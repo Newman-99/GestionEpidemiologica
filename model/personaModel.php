@@ -10,8 +10,7 @@
 		 apellidos,
 		 fechaNacimiento,
 		 idNacionalidad,
-		 idGenero,
-		 telefono) VALUES (
+		 idGenero) VALUES (
 		 :docIdentidad,
 		 :nombres,
 		 :apellidos,
@@ -29,24 +28,65 @@
 
 
 			return $sqlQuery;
+		}
 
-	}	
-
-			protected static function addPersonaTlfModel($dataPersona){
-		$sqlQuery = mainModel::connectDB()->prepare("INSERT INTO telefonos(
-		 telefono,
-		 docIdentidad) VALUES (
-		 :docIdentidad,
-		 :telefono);");
+			protected static function updatePersonaModel($dataPersona){
+		$sqlQuery = mainModel::connectDB()->prepare("UPDATE personas SET
+		 docIdentidad = :docIdentidad,
+		 nombres = :nombres,
+		 apellidos = :apellidos,
+		 fechaNacimiento = :fechaNacimiento,
+		 idNacionalidad = :idNacionalidad,
+		 idGenero = :idGenero WHERE docIdentidad = :docIdentidad;");
 
 			$sqlQuery->execute(array(
 		 "docIdentidad"=>$dataPersona['docIdentidad'],
-		 "telefono"=>$dataPersona['telefono']));
+		 "nombres"=>$dataPersona['nombres'],
+		 "apellidos"=>$dataPersona['apellidos'],
+		 "fechaNacimiento"=>$dataPersona['fechaNacimiento'],
+		 "idNacionalidad"=>$dataPersona['idNacionalidad'],
+		 "idGenero"=>$dataPersona['idGenero']));
+
 
 			return $sqlQuery;
-
 		}
+
+
+			protected static function deletePersonaModel($dataPersona){
+		$sqlQuery = mainModel::connectDB()->prepare(mainModel::disableForeingDB()."DELETE FROM personas WHERE docIdentidad = :docIdentidad;".mainModel::enableForeingDB());
+
+			$sqlQuery->execute(array(
+		 "docIdentidad"=>$dataPersona['docIdentidad']));
+
+			return $sqlQuery;
+		}
+
+			protected static function getPersonaModel($personAttributesFilter,$filterValues){
+
+  
+		    $preSql="SELECT * FROM personas";                  
+		 
+
+		 // Recoger y anadir campos para filtracion de resultado
+		  if (!empty($where)) {
+		    $preSql .= ' WHERE ' . implode(' AND ', $personAttributesFilter);
+		  }
+
+			$sqlQuery = mainModel::connectDB()->prepare($preSql);
+
+		  foreach($filterValues as $key => $values) {
+		    $sqlQuery->bindParam($key, $values['value'], $values['type']);
+		  }
+
+		    $sqlQuery->execute();
+
+		    echo "<br>";
+		    return $recordsResult=$sqlQuery->fetch(PDO::FETCH_ASSOC);
+
+			}
 	}
+
+
 
 
  ?>

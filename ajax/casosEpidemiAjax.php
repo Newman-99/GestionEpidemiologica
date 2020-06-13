@@ -8,11 +8,16 @@ var_dump($_POST);
 	
 	if (isset($_POST['docIdentidad'])) {
 
-		require_once "../controller/pacienteController.php";
-		//Hacer el regist con echo
-		$pacienteController = new pacienteController();
-	 		 //$pacienteController->addPacienteController($_POST);
+		require_once "../controller/personaController.php";
 
+		require_once "../controller/casoEpidemiologicoController.php";
+
+
+		//$personaController = new personaController();
+	 	//$personaController->getPersonaController($_POST);
+echo "<br><br>";		
+		$casoEpidemiologicoController = new casoEpidemiologicoController();
+	 	$casoEpidemiologicoController->deleteCasoEpidemiologicoController($_POST);
 	} else { 
 		/*
 		session_start(["name"=> "systemDptoEpidemi"]);

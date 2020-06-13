@@ -13,9 +13,19 @@
 		public function addUserController(){
 			
 			
-			$usuario_dni = mainModel::cleanStringSQL($_POST["usuario_dni_reg"]);
-
-//			$usuario_id = mainModel::cleanStringSQL($_POST["usuario_id_reg"]);
+			$usuario_dni = mainModel::cleanStringSQL($_POST["usuario_dni_reg"])
+			
+			alias =>mainModel::cleanStringSQL($alias
+			
+			docIdentidad =>mainModel::cleanStringSQL($docIdentidad
+			
+			idNivelPermiso =>mainModel::cleanStringSQL($idNivelPermiso
+			
+			idEstado =>mainModel::cleanStringSQL($idEstado
+			
+			passEncypt =>mainModel::cleanStringSQL($passEncypt
+			
+			correoElectronico =>mainModel::cleanStringSQL($correoElectronico;
 
 			$usuario_nombre = mainModel::cleanStringSQL($_POST["usuario_nombre_reg"]);
 

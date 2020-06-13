@@ -198,6 +198,16 @@ protected static function checkPatterns($pattern,$string){
 		            return FALSE;
 		        }
 		}
+
+protected static function disableForeingDB(){
+    return "SET FOREIGN_KEY_CHECKS=0; ";
+}
+
+protected static function enableForeingDB(){
+    return " SET FOREIGN_KEY_CHECKS=1; ";
+}
+
+
 	}
 
 

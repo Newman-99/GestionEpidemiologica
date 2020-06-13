@@ -7,6 +7,11 @@
             
             Ya Existe el Paciente
          	<input type="checkbox" name="siExist" id="" class="form-control" placeholder="" value="<?php if(isset($siExist)) echo $siExist; ?>">
+
+
+	<!-- Solo valido para el form de actualizar // solo test -->	
+  	<input type="text" name="idCasoEpidemiologico" id="" class="form-control" placeholder="ID CASO EPIDMIOLOGICO" value="<?php if(isset($idCasoEpidemiologico)) echo $idCasoEpidemiologico; ?>">
+
 	Fecha de Registro
   	<input type="date" name="dateRegisterCasoEpidemi" id="" class="form-control" placeholder="Fecha de Registro" value="<?php if(isset($dateRegisterCasoEpidemi)) echo $dateRegisterCasoEpidemi; ?>">
 
@@ -28,6 +33,9 @@
        <option <?php if($idGenero == '1') echo 'selected';?> value='1'>Masculino</option>
        <option <?php if($idGenero == '2') echo 'selected';?> value='2'>Femenino</option>
     </select>
+    
+
+   	Fecha de Nacimiento
 
   	<input type="date" name="fechaNacimiento" id="" class="form-control" placeholder="Cedula" value="<?php if(isset($fechaNacimiento)) echo $fechaNacimiento; ?>">
 
@@ -37,7 +45,7 @@
 
     <textarea rows="3" cols="40" name="direccion" id="" class="form-control" placeholder="Direccion" required><?php if(isset($direccion)) echo $direccion;?></textarea>
 
-  	<input type="text" name="codeCIE10" id="" class="form-control" placeholder="Codigo: CIE-10" value="<?php $codeCIE10 ='A000'; if(isset($codeCIE10)) echo $codeCIE10; ?>">
+  	<input type="text" name="CATALOG_KEY_CIE10" id="" class="form-control" placeholder="Codigo: CIE-10" value="<?php $CATALOG_KEY_CIE10 ='A000'; if(isset($CATALOG_KEY_CIE10)) echo $CATALOG_KEY_CIE10; ?>">
 
 	<button class="btn btn-primary btn-block" type="submit" value="Registrar" name="registrar">REGISTRAR</button>
 
