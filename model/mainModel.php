@@ -172,7 +172,7 @@ protected static function checkPatterns($pattern,$string){
 
 		foreach ($data as $value) {
 		    
-		    if(empty($value) || is_null($value) || self::isStringOnlyHasSpaces($value)){        
+		    if(empty($value) || self::isStringOnlyHasSpaces($value)){        
 		        return true;
 		    }
 		}

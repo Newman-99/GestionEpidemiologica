@@ -62,10 +62,8 @@
 		}
 
 			protected static function getPersonaModel($personAttributesFilter,$filterValues){
-
-  
+ 
 		    $preSql="SELECT * FROM personas";                  
-		 
 
 		 // Recoger y anadir campos para filtracion de resultado
 		  if (!empty($where)) {

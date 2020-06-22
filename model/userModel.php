@@ -9,7 +9,7 @@
 	{
 	
 	protected static function addUserModel($dataUser){
-		$sqlQuery = mainModel::connectDB()->prepare("INSERT INTO  usuarios ( 
+		$sqlQuery = mainModel::connectDB()->prepare("INSERT INTO usuarios ( 
 			alias,
 		 	docIdentidad,
 		 	idNivelPermiso,
@@ -24,15 +24,71 @@
 		 	:correoElectronico)");
 
 			$sqlQuery->execute(array(
-		"alias"=>$dataUser['alias'],
+		"alias"=>$dataUser['aliasUser'],
 		"docIdentidad"=>$dataUser['docIdentidad'],
 		"idNivelPermiso"=>$dataUser['idNivelPermiso'],
 		"idEstado"=>$dataUser['idEstado'],
-		"passEncypt"=>$dataUser['passEncypt'],
-		"correoElectronico"=>$dataUser['correoElectronico']));
+		"passEncypt"=>$dataUser['password'],
+		"correoElectronico"=>$dataUser['email']));
 
 			return $sqlQuery;
 	}	
+
+
+	protected static function updateUserModel($dataUser){
+		$sqlQuery = mainModel::connectDB()->prepare("UPDATE usuarios 
+			SET docIdentidad = :docIdentidad,
+		 	idNivelPermiso = :idNivelPermiso,
+		 	idEstado = :idEstado,
+		 	passEncypt = :password, 
+		 	email = :email WHERE alias = :aliasUser;");
+
+			$sqlQuery->execute(array(
+		"aliasUser"=>$dataUser['aliasUser'],
+		"docIdentidad"=>$dataUser['docIdentidad'],
+		"idNivelPermiso"=>$dataUser['idNivelPermiso'],
+		"idEstado"=>$dataUser['idEstado'],
+		"password"=>$dataUser['password'],
+		"email"=>$dataUser['email']));
+
+			return $sqlQuery;
+	}	
+
+
+			protected static function deleteUserModel($dataPersona){
+		$sqlQuery = mainModel::connectDB()->prepare(mainModel::disableForeingDB()."DELETE FROM usuarios WHERE alias = :aliasUser;".mainModel::enableForeingDB());
+
+			$sqlQuery->execute(array(
+		 "aliasUser"=>$dataPersona['aliasUser']));
+
+			return $sqlQuery;
+		}
+
+			protected static function getUserModel($userAttributesFilter,$filterValues){
+
+  
+		    $preSql="SELECT * FROM usuarios";                  
+		 
+
+		 // Recoger y anadir campos para filtracion de resultado
+		  if (!empty($where)) {
+		    $preSql .= ' WHERE ' . implode(' AND ', $userAttributesFilter);
+		  }
+
+			$sqlQuery = mainModel::connectDB()->prepare($preSql);
+
+		  foreach($filterValues as $key => $values) {
+		    $sqlQuery->bindParam($key, $values['value'], $values['type']);
+		  }
+
+		    $sqlQuery->execute();
+
+		    echo "<br>";
+		    return $recordsResult=$sqlQuery->fetch(PDO::FETCH_ASSOC);
+
+			}
+
+
 	}
 
  ?>

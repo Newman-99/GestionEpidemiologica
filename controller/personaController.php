@@ -16,7 +16,7 @@
 		 
 		 $apellidos = mainModel::cleanStringSQL($dataPersona['apellidos']);
 		 
-		 $fechaNacimiento = mainModel::cleanStringSQL($dataPersona['fechaNacimiento']);
+		 $fechaNacimiento = mainModel::cleanStringSQL($dataPersona['fechaNacimiento']);		 	
 		 
 		 $idNacionalidad = mainModel::cleanStringSQL($dataPersona['idNacionalidad']);
 		 
@@ -33,6 +33,8 @@
 				 	}else{
 
 
+
+
 		 $dataPersona = array();
 
 		 $dataPersona['docIdentidad'] = $docIdentidad;
@@ -42,7 +44,7 @@
 		 $dataPersona['apellidos'] = $apellidos;
 		 
 		 $dataPersona['fechaNacimiento'] = $fechaNacimiento;
-		 
+
 		 $dataPersona['idNacionalidad'] = $idNacionalidad;
 		 
 		 $dataPersona['idGenero'] = $idGenero;

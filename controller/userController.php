@@ -10,83 +10,185 @@
 
 	class userController extends userModel{
 
-		public function addUserController(){
+		public function addUserController($dataUser){
 			
 			
-			$usuario_dni = mainModel::cleanStringSQL($_POST["usuario_dni_reg"])
-			
-			alias =>mainModel::cleanStringSQL($alias
-			
-			docIdentidad =>mainModel::cleanStringSQL($docIdentidad
-			
-			idNivelPermiso =>mainModel::cleanStringSQL($idNivelPermiso
-			
-			idEstado =>mainModel::cleanStringSQL($idEstado
-			
-			passEncypt =>mainModel::cleanStringSQL($passEncypt
-			
-			correoElectronico =>mainModel::cleanStringSQL($correoElectronico;
+			$aliasUser = mainModel::cleanStringSQL($dataUser["aliasUser"]);
+		 	$docIdentidad = mainModel::cleanStringSQL($dataUser["docIdentidad"]);
+		 	// 3 = Invitado en DB
+		 	$idNivelPermiso = "3";
+		 	// 0 = Inactivo  en DB		 	
+		 	$idEstado = "0";
+		 	$password = mainModel::cleanStringSQL($dataUser["password"]);
+		 	$passwordConfirm = mainModel::cleanStringSQL($dataUser["passwordConfirm"]); 
 
-			$usuario_nombre = mainModel::cleanStringSQL($_POST["usuario_nombre_reg"]);
+		 	$email = mainModel::cleanStringSQL($dataUser["email"]);
 
-			$usuario_apellido = mainModel::cleanStringSQL($_POST["usuario_apellido_reg"]);
+		 
+			if (mainModel::isDataEmtpy($aliasUser,
+		 	$docIdentidad,
+		 	$password,
+		 	$passwordConfirm, 
+		 	$email)){
 
-			$usuario_telefono = mainModel::cleanStringSQL($_POST["usuario_telefono_reg"]);
+				echo "ALGO VACIO!";
+			}else{
 
-			$usuario_direccion = mainModel::cleanStringSQL($_POST["usuario_direccion_reg"]);
+			$dataUser = array();
 
-			$usuario_email = mainModel::cleanStringSQL($_POST["usuario_email_reg"]);
+			$dataUser['aliasUser'] = $aliasUser;
+		 	$dataUser['docIdentidad'] = $docIdentidad;
+		 	$dataUser['idNivelPermiso'] = $idNivelPermiso;
+		 	$dataUser['idEstado'] = $idEstado;
+		 	$dataUser['password'] = $password;
+		 	$dataUser['passwordConfirm'] = $passwordConfirm; 
+		 	$dataUser['email'] = $email;
 
-			$usuario_usuario = mainModel::cleanStringSQL($_POST["usuario_usuario_reg"]);
+			echo "<h1>REGISTRADO</h1>";
 
-			$usuario_clave = mainModel::cleanStringSQL($_POST["usuario_clave_1_reg"]);
+			var_dump($dataUser);
 
-			$usuario_clave_confirm = mainModel::cleanStringSQL($_POST["usuario_clave_2_reg"]);
-
-			$usuario_email = mainModel::cleanStringSQL($_POST["usuario_email_reg"]);
-
-//			$usuario_estado = mainModel::cleanStringSQL($_POST["usuario_estado_reg"]);
-
-			$usuario_privilegio = mainModel::cleanStringSQL($_POST["usuario_privilegio_reg"]);		 	
-
-	
-
-			if (mainModel::isDataEmtpy($usuario_dni,
-				 	$usuario_nombre,
-				 	$usuario_apellido,
-				 	$usuario_telefono,
-				 	$usuario_direccion,
-				 	$usuario_email,
-				 	$usuario_usuario,
-				 	$usuario_clave,
-				 	$usuario_clave_confirm,/*
-				 	$usuario_estado,*/
-				 	$usuario_privilegio)) {
-
-				$alerta=[
-					"Alerta"=>"simple",
-					"Titulo"=>"Ocurrió un error inesperado",
-					"Texto"=>"No has llenado todos los campos que son obligatorios",
-					"Tipo"=>"error"
-				];
-
-				echo json_encode($alerta);
-				?>
-
-				<script> var data = <?php echo json_encode($alerta); ?>;
-
-				alertas_ajax(data);
-
-				</script>;
-
-				<?php
-
-				echo "<script>alertas_ajax(".json_encode($alerta).";</script>";
- 
+			 userModel::addUserModel($dataUser);
 
 			}
 		}
-}
+
+				public function updateUserController($dataUser){
+			
+			
+			$aliasUser = mainModel::cleanStringSQL($dataUser["aliasUser"]);
+		 	$docIdentidad = mainModel::cleanStringSQL($dataUser["docIdentidad"]);
+		 	// 3 = Invitado en DB
+		 	$idNivelPermiso = "3";
+		 	// 0 = Inactivo  en DB		 	
+		 	$idEstado = "0";
+		 	
+		 	$password = mainModel::cleanStringSQL($dataUser["password"]);
+		 	$passwordConfirm = mainModel::cleanStringSQL($dataUser["passwordConfirm"]); 
+		 	$email = mainModel::cleanStringSQL($dataUser["email"]);
+		 
+			if (mainModel::isDataEmtpy($aliasUser,
+		 	$docIdentidad,
+		 	$password,
+		 	$passwordConfirm, 
+		 	$email)){
+				echo "ALGO VACIO!";
+			}else{
+
+			$dataUser = array();
+
+			$dataUser['aliasUser'] = $aliasUser;
+		 	$dataUser['docIdentidad'] = $docIdentidad;
+		 	$dataUser['idNivelPermiso'] = $idNivelPermiso;
+		 	$dataUser['idEstado'] = $idEstado;
+		 	$dataUser['password'] = $password;
+		 	$dataUser['passwordConfirm'] = $passwordConfirm; 
+		 	$dataUser['email'] = $email;
+
+			echo "<h1>Actualizado</h1>";
+
+			var_dump($dataUser);
+
+			 userModel::updateUserModel($dataUser);
+
+			}
+		}
+
+				public function deleteUserController($dataUser){
+			
+		 $aliasUser = mainModel::cleanStringSQL($dataUser['aliasUser']);
+		 
+		 
+		 			if (mainModel::isDataEmtpy(
+						 $aliasUser)) {
+			 		echo "<h1>aliasUser VACIO</h1>";
+				 	}else{
+
+
+		 $dataUser = array();
+
+		 $dataUser['aliasUser'] = $aliasUser;
+		 
+			echo "<h1>Eliminado</h1>";
+
+			var_dump($dataUser);
+
+			 userModel::deleteUserModel($dataUser);
+
+				 	}
+
+				 }
+
+			public function getUserController($dataUser){
+ 
+			$aliasUser = mainModel::cleanStringSQL($dataUser["aliasUser"]);
+		 	$docIdentidad = mainModel::cleanStringSQL($dataUser["docIdentidad"]);
+		 	// 3 = Invitado en DB
+		 	$idNivelPermiso = "3";
+		 	// 0 = Inactivo  en DB		 	
+		 	$idEstado = "0";
+		 
+		 	$email = mainModel::cleanStringSQL($dataUser["email"]);
+
+
+		$UserAttributesFilter = [];
+
+ 		$filterValues = [];
+
+		if (!empty($docIdentidad)) {
+		array_push($UserAttributesFilter, 'docIdentidad = :docIdentidad');
+		$filterValues[':docIdentidad'] = [
+		'value' => $docIdentidad,
+		'type' => \PDO::PARAM_STR,
+		];}
+
+		if (!empty($aliasUser)) {
+		array_push($UserAttributesFilter, 'alias = :aliasUser');
+		$filterValues[':aliasUser'] = [
+		'value' => $aliasUser,
+		'type' => \PDO::PARAM_STR,
+		];}
+
+		if (!empty($idNivelPermiso)) {
+		array_push($UserAttributesFilter, 'idNivelPermiso = :idNivelPermiso');
+		$filterValues[':idNivelPermiso'] = [
+		'value' => $idNivelPermiso,
+		'type' => \PDO::PARAM_INT,
+		];}
+		if (!empty($idEstado)) {
+		array_push($UserAttributesFilter, 'idEstado = :idEstado');
+		$filterValues[':idEstado'] = [
+		'value' => $idEstado,
+		'type' => \PDO::PARAM_STR,
+		];}
+
+
+		if (!empty($email)) {
+		array_push($UserAttributesFilter, '$email = :$email');
+		$filterValues[':$email'] = [
+		'value' => $email,
+		'type' => \PDO::PARAM_STR,
+		];}
+
+
+		// Si todos estan vacios
+		if (mainModel::isDataEmtpy($docIdentidad) == TRUE &&
+		 mainModel::isDataEmtpy($aliasUser) == TRUE &&
+		 mainModel::isDataEmtpy($idNivelPermiso) == TRUE &&
+		 mainModel::isDataEmtpy($idEstado) == TRUE &&
+		 mainModel::isDataEmtpy($email == TRUE)){
+
+			echo "Todos Vacioo, No Permitido";
+
+		}else{
+
+
+	var_dump(userModel::getUserModel($UserAttributesFilter,$filterValues));
+
+		}
+
+		}
+	}
 
 
  ?>

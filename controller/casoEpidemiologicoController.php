@@ -15,8 +15,8 @@
 		 $idParroquia = mainModel::cleanStringSQL($dataCasoEpidemi['idParroquia']);
 		 $direccion = mainModel::cleanStringSQL($dataCasoEpidemi['direccion']);
 		 $telefono = mainModel::cleanStringSQL($dataCasoEpidemi['telefono']);
-		 $dateRegisterCasoEpidemi = mainModel::cleanStringSQL($dataCasoEpidemi['dateRegisterCasoEpidemi']);
 
+		 $dateRegisterCasoEpidemi = mainModel::cleanStringSQL($dataCasoEpidemi['dateRegisterCasoEpidemi']);
 
 		if (mainModel::isDataEmtpy(
 		 $docIdentidad,
