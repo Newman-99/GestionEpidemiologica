@@ -29,6 +29,9 @@
 		 
 		 $idGenero = mainModel::cleanStringSQL($dataPersona['idGenero']);
 
+var_dump(mainModel::isDateGreaterCurrentDate($fechaNacimiento));
+	
+
 		if (mainModel::isDataEmtpy(
 			$docIdentidad,
 			$nombres,
@@ -99,12 +102,12 @@
 				exit();
 			}
 
-			if(!self::isValidIdNacionalidad($idNacionalidad)){
+			if(!self::isValidSelectionTwoOptions($idNacionalidad)){
 
 			$alert=[
 				"Alert"=>"simple",
 				"Title"=>"Datos Invalidos",
-				"Text"=>"El campo de Nacionalidad son invalidos",
+				"Text"=>"El campo de Nacionalidad es invalido",
 				"Type"=>"error"
 			];
 
@@ -113,6 +116,20 @@
 				exit();
 			}
 
+
+			if(!self::isValidSelectionTwoOptions($idGenero)){
+
+			$alert=[
+				"Alert"=>"simple",
+				"Title"=>"Datos Invalidos",
+				"Text"=>"El campo de Genero es invalido",
+				"Type"=>"error"
+			];
+
+				echo json_encode($alert);
+
+				exit();
+			}
 
 			if(!self::isValidNombresApellidos($nombres,$apellidos)){
 
@@ -127,6 +144,34 @@
 
 				exit();
 			}
+
+
+			if (!mainModel::checkDate($fechaNacimiento)){
+			$alert=[
+				"Alert"=>"simple",
+				"Title"=>"Datos Invalidos",
+				"Text"=>"El campo fecha de  nacimiento es invalido",
+				"Type"=>"error"
+			];
+
+				echo json_encode($alert);
+
+				exit();
+		}
+
+
+		if (mainModel::isDateGreaterCurrentDate($fechaNacimiento)) {
+				$alert=[
+					"Alert"=>"simple",
+					"Title"=>"Datos Invalidos",
+					"Text"=>"La Fecha de Nacimiento es mayor a la del sistema",
+					"Type"=>"error"
+				];
+
+					echo json_encode($alert);
+
+					exit();
+		}
 
 		 $dataPersona = array();
 
@@ -332,10 +377,10 @@ public static function isValidDocIdentidad($docIdentidad){
 
 
 
-public static function isValidIdNacionalidad($idNacionalidad){
+public static function isValidSelectionTwoOptions($idOption){
 
 	// si no concide con los id en la BD
-    if (strcmp($idNacionalidad,"1") == 0 || strcmp($idNacionalidad,"2") == 0) {
+    if (strcmp($idOption,"1") == 0 || strcmp($idOption,"2") == 0) {
 		return TRUE;
 	}	
 	else FALSE;

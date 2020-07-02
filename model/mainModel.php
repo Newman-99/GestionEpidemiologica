@@ -105,9 +105,9 @@ protected static function checkPatterns($pattern,$string){
 		$values = explode("-", $date);
 
 		if (count($values) == 3 && checkdate($values[1],$values[2],$values[0])) {
-			return false;
+			return TRUE;
 		} else {
-			return true;
+			return FALSE;
 			// Si hay errors
 		}
 	}
@@ -207,6 +207,28 @@ protected static function enableForeingDB(){
     return " SET FOREIGN_KEY_CHECKS=1; ";
 }
 
+
+
+protected static function isDateGreaterCurrentDate($dateReviewed){
+	
+	$currentDate =  self::getDateCurrentSystem();
+    
+    $dateReviewed = strtotime($dateReviewed);
+        if($dateReviewed > $currentDate){
+            return TRUE;
+        }else{
+            return FALSE;
+
+        }                   
+}
+
+protected static function getDateCurrentSystem(){
+      
+    date_default_timezone_set("America/Caracas");
+
+    return $currentDate = strtotime(date("Y-m-d H:i:s"));
+
+}
 
 	}
 

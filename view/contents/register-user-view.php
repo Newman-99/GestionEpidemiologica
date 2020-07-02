@@ -14,7 +14,7 @@
               </div>
 
 
-                <form class="formAjax   form-group text-center user" action="<?php echo SERVERURL; ?>ajax/userAjax.php" method="POST" data-form="save" autocomplete="off">
+                <form class="formAja   form-group text-center user" action="<?php echo SERVERURL; ?>ajax/userAjax.php" method="POST" data-form="save" autocomplete="off">
             
 
               <div class="form-group row">
@@ -29,7 +29,7 @@
        <div class="col-sm-4 mb-3 mb-sm-0">
 
                 <select name='idNacionalidad' id='idNacionalidad' class="form-control" autocomplete='on' class="form-control" >  
-                <option>Nacionalidad</option>
+                <option value="">Nacionalidad</option>
                 <option <?php if(isset($_POST['idNacionalidad'])) echo 'selected';?> value="1">V</option>
                 <option <?php if(isset($_POST['idNacionalidad'])) echo 'selected'; ?> value="2">E</option>
               </select>
@@ -54,7 +54,7 @@
                   <div class="col-sm-6 mb-3 mb-sm-0">
 
                 <select name='idGenero' id='idGenero' class="form-control" autocomplete='on' class="form-control" >
-                      <option>Genero</option>
+                      <option value="">Genero</option>
                         <option <?php if(isset($_POST['idGenero'])) echo 'selected';?> value="1">Masculino</option>
                         <option <?php if(isset($_POST['idGenero'])) echo 'selected'; ?> value="2">Femenino</option>
                     </select>
