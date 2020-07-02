@@ -22,3 +22,8 @@
   <script src="<?php echo SERVERURL; ?>view/js/demo/chart-area-demo.js"></script>
   <script src="<?php echo SERVERURL; ?>view/js/demo/chart-pie-demo.js"></script>
   <script src="<?php echo SERVERURL; ?>view/js/demo/chart-bar-demo.js"></script>
+
+
+<script src="<?php echo SERVERURL; ?>view/js/main.js" ></script>
+
+<script src="<?php echo SERVERURL; ?>view/js/alerts.js" ></script>

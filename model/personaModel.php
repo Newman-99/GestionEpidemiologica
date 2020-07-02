@@ -63,14 +63,14 @@
 
 			protected static function getPersonaModel($personAttributesFilter,$filterValues){
  
-		    $preSql="SELECT * FROM personas";                  
+		    $sqlQuery="SELECT * FROM personas ";                  
 
 		 // Recoger y anadir campos para filtracion de resultado
-		  if (!empty($where)) {
-		    $preSql .= ' WHERE ' . implode(' AND ', $personAttributesFilter);
+		  if (!empty($personAttributesFilter)) {
+		    $sqlQuery .= ' WHERE ' . implode(' AND ', $personAttributesFilter);
 		  }
 
-			$sqlQuery = mainModel::connectDB()->prepare($preSql);
+			$sqlQuery = mainModel::connectDB()->prepare($sqlQuery);
 
 		  foreach($filterValues as $key => $values) {
 		    $sqlQuery->bindParam($key, $values['value'], $values['type']);
@@ -78,8 +78,10 @@
 
 		    $sqlQuery->execute();
 
-		    echo "<br>";
 		    return $recordsResult=$sqlQuery->fetch(PDO::FETCH_ASSOC);
+
+		    var_dump($recordsResult);
+
 
 			}
 	}

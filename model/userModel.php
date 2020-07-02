@@ -67,27 +67,26 @@
 			protected static function getUserModel($userAttributesFilter,$filterValues){
 
   
-		    $preSql="SELECT * FROM usuarios";                  
+		    $sqlQuery="SELECT * FROM usuarios";                  
 		 
 
 		 // Recoger y anadir campos para filtracion de resultado
-		  if (!empty($where)) {
-		    $preSql .= ' WHERE ' . implode(' AND ', $userAttributesFilter);
+		  if (!empty($userAttributesFilter)) {
+		    $sqlQuery .= ' WHERE ' . implode(' AND ', $userAttributesFilter);
 		  }
 
-			$sqlQuery = mainModel::connectDB()->prepare($preSql);
+			$sqlQuery = mainModel::connectDB()->prepare($sqlQuery);
 
 		  foreach($filterValues as $key => $values) {
 		    $sqlQuery->bindParam($key, $values['value'], $values['type']);
 		  }
-
 		    $sqlQuery->execute();
-
-		    echo "<br>";
+		   
 		    return $recordsResult=$sqlQuery->fetch(PDO::FETCH_ASSOC);
 
 			}
 
+		
 
 	}
 

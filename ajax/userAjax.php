@@ -1,26 +1,27 @@
 <?php 
-	$requestAjax = true;
+
+error_reporting(0);
+
+		$requestAjax = true;
 
 	require_once "../config/app.php";
 	
-	if (isset($_POST['registerUser'])) {
-
+	if (/*$_POST['operationType'] == "save"||*/ TRUE) {
 
 		require_once "../controller/userController.php";
 		
 		require_once "../controller/personaController.php";
 
 		$personaController = new personaController();
-	
+
 		$personaController->addPersonaController($_POST);
 
-		$userController = new userController();
-	
-		$userController->getUserController($_POST);
 
+	//	$userController = new userController();
+	
+//		$userController->addUserController($_POST);
 
 	} else { 
-
 /*		
 		session_start(["name"=> "systemDptoEpidemi"]);
 		session_unset();

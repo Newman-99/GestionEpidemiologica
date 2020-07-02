@@ -4,3 +4,9 @@
 
   <!-- Custom styles for this template-->
   <link href="<?php echo SERVERURL; ?>view/css/sb-admin-2.min.css" rel="stylesheet">
+
+<!-- Sweet Alerts V8.13.0 CSS file -->
+<link rel="stylesheet" href="<?php echo SERVERURL; ?>view/css/sweetalert2.min.css">
+
+<!-- Sweet Alert V8.13.0 JS file-->
+<script src="<?php echo SERVERURL; ?>view/js/sweetalert2.min.js" ></script>
