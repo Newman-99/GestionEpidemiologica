@@ -15,13 +15,15 @@
 		 	idNivelPermiso,
 		 	idEstado,
 		 	passEncypt, 
-		 	correoElectronico) VALUES (
+		 	email,
+		 	telefono) VALUES (
 		 	:alias,
 		 	:docIdentidad,
 		 	:idNivelPermiso,
 		 	:idEstado,
 		 	:passEncypt, 
-		 	:correoElectronico)");
+		 	:email,
+		 	:telefono )");
 
 			$sqlQuery->execute(array(
 		"alias"=>$dataUser['aliasUser'],
@@ -29,7 +31,26 @@
 		"idNivelPermiso"=>$dataUser['idNivelPermiso'],
 		"idEstado"=>$dataUser['idEstado'],
 		"passEncypt"=>$dataUser['password'],
-		"correoElectronico"=>$dataUser['email']));
+		"email"=>$dataUser['email'],
+		"telefono"=>$dataUser['telefono']));
+
+		$sqlQuery = mainModel::connectDB()->prepare("INSERT INTO usuariosPreguntas(
+		aliasUsuario,
+	 	idPregunta,
+	 	respuesta) VALUES (
+	 	:aliasUsuario,
+	 	:idPregunta,
+		:respuesta)");
+
+			$sqlQuery->execute(array(
+		"aliasUsuario"=>$dataUser['aliasUser'],
+		"idPregunta"=>"1",
+		"respuesta"=>$dataUser["question1"]));
+
+		$sqlQuery->execute(array(
+		"aliasUsuario"=>$dataUser['aliasUser'],
+		"idPregunta"=>"2",
+		"respuesta"=>$dataUser["question2"]));
 
 			return $sqlQuery;
 	}	
@@ -51,6 +72,23 @@
 		"password"=>$dataUser['password'],
 		"email"=>$dataUser['email']));
 
+
+		$sqlQuery = mainModel::connectDB()->prepare("UPDATE usuariosPreguntas 
+			SET respuesta = :respuesta,
+			WHERE aliasUsuario = :aliasUser AND idPregunta = :idPregunta ;");
+
+
+		$sqlQuery->execute(array(
+		"aliasUsuario"=>$dataUser['aliasUser'],
+		"idPregunta"=>"1",
+		"respuesta"=>$dataUser["question1"]));
+
+
+		$sqlQuery->execute(array(
+		"aliasUsuario"=>$dataUser['aliasUser'],
+		"idPregunta"=>"2",
+		"respuesta"=>$dataUser["question2"]));
+
 			return $sqlQuery;
 	}	
 
@@ -61,6 +99,12 @@
 			$sqlQuery->execute(array(
 		 "aliasUser"=>$dataPersona['aliasUser']));
 
+
+		$sqlQuery = mainModel::connectDB()->prepare("DELETE FROM usuariosPreguntas WHERE aliasUser = :aliasUser;");
+
+			$sqlQuery->execute(array(
+			 "aliasUser"=>$dataPersona['aliasUser']));
+
 			return $sqlQuery;
 		}
 
@@ -69,7 +113,6 @@
   
 		    $sqlQuery="SELECT * FROM usuarios";                  
 		 
-
 		 // Recoger y anadir campos para filtracion de resultado
 		  if (!empty($userAttributesFilter)) {
 		    $sqlQuery .= ' WHERE ' . implode(' AND ', $userAttributesFilter);
@@ -80,14 +123,13 @@
 		  foreach($filterValues as $key => $values) {
 		    $sqlQuery->bindParam($key, $values['value'], $values['type']);
 		  }
-		    $sqlQuery->execute();
+		     return $sqlQuery;
 		   
-		    return $recordsResult=$sqlQuery->fetch(PDO::FETCH_ASSOC);
-
 			}
 
 		
 
 	}
+
 
  ?>

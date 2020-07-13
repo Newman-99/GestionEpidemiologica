@@ -23,7 +23,7 @@ $requestAjax = TRUE;
 		return $requestedSimpleQuery;
 	}
 
-		public function encryption($string){
+		public static function encryption($string){
 			$output=FALSE;
 			$key=hash('sha256', SECRET_KEY);
 			$iv=substr(hash('sha256', SECRET_IV), 0, 16);
@@ -52,7 +52,7 @@ $requestAjax = TRUE;
 
 }
 
-public function cleanStringSQL($string){
+public static function cleanStringSQL($string){
 
 	$string = trim($string);
 	$string = stripcslashes($string);
@@ -228,7 +228,54 @@ protected static function getDateCurrentSystem(){
 
     return $currentDate = strtotime(date("Y-m-d H:i:s"));
 
+} 	
+
+protected static function isValidNroTlf(...$nrosTlfs){
+    foreach ($nrosTlfs as $nroTlf) {
+
+    if(preg_match("/^[0-9]{11}$/",$nroTlf)){
+        return true;
+    }
 }
+
+return false;
+}
+
+// Para caracteres que usuarios usualmente usam para separar en un input
+public static function ClearUserSeparatedCharacters($inputString){
+    $inputString=preg_replace("/\.|-|\s/", "",$inputString);
+    return $inputString;
+	}
+
+
+public static function isValidSelectionTwoOptions($idOption){
+
+    if (strcmp($idOption,"1") == 0 || strcmp($idOption,"2") == 0) {
+		return TRUE;
+	}	
+	else FALSE;
+}
+
+
+public static function isTwoValuesEquals($value1,$value2){
+    if(strcmp($value1,$value2)){
+        return true;
+    }else{
+        return false;
+    }
+}
+
+
+protected static function  isStringInRange($string,$rangeMin,$rangeMax){
+    
+    if(strlen($string)<$rangeMin or strlen($string)>$rangeMax){
+        return false;
+    }else{
+        return true;
+    }
+}
+
+
 
 	}
 

@@ -30,6 +30,8 @@ function sendFormAjax (e){
 		textMsjAlert="Se eliminará el término de búsqueda y tendrás que escribir uno nuevo";
 	}else if(type==="loans"){
 		textMsjAlert="Desea remover los datos seleccionados para préstamos o reservaciones";
+	}else if(type==="login"){
+		textMsjAlert="Desea iniciar sesion?";		
 	}else{
 		textMsjAlert="Quieres realizar la operación solicitada";
 	}
@@ -40,18 +42,20 @@ var formData = {};
      formData[this.name] = this.value;
     });
      
-    $('input:checkbox').each(function () {
-        var valueCheckbox = this.checked;
-        if (valueCheckbox) {
-        formData[this.name] = this.value;
-       }
 
+    $('input:checkbox').each(function () {
+
+        var valueCheckbox = this.checked;
+
+        if (valueCheckbox) {
+       
+        formData[this.name] = this.value;
+        
+       }
     });
 
-
-     //alert($('input:checkbox').val());
-
-
+   // alert(Object.entries(formData));
+     
       formData['operationType'] = type;
 
 	Swal.fire({
@@ -70,6 +74,7 @@ var formData = {};
 			       	data: formData,
 			        type:method,
 			        success: function (response) {
+
 			          if(!response.error) {
 			          let operationResult = JSON.parse(response);
 
@@ -77,7 +82,6 @@ var formData = {};
 			
 			 ajaxSweetAlerts(operationResult);
 
-			$('input:checkbox').val(null);
 						}
 
 			          }
@@ -98,16 +102,17 @@ FORM_AJAX.forEach(form => {
 
 function ajaxSweetAlerts(alert){
 	if(alert.Alert==="simple"){
+
 		Swal.fire({
 			title: alert.Title,
-			text: alert.Text,
+			html: alert.Text,
 			type: alert.Type,
 			confirmButtonText: 'Aceptar'
 		});
-	}else if(alert.Alert==="recargar"){
+	}else if(alert.Alert==="reload"){
 		Swal.fire({
 			title: alert.Title,
-			text: alert.Text,
+			html: alert.Text,
 			type: alert.Type,
 			confirmButtonText: 'Aceptar'
 		}).then((result) => {
@@ -115,18 +120,44 @@ function ajaxSweetAlerts(alert){
 				location.reload();
 			}
 		});
-	}else if(alert.Alert==="limpiar"){
+	}else if(alert.Alert==="clean"){
 		Swal.fire({
 			title: alert.Title,
-			text: alert.Text,
+			html: alert.Text,
 			type: alert.Type,
 			confirmButtonText: 'Aceptar'
 		}).then((result) => {
+
+
 			if(result.value){
-				document.querySelector(".formAjax").reset();
+			$('.formAjax').trigger("reset");
+
+			$(".form-control").prop('disabled', false);
+
+				//document.querySelector(".formAjax").reset();
 			}
 		});
 	}else if(alert.Alert==="redireccionar"){
 		window.location.href=alert.URL;
 	}
 }
+
+// Control de funcionalidades de formularios
+
+// si el checkbox de la persona ya existe se active, inabilita los campos innecesarios
+
+$('#siExistPerson').change(function() {
+    
+var fieldStatusValuePerson;
+
+    if (this.checked) {	
+    	 fieldStatusValuePerson = true;
+
+    } else {
+    	 fieldStatusValuePerson = false;
+    }
+
+	$(".form-control-person").prop('disabled', fieldStatusValuePerson);
+
+});
+

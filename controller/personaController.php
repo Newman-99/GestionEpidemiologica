@@ -13,7 +13,7 @@
 		 
 		$docIdentidad = mainModel::cleanStringSQL($dataPersona['docIdentidad']);
 		
-		 $docIdentidad = self::cleanStrDocIdentidad($docIdentidad);
+		 $docIdentidad = self::ClearUserSeparatedCharacters($docIdentidad);
 
 		 $nombres = mainModel::cleanStringSQL($dataPersona['nombres']);
 		 
@@ -29,20 +29,24 @@
 		 
 		 $idGenero = mainModel::cleanStringSQL($dataPersona['idGenero']);
 
-var_dump(mainModel::isDateGreaterCurrentDate($fechaNacimiento));
-	
+		 $idGenero = mainModel::cleanStringSQL($dataPersona['idGenero']);
+
+		 $telefono = mainModel::cleanStringSQL($dataPersona['telefono']);
+
+		 $telefono = self::ClearUserSeparatedCharacters($telefono);
+
 
 		if (mainModel::isDataEmtpy(
 			$docIdentidad,
 			$nombres,
 			$apellidos,
 			$fechaNacimiento,
-			$idNacionalidad,$idGenero)) {
+			$idNacionalidad,$idGenero,$telefono)) {
 
 			$alert=[
 				"Alert"=>"simple",
 				"Title"=>"Campos Vacios",
-				"Text"=>"Todos los datos personales deben ser llenados",
+				"Text"=>"Todos los datos personales son obligatorios",
 				"Type"=>"error"
 			];
 
@@ -50,43 +54,6 @@ var_dump(mainModel::isDateGreaterCurrentDate($fechaNacimiento));
 
 				exit();
 			}
-
-		 $primaryKeyPersona = array();
-
-		 $primaryKeyPersona['idNacionalidad'] = $idNacionalidad;
-
-		 $primaryKeyPersona['docIdentidad'] = $docIdentidad;
-
-			if(isset($dataPersona['siExistPerson']) && $dataPersona['siExistPerson'] == 1 ){
-
-			if(!self::getPersonaController($primaryKeyPersona)){
-			$alert=[
-				"Alert"=>"simple",
-				"Title"=>"Datos no encontrados",
-				"Text"=>"No se encuentra una persona con esta cedula registrada ".$dataPersona['siExistPerson'],
-				"Type"=>"error"
-			];
-
-				echo json_encode($alert);
-
-				exit();
-			}
-
-			}else{
-
-			if(is_array(self::getPersonaController($primaryKeyPersona))){
-			$alert=[
-				"Alert"=>"simple",
-				"Title"=>"Datos Duplicados",
-				"Text"=>"Ya se encuentra una persona con esta cedula registrada ".$dataPersona['siExistPerson'],
-				"Type"=>"error"
-			];
-
-				echo json_encode($alert);
-
-				exit();
-			}
-		}
 
 			if(!self::isValidDocIdentidad($docIdentidad)){
 
@@ -102,7 +69,7 @@ var_dump(mainModel::isDateGreaterCurrentDate($fechaNacimiento));
 				exit();
 			}
 
-			if(!self::isValidSelectionTwoOptions($idNacionalidad)){
+			if(!mainModel::isValidSelectionTwoOptions($idNacionalidad)){
 
 			$alert=[
 				"Alert"=>"simple",
@@ -117,7 +84,7 @@ var_dump(mainModel::isDateGreaterCurrentDate($fechaNacimiento));
 			}
 
 
-			if(!self::isValidSelectionTwoOptions($idGenero)){
+			if(!mainModel::isValidSelectionTwoOptions($idGenero)){
 
 			$alert=[
 				"Alert"=>"simple",
@@ -173,6 +140,22 @@ var_dump(mainModel::isDateGreaterCurrentDate($fechaNacimiento));
 					exit();
 		}
 
+		if(!mainModel::isValidNroTlf($telefono)){
+			
+			$alert=[
+				"Alert"=>"simple",
+				"Title"=>"Datos Invalidos",
+				"Text"=>"El Nro de Telefono es invalido",
+				"Type"=>"error"
+			];
+
+				echo json_encode($alert);
+
+				exit();
+			}
+
+
+
 		 $dataPersona = array();
 
 		 $dataPersona['docIdentidad'] = $docIdentidad;
@@ -186,19 +169,8 @@ var_dump(mainModel::isDateGreaterCurrentDate($fechaNacimiento));
 		 $dataPersona['idNacionalidad'] = $idNacionalidad;
 		 
 		 $dataPersona['idGenero'] = $idGenero;
-		 
-			$alert=[
-				"Alert"=>"simple",
-				"Title"=>"Operacion Exitosa",
-				"Text"=>"Datos personales registrados",
-				"Type"=>"success"
-			];
-
-			
-				echo json_encode($alert);
-
-
-			// personaModel::addPersonaModel($dataPersona);
+		
+		 personaModel::addPersonaModel($dataPersona);
 
 				 	}				
 
@@ -361,30 +333,12 @@ var_dump(mainModel::isDateGreaterCurrentDate($fechaNacimiento));
 
 // Funciones Para validar DATOS
 
-public static function cleanStrDocIdentidad($docIdentidad){
-
-    $docIdentidad=preg_replace("/\.|-|\s/", "",$docIdentidad);
-    return $docIdentidad;
-
-}
-
 public static function isValidDocIdentidad($docIdentidad){
     if(preg_match_all("/^[0-9]{7,8}$/",$docIdentidad)){
         return TRUE;
     }
         return FALSE;
 	}
-
-
-
-public static function isValidSelectionTwoOptions($idOption){
-
-	// si no concide con los id en la BD
-    if (strcmp($idOption,"1") == 0 || strcmp($idOption,"2") == 0) {
-		return TRUE;
-	}	
-	else FALSE;
-}
 
 
 public static function isValidNombresApellidos(...$NombresApellidos){
@@ -398,6 +352,8 @@ public static function isValidNombresApellidos(...$NombresApellidos){
         return TRUE;
     }
 
+
+// Funciones Para Limpiar/filtrar DATOS
 
 public static function filtterNombresApellidos($nombreApellido){
 

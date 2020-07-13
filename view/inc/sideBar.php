@@ -76,9 +76,9 @@
         <div id="collapsePages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
           <div class="bg-white py-2 collapse-inner rounded">
             <h6 class="collapse-header">Login Screens:</h6>
-            <a class="collapse-item" href="<?php echo SERVERURL; ?>login/">Login</a>
-            <a class="collapse-item" href="<?php echo SERVERURL; ?>register/">Register</a>
-            <a class="collapse-item" href="<?php echo SERVERURL; ?>forgot-password/">Forgot Password</a>
+            <a class="collapse-item" href="<?php echo SERVERURL; ?>login/">Ingresar Sesion</a>
+            <a class="collapse-item" href="<?php echo SERVERURL; ?>register-user/">Registrar</a>
+            <a class="collapse-item" href="<?php echo SERVERURL; ?>forgot-password/">Se me olvido la contrasena</a>
             <div class="collapse-divider"></div>
             <h6 class="collapse-header">Other Pages:</h6>
             <a class="collapse-item" href="<?php echo SERVERURL; ?>404/">404 Page</a>

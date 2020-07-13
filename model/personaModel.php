@@ -76,12 +76,7 @@
 		    $sqlQuery->bindParam($key, $values['value'], $values['type']);
 		  }
 
-		    $sqlQuery->execute();
-
-		    return $recordsResult=$sqlQuery->fetch(PDO::FETCH_ASSOC);
-
-		    var_dump($recordsResult);
-
+		    return $sqlQuery;
 
 			}
 	}
