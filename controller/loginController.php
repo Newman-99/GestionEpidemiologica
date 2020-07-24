@@ -47,7 +47,6 @@ public function loginUserController($dataUser){
 				"Text"=>"No existe un usuario con este alias registrado",
 				"Type"=>"error"
 			];
-
 				echo json_encode($alert);
 
 				exit();
@@ -78,7 +77,7 @@ public function loginUserController($dataUser){
 				$alert=[
 				"Alert"=>"simple",
 				"Title"=>"Datos Invalidos",
-				"Text"=>"La contraseña no existe",
+				"Text"=>"La contraseña es incorrecta",
 				"Type"=>"error"
 			];
 
@@ -100,8 +99,10 @@ public function loginUserController($dataUser){
 			while($valuesDataPerson=$recordsPersonSQL->fetch(PDO
 			::FETCH_ASSOC)){ 
 
+			$nameUser = $valuesDataPerson["idGenero"]; 
 			$nameUser = $valuesDataPerson["nombres"]; 
 			$lastNamesUser = $valuesDataPerson["apellidos"]; 
+			$idGeneroUser = $valuesDataPerson["idGenero"]; 
 
 		}
 
@@ -123,17 +124,36 @@ public function loginUserController($dataUser){
 
 			}
 
+				$arrayNamesUser = explode (" ", $nameUser);
+				$arrayLastNamesUser = explode (" ", $lastNamesUser);
+
 				session_start(['name'=>'dptoEpidemi']);
+			     
+
 				$_SESSION['docIdentidad']=$docIdentidad;
 				$_SESSION['aliasUser']=$aliasUser;
-				$_SESSION['nameUser']=$nameUser;
-				$_SESSION['lastNamesUser']=$lastNamesUser;
+				$_SESSION['nameUser']=$arrayNamesUser[0];
+				$_SESSION['lastNameUser']=$arrayLastNamesUser[0];
 				$_SESSION['idNivelPermiso']=$idNivelPermiso;
 				$_SESSION['idEstado']=$idEstado;
+				$_SESSION['idGeneroUser']=$idGeneroUser;
 				$_SESSION['token_dptoEpidemi']=md5(uniqid(mt_rand(),true));
+			
+				if ($idGeneroUser == "1"){
+                  $_SESSION['iconUser'] = "male-user.png"; 
+                }elseif ($idGeneroUser == "2") {
+                  $_SESSION['iconUser'] = "fermale-user.png"; 
+                }
 
-				//return header("Location: ".SERVERURL."dashboard/");
 
+				$alert=[
+				"Alert"=>"redirecting",
+				"URL"=>SERVERURL."dashboard/"
+				];
+
+				echo json_encode($alert);
+
+				 //header("Location: ".SERVERURL."dashboard/");
 		}
  
 		public function forceClosureController(){
@@ -142,12 +162,12 @@ public function loginUserController($dataUser){
 			if(headers_sent()){
 				return "<script> window.location.href='".SERVERURL."login/';</script>";
 			}else{
-				return header("Location: ".SERVERURL."login/");
+				return header("Location: ".SERVERURL);
 			}
 
 		}
 
-		public function closeControllerSession($dataLogin){
+		protected function closeControllerSession($dataLogin){
 			session_start(['name'=>'dptoEpidemi']);
 			$tokenUser=mainModel::decryption($dataLogin['tokenUser']);
 			$aliasUser=mainModel::decryption($dataLogin['aliasUser']);
@@ -157,7 +177,7 @@ public function loginUserController($dataUser){
 				session_destroy();
 				$alert=[
 					"Alert"=>"redireccionar",
-					"URL"=>SERVERURL."login/"
+					"URL"=>SERVERURL
 				];
 
 			}else{
@@ -170,5 +190,18 @@ public function loginUserController($dataUser){
 			}
 			echo json_encode($alert);
 		}
+
+
+	public static function randIconUserIMG(){
+
+	$idGeneroUser =mt_rand(1,2);
+	if ($idGeneroUser == "1"){
+		 return $iconUser = "male-user.png"; 
+			}elseif ($idGeneroUser == "2") {
+				 return $iconUser = "fermale-user.png"; 
+           	}
+
+       }
+
  }
  ?>

@@ -11,13 +11,16 @@
           <div class="card-body p-0">
             <!-- Nested Row within Card Body -->
             <div class="row">
-              <div class="col-lg-6 d-none d-lg-block bg-login-image"></div>
+
+              <?php   
+              ?>
+              <div class="col-lg-6 d-none d-lg-block bg-user-image"><img src="<?php echo SERVERURL.'view/img/male-user.png'; ?>"></div>
               <div class="col-lg-6">
                 <div class="p-5">
                   <div class="text-center">
                     <h1 class="h4 text-gray-900 mb-4">Iniciar Sesion</h1>
                   </div>
-                <form class="formAax form-group text-center user" action="<?php echo SERVERURL; ?>ajax/loginAjax.php" method="POST" data-form="login" autocomplete="off">
+                <form class="formAjax form-group text-center user" action="<?php echo SERVERURL; ?>ajax/loginAjax.php" method="POST" data-form="login" autocomplete="off">
 
                     <div class="form-group">
                   <input type="text" class="form-control 
@@ -29,6 +32,8 @@
                     </div>
 
                   <button class="btn btn-primary btn-user btn-block" type="submit" value="loginSession" name="login">Ingresar</button>
+                    
+                    <div class="responseProcessAjax"></div>
 
                   </form>
                   <hr>

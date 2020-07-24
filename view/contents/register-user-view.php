@@ -14,7 +14,7 @@
               </div>
 
 
-                <form class="formAjax   form-group text-center user" action="<?php echo SERVERURL; ?>ajax/userAjax.php" method="POST" data-form="save" autocomplete="off">
+                <form class="formAjax form-group text-center user" action="<?php echo SERVERURL; ?>ajax/userAjax.php" method="POST" data-form="save" autocomplete="off">
             
 
               <div class="form-group row">
@@ -130,8 +130,9 @@
                 </div>
 
                   <button class="btn btn-primary btn-user btn-block" type="submit" value="registerUser" name="save">Registar</button>
-
                 </a> 
+
+                <div class="responseProcessAjax"></div>
               </form>
               <hr>
               <div class="text-center">

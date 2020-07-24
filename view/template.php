@@ -15,20 +15,28 @@
 	
 
 	<?php 
-$requestAjax = false;
+
+  $requestAjax = false;
 	require_once "./controller/viewsController.php";; 
 	
 	$viewsController =  new viewsController();
 
 	$requestedView= $viewsController->getViewsController();
-
-	$requestAjax = FALSE;
 		 
 	if($requestedView == "login" || $requestedView == '404'){
 			require_once "./view/contents/".$requestedView."-view.php";
 		}else{
 
-	session_start();
+	     session_start(['name'=>'dptoEpidemi']);
+
+      require_once "./controller/loginController.php";
+      $loginController = new loginController();
+
+      if(!isset($_SESSION['token_dptoEpidemi']) || !isset($_SESSION['aliasUser'])){
+        echo $loginController->forceClosureController();
+        exit();
+
+      }
 
 	?>
 	

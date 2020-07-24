@@ -6,7 +6,7 @@
         <div class="sidebar-brand-icon rotate-n-15">
           <i class="fas fa-laugh-wink"></i>
         </div>
-        <div class="sidebar-brand-text mx-3">SB Admin <sup>2</sup></div>
+        <div class="sidebar-brand-text mx-3"><?php echo ORGANIZATION ?></div>
       </a>
 
       <!-- Divider -->
@@ -16,7 +16,7 @@
       <li class="nav-item">
         <a class="nav-link" href="<?php echo SERVERURL; ?>dashboard/">
           <i class="fas fa-fw fa-tachometer-alt"></i>
-          <span>Dashboard</span></a>
+          <span>Tablero de Inicio</span></a>
       </li>
 
       <!-- Divider -->
@@ -29,7 +29,7 @@
 
       <!-- Nav Item - Pages Collapse Menu -->
       <li class="nav-item active">
-        <a class="nav-link" href="#" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
+        <a class="nav-link" href="" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
           <i class="fas fa-fw fa-cog"></i>
           <span>Components</span>
         </a>
@@ -86,6 +86,17 @@
           </div>
         </div>
       </li>
+
+<?php if ($_SESSION['idNivelPermiso'] == "1"): ?>
+  
+
+      <!-- Nav Item - User -->
+      <li class="nav-item">
+        <a class="nav-link" href="<?php echo SERVERURL; ?>charts/">
+          <i class="fas fa-fw fa-users"></i>
+          <span>Usuarios</span></a>
+      </li>
+<?php endif ?>
 
       <!-- Nav Item - Charts -->
       <li class="nav-item">

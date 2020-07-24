@@ -1,6 +1,4 @@
 <?php 
-
-$requestAjax = TRUE;
 	if ($requestAjax) {
 		require_once "../config/server.php";
 
@@ -274,8 +272,6 @@ protected static function  isStringInRange($string,$rangeMin,$rangeMax){
         return true;
     }
 }
-
-
 
 	}
 

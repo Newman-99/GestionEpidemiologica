@@ -4,7 +4,7 @@
 
 	require_once "../config/app.php";
 	
-	if ($_POST['operationType'] === "save") {
+	if (/*$_POST['operationType'] === "save"*/ true) {
 
 		require_once "../controller/userController.php";
 		
