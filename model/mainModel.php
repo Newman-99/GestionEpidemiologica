@@ -43,9 +43,8 @@
 		$numberRandom = rand(0,9);
 		$Codeletter.=$numberRandom;
 	}
-
+	$RamdonCode = "";
 	$RamdonCode.=$Codeletter.$identifierNumber;
-
 	return $RamdonCode;
 
 }
@@ -224,7 +223,7 @@ protected static function getDateCurrentSystem(){
       
     date_default_timezone_set("America/Caracas");
 
-    return $currentDate = strtotime(date("Y-m-d H:i:s"));
+     return $currentDate = strtotime(date("Y-m-d H:i:s"));
 
 } 	
 
@@ -273,7 +272,66 @@ protected static function  isStringInRange($string,$rangeMin,$rangeMax){
     }
 }
 
-	}
+// funciones para la bitacora
+
+protected function  addBitacora($dataBitacora){
+
+	$sqlQuery = self::connectDB()->prepare("INSERT INTO bitacora(
+		usuarioAlias
+		,bitacoraCodigo
+		,bitacoraFecha
+		,bitacoraHoraInicio
+		,bitacoraHoraFinal
+		,bitacoraNivelUsuario
+		,bitacoraYear) VALUES (
+		:usuarioAlias, 
+		:bitacoraCodigo, 
+		:bitacoraFecha, 
+		:bitacoraHoraInicio, 
+		:bitacoraHoraFinal, 
+		:bitacoraNivelUsuario, 
+		:bitacoraYear)");
+
+			$sqlQuery->execute(array(
+		"usuarioAlias"=>$dataBitacora['usuarioAlias'],
+		"bitacoraCodigo"=>$dataBitacora['bitacoraCodigo'],
+		"bitacoraFecha"=>$dataBitacora['bitacoraFecha'],
+		"bitacoraHoraInicio"=>$dataBitacora['bitacoraHoraInicio'],
+		"bitacoraHoraFinal"=>$dataBitacora['bitacoraHoraFinal'],
+		"bitacoraNivelUsuario"=>$dataBitacora['bitacoraNivelUsuario'],
+		"bitacoraYear"=>$dataBitacora['bitacoraYear']));
+
+
+			return $sqlQuery;
+
+}
+
+protected function updateBitacora($dataBitacora){
+
+$sqlQuery = self::connectDB()->prepare("UPDATE `bitacora` SET 
+		bitacoraHoraFinal=:bitacoraHoraFinal WHERE bitacoraCodigo = :bitacoraCodigo");
+
+			$sqlQuery->execute(array(
+		"bitacoraHoraFinal"=>$dataBitacora['bitacoraHoraFinal'],
+		"bitacoraCodigo"=>$dataBitacora['bitacoraCodigo']));
+
+			return $sqlQuery;
+
+}
+
+
+
+protected function deleteBitacora($usuarioAlias){
+
+$sqlQuery = self::connectDB()->prepare("DELETE FROM `bitacora` WHERE  usuarioAlias = :usuarioAlias"); 
+	
+			$sqlQuery->bindParam(":usuarioAlias".$usuarioAlias);
+
+	return $sqlQuery;
+
+}
+	
+}
 
 
 

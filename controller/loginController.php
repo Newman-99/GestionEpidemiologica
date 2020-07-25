@@ -124,6 +124,39 @@ public function loginUserController($dataUser){
 
 			}
 
+			// Datos para la bitacora
+			
+				$currentDate =  mainModel::getDateCurrentSystem();
+
+
+				$currentYear = date("Y", $currentDate);
+
+				$currentHour = date("h:i:s a", $currentDate);
+
+				$currentDate = date("Y-m-d", $currentDate);
+
+
+				$queryRecordsBitacora = mainModel::runSimpleQuery("SELECT id FROM bitacora");
+
+				$totalRecordsBitacora = ($queryRecordsBitacora->rowCount())+1;
+
+				$bitacoraCodigo = mainModel::generateRandomCode("CB",8,$totalRecordsBitacora);
+
+				$dataBitacora=[
+					"usuarioAlias"=>$aliasUser,
+					"bitacoraCodigo"=>$bitacoraCodigo,
+					"bitacoraFecha"=>$currentDate,
+					"bitacoraYear"=>$currentYear,
+					"bitacoraHoraInicio"=>$currentHour,
+					"bitacoraHoraFinal"=> NULL,//Se registrar cuando cierre secion
+					"bitacoraNivelUsuario"=>$idNivelPermiso];
+
+					mainModel::addBitacora($dataBitacora);
+					
+				
+
+				// Datos para las variables de SESSION
+
 				$arrayNamesUser = explode (" ", $nameUser);
 				$arrayLastNamesUser = explode (" ", $lastNamesUser);
 
@@ -137,6 +170,8 @@ public function loginUserController($dataUser){
 				$_SESSION['idNivelPermiso']=$idNivelPermiso;
 				$_SESSION['idEstado']=$idEstado;
 				$_SESSION['idGeneroUser']=$idGeneroUser;
+				$_SESSION['bitacoraCodigo']=$bitacoraCodigo;
+
 				$_SESSION['token_dptoEpidemi']=md5(uniqid(mt_rand(),true));
 			
 				if ($idGeneroUser == "1"){
@@ -200,6 +235,9 @@ public function loginUserController($dataUser){
 			}elseif ($idGeneroUser == "2") {
 				 return $iconUser = "fermale-user.png"; 
            	}
+
+
+
 
        }
 
