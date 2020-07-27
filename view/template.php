@@ -79,10 +79,14 @@
   <!-- End of Page Wrapper -->
 
   <!-- Scroll to Top Button-->
+
 <?php require_once "inc/scrollTopButton.php"; ?>  
 
   <!-- Logout Modal-->
-<?php require_once "inc/logoutModal.php"; ?>
+
+
+<?php //require_once "inc/logOutScript.php"; ?>
+
 
 <?php } ?>
 <?php require_once "inc/script.php"; ?>

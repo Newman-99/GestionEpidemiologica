@@ -202,29 +202,50 @@ public function loginUserController($dataUser){
 
 		}
 
-		protected function closeControllerSession($dataLogin){
+		public function closeControllerSession($dataSession){
 			session_start(['name'=>'dptoEpidemi']);
-			$tokenUser=mainModel::decryption($dataLogin['tokenUser']);
-			$aliasUser=mainModel::decryption($dataLogin['aliasUser']);
 
-			if($tokenUser==$_SESSION['token_dptoEpidemi'] && $aliasUser==$_SESSION['aliasUser']){
-				session_unset();
-				session_destroy();
-				$alert=[
-					"Alert"=>"redireccionar",
-					"URL"=>SERVERURL
-				];
+			$tokenCurrentUser=mainModel::decryption($dataSession['tokenCurrentUser']);
+			
+			$aliasUser=mainModel::decryption($_SESSION['aliasUser']);
 
-			}else{
+			$currentDate =  mainModel::getDateCurrentSystem();
+
+			$currentHour = date("h:i:s a", $currentDate);
+
+			$dataSession=[
+			"aliasUser"=>$aliasUser,
+			"tokenCurrentUser"=>$tokenCurrentUser,
+			"bitacoraHoraFinal"=>$currentHour,
+			"token_dptoEpidemi"=>$_SESSION["token_dptoEpidemi"],
+			"bitacoraCodigo"=>$_SESSION["bitacoraCodigo"]];
+
+			// si no se crea otra alert, imprimira este msj error
 				$alert=[
 					"Alert"=>"simple",
 					"Title"=>"Error al cerrar la sesión",
 					"Text"=>"No se pudo cerrar la sesion en el sistema",
 					"Type"=>"error"
 				];
+
+			if($tokenCurrentUser==$_SESSION['token_dptoEpidemi']){
+
+			$updateBitacora = mainModel::updateBitacora($dataSession);
+			
+			if ($updateBitacora->rowCount()) {
+				session_unset();
+				session_destroy();
+
+					$alert=[
+					"Alert"=>"redirecting",
+					"URL"=>SERVERURL
+				];
+
 			}
+			
 			echo json_encode($alert);
 		}
+	}
 
 
 	public static function randIconUserIMG(){

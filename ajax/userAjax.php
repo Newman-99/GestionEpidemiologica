@@ -4,7 +4,7 @@
 
 	require_once "../config/app.php";
 	
-	if (/*$_POST['operationType'] === "save"*/ true) {
+	if ($_POST['operationType'] === "save") {
 
 		require_once "../controller/userController.php";
 		
@@ -13,6 +13,8 @@
 		$userController->addUserController($_POST);
 
 
+	}elseif ($_POST['operationType'] === "save")) {
+		# code...
 	} else { 
 /*		
 		session_start(["name"=> "systemDptoEpidemi"]);

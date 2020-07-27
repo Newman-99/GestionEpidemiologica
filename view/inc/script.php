@@ -26,4 +26,12 @@
 
 <script src="<?php echo SERVERURL; ?>view/js/main.js" ></script>
 
+  <!-- Logout script-->
+
 <script src="<?php echo SERVERURL; ?>view/js/alerts.js" ></script>
+
+<script src="<?php echo SERVERURL; ?>view/js/logOut.js" ></script>
+
+<script>
+//$.material.init();
+</script>

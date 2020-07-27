@@ -5,12 +5,27 @@
 
 		require_once "../controller/loginController.php";
 
-if (/*$_POST['operationType'] === "login"*/ TRUE) {
-
 		$loginController = new loginController();
+
+if (isset($_POST['operationType']) && $_POST['operationType'] === "login") {
+
 
 		$loginController->loginUserController($_POST);
 
-	}
+
+	}elseif (isset($_GET['operationType']) && $_GET['operationType'] === "closeSession") {
+
+			$loginController->closeControllerSession($_GET);
+	}else{	
+/*
+		$loginController->loginUserController($closeSession);
+
+		session_start(["name"=> "dptoEpidemi"]);
+		session_unset();
+		session_destroy();
+		header("Location: ".SERVERURL."login/");
+*/
+}
+
 
  ?>

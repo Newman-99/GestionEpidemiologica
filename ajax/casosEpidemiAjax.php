@@ -19,12 +19,12 @@ echo "<br><br>";
 		$casoEpidemiologicoController = new casoEpidemiologicoController();
 	 	$casoEpidemiologicoController->deleteCasoEpidemiologicoController($_POST);
 	} else { 
-		/*
-		session_start(["name"=> "systemDptoEpidemi"]);
+		
+		session_start(["name"=> "dptoEpidemi"]);
 		session_unset();
 		session_destroy();
 		header("Location: ".SERVERURL."login/");
-	*/}
+	}
 	
 
 

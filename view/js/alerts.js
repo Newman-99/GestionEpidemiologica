@@ -1,3 +1,4 @@
+
 const FORM_AJAX = document.querySelectorAll(".formAjax");
 
 function captureDataForm (e){
@@ -41,29 +42,10 @@ function captureDataForm (e){
 
 
 
-var contentFormFields = form.serialize();
-/*
-    $('.form-control').not('input:checkbox').each(function () {
-     contentFormFields[this.name] = this.value;
-    });
-     
+	var contentFormFields = form.serialize();
 
-    $('input:checkbox').each(function () {
+     contentFormFields+='&operationType='+type;
 
-        var valueCheckbox = this.checked;
-
-        if (valueCheckbox) {
-       
-        contentFormFields[this.name] = this.value;
-        
-       }
-    });
-
-   // alert(Object.entries(dataForm));
-     
-*/
-
-     contentFormFields['operationType'] = type;
 
 // Operaciones que no necesitan confirmacion
 if(textMsjAlert==false){
@@ -90,11 +72,11 @@ if(textMsjAlert==false){
 
 
 
-function sendFormDataAjax(action,contentFormFields,method,responseProcess){
+function sendFormDataAjax(action,ValuesAndFields,method,showResponseProcess){
 	$.ajax({
 		type: method,
 		url: action,
-		data: contentFormFields,
+		data: ValuesAndFields,
 		cache: false,
         processData: false,
         xhr: function(){
@@ -104,18 +86,17 @@ function sendFormDataAjax(action,contentFormFields,method,responseProcess){
                      var percentComplete = evt.loaded / evt.total;
                      percentComplete = parseInt(percentComplete * 100);
                        if(percentComplete<100){
-                        	responseProcess.html('<p class="text-center">Procesado... ('+percentComplete+'%)</p><div class="progress progress-striped active"><div class="progress-bar progress-bar-info" style="width: '+percentComplete+'%;"></div></div>');
+                        	showResponseProcess.html('<p class="text-center">Procesado... ('+percentComplete+'%)</p><div class="progress progress-striped active"><div class="progress-bar progress-bar-info" style="width: '+percentComplete+'%;"></div></div>');
                       	}else{
-                      		responseProcess.html('<p class="text-center"></p>');
+                      		showResponseProcess.html('<p class="text-center"></p>');
                       	}
                       }
                     }, false);
                     return xhr;
                 },
 		success: function (response) {
-
+		console.log(response);
 		  let operationResult = JSON.parse(response);
-
 		  if (typeof operationResult.Alert != 'undefined') {		
 			return ajaxSweetAlerts(operationResult);
 				}
