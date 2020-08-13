@@ -10,9 +10,10 @@ class viewsController extends viewsModel{
 		 if (isset($_GET['views'])) {
 		 	$route=explode("/",$_GET["views"]);
 		 	$answer = viewsModel::getViewModel($route[0]);
-		 } else {
+		 }else{
 		 	$answer = "login";
 		 }
+
 	return $answer;	 
 	} 
 

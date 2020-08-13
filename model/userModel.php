@@ -11,26 +11,29 @@
 	protected static function addUserModel($dataUser){
 		$sqlQuery = mainModel::connectDB()->prepare("INSERT INTO usuarios ( 
 			alias,
+			idNacionalidad,
 		 	docIdentidad,
 		 	idNivelPermiso,
 		 	idEstado,
-		 	passEncypt, 
+		 	passEncrypt, 
 		 	email,
 		 	telefono) VALUES (
 		 	:alias,
+		 	:idNacionalidad,
 		 	:docIdentidad,
 		 	:idNivelPermiso,
 		 	:idEstado,
-		 	:passEncypt, 
+		 	:passEncrypt, 
 		 	:email,
-		 	:telefono )");
+		 	:telefono)");
 
 			$sqlQuery->execute(array(
 		"alias"=>$dataUser['aliasUser'],
+		"idNacionalidad"=>$dataUser['idNacionalidad'],
 		"docIdentidad"=>$dataUser['docIdentidad'],
 		"idNivelPermiso"=>$dataUser['idNivelPermiso'],
 		"idEstado"=>$dataUser['idEstado'],
-		"passEncypt"=>$dataUser['password'],
+		"passEncrypt"=>$dataUser['password'],
 		"email"=>$dataUser['email'],
 		"telefono"=>$dataUser['telefono']));
 
@@ -56,62 +59,57 @@
 	}	
 
 
-	protected static function updateUserModel($dataUser){
-		$sqlQuery = mainModel::connectDB()->prepare("UPDATE usuarios 
-			SET docIdentidad = :docIdentidad,
-		 	idNivelPermiso = :idNivelPermiso,
-		 	idEstado = :idEstado,
-		 	passEncypt = :password, 
-		 	email = :email WHERE alias = :aliasUser;");
+	protected static function updateUserModel($userValuesUpdate,$userAttributesUpdate){
 
-			$sqlQuery->execute(array(
-		"aliasUser"=>$dataUser['aliasUser'],
-		"docIdentidad"=>$dataUser['docIdentidad'],
-		"idNivelPermiso"=>$dataUser['idNivelPermiso'],
-		"idEstado"=>$dataUser['idEstado'],
-		"password"=>$dataUser['password'],
-		"email"=>$dataUser['email']));
+
+		$sqlQuery = mainModel::connectDB()->prepare("UPDATE usuarios 
+			SET 	".implode(",",$userAttributesUpdate)." WHERE alias = :aliasUser;");
+
+
+		  foreach($userValuesUpdate as $key => $values) {
+		    $sqlQuery->bindParam($key, $values['value'], $values['type']);
+		  }
+
+		  $sqlQuery->execute();
+
+			return $sqlQuery;
+
+	}
+
+		protected static function updateUserQuestionModel($dataUpdateQuestions){
 
 
 		$sqlQuery = mainModel::connectDB()->prepare("UPDATE usuariosPreguntas 
-			SET respuesta = :respuesta,
-			WHERE aliasUsuario = :aliasUser AND idPregunta = :idPregunta ;");
+			SET respuesta = :respuesta WHERE aliasUsuario = :aliasUser AND idPregunta = :idPregunta ;");
 
 
-		$sqlQuery->execute(array(
-		"aliasUsuario"=>$dataUser['aliasUser'],
-		"idPregunta"=>"1",
-		"respuesta"=>$dataUser["question1"]));
+		    return $sqlQuery->execute(array("aliasUser"=>$dataUpdateQuestions["aliasUser"],"idPregunta"=>$dataUpdateQuestions["idPregunta"],"respuesta"=>$dataUpdateQuestions["respuesta"]));
+
+		}	
 
 
-		$sqlQuery->execute(array(
-		"aliasUsuario"=>$dataUser['aliasUser'],
-		"idPregunta"=>"2",
-		"respuesta"=>$dataUser["question2"]));
-
-			return $sqlQuery;
-	}	
-
-
-			protected static function deleteUserModel($dataPersona){
+			protected static function deleteUserModel($dataUser){
 		$sqlQuery = mainModel::connectDB()->prepare(mainModel::disableForeingDB()."DELETE FROM usuarios WHERE alias = :aliasUser;".mainModel::enableForeingDB());
 
 			$sqlQuery->execute(array(
-		 "aliasUser"=>$dataPersona['aliasUser']));
+		 "aliasUser"=>$dataUser['aliasUser']));
 
 
-		$sqlQuery = mainModel::connectDB()->prepare("DELETE FROM usuariosPreguntas WHERE aliasUser = :aliasUser;");
+		$sqlQuery = mainModel::connectDB()->prepare("DELETE FROM usuariosPreguntas WHERE aliasUsuario = :aliasUser;");
 
 			$sqlQuery->execute(array(
-			 "aliasUser"=>$dataPersona['aliasUser']));
+			 "aliasUser"=>$dataUser['aliasUser']));
+
+			$sqlQuery->execute();
 
 			return $sqlQuery;
+
 		}
 
 			protected static function getUserModel($userAttributesFilter,$filterValues){
 
   
-		    $sqlQuery="SELECT * FROM usuarios";                  
+		    $sqlQuery=self::stringQueryForGetUser();                  
 		 
 		 // Recoger y anadir campos para filtracion de resultado
 		  if (!empty($userAttributesFilter)) {
@@ -127,9 +125,43 @@
 		   
 			}
 
+			protected static function stringQueryForGetUser(){
+				$stringQueryForGetUser = " SELECT SQL_CALC_FOUND_ROWS usr.alias aliasUsuario, usr.docIdentidad, usr.idNivelPermiso, usr.idEstado, usr.passEncrypt, usr.email, usr.telefono,
+				pers.docIdentidad, pers.nombres, pers.apellidos, pers.fechaNacimiento, pers.idNacionalidad, pers.idGenero,
+				nacion.descripcionNacionalidad,
+				gnro.descripcionGenero,
+				usrEtdo.descripcionEstado,
+				usrNivl.descripcionNivelPermiso,
+				usrQuest.idPregunta,usrQuest.respuesta FROM usuarios usr
+				INNER JOIN personas pers ON usr.docIdentidad = pers.docIdentidad
+				INNER JOIN nacionalidades nacion ON pers.idNacionalidad = nacion.idNacionalidad 
+				INNER JOIN generos gnro ON pers.idGenero = gnro.idGenero 
+				INNER JOIN usuariosEstados usrEtdo ON usr.idEstado =  usrEtdo.idEstado
+				INNER JOIN usuariosNiveles usrNivl ON usr.idNivelPermiso =  usrNivl.idNivelPermiso
+				INNER JOIN usuariosPreguntas usrQuest ON usr.alias =  usrQuest.aliasUsuario";
+
+				return $stringQueryForGetUser;
+			}
 		
+	 protected static function userTypeCounterModel($userAttribute,$userType){
+
+	 $WHERE = "";
+
+	 if (!is_null($userType)) {
+	 $WHERE = "WHERE $userAttribute ='$userType'";
+	 }
+
+	$userTypeCounter = mainModel::runSimpleQuery("SELECT $userAttribute FROM usuarios ".$WHERE);
+
+	return $userTypeCounter;
 
 	}
+	
+
+	}
+
+
+
 
 
  ?>

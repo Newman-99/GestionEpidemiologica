@@ -53,9 +53,10 @@
 
 
 			protected static function deletePersonaModel($dataPersona){
-		$sqlQuery = mainModel::connectDB()->prepare(mainModel::disableForeingDB()."DELETE FROM personas WHERE docIdentidad = :docIdentidad;".mainModel::enableForeingDB());
+		$sqlQuery = mainModel::connectDB()->prepare(mainModel::disableForeingDB()."DELETE FROM personas WHERE idNacionalidad =:idNacionalidad AND docIdentidad = :docIdentidad;".mainModel::enableForeingDB());
 
 			$sqlQuery->execute(array(
+		 "idNacionalidad"=>$dataPersona['idNacionalidad'],
 		 "docIdentidad"=>$dataPersona['docIdentidad']));
 
 			return $sqlQuery;

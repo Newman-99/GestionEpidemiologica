@@ -321,18 +321,48 @@ $sqlQuery = self::connectDB()->prepare("UPDATE `bitacora` SET
 
 
 
-protected function deleteBitacora($usuarioAlias){
+protected static function deleteBitacora($usuarioAlias){
 
-$sqlQuery = self::connectDB()->prepare("DELETE FROM `bitacora` WHERE  usuarioAlias = :usuarioAlias"); 
+ $sqlQuery = self::connectDB()->prepare(self::disableForeingDB()."DELETE FROM `bitacora` WHERE  usuarioAlias = :usuarioAlias; ".self::enableForeingDB()); 
 	
-			$sqlQuery->bindParam(":usuarioAlias".$usuarioAlias);
+	$sqlQuery->execute(array("usuarioAlias"=>$usuarioAlias));
 
 	return $sqlQuery;
 
 }
 	
-}
+// Comrpueba que un conjuntos de campos enviados tienen los mismo valores a los registrados en la base de datos
 
+protected static function isFieldsEqualToThoseInTheDatabase($query,$fieldstoCompare){
+
+		$matchCounterFieldsToCompare = count($fieldstoCompare);
+
+ 		$query->execute();
+
+		$records = $query->fetch(PDO::FETCH_BOTH);
+
+ 		$matchCounterDatabaseFields = 0;
+		 
+		foreach ($fieldstoCompare as $keyToCompare => $valueToCompare) {
+
+ 		foreach ($records as $databaseKey => $databaseValue) {
+			if (strcmp($databaseKey,$keyToCompare)==0) {
+				if (strcmp($databaseValue,$valueToCompare)==0) {
+				$matchCounterDatabaseFields++;
+				}
+			
+			}
+
+			}
+		}
+
+		if ($matchCounterFieldsToCompare == $matchCounterDatabaseFields) {
+			return true;
+			}
+			
+			return false;
+		}
+}
 
 
 

@@ -1,20 +1,22 @@
 <?php 
 
-		$requestAjax = true;
-
 	require_once "../config/app.php";
+
+		$requestAjax =  TRUE;
+
+	require_once "../controller/userController.php";
 	
+			$userController = new userController();
+
 	if ($_POST['operationType'] === "save") {
-
-		require_once "../controller/userController.php";
-		
-		$userController = new userController();
-	
 		$userController->addUserController($_POST);
+	}elseif ($_POST['operationType'] === "delete") {
+		$userController->deleteUserController($_POST);
 
+	}elseif ($_POST['operationType'] === "update") {
 
-	}elseif ($_POST['operationType'] === "save")) {
-		# code...
+		$userController->updateUserController($_POST);
+
 	} else { 
 /*		
 		session_start(["name"=> "systemDptoEpidemi"]);

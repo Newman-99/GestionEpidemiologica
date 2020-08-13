@@ -21,9 +21,8 @@
 	
 	$viewsController =  new viewsController();
 
-	$requestedView= $viewsController->getViewsController();
-		 
-	if($requestedView == "login" || $requestedView == '404'){
+	$requestedView= $viewsController->getViewsController();	
+	if($requestedView == "register-user" || $requestedView == "login" || $requestedView == '404'){
 			require_once "./view/contents/".$requestedView."-view.php";
 		}else{
 

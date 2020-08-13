@@ -1,4 +1,3 @@
-
 const FORM_AJAX = document.querySelectorAll(".formAjax");
 
 function captureDataForm (e){
@@ -45,7 +44,6 @@ function captureDataForm (e){
 	var contentFormFields = form.serialize();
 
      contentFormFields+='&operationType='+type;
-
 
 // Operaciones que no necesitan confirmacion
 if(textMsjAlert==false){
@@ -95,7 +93,7 @@ function sendFormDataAjax(action,ValuesAndFields,method,showResponseProcess){
                     return xhr;
                 },
 		success: function (response) {
-		console.log(response);
+			console.log(response);
 		  let operationResult = JSON.parse(response);
 		  if (typeof operationResult.Alert != 'undefined') {		
 			return ajaxSweetAlerts(operationResult);
@@ -143,7 +141,6 @@ function ajaxSweetAlerts(alert){
 			confirmButtonText: 'Aceptar'
 		}).then((result) => {
 
-
 			if(result.value){
 			$('.formAjax').trigger("reset");
 
@@ -152,10 +149,37 @@ function ajaxSweetAlerts(alert){
 				//document.querySelector(".formAjax").reset();
 			}
 		});
+	}else if(alert.Alert==="confirmation"){
+
+			Swal.fire({
+				title: '¿Estás seguro?',
+				html: alert.Text,
+				type: 'question',
+				showCancelButton: true,
+				confirmButtonColor: '#3085d6',
+				cancelButtonColor: '#d33',
+				confirmButtonText: 'Aceptar',
+				cancelButtonText: 'Cancelar'
+			}).then((result) => {
+				if(result.value){
+					$.ajax({
+					  url : alert.Url,
+					  type: alert.Method,
+					  data : alert.Data,
+		       		 success:function(response) {
+		       		 	console.log(response);
+				  let operationResult = JSON.parse(response);
+					return ajaxSweetAlerts(operationResult);
+					
+					}
+				})
+			}
+		});
+
 	}else if(alert.Alert==="redirecting"){
-		window.location.href=alert.URL;
+			window.location.href=alert.URL;
+		}
 	}
-}
 
 // Control de funcionalidades de formularios
 
@@ -166,4 +190,5 @@ $('#siExistPerson').change(function() {
 	$(".form-control-person").prop('disabled', this.checked);
 
 });
+
 

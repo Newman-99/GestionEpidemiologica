@@ -11,9 +11,6 @@
           <div class="card-body p-0">
             <!-- Nested Row within Card Body -->
             <div class="row">
-
-              <?php   
-              ?>
               <div class="col-lg-6 d-none d-lg-block bg-user-image"><img src="<?php echo SERVERURL.'view/img/male-user.png'; ?>"></div>
               <div class="col-lg-6">
                 <div class="p-5">
@@ -41,7 +38,7 @@
                     <a class="small" href="<?php echo SERVERURL; ?>forgot-password/">¿Se me olvido la contraseña?</a>
                   </div>
                   <div class="text-center">
-                    <a class="small" href="<?php echo SERVERURL; ?>register/">Crea una cuenta</a>
+                    <a class="small" href="<?php echo SERVERURL; ?>register-user/">Crea una cuenta</a>
                   </div>
                 </div>
               </div>

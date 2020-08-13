@@ -158,20 +158,20 @@
               </a>
               <!-- Dropdown - User Information -->
               <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
-                <a class="dropdown-item" href="#">
+                <a class="dropdown-item" href="<?php echo SERVERURL; ?>dataAccount/<?php echo $loginController->encryption($_SESSION['aliasUser']);?>/">
                   <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
-                  Profile
+                  Perfil
                 </a>
-                <a class="dropdown-item" href="#">
+                <a class="dropdown-item" href="<?php echo SERVERURL; ?>userSettings/">
                   <i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>
-                  Settings
+                  Configuraciones
                 </a>
                 <a class="dropdown-item" href="#">
                   <i class="fas fa-list fa-sm fa-fw mr-2 text-gray-400"></i>
                   Activity Log
                 </a>
 
-<?php $URL_token_dptoEpidemi = SERVERURL."ajax/loginAjax.php?"."operationType=closeSession"."&tokenCurrentUser=".$loginController->encryption($_SESSION["token_dptoEpidemi"])?>
+                <?php $URL_token_dptoEpidemi = SERVERURL."ajax/loginAjax.php?"."operationType=closeSession"."&tokenCurrentUser=".$loginController->encryption($_SESSION["token_dptoEpidemi"])?>
 
                 <div class="dropdown-divider"></div>
                 <a class="dropdown-item btn-exit-system" href="<?php echo $URL_token_dptoEpidemi;?>">

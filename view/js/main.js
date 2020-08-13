@@ -1,5 +1,5 @@
-$(document).ready(function(){
 
+$(document).ready(function(){
 	/*  Show/Hidden Submenus */
 	$('.nav-btn-submenu').on('click', function(e){
 		e.preventDefault();

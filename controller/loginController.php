@@ -30,6 +30,8 @@ public function loginUserController($dataUser){
 			}
 
 			// para usar los metodos de user como si heredaramos
+		$requestAjax = TRUE;
+
 			require_once "../controller/userController.php";
 
 			$userController = new userController();
@@ -60,8 +62,7 @@ public function loginUserController($dataUser){
 
 			$passEncryptDB = $valuesDataUser["passEncrypt"]; 
 
-			$aliasUser = $valuesDataUser["alias"]; 
-			
+			$aliasUser = $valuesDataUser["aliasUsuario"]; 			
 			$docIdentidad = $valuesDataUser["docIdentidad"];
 
 			$idNivelPermiso = $valuesDataUser["idNivelPermiso"];
@@ -161,10 +162,11 @@ public function loginUserController($dataUser){
 				$arrayLastNamesUser = explode (" ", $lastNamesUser);
 
 				session_start(['name'=>'dptoEpidemi']);
-			     
+			   
 
 				$_SESSION['docIdentidad']=$docIdentidad;
 				$_SESSION['aliasUser']=$aliasUser;
+
 				$_SESSION['nameUser']=$arrayNamesUser[0];
 				$_SESSION['lastNameUser']=$arrayLastNamesUser[0];
 				$_SESSION['idNivelPermiso']=$idNivelPermiso;

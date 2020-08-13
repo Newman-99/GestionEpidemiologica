@@ -15,8 +15,7 @@ $(document).ready(function() {
       cancelButtonText: ' <i class="zmdi zmdi-close-circle"></i> No, Cancelar'
     }).then((result) => {
       if (result.value) {
-
-
+        
         $.ajax({
     url: URL_tokenCurrentUSer,
         success:function(data) {

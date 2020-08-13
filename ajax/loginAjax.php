@@ -1,5 +1,5 @@
 <?php 
-		$requestAjax = true;
+		$requestAjax = TRUE;
 
 		require_once "../config/app.php";
 

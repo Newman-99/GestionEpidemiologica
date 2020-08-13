@@ -92,8 +92,8 @@
 
       <!-- Nav Item - User -->
       <li class="nav-item">
-        <a class="nav-link" href="<?php echo SERVERURL; ?>charts/">
-          <i class="fas fa-fw fa-users"></i>
+        <a class="nav-link" href="<?php echo SERVERURL; ?>user-list/">
+          <i class="fas fa-fw fa-users-cog"></i>
           <span>Usuarios</span></a>
       </li>
 <?php endif ?>

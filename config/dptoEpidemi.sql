@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: localhost
--- Tiempo de generación: 25-07-2020 a las 21:22:30
+-- Tiempo de generación: 13-08-2020 a las 04:04:45
 -- Versión del servidor: 10.4.11-MariaDB
 -- Versión de PHP: 7.4.3
 
@@ -44,13 +44,54 @@ CREATE TABLE `bitacora` (
 --
 
 INSERT INTO `bitacora` (`usuarioAlias`, `idBitacora`, `bitacoraCodigo`, `bitacoraFecha`, `bitacoraHoraInicio`, `bitacoraHoraFinal`, `bitacoraNivelUsuario`, `bitacoraYear`) VALUES
-('newman206', 3, 'CB064554941', '2020-07-25', '03:18:02 pm', NULL, 1, 2020),
-('newman206', 4, 'CB424842991', '2020-07-25', '03:18:05 pm', NULL, 1, 2020),
-('newman206', 5, 'CB157934401', '2020-07-25', '03:20:08 pm', NULL, 1, 2020),
-('newman206', 6, 'CB960670061', '2020-07-25', '03:20:09 pm', NULL, 1, 2020),
-('newman206', 7, 'CB027095391', '2020-07-25', '03:20:11 pm', NULL, 1, 2020),
-('newman206', 8, 'CB383524561', '2020-07-25', '03:20:11 pm', NULL, 1, 2020),
-('newman206', 9, 'CB658351711', '2020-07-25', '03:20:50 pm', NULL, 1, 2020);
+('newman206', 11, 'CB449735041', '2020-07-27', '01:12:02 pm', '01:14:07 pm', 1, 2020),
+('newman206', 12, 'CB358134751', '2020-07-27', '01:28:03 pm', '01:28:45 pm', 1, 2020),
+('newman206', 13, 'CB137859431', '2020-07-27', '01:43:44 pm', NULL, 1, 2020),
+('newman206', 14, 'CB912782951', '2020-07-27', '01:43:44 pm', '01:25:40 pm', 1, 2020),
+('newman206', 15, 'CB709469381', '2020-07-30', '09:43:29 am', NULL, 1, 2020),
+('newman206', 16, 'CB618991241', '2020-08-05', '10:39:06 am', '10:43:07 am', 1, 2020),
+('newman206', 19, 'CB023296871', '2020-08-05', '10:47:43 am', NULL, 1, 2020),
+('newman206', 20, 'CB211937011', '2020-08-06', '11:05:26 am', NULL, 1, 2020),
+('newman206', 21, 'CB137064001', '2020-08-08', '02:30:26 pm', '03:16:15 pm', 1, 2020),
+('calito_22', 22, 'CB982181261', '2020-08-08', '03:16:47 pm', '03:21:38 pm', 2, 2020),
+('calito_22', 23, 'CB958073031', '2020-08-08', '03:21:55 pm', '03:26:30 pm', 2, 2020),
+('calito_22', 24, 'CB735908831', '2020-08-08', '03:28:16 pm', NULL, 2, 2020),
+('calito_22', 25, 'CB948644451', '2020-08-08', '03:28:17 pm', NULL, 2, 2020),
+('calito_22', 26, 'CB915972731', '2020-08-08', '03:28:18 pm', NULL, 2, 2020),
+('calito_22', 27, 'CB894161641', '2020-08-08', '03:28:19 pm', NULL, 2, 2020),
+('calito_22', 28, 'CB078568371', '2020-08-08', '03:30:12 pm', NULL, 2, 2020),
+('calito_22', 29, 'CB241443491', '2020-08-08', '03:30:13 pm', NULL, 2, 2020),
+('calito_22', 30, 'CB463941011', '2020-08-08', '03:30:31 pm', NULL, 2, 2020),
+('calito_22', 31, 'CB069558741', '2020-08-08', '03:30:33 pm', NULL, 2, 2020),
+('calito_22', 32, 'CB372764091', '2020-08-08', '03:30:33 pm', NULL, 2, 2020),
+('calito_22', 33, 'CB315862961', '2020-08-08', '03:31:43 pm', NULL, 2, 2020),
+('calito_22', 34, 'CB337940531', '2020-08-08', '03:31:45 pm', NULL, 2, 2020),
+('calito_22', 35, 'CB078026991', '2020-08-08', '03:31:46 pm', NULL, 2, 2020),
+('calito_22', 36, 'CB870457541', '2020-08-08', '03:32:28 pm', NULL, 2, 2020),
+('calito_22', 37, 'CB285728281', '2020-08-08', '03:32:30 pm', NULL, 2, 2020),
+('calito_22', 38, 'CB901737481', '2020-08-08', '03:32:30 pm', NULL, 2, 2020),
+('calito_22', 39, 'CB153459361', '2020-08-08', '03:33:34 pm', NULL, 2, 2020),
+('calito_22', 40, 'CB899944271', '2020-08-08', '03:33:35 pm', NULL, 2, 2020),
+('calito_22', 41, 'CB532979341', '2020-08-08', '03:34:39 pm', NULL, 2, 2020),
+('calito_22', 42, 'CB492094831', '2020-08-08', '03:34:40 pm', NULL, 2, 2020),
+('calito_22', 43, 'CB484681921', '2020-08-08', '03:35:44 pm', NULL, 2, 2020),
+('calito_22', 44, 'CB614558721', '2020-08-08', '03:35:46 pm', NULL, 2, 2020),
+('calito_22', 45, 'CB798534621', '2020-08-08', '03:35:46 pm', NULL, 2, 2020),
+('calito_22', 46, 'CB826827441', '2020-08-08', '03:35:47 pm', NULL, 2, 2020),
+('calito_22', 47, 'CB495412711', '2020-08-08', '03:35:47 pm', NULL, 2, 2020),
+('calito_22', 48, 'CB690307501', '2020-08-08', '03:35:47 pm', NULL, 2, 2020),
+('calito_22', 49, 'CB427297061', '2020-08-08', '03:35:48 pm', NULL, 2, 2020),
+('calito_22', 50, 'CB596283131', '2020-08-08', '03:36:33 pm', NULL, 2, 2020),
+('calito_22', 51, 'CB504969041', '2020-08-08', '03:36:35 pm', NULL, 2, 2020),
+('calito_22', 52, 'CB430402331', '2020-08-08', '03:36:36 pm', NULL, 2, 2020),
+('calito_22', 53, 'CB433164901', '2020-08-08', '03:36:36 pm', NULL, 2, 2020),
+('calito_22', 54, 'CB367040031', '2020-08-08', '03:36:43 pm', '03:41:20 pm', 2, 2020),
+('calito_22', 55, 'CB836691311', '2020-08-08', '03:41:38 pm', NULL, 2, 2020),
+('calito_22', 56, 'CB428175571', '2020-08-08', '03:41:38 pm', NULL, 2, 2020),
+('calito_22', 57, 'CB204654381', '2020-08-08', '03:41:40 pm', NULL, 2, 2020),
+('calito_22', 58, 'CB543912551', '2020-08-08', '03:42:23 pm', '03:43:05 pm', 2, 2020),
+('calito_22', 59, 'CB623267821', '2020-08-08', '03:43:15 pm', '03:53:18 pm', 2, 2020),
+('calito_22', 60, 'CB227122041', '2020-08-08', '03:53:29 pm', NULL, 2, 2020);
 
 -- --------------------------------------------------------
 
@@ -1374,9 +1415,18 @@ CREATE TABLE `personas` (
 --
 
 INSERT INTO `personas` (`docIdentidad`, `nombres`, `apellidos`, `fechaNacimiento`, `idNacionalidad`, `idGenero`) VALUES
+('13453984', 'Carlos Luis', 'Esparza Guerra', '1980-07-10', 1, 1),
 ('16273686', 'Luis', 'Perez', '2020-06-06', 1, 1),
+('1890039', 'Anderson Gregorio', 'Hernandez Silva', '2018-07-09', 1, 1),
+('18923993', 'Angel Luis', 'Arteaga Perez', '1992-07-03', 1, 1),
+('1902930', 'Karla Maria', 'Verastegui Villaverde', '1990-02-20', 1, 2),
+('19283938', 'Maria Angela', 'Perez Ribas', '2020-07-03', 1, 2),
 ('20293099', 'Carlos', 'Arteaga', '2020-06-05', 1, 1),
-('28117206', 'Newman Louis', 'Rodriguez Robles', '1999-06-26', 1, 1);
+('23928298', 'Leandro Jesus', 'Villegas Perez', '1996-08-06', 1, 1),
+('23948938', 'Carla Elena', 'Alvarado Prado', '1999-07-24', 1, 1),
+('28117206', 'Newman Louis', 'Rodriguez Robles', '1999-06-26', 1, 1),
+('28379278', 'Miguel jose', 'Sanchez', '1989-07-01', 1, 1),
+('9029345', 'Fernando Jose', 'Perez Zapatero', '1962-07-29', 2, 1);
 
 -- --------------------------------------------------------
 
@@ -1407,6 +1457,7 @@ CREATE TABLE `telefonos` (
 
 CREATE TABLE `usuarios` (
   `alias` varchar(20) NOT NULL,
+  `idNacionalidad` int(1) NOT NULL,
   `docIdentidad` varchar(15) NOT NULL,
   `idNivelPermiso` int(1) NOT NULL,
   `idEstado` int(1) NOT NULL,
@@ -1419,9 +1470,18 @@ CREATE TABLE `usuarios` (
 -- Volcado de datos para la tabla `usuarios`
 --
 
-INSERT INTO `usuarios` (`alias`, `docIdentidad`, `idNivelPermiso`, `idEstado`, `passEncrypt`, `email`, `telefono`) VALUES
-('Miguel122', '28379278', 3, 0, 'Wk8vdWFYT1YwVDV0WGhLVGZ1aVJtZz09', 'miguel12@gmail.com', ''),
-('newman206', '28117206', 1, 1, 'Wk8vdWFYT1YwVDV0WGhLVGZ1aVJtZz09', 'newman@gmail.com', '04120293034');
+INSERT INTO `usuarios` (`alias`, `idNacionalidad`, `docIdentidad`, `idNivelPermiso`, `idEstado`, `passEncrypt`, `email`, `telefono`) VALUES
+('angel189', 1, '18923993', 3, 0, 'Wk8vdWFYT1YwVDV0WGhLVGZ1aVJtZz09', 'angelose332@gmail.com', '04129384934'),
+('calito_22', 1, '13453984', 2, 1, 'Wk8vdWFYT1YwVDV0WGhLVGZ1aVJtZz09', 'calito_21@gmail.com', '04140363234'),
+('carla', 1, '23948938', 3, 0, 'Wk8vdWFYT1YwVDV0WGhLVGZ1aVJtZz09', 'newmanrodriguez1999@gmail.com', '04120340023'),
+('ferjose12', 2, '9029345', 3, 0, 'WURsTkRYZnhxdlExUnlrMk9wMTdhZz09', 'ferjose1962@hotmail.com', '02120329039'),
+('karla_villa', 1, '1902930', 3, 0, 'MGF5VG42RWVaMGorL01Cb21KMzlSZz09', 'karla_villa112@gmail.com', '02399384938'),
+('luisespar_12', 1, '13453984', 3, 0, 'Wk8vdWFYT1YwVDV0WGhLVGZ1aVJtZz09', 'luisespar12@gmail.com', '04120394034'),
+('mariaangel_22', 1, '19283938', 3, 0, 'Wk8vdWFYT1YwVDV0WGhLVGZ1aVJtZz09', 'Mariaangel_22@gmail.com', '04122122212'),
+('Miguel122', 1, '28379278', 3, 0, 'Wk8vdWFYT1YwVDV0WGhLVGZ1aVJtZz09', 'miguel12@gmail.com', ''),
+('newman206', 1, '28117206', 1, 1, 'Wk8vdWFYT1YwVDV0WGhLVGZ1aVJtZz09', 'newman@gmail.com', '04120293034'),
+('silva1', 1, '1890039', 3, 0, 'MGF5VG42RWVaMGorL01Cb21KMzlSZz09', 'silva2010@hotmail.com', '04129304039'),
+('Villegas122', 1, '23928298', 3, 0, 'Wk8vdWFYT1YwVDV0WGhLVGZ1aVJtZz09', 'Villegas122@hotmail.com', '04129304038');
 
 -- --------------------------------------------------------
 
@@ -1481,6 +1541,18 @@ CREATE TABLE `usuariosPreguntas` (
 INSERT INTO `usuariosPreguntas` (`aliasUsuario`, `idPregunta`, `respuesta`) VALUES
 ('28117206', 1, 'carlos'),
 ('28117206', 2, 'carlos'),
+('angel189', 1, 'dEpha1ZrOFc4OUFvRU5lTWtVRG1kZz09'),
+('angel189', 2, 'bGMvR2pqWWpPQ29sV1dEUWZtcExmdz09'),
+('calito_22', 1, 'aaa'),
+('calito_22', 2, 'bGMvR2pqWWpPQ29sV1dEUWZtcExmdz09'),
+('carla', 1, 'dEpha1ZrOFc4OUFvRU5lTWtVRG1kZz09'),
+('carla', 2, 'bGMvR2pqWWpPQ29sV1dEUWZtcExmdz09'),
+('ferjose12', 1, 'K1FwSFNzbmxicjBoVmcxOUwzS2lLZz09'),
+('ferjose12', 2, 'QmUrb1Q4OHBHbVhoUkN2QnZNaEIxdz09'),
+('karla_villa', 1, 'eDJORGNVUURPK2xnS0JnY0xxcFVEdz09'),
+('karla_villa', 2, 'QmUrb1Q4OHBHbVhoUkN2QnZNaEIxdz09'),
+('mariaangel_22', 1, 'dEpha1ZrOFc4OUFvRU5lTWtVRG1kZz09'),
+('mariaangel_22', 2, 'bGMvR2pqWWpPQ29sV1dEUWZtcExmdz09'),
 ('Miguel122', 1, 'no'),
 ('Miguel122', 2, 'no'),
 ('newman206', 1, 'dEpha1ZrOFc4OUFvRU5lTWtVRG1kZz09'),
@@ -1488,7 +1560,15 @@ INSERT INTO `usuariosPreguntas` (`aliasUsuario`, `idPregunta`, `respuesta`) VALU
 ('newman207', 1, 'carlos'),
 ('newman207', 2, 'jon'),
 ('newman23', 1, 'jon'),
-('newman23', 2, 'pepe');
+('newman23', 2, 'pepe'),
+('rondaApar0431', 1, 'eDJORGNVUURPK2xnS0JnY0xxcFVEdz09'),
+('rondaApar0431', 2, 'QmUrb1Q4OHBHbVhoUkN2QnZNaEIxdz09'),
+('roserose23', 1, 'dEpha1ZrOFc4OUFvRU5lTWtVRG1kZz09'),
+('roserose23', 2, 'bGMvR2pqWWpPQ29sV1dEUWZtcExmdz09'),
+('silva1', 1, 'eDJORGNVUURPK2xnS0JnY0xxcFVEdz09'),
+('silva1', 2, 'QmUrb1Q4OHBHbVhoUkN2QnZNaEIxdz09'),
+('Villegas122', 1, 'dEpha1ZrOFc4OUFvRU5lTWtVRG1kZz09'),
+('Villegas122', 2, 'bGMvR2pqWWpPQ29sV1dEUWZtcExmdz09');
 
 -- --------------------------------------------------------
 
@@ -1569,7 +1649,9 @@ ALTER TABLE `personas`
 ALTER TABLE `usuarios`
   ADD PRIMARY KEY (`alias`),
   ADD KEY `id_tip_usr` (`idNivelPermiso`),
-  ADD KEY `idEstado` (`idEstado`);
+  ADD KEY `idEstado` (`idEstado`),
+  ADD KEY `docIdentidad` (`docIdentidad`),
+  ADD KEY `idNacionalidad` (`idNacionalidad`,`docIdentidad`);
 
 --
 -- Indices de la tabla `usuariosEstados`
@@ -1604,7 +1686,7 @@ ALTER TABLE `usuariosPreguntasDisponibles`
 -- AUTO_INCREMENT de la tabla `bitacora`
 --
 ALTER TABLE `bitacora`
-  MODIFY `idBitacora` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `idBitacora` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=61;
 
 --
 -- AUTO_INCREMENT de la tabla `casosEpidemiologicos`
@@ -1650,7 +1732,8 @@ ALTER TABLE `personas`
 ALTER TABLE `usuarios`
   ADD CONSTRAINT `usuarios_ibfk_1` FOREIGN KEY (`idNivelPermiso`) REFERENCES `usuariosNiveles` (`idNivelPermiso`),
   ADD CONSTRAINT `usuarios_ibfk_2` FOREIGN KEY (`idNivelPermiso`) REFERENCES `usuariosNiveles` (`idNivelPermiso`),
-  ADD CONSTRAINT `usuarios_ibfk_3` FOREIGN KEY (`idEstado`) REFERENCES `usuariosEstados` (`idEstado`);
+  ADD CONSTRAINT `usuarios_ibfk_3` FOREIGN KEY (`idEstado`) REFERENCES `usuariosEstados` (`idEstado`),
+  ADD CONSTRAINT `usuarios_ibfk_4` FOREIGN KEY (`idNacionalidad`,`docIdentidad`) REFERENCES `personas` (`idNacionalidad`, `docIdentidad`);
 
 --
 -- Filtros para la tabla `usuariosPreguntas`

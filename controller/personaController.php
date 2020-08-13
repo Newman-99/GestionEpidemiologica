@@ -31,7 +31,7 @@
 
 		 $idGenero = mainModel::cleanStringSQL($dataPersona['idGenero']);
 
-		 $telefono = mainModel::cleanStringSQL($dataPersona['telefono']);
+		 $telefono = mainModel::cleanStringSQL($dataPersona['telefonoPart1'].$dataPersona['telefonoPart2'].$dataPersona['telefonoPart3']);
 
 		 $telefono = self::ClearUserSeparatedCharacters($telefono);
 
@@ -175,8 +175,8 @@
 				 	}				
 
 
-		public function updatePersonaController($dataPersona){
-			
+		public static function updatePersonaController($dataPersona){
+
 		 $docIdentidad = mainModel::cleanStringSQL($dataPersona['docIdentidad']);
 		 
 		 $nombres = mainModel::cleanStringSQL($dataPersona['nombres']);
@@ -188,7 +188,11 @@
 		 $idNacionalidad = mainModel::cleanStringSQL($dataPersona['idNacionalidad']);
 		 
 		 $idGenero = mainModel::cleanStringSQL($dataPersona['idGenero']);
-		 
+		
+		 $telefono = $dataPersona['telefonoPart1'].$dataPersona['telefonoPart2'].$dataPersona['telefonoPart3'];
+
+		 $telefono = mainModel::cleanStringSQL($telefono);
+
 		 			if (mainModel::isDataEmtpy(
 						 $docIdentidad,
 						 $nombres,
@@ -197,8 +201,91 @@
 						 $idNacionalidad,
 						 $idGenero)) {
 
+			$alert=[
+				"Alert"=>"simple",
+				"Title"=>"Campos Vacios",
+				"Text"=>"Todos los datos personales son obligatorios",
+				"Type"=>"error"
+			];
+			
+				echo json_encode($alert);
 
-				 	}else{
+				exit();
+
+			}
+
+
+
+			if(!mainModel::isValidSelectionTwoOptions($idGenero)){
+
+			$alert=[
+				"Alert"=>"simple",
+				"Title"=>"Datos Invalidos",
+				"Text"=>"El campo de Genero es invalido",
+				"Type"=>"error"
+			];
+
+				echo json_encode($alert);
+
+				exit();
+			}
+
+			if(!self::isValidNombresApellidos($nombres,$apellidos)){
+
+			$alert=[
+				"Alert"=>"simple",
+				"Title"=>"Datos Invalidos",
+				"Text"=>"El Nombre o Apellido ingresado es invalido",
+				"Type"=>"error"
+			];
+
+				echo json_encode($alert);
+
+				exit();
+			}
+
+
+			if (!mainModel::checkDate($fechaNacimiento)){
+			$alert=[
+				"Alert"=>"simple",
+				"Title"=>"Datos Invalidos",
+				"Text"=>"El campo fecha de  nacimiento es invalido",
+				"Type"=>"error"
+			];
+
+				echo json_encode($alert);
+
+				exit();
+		}
+
+
+		if (mainModel::isDateGreaterCurrentDate($fechaNacimiento)) {
+				$alert=[
+					"Alert"=>"simple",
+					"Title"=>"Datos Invalidos",
+					"Text"=>"La Fecha de Nacimiento es mayor a la del sistema",
+					"Type"=>"error"
+				];
+
+					echo json_encode($alert);
+
+					exit();
+		}
+
+		if(!mainModel::isValidNroTlf($telefono)){
+			
+			$alert=[
+				"Alert"=>"simple",
+				"Title"=>"Datos Invalidos",
+				"Text"=>"El Nro de Telefono es invalido",
+				"Type"=>"error"
+			];
+
+				echo json_encode($alert);
+
+				exit();
+			}
+
 
 
 		 $dataPersona = array();
@@ -216,9 +303,9 @@
 		 $dataPersona['idGenero'] = $idGenero;
 		 
 
-			 personaModel::updatePersonaModel($dataPersona);
+			 return personaModel::updatePersonaModel($dataPersona);
 
-				 	}
+				 	
 
 				 }
 
@@ -227,20 +314,47 @@
 			
 		 $docIdentidad = mainModel::cleanStringSQL($dataPersona['docIdentidad']);
 		 
-		 
-		 			if (mainModel::isDataEmtpy(
-						 $docIdentidad)) {
-				 	}else{
+		 $idNacionalidad = mainModel::cleanStringSQL($dataPersona['idNacionalidad']);
 
+		 	if (mainModel::isDataEmtpy($docIdentidad,$idNacionalidad)) {
+				$alert=[
+					"Alert"=>"simple",
+					"Title"=>"Datos Vacios",
+					"Text"=>"Los datos no fueron recibidos",
+					"Type"=>"error"];
+					
+				echo json_encode($alert);
 
-		 $dataPersona = array();
-
-		 $dataPersona['docIdentidad'] = $docIdentidad;
-		 
-
-			 personaModel::deletePersonaModel($dataPersona);
+				exit();
 
 				 	}
+
+			$primaryKeyPersona = [
+
+				"idNacionalidad"=>$idNacionalidad,
+				"docIdentidad"=>$docIdentidad
+			];
+
+			$SQL_isExistPersona = self::getPersonaController($primaryKeyPersona);
+			
+			$SQL_isExistPersona->execute();
+
+			if(!$SQL_isExistPersona->rowCount()){
+			$alert=[
+				"Alert"=>"simple",
+				"Title"=>"Datos no encontrados",
+				"Text"=>"No se encuentra una persona con esta cedula registrada ",
+				"Type"=>"error"
+			];
+
+				echo json_encode($alert);
+
+				exit();
+			}
+
+			 personaModel::deletePersonaModel($primaryKeyPersona);
+
+							 
 
 				 }
 
