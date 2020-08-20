@@ -162,12 +162,12 @@
 		}
 
 
-		   if(strlen($question1)>4 || strlen($question2)>4 ){
+		   if(strlen($question1)<3 || strlen($question2)<3 ){
 
 			$alert=[
 			"Alert"=>"simple",
 			"Title"=>"Datos Invalidos",
-			"Text"=>"Las preguntas de seguridad deben ser almenos mayor a 5 caracteres",
+			"Text"=>"Las preguntas de seguridad deben ser mayor a 3 caracteres",
 			"Type"=>"error"
 				];
 		
@@ -282,166 +282,6 @@
 
 		}
 
-				public function modifyUserSafetyDataController($dataUser){
-
-				// comprobar si desea actualizar contrasenaia
-
-	if (isset($dataUser["passwordConfirm"],$dataUser["password"]) && !mainModel::isDataEmtpy($dataUser["passwordConfirm"],$dataUser["password"])) {
-
-			$password = mainModel::cleanStringSQL($dataUser["password"]);
-			
-			 $passwordConfirm = mainModel::cleanStringSQL($dataUser["passwordConfirm"]); 
-
-    	if(strcmp($passwordConfirm,$password)!== 0){
-		
-			$alert=[
-			"Alert"=>"simple",
-			"Title"=>"Datos Invalidos",
-			"Text"=>"Las contraseñas no coinciden",
-			"Type"=>"error"
-				];
-		
-				echo json_encode($alert);
-
-				exit();
-
-		}
-
-
-		if (!self::isValidPassword($password)) {
-				$alert=[
-					"Alert"=>"simple",
-					"Title"=>"Datos Invalidos",
-					"Text"=>"La contraseña debe tener:
-					<br>
-					Longitud de entre 8 y 20 caracteres
-					<br>
-					Almenos una letra mayuscula		
-					<br>
-					Almenos una letra minuscula
-					<br>
-					Almenos un numero
-					<br>
-					Almenos un caracter especial
-					",
-					"Type"=>"error"
-				];
-				echo json_encode($alert);
-
-				exit();
-			}
-		
-				array_push($userAttributesUpdate, 'passEncrypt = :password');
-				$userValuesUpdate['password'] = [
-				'value' => mainModel::encryption($password),
-				'type' => \PDO::PARAM_STR,
-				];
-
-	}
-
-		// Comprobar si se desea actualizar preguntas
-
-		if (isset($dataUser["question1"]) && !mainModel::isDataEmtpy($dataUser["question1"])) {
-
-		$question1 = mainModel::cleanStringSQL($dataUser["question1"]);
-
-
-			$queryGetQuestion2 = mainModel::runSimpleQuery("SELECT respuesta FROM `usuariosPreguntas` WHERE aliasUsuario = '$aliasUser' AND idPregunta = '2';");
-
-			$registeredQuestion2 = $queryGetQuestion2->fetchColumn();
-
-		   if(strcmp($question1,$registeredQuestion2)== 0){
-
-			$alert=[
-			"Alert"=>"simple",
-			"Title"=>"Datos Invalidos",
-			"Text"=>"Las preguntas de seguridad no deben ser iguales a las registradas",
-			"Type"=>"error"
-				];
-		
-				echo json_encode($alert);
-
-				exit();
-			}
-
-		   if(strlen($question1)>4){
-
-			$alert=[
-			"Alert"=>"simple",
-			"Title"=>"Datos Invalidos",
-			"Text"=>"Las preguntas de seguridad deben ser almenos mayor a 5 caracteres",
-			"Type"=>"error"
-				];
-		
-				echo json_encode($alert);
-
-				exit();
-			}
-
-		$dataUpdateQuestions = ["aliasUser"=>$aliasUser,"idPregunta"=>1,"respuesta"=>$question1];
-
-		userModel::updateUserQuestionModel($dataUpdateQuestions);
-
-		userModel::updateUserQuestionModel($dataUpdateQuestions);
-
-
-}
-
-		if (isset($dataUser["question2"]) && !mainModel::isDataEmtpy($dataUser["question2"])) {
-
-
-		 $question2 = mainModel::cleanStringSQL($dataUser["question2"]);
-
-
-			$queryGetQuestion1 = mainModel::runSimpleQuery("SELECT respuesta FROM `usuariosPreguntas` WHERE aliasUsuario = '$aliasUser' AND idPregunta = '1';");
-
-			$registeredQuestion1 = $queryGetQuestion1->fetchColumn();
-
-		   if(strcmp($registeredQuestion1,$question2)== 0){
-
-			$alert=[
-			"Alert"=>"simple",
-			"Title"=>"Datos Invalidos",
-			"Text"=>"Las preguntas de seguridad no deben ser iguales a las registradas",
-			"Type"=>"error"
-				];
-		
-				echo json_encode($alert);
-
-				exit();
-			}
-
-
-		   if(strlen($question1)>4){
-
-			$alert=[
-			"Alert"=>"simple",
-			"Title"=>"Datos Invalidos",
-			"Text"=>"Las preguntas de seguridad deben ser almenos mayor a 5 caracteres",
-			"Type"=>"error"
-				];
-		
-				echo json_encode($alert);
-
-				exit();
-			}
-
-
-
-		$dataUpdateQuestions = ["aliasUser"=>$aliasUser,"idPregunta"=>2,"respuesta"=>$question2];
-	
-		userModel::updateUserQuestionModel($dataUpdateQuestions);
-
-		userModel::updateUserQuestionModel($dataUpdateQuestions);
-		
-
-
-
-		}
-
-
-
-				}
 				
 	public function updateUserController($dataUser){
 		 
@@ -456,23 +296,29 @@
 		 $telefono = mainModel::cleanStringSQL($telefono);
 
 		 $email = mainModel::cleanStringSQL($dataUser["email"]);
-
-		 $idGenero = mainModel::cleanStringSQL($dataUser["idGenero"]);
 		 
 		 $fechaNacimiento = mainModel::cleanStringSQL($dataUser["fechaNacimiento"]);
 
-		 // para datps generales del usuario
+		 $nombres = mainModel::cleanStringSQL($dataUser["nombres"]);
+
+		 $apellidos = mainModel::cleanStringSQL($dataUser["apellidos"]);
+
+
+		 $idGenero = mainModel::cleanStringSQL($dataUser["idGenero"]);
+
+		 // para datos principales del usuario
 		$userAttributesUpdate = [];
 
  		$userValuesUpdate = [];
 
- 		// datos del usuario como persona
+ 		// Campos del usuario como persona a comparar con la BD
+ 		$fieldstoComparePerson = [
+		 "fechaNacimiento"=>$fechaNacimiento,
+		 "nombres"=>$nombres,
+		 "apellidos"=>$apellidos,
+		 "idGenero"=>$idGenero 			
+ 		];
 
-		$personAttributesUpdate = [];
-
- 		$personValuesUpdate = [];
-
- 		$fieldstoCompare = 0;
 
 		if (!self::isValidEmail($email)) {
 				$alert=[
@@ -504,6 +350,7 @@
 				];
 
 
+
 				array_push($userAttributesUpdate, 'email = :email');
 				$userValuesUpdate['email'] = [
 				'value' => $email,
@@ -518,9 +365,9 @@
 				];
 
 
-		$fieldstoCompare=["telefono"=>$telefono,"email"=>$email];
+		$fieldstoCompareUser=["telefono"=>$telefono,"email"=>$email];
 
-		 if (isset($dataUser["idNivelPermiso"])){
+		 if (isset($dataUser["idNivelPermiso"]) AND $dataUser['idNivelPermiso'] != 0){
 
 		 $idNivelPermiso = mainModel::cleanStringSQL($dataUser["idNivelPermiso"]);
 
@@ -530,10 +377,10 @@
 				'type' => \PDO::PARAM_INT,
 				];
 
-		 	$fieldstoCompare["idNivelPermiso"] = $idNivelPermiso;
+		 	$fieldstoCompareUser["idNivelPermiso"] = $idNivelPermiso;
 		}
 
-		 if (isset($dataUser["idEstado"])) {
+		 if (isset($dataUser["idEstado"]) || $dataUser['idEstado'] != 0) {
 
 		 $idEstado = mainModel::cleanStringSQL($dataUser["idEstado"]);
 
@@ -542,7 +389,7 @@
 				'value' => $idEstado,
 				'type' => \PDO::PARAM_INT,
 				];
-			$fieldstoCompare["idEstado"] = $idEstado;
+			$fieldstoCompareUser["idEstado"] = $idEstado;
 		 }
 
 
@@ -550,9 +397,21 @@
 
  		$queryToGetUser = self::getUserController(array("aliasUser"=>$aliasUser));
 
-		$isFieldsEqualToThoseInTheDatabase = mainModel::isFieldsEqualToThoseInTheDatabase($queryToGetUser,$fieldstoCompare);
+		$fieldsEqualDatabaseUser = mainModel::isFieldsEqualToThoseInTheDatabase($queryToGetUser,$fieldstoCompareUser);
 
-			if ($isFieldsEqualToThoseInTheDatabase) {
+		 // Tambien lo hacemos con los datos personales
+
+			require_once "../controller/personaController.php";
+			
+			$personaController = new personaController();
+
+ 		$queryToGetPerson = $personaController->getPersonaController(array("docIdentidad"=>$docIdentidad,"idNacionalidad"=>$idNacionalidad));
+
+
+		$fieldsEqualDatabasePerson = mainModel::isFieldsEqualToThoseInTheDatabase($queryToGetPerson,$fieldstoComparePerson);
+
+ 
+			if ($fieldsEqualDatabaseUser AND $fieldsEqualDatabasePerson) {
 
 			$alert=[
 				"Alert"=>"simple",
@@ -567,24 +426,18 @@
 
 			}
 
-			// Actualizacos los datos personales
-			require_once "../controller/personaController.php";
-			
-			$personaController = new personaController();
+			// HAcemos las operaciones de actualizacion principales
 
 			$resultUpdatePerson = $personaController::updatePersonaController($dataUser);
-
-
-			// Ahora los de usuario
 
 			$resultUpdateUser = userModel::updateUserModel($userValuesUpdate,$userAttributesUpdate);
 
 
-
+			// Impimirmo el resultado de la operacion
 			$alert=[
-				"Alert"=>"clean",
+				"Alert"=>"reload",
 				"Title"=>"Operacion Exitosa",
-				"Text"=>"Datos del usuarios actulizados",
+				"Text"=>"Datos del usuarios actualizados",
 				"Type"=>"success"
 			];
 
@@ -594,7 +447,7 @@
 			$alert=[
 				"Alert"=>"simple",
 				"Title"=>"Ocurrio un error inesperado",
-				"Text"=>"Error en la actulizacion del usuario",
+				"Text"=>"Error en la actualizacion del usuario",
 				"Type"=>"error"
 			];
 
@@ -606,6 +459,398 @@
 
 
 			}
+
+
+// Esta funcion se usa en 4 funcionalidades del sistema:
+// config: Formulario de actulizacion de seguridad normal
+// restart: proceso de reinicio del usuario
+// recoverPass:: proceso de recuperacion password
+// 
+	public  static function modifyUserSafetyDataController($dataUser){
+
+		$aliasUser = mainModel::cleanStringSQL($dataUser["aliasUser"]);
+
+	// variables para guardar el resultado de las consultas
+
+		$resultQueryUpdatePass = TRUE;
+		$resultQueryUpdateQuestion1 = TRUE;
+		$resultQueryUpdateQuestion2 = TRUE;
+
+
+	// Comprobamos que exista el susuario
+
+		$queryGetUserStatus = mainModel::runSimpleQuery("SELECT idEstado FROM `usuarios` WHERE alias =
+			'$aliasUser'");
+
+		$queryGetUserStatus->execute();
+
+		$idEstado = $queryGetUserStatus->fetchColumn();
+
+		if(!$queryGetUserStatus->rowCount()){
+				
+				$alert=[
+				"Alert"=>"simple",
+				"Title"=>"Datos no encontrados",
+				"Text"=>"No existe un usuario con este alias registrado",
+				"Type"=>"error"
+			];
+				echo json_encode($alert);
+
+				exit();
+
+			}
+
+		// si estado es 0 no tiene permiso de cambiar datos de seguridad
+		if($idEstado == 0){
+				
+				$alert=[
+				"Alert"=>"simple",
+				"Title"=>"Permiso Denegado",
+				"Text"=>"El usuario se encuentra inactivo por favor contactar un administrador",
+				"Type"=>"error"
+			];
+
+				echo json_encode($alert);
+
+				exit();
+
+			}
+
+		// si esta funcion es llamada por restar USer verificara que el estado No se ha activo
+if ($dataUser["operationType"] == "restart") {
+		if($idEstado == 1){
+				
+				$alert=[
+				"Alert"=>"simple",
+				"Title"=>"Permiso Denegado",
+				"Text"=>"El usuario no posee una solicitud de reinicio",
+				"Type"=>"error"
+			];
+
+				echo json_encode($alert);
+
+				exit();
+
+			}
+}
+
+// Comprobamos los datos de seguridad
+
+// solo en la configuracion normal de usuario se verfica la password
+
+if ($dataUser["operationType"] == "config") {
+
+		// Estos datos deben estar llenados en cofig
+		if (mainModel::isDataEmtpy($aliasUser,
+		 	$dataUser["question1"],$dataUser["question2"],$dataUser["password"])){
+				$alert=[
+					"Alert"=>"simple",
+					"Title"=>"Campos Vacios",
+					"Text"=>"Todos los campos del usuario son obligatorios",
+					"Type"=>"error"
+				];
+
+				echo json_encode($alert);
+
+				exit();
+
+			}
+
+if (mainModel::isDataEmtpy($dataUser["newQuestion1"]) &&
+	mainModel::isDataEmtpy($dataUser["newQuestion2"]) &&
+	mainModel::isDataEmtpy($dataUser["newPassword"]) &&
+	mainModel::isDataEmtpy($dataUser["newPasswordConfirm"])){
+				$alert=[
+					"Alert"=>"simple",
+					"Title"=>"Campos Vacios",
+					"Text"=>"No se encuentra ningun dato para actualizar",
+					"Type"=>"error"
+				];
+
+				echo json_encode($alert);
+
+				exit();
+ 
+			}
+// Imprime msj si es incorrecta
+self::passwordCorrespondDatabase($dataUser);
+
+}
+
+// validar preguntas de seguridad 
+
+// solo en la configuracion normal y recuperacion de password  se verfica las preguntas de seguridad
+
+if ($dataUser["operationType"] == "config" || $dataUser["operationType"] == "recoverPass") {
+
+self::securityQuestionsCorrespondDatabase($dataUser);
+}
+
+// Actualizamos password si se desea
+
+if (!mainModel::isDataEmtpy($dataUser["newPasswordConfirm"]) || !mainModel::isDataEmtpy($dataUser["newPassword"])) {
+		
+$resultQueryUpdatePass = self::passwordUpdateController($dataUser);
+
+	}
+
+				// Actualizamos preguntas si se desea
+
+		if (isset($dataUser["newQuestion1"]) && !mainModel::isDataEmtpy($dataUser["newQuestion1"])) {
+
+		$dataUpdateQuestions = ["newQuestion"=>$dataUser["newQuestion1"],"aliasUser"=>$aliasUser,"idPregunta"=>'1'];
+
+		$resultQueryUpdateQuestion1 = self::questionUpdateController($dataUpdateQuestions);
+
+	}
+
+
+		if (isset($dataUser["newQuestion2"]) && !mainModel::isDataEmtpy($dataUser["newQuestion2"])) {
+
+		$dataUpdateQuestions = ["newQuestion"=>$dataUser["newQuestion2"],"aliasUser"=>$aliasUser,"idPregunta"=>'2'];
+
+		$resultQueryUpdateQuestion2 = self::questionUpdateController($dataUpdateQuestions);
+
+		}
+
+			// Guardar e Impimir el resultado de las operaciones
+
+			$totalResultQuerys = TRUE;
+
+			if (!$resultQueryUpdatePass || !$resultQueryUpdateQuestion1 || !$resultQueryUpdateQuestion2) {
+				
+				$totalResultQuerys = FALSE;
+				
+				}
+
+
+if ($dataUser["operationType"] == "config") {
+			$alert=[
+				"Alert"=>"simple",
+				"Title"=>"Ocurrio un error inesperado",
+				"Text"=>"Error en la actualizacion del usuario",
+				"Type"=>"error"
+			];
+
+			if ($totalResultQuerys) {
+
+			$alert=[
+				"Alert"=>"reload",
+				"Title"=>"Operacion Exitosa",
+				"Text"=>"Datos del usuario actualizados",
+				"Type"=>"success"
+			];
+
+
+			}
+
+				echo json_encode($alert);
+
+				exit();	 	
+}
+
+// procesos recover pass y restart user imprimiran su propio msjs de exito
+
+ 
+return $totalResultQuerys;
+
+
+}
+
+
+protected static function passwordCorrespondDatabase($dataUser){
+
+		$aliasUser = mainModel::cleanStringSQL($dataUser["aliasUser"]);
+
+		$password = mainModel::cleanStringSQL($dataUser["password"]);
+
+		$querGetpassEncrypt = mainModel::runSimpleQuery("SELECT passEncrypt FROM `usuarios` WHERE alias =
+			'$aliasUser'");
+
+		$querGetpassEncrypt->execute();
+
+		$passEncryptDB = mainModel::decryption($querGetpassEncrypt->fetchColumn());
+				
+		    if (strcmp($passEncryptDB, $password) != 0){
+				$alert=[
+				"Alert"=>"simple",
+				"Title"=>"Datos Invalidos",
+				"Text"=>"La contraseña es incorrecta",
+				"Type"=>"error"
+			];
+
+				echo json_encode($alert);
+
+				exit();
+    	}
+
+}
+		protected static function passwordUpdateController($dataUser){
+		$aliasUser = mainModel::cleanStringSQL($dataUser["aliasUser"]);
+		
+		$newPasswordConfirm = mainModel::cleanStringSQL($dataUser["newPasswordConfirm"]); 
+
+		$newPassword = mainModel::cleanStringSQL($dataUser["newPassword"]);
+
+    	if(strcmp($newPasswordConfirm,$newPassword)!== 0){
+		
+			$alert=[
+			"Alert"=>"simple",
+			"Title"=>"Datos Invalidos",
+			"Text"=>"Las contraseñas no coinciden",
+			"Type"=>"error"
+				];
+		
+				echo json_encode($alert);
+
+				exit();
+
+		}
+
+		if (!self::isValidPassword($newPassword)) {
+				$alert=[
+					"Alert"=>"simple",
+					"Title"=>"Datos Invalidos",
+					"Text"=>"La contraseña debe tener:
+					<br>
+					Longitud de entre 8 y 20 caracteres
+					<br>
+					Almenos una letra mayuscula		
+					<br>
+					Almenos una letra minuscula
+					<br>
+					Almenos un numero
+					<br>
+					Almenos un caracter especial
+					",
+					"Type"=>"error"
+				];
+				echo json_encode($alert);
+
+				exit();
+			}
+		
+			$userAttributesUpdate = [];
+				array_push($userAttributesUpdate, 'passEncrypt = :password');
+				$userValuesUpdate['password'] = [
+				'value' => mainModel::encryption($newPassword),
+				'type' => \PDO::PARAM_STR];
+
+
+				array_push($userAttributesUpdate, 'alias = :aliasUser');
+				$userValuesUpdate['aliasUser'] = [
+				'value' => $aliasUser,
+				'type' => \PDO::PARAM_STR];
+
+			return $resultQueryUpdatePass = userModel::updateUserModel($userValuesUpdate,$userAttributesUpdate);
+		}
+
+		// las pregunas de seguridad corresponden base de datos
+		
+		protected static function securityQuestionsCorrespondDatabase($dataUser){
+		$aliasUser = mainModel::cleanStringSQL($dataUser["aliasUser"]);
+		// Verificamos que la pregunta no este repetida
+		$recordsUserSQL = userController::getUserController(array("aliasUser"=>$aliasUser));
+					
+		$recordsUserSQL->execute();
+
+		// Obtener preguntas del usuario
+		while($valuesDataUser=$recordsUserSQL->fetch(PDO
+			::FETCH_ASSOC)){ 
+
+			if ($valuesDataUser["idPregunta"] == 1) {
+
+				$registeredQuestion1 = mainModel::decryption($valuesDataUser['respuesta']);
+
+				}else{
+
+					// id pregunta == 2
+				$registeredQuestion2 = mainModel::decryption($valuesDataUser['respuesta']);
+				}
+
+		}
+
+		$question1 = mainModel::cleanStringSQL($dataUser["question1"]); 
+
+		$question2 = mainModel::cleanStringSQL($dataUser["question2"]); 
+
+		    if (strcmp($registeredQuestion1, $question1) != 0 || strcmp($registeredQuestion2, $question2) != 0){
+				$alert=[
+				"Alert"=>"simple",
+				"Title"=>"Datos Invalidos",
+				"Text"=>"Revise las preguntas de seguridad",
+				"Type"=>"error"
+			];
+
+				echo json_encode($alert);
+
+				exit();
+    	}
+}
+
+		protected static function questionUpdateController($dataUser){
+
+		$aliasUser = mainModel::cleanStringSQL($dataUser["aliasUser"]);
+
+		$newQuestion = mainModel::cleanStringSQL($dataUser["newQuestion"]);
+
+		$idPregunta = mainModel::cleanStringSQL($dataUser["idPregunta"]);
+
+		// Verificamos que la pregunta no este repetida
+		$recordsUserSQL = userController::getUserController(array("aliasUser"=>$aliasUser));
+					
+		$recordsUserSQL->execute();
+
+		// Obtener preguntas del usuario
+		while($valuesDataUser=$recordsUserSQL->fetch(PDO
+			::FETCH_ASSOC)){ 
+
+
+			if ($valuesDataUser["idPregunta"] == 1) {
+				$registeredQuestion1 = mainModel::decryption($valuesDataUser['respuesta']);
+
+				}else{
+					// id pregunta == 2
+				$registeredQuestion2 = mainModel::decryption($valuesDataUser['respuesta']);
+				}
+
+		}
+
+		   if(strcmp($registeredQuestion1,$newQuestion)== 0 || strcmp($registeredQuestion2,$newQuestion)== 0){
+
+			$alert=[
+			"Alert"=>"simple",
+			"Title"=>"Datos Invalidos",
+			"Text"=>"Las preguntas de seguridad no deben ser iguales a las registradas",
+			"Type"=>"error"
+				];
+		
+				echo json_encode($alert);
+
+				exit();
+			}
+
+
+		   if(strlen($newQuestion)<3){
+
+			$alert=[
+			"Alert"=>"simple",
+			"Title"=>"Datos Invalidos",
+			"Text"=>"Las preguntas de seguridad deben ser mayor a 3 caracteres",
+			"Type"=>"error"
+				];
+		
+				echo json_encode($alert);
+
+				exit();
+			}
+
+		$dataUpdateQuestions = ["aliasUser"=>$aliasUser,"idPregunta"=>$idPregunta,"respuesta"=>mainModel::encryption($newQuestion)];
+
+		return $resultQueryUpdateQuestion = userModel::updateUserQuestionModel($dataUpdateQuestions);
+
+
+		}
 
 
 		public static function deleteUserController($dataUser){
@@ -728,11 +973,21 @@ if (!isset($dataUser['confirmDelete'])) {
 
  		$filterValues = [];
 
+		if (isset($dataUser["idNacionalidad"]) && !mainModel::isDataEmtpy($dataUser["idNacionalidad"])) {
+
+		$idNacionalidad = mainModel::cleanStringSQL($dataUser["idNacionalidad"]);
+
+		array_push($userAttributesFilter, 'usr.idNacionalidad = :idNacionalidad');
+		$filterValues[':idNacionalidad'] = [
+		'value' => $idNacionalidad,
+		'type' => \PDO::PARAM_STR,
+		];}
+
 		if (isset($dataUser["docIdentidad"]) && !mainModel::isDataEmtpy($dataUser["docIdentidad"])) {
 
 		$docIdentidad = mainModel::cleanStringSQL($dataUser["docIdentidad"]);
 
-		array_push($userAttributesFilter, 'docIdentidad = :docIdentidad');
+		array_push($userAttributesFilter, 'usr.docIdentidad = :docIdentidad');
 		$filterValues[':docIdentidad'] = [
 		'value' => $docIdentidad,
 		'type' => \PDO::PARAM_STR,
@@ -742,7 +997,7 @@ if (!isset($dataUser['confirmDelete'])) {
 		
 		$aliasUser = mainModel::cleanStringSQL($dataUser["aliasUser"]);
 
-		array_push($userAttributesFilter, 'alias = :aliasUser');
+		array_push($userAttributesFilter, 'usr.alias = :aliasUser');
 		$filterValues[':aliasUser'] = [
 		'value' => $aliasUser,
 		'type' => \PDO::PARAM_STR,
@@ -763,7 +1018,7 @@ if (!isset($dataUser['confirmDelete'])) {
 
 		$idEstado = mainModel::cleanStringSQL($dataUser["idEstado"]);
 
-		array_push($userAttributesFilter, 'idEstado = :idEstado');
+		array_push($userAttributesFilter, 'usr.idEstado = :idEstado');
 		$filterValues[':idEstado'] = [
 		'value' => $idEstado,
 		'type' => \PDO::PARAM_STR,
@@ -786,6 +1041,74 @@ if (!isset($dataUser['confirmDelete'])) {
 
 
  
+	public static function restartUserController($dataUser){
+	
+
+		 $aliasUser = mainModel::cleanStringSQL($dataUser["aliasUser"]);
+
+
+		 $aliasUser = mainModel::decryption($dataUser["aliasUser"]);
+
+		$userAttributesUpdate = [];
+
+ 		$userValuesUpdate = [];
+
+		$queryIsExistUser = mainModel::runSimpleQuery("SELECT alias FROM `usuarios` WHERE alias = '$aliasUser'");
+					
+		$queryIsExistUser->execute();
+
+
+		if(!$queryIsExistUser->rowCount()){
+				
+				$alert=[
+				"Alert"=>"simple",
+				"Title"=>"Datos Invalidos",
+				"Text"=>"Error de envio de datos",
+				"Type"=>"error"
+			];
+
+				echo json_encode($alert);
+
+				exit();
+
+			}
+
+				$userValuesUpdate['aliasUser'] = [
+				'value' => $aliasUser,
+				'type' => \PDO::PARAM_STR,
+				];
+
+				array_push($userAttributesUpdate, 'idEstado = :idEstado');
+				$userValuesUpdate['idEstado'] = [
+				'value' => 2,
+				'type' => \PDO::PARAM_INT,
+				];
+
+
+				$alert=[
+				"Alert"=>"reload",
+				"Title"=>"Operacion Exitosa",
+				"Text"=>"Datos del usuario reiniciados",
+				"Type"=>"success"
+			];
+
+				if (!userModel::updateUserModel($userValuesUpdate,$userAttributesUpdate)) {
+
+					$alert=[
+				"Alert"=>"simple",
+				"Title"=>"Ha ocurrido un error inesperado",
+				"Text"=>"Error al modificar los datos",
+				"Type"=>"error"
+			];
+
+				}
+
+
+				echo json_encode($alert);
+
+				exit();	 		
+	}
+
 public static function paginateUserController($currentPaginate,$nivelUser,$aliasUser){
 
 	$currentPaginate= mainModel::cleanStringSQL($currentPaginate);
@@ -828,6 +1151,7 @@ $table.="<div class='table-responsive'>
                       <th>Email</th>
                       <th></th>
                       <th></th>
+                      <th></th>
                     </tr>
                   </thead>
                   <tfoot>
@@ -868,10 +1192,27 @@ $table.="<div class='table-responsive'>
 		 			<td>'.$rows['descripcionEstado'].'</td>
 		 			<td>'.$rows['email'].'</td>
 		 			<td>
-	                  <a href="'.SERVERURL.'myAccount/'.mainModel::encryption($rows['aliasUsuario']).'" class="btn btn-info btn-circle btn-sm">
+	                  <a href="'.SERVERURL.'dataAccount/'.mainModel::encryption($rows['aliasUsuario']).'" class="btn btn-info btn-circle btn-sm">
 	                    <i class="fas  fa-plus"></i>
 	                  </a>
 		 			</td>
+
+
+				<td>
+		 		<form class="formAjax" action="'.SERVERURL.'ajax/userAjax.php" method="POST" data-form="restart" enctypy="multipart/form-data" autocomplete="off">
+					
+					<input name= "aliasUser" type="hidden" value="'.mainModel::encryption($rows['aliasUsuario']).'">
+
+					<input name= "idNacionalidad" type="hidden" value="'.mainModel::encryption($rows['idNacionalidad']).'">
+
+					<input name= "docIdentidad" type="hidden" value="'.mainModel::encryption($rows['docIdentidad']).'">
+
+						<button type="submit" value = "delete" class="btn btn-warning btn-circle btn-sm">
+	                    <i class="fas fa-redo"></i>
+	                     </button>
+	                     <div class="responseProcessAjax"></div>
+		 			</form>
+				</td>
 
 		 			<td>
 		 		<form class="formAjax" action="'.SERVERURL.'ajax/userAjax.php" method="POST" data-form="delete" enctypy="multipart/form-data" autocomplete="off">
@@ -886,9 +1227,8 @@ $table.="<div class='table-responsive'>
 	                    <i class="fas fa-trash"></i>
 	                     </button>
 	                     <div class="responseProcessAjax"></div>
-		 			</td>
 		 			</form>
-
+		 			</td>
                </tr>
 			';
 
@@ -962,9 +1302,11 @@ $table.="</tbody>
 
 		$userInviteds = userModel::userTypeCounterModel('idNivelPermiso',3);
 
-		$userActive = userModel::userTypeCounterModel('idEstado',1);
+		$userActives = userModel::userTypeCounterModel('idEstado',1);
 
-		$userInactive = userModel::userTypeCounterModel('idEstado',0);
+		$userInactives = userModel::userTypeCounterModel('idEstado',0);
+
+		$userRestarts = userModel::userTypeCounterModel('idEstado',2);
 
 		$usersTotal = userModel::userTypeCounterModel('alias',NULL);
 
@@ -972,9 +1314,10 @@ $table.="</tbody>
 		'userAdmins' => $userAdmins->rowCount(),
 		'userOperators' => $userOperators->rowCount(),
 		'userInviteds' => $userInviteds->rowCount(),
-		'userActive' => $userActive->rowCount(),
-		'userInactive' => $userInactive->rowCount(),
+		'userActives' => $userActives->rowCount(),
+		'userInactives' => $userInactives->rowCount(),
 		'usersTotal' => $usersTotal->rowCount(),
+		'userRestarts' => $userRestarts->rowCount()
 	];
 
         echo "
@@ -984,9 +1327,11 @@ $table.="</tbody>
   		<br>
         Invitados: ".$dataCounTypeUsers['userInviteds']."
   		<br>
-        Activos: ".$dataCounTypeUsers['userActive']."
+        Activos: ".$dataCounTypeUsers['userActives']."
   		<br>
-        Inactivos: ".$dataCounTypeUsers['userInactive']."
+        Inactivos: ".$dataCounTypeUsers['userInactives']."
+		<br>
+        Reiniciados: ".$dataCounTypeUsers['userRestarts']."
 		<br>
         Total: ".$dataCounTypeUsers['usersTotal']."";
 		

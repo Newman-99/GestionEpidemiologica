@@ -14,7 +14,7 @@
               </div>
 
 
-                <form class="formAjax form-group text-center user" action="<?php echo SERVERURL; ?>ajax/userAjax.php" method="POST" data-form="save" autocomplete="off">
+       <form class="formAjax form-group text-center user" action="<?php echo SERVERURL; ?>ajax/userAjax.php" method="POST" data-form="save" autocomplete="off">
             
 
               <div class="form-group row">
@@ -48,11 +48,11 @@
                   <div class="col-sm-6 mb-3 mb-sm-0">
                     <input type="text" class="form-control
                     form-control-user
-                      form-control-person" id="nombres" name="nombres"  placeholder="Nombres" value ="<?php if(isset($_POST['nombres'])) echo $_POST['nombres']; ?>">
+                      form-control-person" id="nombres" name="nombres"  placeholder="Nombres">
                   </div>
                   <div class="col-sm-6">
                     <input type="text" class="form-control
-                    form-control-user  form-control-person" id="apellidos"  name="apellidos" placeholder="Apellidos" value ="<?php if(isset($_POST['apellidos'])) echo $_POST['apellidos']; ?>">
+                    form-control-user  form-control-person" id="apellidos"  name="apellidos" placeholder="Apellidos">
                   </div>
                 </div>
 
@@ -62,8 +62,8 @@
                 <select name='idGenero' id='idGenero' class="form-control
                 form-control-person" autocomplete='on' class="form-control" >
                       <option value="">Genero</option>
-                        <option <?php if(isset($_POST['idGenero'])) echo 'selected';?> value="1">Masculino</option>
-                        <option <?php if(isset($_POST['idGenero'])) echo 'selected'; ?> value="2">Femenino</option>
+                        <option value="1">Masculino</option>
+                        <option  value="2">Femenino</option>
                     </select>
     
                   </div>
@@ -85,7 +85,7 @@
 
                 <div class="form-group">
                   <input type="emai" class="form-control 
-                  form-control-user" id="email" name="email" placeholder="Correo Electronico" value ="<?php if(isset($_POST['email'])) echo $_POST['email']; ?>">
+                  form-control-user" id="email" name="email" placeholder="Correo Electronico">
                 </div>
 
                 <div class="form-group">
@@ -122,10 +122,10 @@
 
                 <div class="form-group row">
                   <div class="col-sm-6 mb-3 mb-sm-0">
-                    <input type="password" class="form-control form-control-user" id="password" name="password" placeholder="Contraseña" value ="<?php if(isset($_POST['password'])) echo $_POST['password']; ?>">
+                    <input type="password" class="form-control form-control-user" id="password" name="password" placeholder="Contraseña">
                   </div>
                   <div class="col-sm-6">
-                    <input type="password" class="form-control form-control-user" id="passwordConfirm" name="passwordConfirm" placeholder="Confirmar contraseña" value ="<?php if(isset($_POST['passwordConfirm'])) echo $_POST['passwordConfirm']; ?>">
+                    <input type="password" class="form-control form-control-user" id="passwordConfirm" name="passwordConfirm" placeholder="Confirmar contraseña">
                   </div>
                 </div>
 
@@ -140,8 +140,11 @@
               </div>
 
               <div class="text-center">
-                <a class="small" href=" <?php echo SERVERURL ?>login/">Ya posee un cuenta? Inicio de Sesion</a>
+                <a class="small" href=" <?php echo SERVERURL ?>login/">Ya posee un cuenta? Inicie Sesion</a>
               </div>
+
+              <?php require "./view/inc/linkRestartUser.php"; ?>
+
             </div>
           </div>
         </div>

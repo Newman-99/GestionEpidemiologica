@@ -16,27 +16,28 @@
 
 	<?php 
 
+
   $requestAjax = false;
+
+      require_once "./controller/loginController.php";
+      $loginController = new loginController();
+
 	require_once "./controller/viewsController.php";; 
 	
 	$viewsController =  new viewsController();
 
 	$requestedView= $viewsController->getViewsController();	
-	if($requestedView == "register-user" || $requestedView == "login" || $requestedView == '404'){
-			require_once "./view/contents/".$requestedView."-view.php";
+
+	if($requestedView == "register-user" || $requestedView == "login" || $requestedView == "404" || $requestedView == "forgot-password" || $requestedView == "restartUser"){
+      require_once "./view/contents/".$requestedView."-view.php";
 		}else{
 
 	     session_start(['name'=>'dptoEpidemi']);
-
-      require_once "./controller/loginController.php";
-      $loginController = new loginController();
-
       if(!isset($_SESSION['token_dptoEpidemi']) || !isset($_SESSION['aliasUser'])){
         echo $loginController->forceClosureController();
         exit();
 
       }
-
 	?>
 	
 <body id="page-top">

@@ -18,7 +18,7 @@
 		 :idNacionalidad,
 		 :idGenero);");
 
-			$sqlQuery->execute(array(
+			return $sqlQuery->execute(array(
 		 "docIdentidad"=>$dataPersona['docIdentidad'],
 		 "nombres"=>$dataPersona['nombres'],
 		 "apellidos"=>$dataPersona['apellidos'],
@@ -26,20 +26,17 @@
 		 "idNacionalidad"=>$dataPersona['idNacionalidad'],
 		 "idGenero"=>$dataPersona['idGenero']));
 
-
-			return $sqlQuery;
 		}
 
 			protected static function updatePersonaModel($dataPersona){
 		$sqlQuery = mainModel::connectDB()->prepare("UPDATE personas SET
-		 docIdentidad = :docIdentidad,
 		 nombres = :nombres,
 		 apellidos = :apellidos,
 		 fechaNacimiento = :fechaNacimiento,
-		 idNacionalidad = :idNacionalidad,
-		 idGenero = :idGenero WHERE docIdentidad = :docIdentidad;");
+		 idGenero = :idGenero WHERE docIdentidad = :docIdentidad AND idNacionalidad = :idNacionalidad;");
 
-			$sqlQuery->execute(array(
+			return $sqlQuery->execute(array(
+		 "idNacionalidad"=>$dataPersona['idNacionalidad'],
 		 "docIdentidad"=>$dataPersona['docIdentidad'],
 		 "nombres"=>$dataPersona['nombres'],
 		 "apellidos"=>$dataPersona['apellidos'],
@@ -47,8 +44,6 @@
 		 "idNacionalidad"=>$dataPersona['idNacionalidad'],
 		 "idGenero"=>$dataPersona['idGenero']));
 
-
-			return $sqlQuery;
 		}
 
 

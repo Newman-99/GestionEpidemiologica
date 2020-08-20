@@ -16,6 +16,15 @@ if (isset($_POST['operationType']) && $_POST['operationType'] === "login") {
 	}elseif (isset($_GET['operationType']) && $_GET['operationType'] === "closeSession") {
 
 			$loginController->closeControllerSession($_GET);
+
+		}elseif($_POST['operationType'] === "forgotPassUser") {
+
+		$loginController->forgotPassUserController($_POST);
+
+		}elseif($_POST['operationType'] === "restart") {
+
+		$loginController->addDataForUserRestartController($_POST);
+
 	}else{	
 /*
 		$loginController->loginUserController($closeSession);

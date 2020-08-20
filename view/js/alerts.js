@@ -31,8 +31,8 @@ function captureDataForm (e){
 		textMsjAlert="Los datos del sistema serán actualizados";
 	}else if(type==="search"){
 		textMsjAlert="Se eliminará el término de búsqueda y tendrás que escribir uno nuevo";
-	}else if(type==="loans"){
-		textMsjAlert="Desea remover los datos seleccionados para préstamos o reservaciones";		
+	}else if(type==="config"){
+		textMsjAlert="Las configuraciones se guardaran en el sistema";		
 	}else if(type==="login"){
 		textMsjAlert=false;		
 	}else{

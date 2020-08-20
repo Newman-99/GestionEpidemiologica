@@ -118,7 +118,7 @@
 
                 </div>
 
-            <p class="form-control">
+            <p class="form-control ">
                 <?php echo $fieldsUserRequested['aliasUsuario'];
                 ?>
             <input name= "aliasUser" type="hidden" value="<?php echo $fieldsUserRequested['aliasUsuario']; ?>">
@@ -176,15 +176,16 @@
                   <div class="col-sm-6 mb-3 mb-sm-0">
                 <select name='idEstado' id='idEstado' class="form-control
                 form-control-person" autocomplete='on' class="form-control" <?php if ($_SESSION['idNivelPermiso'] != 1) echo "disabled"; ?> >
-                      <option value="">Genero</option>
-                        <option <?php if($fieldsUserRequested['idEstado'] == 0) echo 'selected';?> value="1">Estado: Inactivo</option>
-                        <option <?php if($fieldsUserRequested['idEstado'] == 1) echo 'selected'; ?> value="2">Estado: Habilitado</option>
+                      <option value="">Estado</option>
+                        <option <?php if($fieldsUserRequested['idEstado'] == 0) echo 'selected';?> value="0">Estado: Inactivo</option>
+                        <option <?php if($fieldsUserRequested['idEstado'] == 1) echo 'selected'; ?> value="1">Estado: Activo</option>
+                        <option <?php if($fieldsUserRequested['idEstado'] == 2) echo 'selected'; ?> value="3">Estado: Reiniciado</option>
                     </select>
     
                   </div>                
                 </div>
 
-                  <button class="btn btn-primary btn-user btn-block" type="submit" value="registerUser" name="save">Registar</button>
+                  <button class="btn btn-primary btn-user btn-block" type="submit" value="updaterUser" name="save">Actualizar</button>
                 </a> 
 
                 <div class="responseProcessAjax"></div>

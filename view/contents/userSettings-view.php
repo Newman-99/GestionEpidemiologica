@@ -9,29 +9,106 @@
               </div>
 
 
-   <form class="formAjax form-update form-group text-center user" action="<?php echo SERVERURL; ?>ajax/userAjax.php" method="POST" data-form="update" autocomplete="off">
+              <?php 
+              $userEncryptURl= explode("/",$_GET['views']);
+
+              $msjError="<div class='form-group row'>
+                    <h3 class='h3 mb-2 red'>Error de solicitud de la Cuenta </h3>
+
+              <a href=".SERVERURL."/dashboard>&larr; Regresa al Tablero de Inicio</a>
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+              ";              
+              if (!isset($userEncryptURl[1]) || empty($userEncryptURl[1])){
+
+                echo $msjError;
+
+                exit;
+
+              }
+              $requestedAliasUser = $loginController->decryption($userEncryptURl[1]);
+
+              if (strcmp($_SESSION["aliasUser"],$requestedAliasUser) != 0) {
+                echo $loginController->forceClosureController();
+              }
+
+              // comrprobar que exista el usuario solicitado
+                 $requestAjax =  FALSE;
+
+                require_once "./controller/userController.php";
+              
+                $userController = new userController();
+
+               $queryUserRequested=$userController->getUserController(array("aliasUser"=>$requestedAliasUser));
+
+                $queryUserRequested->execute();     
+                
+                if(!$queryUserRequested->rowCount()){
+                echo $msjError;
+
+                exit;
+                }
+
+                $fieldsUserRequested=$queryUserRequested->fetch();
+
+?>
+
+
+
+   <form class="formAjax form-update form-group text-center user" action="<?php echo SERVERURL; ?>ajax/userAjax.php" method="POST" data-form="config" autocomplete="off">
+
+                <div class="form-group">
+            <p class="form-control">
+                <?php echo $fieldsUserRequested['aliasUsuario'];
+                ?>
+            <input name= "aliasUser" type="hidden" value="<?php echo $fieldsUserRequested['aliasUsuario']; ?>">
+
+            </p>
+            </div>
+
+                <div class="form-group">
+                    <input type="password" class="form-control form-control-user" id="password" name="password" placeholder="Contraseña">
+              </div>
+ 
+                <div class="form-group">
+                  <input type="password" class="form-control 
+                  form-control-user" id="question1" name="question1" placeholder="¿Cual fue el nombre de tu primera mascota?">
+                </div>
+
+                <div class="form-group">
+                  <input type="password" class="form-control 
+                  form-control-user" id="question2" name="question2" placeholder="¿Cual es el nombre de tu artista favorita?">
+                </div>
+
+            <hr>
+              <h5 class="h5 mb-2 text-gray-800">Nuevas Configuraciones</h5>
 
                 <div class="form-group row">
                   <div class="col-sm-6 mb-3 mb-sm-0">
-                    <input type="password" class="form-control form-control-user" id="password" name="password" placeholder="Nueva Contraseña">
+                    <input type="password" class="form-control form-control-user" id="newPassword" name="newPassword" placeholder="Nueva Contraseña">
                   </div>
                   <div class="col-sm-6">
-                    <input type="password" class="form-control form-control-user" id="passwordConfirm" name="passwordConfirm" placeholder="Confirmar contraseña">
+                    <input type="password" class="form-control form-control-user" id="newPasswordConfirm" name="newPasswordConfirm" placeholder="Confirmar contraseña">
                   </div>
                 </div>
 
+                <div class="form-group">
+                  <input type="password" class="form-control 
+                  form-control-user" id="newQuestion1" name="newQuestion1" placeholder="¿Cual fue el nombre de tu primera mascota?">
+                </div>
 
-                <div class="form-group row">
-                  <div class="col-sm-6 mb-3 mb-sm-0">
-                    <input type="password" class="form-control form-control-user" id="password" name="password" placeholder="Nueva Contraseña">
-                  </div>
-                  <div class="col-sm-6">
-                    <input type="password" class="form-control form-control-user" id="passwordConfirm" name="passwordConfirm" placeholder="Confirmar contraseña">
-                  </div>
-		      </div>
+                <div class="form-group">
+                  <input type="password" class="form-control 
+                  form-control-user" id="newQuestion2" name="newQuestion2" placeholder="¿Cual es el nombre de tu artista favorita?">
+                </div>
+
 
 		  
-		 <button class="btn btn-primary btn-user btn-block" type="submit" value="registerUser" name="save">Registar</button>
+		 <button class="btn btn-primary btn-user btn-block" type="submit" value="configSecurityUser" name="config">Guardar</button>
 
 		 <div class="responseProcessAjax"></div>
 		          </form>

@@ -38,8 +38,11 @@
                     <a class="small" href="<?php echo SERVERURL; ?>forgot-password/">¿Se me olvido la contraseña?</a>
                   </div>
                   <div class="text-center">
-                    <a class="small" href="<?php echo SERVERURL; ?>register-user/">Crea una cuenta</a>
+                    <a class="small" href="<?php echo SERVERURL; ?>register-user/">Crear una cuenta</a>
                   </div>
+  
+                  <?php require "./view/inc/linkRestartUser.php"; ?>
+      
                 </div>
               </div>
             </div>

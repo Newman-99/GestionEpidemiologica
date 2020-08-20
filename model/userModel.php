@@ -70,9 +70,7 @@
 		    $sqlQuery->bindParam($key, $values['value'], $values['type']);
 		  }
 
-		  $sqlQuery->execute();
-
-			return $sqlQuery;
+		  return $sqlQuery->execute();
 
 	}
 
@@ -81,7 +79,6 @@
 
 		$sqlQuery = mainModel::connectDB()->prepare("UPDATE usuariosPreguntas 
 			SET respuesta = :respuesta WHERE aliasUsuario = :aliasUser AND idPregunta = :idPregunta ;");
-
 
 		    return $sqlQuery->execute(array("aliasUser"=>$dataUpdateQuestions["aliasUser"],"idPregunta"=>$dataUpdateQuestions["idPregunta"],"respuesta"=>$dataUpdateQuestions["respuesta"]));
 

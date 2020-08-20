@@ -17,28 +17,48 @@
                 <div class="p-5">
                   <div class="text-center">
                     <h1 class="h4 text-gray-900 mb-2">¿Has olvidado tu contraseña?</h1>
-                    <p class="mb-4">Rellena los campos correctamente para que la recuperacion de contraseña se ha autorizada por un administrador</p>
+                    <p class="mb-4">Rellena los campos correctamente para que la recuperacion de contraseña se ha autorizada por un administrador y se ha reactivada su cuenta</p>
                   </div>
-                  <form class="user">
-                    <div class="form-group">
-                      <input type="email" class="form-control form-control-user" id="emailHelp" name="emailHelp" aria-describedby="emailHelp" placeholder="¿Cual es tu correo electronico?">
-                    </div>
 
-                    <div class="form-group">
-                      <input type="email" class="form-control form-control-user" id="emailHelp" name="emailHelp" placeholder="¿Cual es tu correo electronico?">
-                    </div>
+          <form class="formAjax form-group text-center user" action="<?php echo SERVERURL; ?>ajax/loginAjax.php" method="POST" data-form="forgotPassUser" autocomplete="off">
+
+                <div class="form-group">
+                  <input type="text" class="form-control 
+                  form-control-user
+                  form-control-user" id="aliasUser" name="aliasUser" placeholder="Alias de Usuario">
+                </div>
+
+                <div class="form-group">
+                  <input type="password" class="form-control 
+                  form-control-user" id="question1" name="question1" placeholder="¿Cual fue el nombre de tu primera mascota?">
+                </div>
+
+                <div class="form-group">
+                  <input type="password" class="form-control 
+                  form-control-user" id="question2" name="question2" placeholder="¿Cual es el nombre de tu artista favorita?">
+                </div>
+
+<hr>
+                <div class="form-group">
+                  <input type="password" class="form-control 
+                  form-control-user" id="newPassword" name="newPassword" placeholder="Nueva Contraseña">
+                </div>
 
 
-                    <a href="<?php echo SERVERURL; ?>login/" class="btn btn-primary btn-user btn-block">
-                      Recuperar Contraseña
-                    </a>
+                <div class="form-group">
+                  <input type="password" class="form-control 
+                  form-control-user" id="newPasswordConfirm" name="newPasswordConfirm" placeholder="Confirmar Contraseña">
+                </div>
+
+                  <button class="btn btn-primary btn-user btn-block" type="submit" value="forgotPassUser" name="forgotPassUser">Recuperar</button>
+
                   </form>
                   <hr>
                   <div class="text-center">
-                    <a class="small" href="<?php echo SERVERURL; ?>register/">Crear una Cuenta!</a>
+                    <a class="small" href="<?php echo SERVERURL; ?>register-user/">Crear una Cuenta</a>
                   </div>
                   <div class="text-center">
-                    <a class="small" href="<?php echo SERVERURL; ?>login/">Ya tienes una cuenta? Login!</a>
+                    <a class="small" href="<?php echo SERVERURL; ?>login/">Ya tienes una cuenta? Inicie Sesion</a>
                   </div>
                 </div>
               </div>

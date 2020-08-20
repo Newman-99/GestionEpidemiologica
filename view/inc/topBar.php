@@ -162,7 +162,7 @@
                   <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
                   Perfil
                 </a>
-                <a class="dropdown-item" href="<?php echo SERVERURL; ?>userSettings/">
+                <a class="dropdown-item" href="<?php echo SERVERURL; ?>userSettings/<?php echo $loginController->encryption($_SESSION['aliasUser']);?>/">
                   <i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>
                   Configuraciones
                 </a>

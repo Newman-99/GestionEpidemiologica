@@ -17,7 +17,15 @@
 
 		$userController->updateUserController($_POST);
 
-	} else { 
+	}elseif ($_POST['operationType'] === "config") {
+
+	$userController->modifyUserSafetyDataController($_POST);
+
+	}elseif ($_POST['operationType'] === "restart") {
+		
+	$userController->reloadUserController($_POST);
+		
+ }else { 
 /*		
 		session_start(["name"=> "systemDptoEpidemi"]);
 		session_unset();

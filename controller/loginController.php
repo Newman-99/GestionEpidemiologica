@@ -1,12 +1,12 @@
 <?php 	
 
 	if($requestAjax){
-		require_once "../model/mainModel.php";
+		require_once "../controller/userController.php";
 	}else{
-		require_once "./model/mainModel.php";
+		require_once "./controller/userController.php";
 	}
 
-	class loginController extends mainModel{
+	class loginController extends userController{
 
 public function loginUserController($dataUser){
 		$aliasUser = mainModel::cleanStringSQL($dataUser["aliasUser"]);
@@ -30,23 +30,17 @@ public function loginUserController($dataUser){
 			}
 
 			// para usar los metodos de user como si heredaramos
-		$requestAjax = TRUE;
-
-			require_once "../controller/userController.php";
-
-			$userController = new userController();
 
 			$recordsUserSQL = userController::getUserController(array("aliasUser"=>$aliasUser));
 					
 			$recordsUserSQL->execute();
-
 
 		if(!$recordsUserSQL->rowCount()){
 				
 				$alert=[
 				"Alert"=>"simple",
 				"Title"=>"Datos no encontrados",
-				"Text"=>"No existe un usuario con este alias registrado",
+				"Text"=>"El alias de usuario o la contraseña son incorrectos",
 				"Type"=>"error"
 			];
 				echo json_encode($alert);
@@ -78,7 +72,7 @@ public function loginUserController($dataUser){
 				$alert=[
 				"Alert"=>"simple",
 				"Title"=>"Datos Invalidos",
-				"Text"=>"La contraseña es incorrecta",
+				"Text"=>"El alias de usuario o la contraseña son incorrectos ",
 				"Type"=>"error"
 			];
 
@@ -110,12 +104,12 @@ public function loginUserController($dataUser){
 
 		// Comprobar que el estado del usuario se ha valido
 		
-		if(!$idEstado){
+		if($idEstado == 0 || $idEstado == 2){
 				
 				$alert=[
 				"Alert"=>"simple",
 				"Title"=>"Permiso Denegado",
-				"Text"=>"El usuario se encuentra inactivo por favor contactar un administrador",
+				"Text"=>"El usuario se encuentra inactivo o reiniciado, por favor contactar un administrador",
 				"Type"=>"error"
 			];
 
@@ -249,6 +243,138 @@ public function loginUserController($dataUser){
 		}
 	}
 
+public function forgotPassUserController($dataUser){
+
+
+		 $aliasUser = mainModel::cleanStringSQL($dataUser["aliasUser"]);
+
+
+		if (mainModel::isDataEmtpy($aliasUser,
+		 	$dataUser["question1"],$dataUser["question2"],$dataUser["newPassword"],$dataUser["newPasswordConfirm"])){
+
+				$alert=[
+					"Alert"=>"simple",
+					"Title"=>"Campos Vacios",
+					"Text"=>"Todos los campos son obligatorios",
+					"Type"=>"error"
+				];
+
+				echo json_encode($alert);
+
+				exit();
+
+			}
+
+			// Desactivamos el usuario
+			
+		$userAttributesUpdate = [];
+
+ 		$userValuesUpdate = [];
+
+			// Actualizamos la contrasenia
+			$resultQueryModifyUserSafetyData = userController::modifyUserSafetyDataController($dataUser);
+
+
+				$userValuesUpdate['aliasUser'] = [
+				'value' => $aliasUser,
+				'type' => \PDO::PARAM_STR,
+				];
+
+				array_push($userAttributesUpdate, 'idEstado = :idEstado');
+				$userValuesUpdate['idEstado'] = [
+				'value' => 0,
+				'type' => \PDO::PARAM_INT,
+				];
+
+			$resultQueryUpdateUserStatus = userModel::updateUserModel($userValuesUpdate,$userAttributesUpdate);
+
+
+			$alert=[
+				"Alert"=>"simple",
+				"Title"=>"Ocurrio un error inesperado",
+				"Text"=>"Error en la actualizacion del usuario",
+				"Type"=>"error"
+			];
+
+			if ($resultQueryModifyUserSafetyData && $resultQueryUpdateUserStatus) {
+			$alert=[
+				"Alert"=>"reload",
+				"Title"=>"Operacion Exitosa",
+				"Text"=>"Contraseña Recuperada, Por favor contacte con el administrador para reactivar su cuenta",
+				"Type"=>"success"
+			];
+
+			}
+
+				echo json_encode($alert);
+
+				exit();	 	
+
+
+}
+
+
+public function addDataForUserRestartController($dataUser){
+
+
+		 $aliasUser = mainModel::cleanStringSQL($dataUser["aliasUser"]);
+
+		$userAttributesUpdate = [];
+
+ 		$userValuesUpdate = [];
+
+		if (mainModel::isDataEmtpy($aliasUser,
+		 	$dataUser["newQuestion1"],$dataUser["newQuestion2"],$dataUser["newPassword"],$dataUser["newPasswordConfirm"])){
+
+				$alert=[
+					"Alert"=>"simple",
+					"Title"=>"Campos Vacios",
+					"Text"=>"Todos los campos son obligatorios",
+					"Type"=>"error"
+				];
+
+				echo json_encode($alert);
+
+				exit();
+
+			}
+
+			$resultQueryModifyUserSafetyData = userController::modifyUserSafetyDataController($dataUser);
+
+				$userValuesUpdate['aliasUser'] = [
+				'value' => $aliasUser,
+				'type' => \PDO::PARAM_STR,
+				];
+
+				array_push($userAttributesUpdate, 'idEstado = :idEstado');
+				$userValuesUpdate['idEstado'] = [
+				'value' => 0,
+				'type' => \PDO::PARAM_INT,
+				];
+
+			$resultQueryUpdateUserStatus = userModel::updateUserModel($userValuesUpdate,$userAttributesUpdate);
+
+			$alert=[
+				"Alert"=>"simple",
+				"Title"=>"Ocurrio un error inesperado",
+				"Text"=>"Error en la actualizacion del usuario",
+				"Type"=>"error"
+			];
+
+			if ($resultQueryModifyUserSafetyData && $resultQueryUpdateUserStatus) {
+			$alert=[
+				"Alert"=>"reload",
+				"Title"=>"Operacion Exitosa",
+				"Text"=>"Datos de Seguridad reiniciados, Por favor contacte con el administrador para reactivar su cuenta",
+				"Type"=>"success"
+			];
+
+			}
+
+				echo json_encode($alert);
+
+				exit();			
+}
 
 	public static function randIconUserIMG(){
 

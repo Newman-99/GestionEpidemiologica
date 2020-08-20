@@ -2,8 +2,7 @@
 class viewsModel{
 
 	protected static function getViewModel($requestedView){
-
-					$whileList=["registrar-caso-epidemi","register-user","utilities-other","utilities-color","utilities-border","utilities-animation","tables","register","login","forgot-password","dashboard","charts","cards","buttons","blank","user-list",'dataAccount',"userSettings"];
+					$whileList=["registrar-caso-epidemi","utilities-other","utilities-color","utilities-border","utilities-animation","tables","dashboard","charts","cards","buttons","blank","user-list",'dataAccount',"userSettings"];
 
 					if (in_array($requestedView, $whileList)) {  
 
@@ -13,15 +12,17 @@ class viewsModel{
 							$content = "404";
 						}
 
-						}elseif($requestedView=="login" || $requestedView == "index" ){
+					}elseif($requestedView=="login" || $requestedView == "index" ){
 						$content = "login";
-						}elseif($requestedView=="register-user"){
-					   $content = "register-user";
+
+					}elseif ($requestedView=="register-user" || $requestedView=="forgot-password" || $requestedView=="restartUser"){
+					   $content = $requestedView;
 					}else{
-					
-						$content = "404"; 
+						$content = "404";
 					}
+
 				return $content;
-			}
+			
 		}
+	}
  ?>

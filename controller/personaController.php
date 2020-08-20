@@ -55,6 +55,25 @@
 				exit();
 			}
 
+			$isExistPerson = mainModel::runSimpleQuery("SELECT docIdentidad FROM `personas` WHERE docIdentidad =
+			'$docIdentidad' AND idNacionalidad =
+			'$idNacionalidad'");
+
+			if($isExistPerson->rowCount()){
+
+			$alert=[
+				"Alert"=>"simple",
+				"Title"=>"Datos Invalidos",
+				"Text"=>"Ya se encuentra una persona con este documento de identidad",
+				"Type"=>"error"
+			];
+
+				echo json_encode($alert);
+
+				exit();
+			}
+
+
 			if(!self::isValidDocIdentidad($docIdentidad)){
 
 			$alert=[
@@ -193,7 +212,7 @@
 
 		 $telefono = mainModel::cleanStringSQL($telefono);
 
-		 			if (mainModel::isDataEmtpy(
+		 			if (!isset(
 						 $docIdentidad,
 						 $nombres,
 						 $apellidos,
@@ -204,7 +223,7 @@
 			$alert=[
 				"Alert"=>"simple",
 				"Title"=>"Campos Vacios",
-				"Text"=>"Todos los datos personales son obligatorios",
+				"Text"=>"Faltan campos para la actualizacion",
 				"Type"=>"error"
 			];
 			
@@ -214,6 +233,39 @@
 
 			}
 
+
+
+			$isExistPerson = mainModel::runSimpleQuery("SELECT docIdentidad FROM `personas` WHERE docIdentidad =
+			'$docIdentidad' AND idNacionalidad =
+			'$idNacionalidad'");
+
+			if(!$isExistPerson->rowCount()){
+
+			$alert=[
+				"Alert"=>"simple",
+				"Title"=>"Datos Invalidos",
+				"Text"=>"Ya se encuentra una persona con este documento de identidad",
+				"Type"=>"error"
+			];
+
+				echo json_encode($alert);
+
+				exit();
+			}
+
+			if(!self::isValidDocIdentidad($docIdentidad)){
+
+			$alert=[
+				"Alert"=>"simple",
+				"Title"=>"Datos Invalidos",
+				"Text"=>"El documento de identidad es invalido",
+				"Type"=>"error"
+			];
+
+				echo json_encode($alert);
+
+				exit();
+			}
 
 
 			if(!mainModel::isValidSelectionTwoOptions($idGenero)){
@@ -302,8 +354,7 @@
 		 
 		 $dataPersona['idGenero'] = $idGenero;
 		 
-
-			 return personaModel::updatePersonaModel($dataPersona);
+		return personaModel::updatePersonaModel($dataPersona);
 
 				 	
 
