@@ -23,8 +23,8 @@
 
 	}elseif ($_POST['operationType'] === "restart") {
 		
-	$userController->reloadUserController($_POST);
-		
+	$userController->reloadUserController($_POST);		
+				
  }else { 
 /*		
 		session_start(["name"=> "systemDptoEpidemi"]);

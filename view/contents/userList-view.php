@@ -5,6 +5,11 @@
   }
 ?>
 
+
+  <script src="<?php echo SERVERURL; ?>view/js/changeLanguageDatatables.js">
+
+  </script>
+
           <!-- Page Heading -->
           <h1 class="h3 mb-2 text-gray-800">Usuarios</h1>
           
@@ -37,3 +42,16 @@
 
                         </div>
           </div>
+
+<script type="text/javascript">
+  
+    $( document ).ready(function() {
+
+      var table = $('#dataTable').DataTable({
+          'language': LANGUAGE_SPANISH_DATATABLES
+    });
+  
+});
+
+
+</script>

@@ -19,9 +19,7 @@ $(document).ready(function() {
         $.ajax({
     url: URL_tokenCurrentUSer,
         success:function(data) {
-    console.log(data);
     let alert = JSON.parse(data);
-
     ajaxSweetAlerts(alert);
 
 /*

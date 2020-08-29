@@ -9,6 +9,13 @@
 
 	class mainModel{
 		
+
+		function __construct()
+	{
+    date_default_timezone_set("America/Caracas");
+	}
+
+
 		protected static function connectDB(){
 		$linkBD = new PDO(SGBD,USER,PASS);
 		$linkBD->exec("SET CHARACTER SET utf8");
@@ -274,9 +281,9 @@ protected static function  isStringInRange($string,$rangeMin,$rangeMax){
 
 // funciones para la bitacora
 
-protected function  addBitacora($dataBitacora){
+protected function  addUsuarioBitacora($dataUsuarioBitacora){
 
-	$sqlQuery = self::connectDB()->prepare("INSERT INTO bitacora(
+	$sqlQuery = self::connectDB()->prepare("INSERT INTO usuarioBitacora(
 		usuarioAlias
 		,bitacoraCodigo
 		,bitacoraFecha
@@ -293,27 +300,27 @@ protected function  addBitacora($dataBitacora){
 		:bitacoraYear)");
 
 			$sqlQuery->execute(array(
-		"usuarioAlias"=>$dataBitacora['usuarioAlias'],
-		"bitacoraCodigo"=>$dataBitacora['bitacoraCodigo'],
-		"bitacoraFecha"=>$dataBitacora['bitacoraFecha'],
-		"bitacoraHoraInicio"=>$dataBitacora['bitacoraHoraInicio'],
-		"bitacoraHoraFinal"=>$dataBitacora['bitacoraHoraFinal'],
-		"bitacoraNivelUsuario"=>$dataBitacora['bitacoraNivelUsuario'],
-		"bitacoraYear"=>$dataBitacora['bitacoraYear']));
+		"usuarioAlias"=>$dataUsuarioBitacora['usuarioAlias'],
+		"bitacoraCodigo"=>$dataUsuarioBitacora['bitacoraCodigo'],
+		"bitacoraFecha"=>$dataUsuarioBitacora['bitacoraFecha'],
+		"bitacoraHoraInicio"=>$dataUsuarioBitacora['bitacoraHoraInicio'],
+		"bitacoraHoraFinal"=>$dataUsuarioBitacora['bitacoraHoraFinal'],
+		"bitacoraNivelUsuario"=>$dataUsuarioBitacora['bitacoraNivelUsuario'],
+		"bitacoraYear"=>$dataUsuarioBitacora['bitacoraYear']));
 
 
 			return $sqlQuery;
 
 }
 
-protected function updateBitacora($dataBitacora){
+protected function updateUsuarioBitacora($dataUsuarioBitacora){
 
-$sqlQuery = self::connectDB()->prepare("UPDATE `bitacora` SET 
+$sqlQuery = self::connectDB()->prepare("UPDATE `usuarioBitacora` SET 
 		bitacoraHoraFinal=:bitacoraHoraFinal WHERE bitacoraCodigo = :bitacoraCodigo");
 
 			$sqlQuery->execute(array(
-		"bitacoraHoraFinal"=>$dataBitacora['bitacoraHoraFinal'],
-		"bitacoraCodigo"=>$dataBitacora['bitacoraCodigo']));
+		"bitacoraHoraFinal"=>$dataUsuarioBitacora['bitacoraHoraFinal'],
+		"bitacoraCodigo"=>$dataUsuarioBitacora['bitacoraCodigo']));
 
 			return $sqlQuery;
 

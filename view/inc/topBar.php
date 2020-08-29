@@ -166,9 +166,9 @@
                   <i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>
                   Configuraciones
                 </a>
-                <a class="dropdown-item" href="#">
+                <a class="dropdown-item" href="<?php echo SERVERURL; ?>activityLogUser/<?php echo $loginController->encryption($_SESSION['aliasUser']);?>/">
                   <i class="fas fa-list fa-sm fa-fw mr-2 text-gray-400"></i>
-                  Activity Log
+                  Mi Registro de Sesiones
                 </a>
 
                 <?php $URL_token_dptoEpidemi = SERVERURL."ajax/loginAjax.php?"."operationType=closeSession"."&tokenCurrentUser=".$loginController->encryption($_SESSION["token_dptoEpidemi"])?>

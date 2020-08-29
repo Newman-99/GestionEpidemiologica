@@ -35,6 +35,8 @@ function captureDataForm (e){
 		textMsjAlert="Las configuraciones se guardaran en el sistema";		
 	}else if(type==="login"){
 		textMsjAlert=false;		
+	}else if(type==="query"){
+		textMsjAlert=false;
 	}else{
 		textMsjAlert="Quieres realizar la operación solicitada";
 	}
@@ -47,6 +49,7 @@ function captureDataForm (e){
 
 // Operaciones que no necesitan confirmacion
 if(textMsjAlert==false){
+
 			return sendFormDataAjax(action,contentFormFields,method,responseProcess);
 }
 
@@ -72,11 +75,13 @@ if(textMsjAlert==false){
 
 function sendFormDataAjax(action,ValuesAndFields,method,showResponseProcess){
 	$.ajax({
+		url : action,
 		type: method,
-		url: action,
-		data: ValuesAndFields,
+ 		data: ValuesAndFields,
 		cache: false,
         processData: false,
+	     /*contentType: "application/json; charset=utf-8",
+        dataType: "json",*/
         xhr: function(){
         	var xhr = new window.XMLHttpRequest();
                 xhr.upload.addEventListener("progress", function(evt) {
@@ -93,16 +98,19 @@ function sendFormDataAjax(action,ValuesAndFields,method,showResponseProcess){
                     return xhr;
                 },
 		success: function (response) {
-			console.log(response);
+		  			console.log(response);
 		  let operationResult = JSON.parse(response);
+
 		  if (typeof operationResult.Alert != 'undefined') {		
 			return ajaxSweetAlerts(operationResult);
-				}
-		},error: function() {
+			}
+			return operationResult;
+		},error: function (e) {
+  			alert("Error: " + e);
 
-		var alert = {"Alert":"simple","Title":"Ocurrió un error inesperado","Text":"Por favor recargue la página","Type":"error"};
+		//var alert = {"Alert":"simple","Title":"Ocurrió un error inesperado","Text":"Por favor recargue la página","Type":"error"};
 
-		ajaxSweetAlerts(alert);
+		//return ajaxSweetAlerts(alert);
 
 		}
 	});
@@ -190,5 +198,3 @@ $('#siExistPerson').change(function() {
 	$(".form-control-person").prop('disabled', this.checked);
 
 });
-
-

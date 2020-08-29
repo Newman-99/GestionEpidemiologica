@@ -380,7 +380,7 @@
 		 	$fieldstoCompareUser["idNivelPermiso"] = $idNivelPermiso;
 		}
 
-		 if (isset($dataUser["idEstado"]) || $dataUser['idEstado'] != 0) {
+		 if (isset($dataUser["idEstado"])) {
 
 		 $idEstado = mainModel::cleanStringSQL($dataUser["idEstado"]);
 
@@ -664,12 +664,12 @@ protected static function passwordCorrespondDatabase($dataUser){
 
 		$password = mainModel::cleanStringSQL($dataUser["password"]);
 
-		$querGetpassEncrypt = mainModel::runSimpleQuery("SELECT passEncrypt FROM `usuarios` WHERE alias =
+		$queryGetpassEncrypt = mainModel::runSimpleQuery("SELECT passEncrypt FROM `usuarios` WHERE alias =
 			'$aliasUser'");
 
-		$querGetpassEncrypt->execute();
+		$queryGetpassEncrypt->execute();
 
-		$passEncryptDB = mainModel::decryption($querGetpassEncrypt->fetchColumn());
+		$passEncryptDB = mainModel::decryption($queryGetpassEncrypt->fetchColumn());
 				
 		    if (strcmp($passEncryptDB, $password) != 0){
 				$alert=[
@@ -1136,6 +1136,7 @@ public static function paginateUserController($currentPaginate,$nivelUser,$alias
 
 	$nroPaginates = ceil($totalRecordsQueryUser/$nroRecordsDisplay);
 
+
 $table = "";
 $table.="<div class='table-responsive'>
                 <table class='table table-bordered' id='dataTable' width='100%' cellspacing='0'>
@@ -1245,7 +1246,7 @@ $table.="<div class='table-responsive'>
               <span class="icon text-white-50">
                 <i class="fas fa-redo"></i>
               </span>
-              <span class="text">Regargar Lista</span>
+              <span class="text">Recargar Lista</span>
             </a>
             </td>
 			</tr>';

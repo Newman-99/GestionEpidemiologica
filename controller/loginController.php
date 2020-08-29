@@ -1,5 +1,6 @@
 <?php 	
 
+
 	if($requestAjax){
 		require_once "../controller/userController.php";
 	}else{
@@ -8,7 +9,56 @@
 
 	class loginController extends userController{
 
+
+
+	function __construct(){
+
+
+		session_start(['name'=>'dptoEpidemi']);	
+
+	if (isset($_SESSION['timeout']) && (time() - $_SESSION['timeout'] > 10800)) {
+			
+			self::forceClosureController();
+
+	}
+				$_SESSION['timeout'] = time();
+}
+
+
 public function loginUserController($dataUser){
+			// si hay una sesion iniciada se le registre su cieerre de sesion en bitacora
+
+			if (isset($_SESSION['aliasUser'])) {
+
+			$currentDate =  mainModel::getDateCurrentSystem();
+
+			$currentHour = date("h:i:s a", $currentDate);
+
+			$dataSession=[
+			"aliasUser"=>$_SESSION["aliasUser"],
+			"tokenCurrentUser"=>$_SESSION["token_dptoEpidemi"],
+			"bitacoraHoraFinal"=>$currentHour,
+			"token_dptoEpidemi"=>$_SESSION["token_dptoEpidemi"],
+			"bitacoraCodigo"=>$_SESSION["bitacoraCodigo"]];
+
+
+			$updateUsuarioBitacora = mainModel::updateUsuarioBitacora($dataSession);
+			
+			if (!$updateUsuarioBitacora->rowCount()) {
+				$alert=[
+					"Alert"=>"simple",
+					"Title"=>"Ocurrio un error inesperado",
+					"Text"=>"No se pudo cerrar la anterior sesion en el sistema",
+					"Type"=>"error"
+
+				];
+			}
+				session_unset();
+				session_destroy();
+			// se vuelve a crear para usarla despues
+		session_start(['name'=>'dptoEpidemi']);
+	}
+
 		$aliasUser = mainModel::cleanStringSQL($dataUser["aliasUser"]);
 		$passRequest = mainModel::cleanStringSQL($dataUser["password"]);
 
@@ -137,7 +187,7 @@ public function loginUserController($dataUser){
 
 				$bitacoraCodigo = mainModel::generateRandomCode("CB",8,$totalRecordsBitacora);
 
-				$dataBitacora=[
+				$dataUsuarioBitacora=[
 					"usuarioAlias"=>$aliasUser,
 					"bitacoraCodigo"=>$bitacoraCodigo,
 					"bitacoraFecha"=>$currentDate,
@@ -146,18 +196,14 @@ public function loginUserController($dataUser){
 					"bitacoraHoraFinal"=> NULL,//Se registrar cuando cierre secion
 					"bitacoraNivelUsuario"=>$idNivelPermiso];
 
-					mainModel::addBitacora($dataBitacora);
+					mainModel::addUsuarioBitacora($dataUsuarioBitacora);
 					
 				
 
 				// Datos para las variables de SESSION
 
 				$arrayNamesUser = explode (" ", $nameUser);
-				$arrayLastNamesUser = explode (" ", $lastNamesUser);
-
-				session_start(['name'=>'dptoEpidemi']);
-			   
-
+				$arrayLastNamesUser = explode (" ", $lastNamesUser);			   
 				$_SESSION['docIdentidad']=$docIdentidad;
 				$_SESSION['aliasUser']=$aliasUser;
 
@@ -184,26 +230,36 @@ public function loginUserController($dataUser){
 
 				echo json_encode($alert);
 
-				 //header("Location: ".SERVERURL."dashboard/");
+				exit();
+
 		}
  
 		public function forceClosureController(){
+
+			// si hay una sesion iniciada, se usa closeControllerSession para que registre la bitacora
+			if (isset($_SESSION['aliasUser'])) {
+					$dataSession=[
+			"tokenCurrentUser"=>mainModel::encryption($_SESSION["token_dptoEpidemi"])];
+			self::closeControllerSession($dataSession);
+	}
+
 			session_unset();
 			session_destroy();
+
 			if(headers_sent()){
 				return "<script> window.location.href='".SERVERURL."login/';</script>";
 			}else{
 				return header("Location: ".SERVERURL);
 			}
 
-		}
+			}
+
 
 		public function closeControllerSession($dataSession){
-			session_start(['name'=>'dptoEpidemi']);
 
 			$tokenCurrentUser=mainModel::decryption($dataSession['tokenCurrentUser']);
-			
-			$aliasUser=mainModel::decryption($_SESSION['aliasUser']);
+
+			$aliasUser= $_SESSION['aliasUser'];
 
 			$currentDate =  mainModel::getDateCurrentSystem();
 
@@ -219,16 +275,18 @@ public function loginUserController($dataUser){
 			// si no se crea otra alert, imprimira este msj error
 				$alert=[
 					"Alert"=>"simple",
-					"Title"=>"Error al cerrar la sesión",
+					"Title"=>"Ocurrio un error inesperado",
 					"Text"=>"No se pudo cerrar la sesion en el sistema",
 					"Type"=>"error"
+
 				];
 
 			if($tokenCurrentUser==$_SESSION['token_dptoEpidemi']){
 
-			$updateBitacora = mainModel::updateBitacora($dataSession);
+			$updateUsuarioBitacora = mainModel::updateUsuarioBitacora($dataSession);
 			
-			if ($updateBitacora->rowCount()) {
+			if ($updateUsuarioBitacora->rowCount()) {
+
 				session_unset();
 				session_destroy();
 
@@ -238,9 +296,11 @@ public function loginUserController($dataUser){
 				];
 
 			}
+
+		}
 			
 			echo json_encode($alert);
-		}
+			exit();
 	}
 
 public function forgotPassUserController($dataUser){

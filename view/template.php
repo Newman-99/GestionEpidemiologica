@@ -32,7 +32,6 @@
       require_once "./view/contents/".$requestedView."-view.php";
 		}else{
 
-	     session_start(['name'=>'dptoEpidemi']);
       if(!isset($_SESSION['token_dptoEpidemi']) || !isset($_SESSION['aliasUser'])){
         echo $loginController->forceClosureController();
         exit();

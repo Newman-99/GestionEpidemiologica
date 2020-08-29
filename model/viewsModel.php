@@ -2,7 +2,7 @@
 class viewsModel{
 
 	protected static function getViewModel($requestedView){
-					$whileList=["registrar-caso-epidemi","utilities-other","utilities-color","utilities-border","utilities-animation","tables","dashboard","charts","cards","buttons","blank","user-list",'dataAccount',"userSettings"];
+					$whileList=["registrar-caso-epidemi","utilities-other","utilities-color","utilities-border","utilities-animation","tables","dashboard","charts","cards","buttons","blank","userList",'dataAccount',"userSettings",'activityLogUser','registerCasosEpidemi'];
 
 					if (in_array($requestedView, $whileList)) {  
 
