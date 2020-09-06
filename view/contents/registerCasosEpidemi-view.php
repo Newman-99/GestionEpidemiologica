@@ -1,53 +1,182 @@
         <!-- Page Heading -->
  
+    <div class="card o-hidden border-0 shadow-lg my-5">
+      <div class="card-body p-0">
+        <!-- Nested Row within Card Body -->
+        <div class="row">
+          <div class="col-lg-7">
+            <div class="p-5">
+              <div class="text-center">
+                <h1 class="h3 mb-2 text-gray-800">Seguridad</h1>
+              </div>
 
  <h1 class="h3 mb-4 text-gray-800">Registrar Caso Epidemiologico</h1>
  
- 	<form action="<?php echo SERVERURL; ?>ajax/casosEpidemiAjax.php" method="post" class="form-group text-center">
+   <form class="formAjax form-group text-center user" action="<?php echo SERVERURL; ?>ajax/casosEpidemiAjax.php" method="POST" data-form="register" autocomplete="off">
             
-            Ya Existe el Paciente
-         	<input type="checkbox" name="siExist" id="" class="form-control" placeholder="" value="<?php if(isset($siExist)) echo $siExist; ?>">
+
+       <span alt="¿La persona ya ha sido registrada como paciente o usuario?">¿Persona ya registrada?<input type="checkbox" name="siExistPerson" id="siExistPerson" class="form-control form-control-user" value="1">  
+        </span>
+
 
 
 	<!-- Solo valido para el form de actualizar // solo test -->	
-  	<input type="text" name="idCasoEpidemiologico" id="" class="form-control" placeholder="ID CASO EPIDMIOLOGICO" value="<?php if(isset($idCasoEpidemiologico)) echo $idCasoEpidemiologico; ?>">
+  	<br>
+          <select name='idCapitulo' id='' class="form-control" autocomplete='on' class="form-control" >
 
-	Fecha de Registro
-  	<input type="date" name="dateRegisterCasoEpidemi" id="" class="form-control" placeholder="Fecha de Registro" value="<?php if(isset($dateRegisterCasoEpidemi)) echo $dateRegisterCasoEpidemi; ?>">
+            <option value="">Capitulos</option>
 
-  	<input type="text" name="nombres" id="" class="form-control" placeholder="Nombres" value="<?php if(isset($nombres)) echo $nombres; ?>">
+            <option  value='01'>I CIERTAS ENFERMEDADES INFECCIOSAS Y PARASITARIAS</option>
 
-  	<input type="text" name="apellidos" id="" class="form-control" placeholder="Apellidos" value="<?php if(isset($apellidos)) echo $apellidos; ?>">
+            <option  value='02'>III ENFERMEDADES DE LA SANGRE Y DE LOS ORGANOS HEMATOPOYETICOS, Y CIERTOS TRASTORNOS QUE AFECTAN EL MECANISMO DE LA INMUNIDAD</option>
 
-        <select name='idNacionalidad' id='' class="form-control" autocomplete='on' class="form-control" >
-          <?php $idNacionalidad =1; ?>
-            <option <?php if($idNacionalidad == '1') echo 'selected'; ?> value='1'>V</option>
-            <option <?php if($idNacionalidad == '2') echo 'selected';?> value='2'>E</option>
+            <option  value='03'>IV   ENFERMEDADES ENDOCRINAS, NUTRICIONALES Y METABOLICAS</option>
+
+            <option  value='04'>V TRASTORNOS MENTALES Y DEL COMPORTAMIENTO</option>
+
+            <option  value='05'>VI ENFERMEDADES DEL SISTEMA NERVIOSO</option>
+
+            <option  value='06'>VII ENFERMEDADES DEL OJO Y SUS ANEXOS</option>
+
+            <option  value='07'>VIII ENFERMEDADES DE OIDO Y DE LA APOFISIS MASTOIDES</option>
+
+            <option  value='08'>IX ENFERMEDADES DEL SISTEMA CIRCULATORIO</option>
+
+            <option  value='09'>X  ENFERMEDADES DEL SISTEMA RESPIRATORIO</option>
+
+            <option  value='10'>XI ENFERMEDADES DEL SISTEMA DIGESTIVO</option>
+
+            <option  value='11'>XII ENFERMEDADES DE LA PIEL Y DEL TEJIDO SUBCUTANEO</option>
+
+            <option  value='12'>XIII ENFERMEDADES DEL SISTEMA OSTEOMUSCULAR Y DEL TEJIDO CONJUNTIVO</option>
+
+            <option  value='13'>XIV ENFERMEDADES DEL SISTEMA GENITOURINARIO</option>
+
+            <option  value='14'>XV EMBARAZO, PARTO Y PUERPERIO</option>
+
+            <option  value='15'>XVI CIERTAS AFECCIONES ORIGINADAS EN EL PERIODO PERINATAL</option>
+
+            <option  value='16'>XVII MALFORMACIONES CONGENITAS, DEFORMIDADES Y ANOMALIAS CROMOSOMICAS</option>
+
+            <option  value='17'>XVIII SINTOMAS, SIGNOS Y HALLAZGOS ANORMALES CLINICOS Y DE LABORATORIO, NO CLASIFICADOS EN OTRA PARTE</option>
+
+            <option  value='18'>XIX TRAUMATISMOS, ENVENENAMIENTOS Y ALGUNAS OTRAS CONSECUENCIAS DE CAUSAS EXTERNAS</option>
+
+            <option  value='19'>XXII CAUSAS PARA PROPOSITOS ESPECIALES</option>
+
+            <option  value='20'>XXI FACTORES QUE INFLUYEN EN EL ESTADO DE SALUD Y CONTACTO CON LOS SERVICIOS DE SALUD</option>
+
+            <option  value='21'>XX CAUSAS EXTERNAS DE MORBILIDAD Y MORTALIDAD</option>
+
         </select>
 
-  	<input type="number" name="docIdentidad" id="" class="form-control" placeholder="Cedula" value="<?php if(isset($docIdentidad)) echo $docIdentidad; ?>">
+    <input type="text" name="searchName" id="searchName" class="form-control" placeholder="Buscar Nombre">
 
-  	<?php $idGenero =1; ?>
+          <select name='CATALOG_KEY' id='' class="form-control" autocomplete='on' class="form-control" >
 
-    <select name='idGenero' id='' class="form-control">
-       <option <?php if($idGenero == '1') echo 'selected';?> value='1'>Masculino</option>
-       <option <?php if($idGenero == '2') echo 'selected';?> value='2'>Femenino</option>
+            <option value="">Selecionar Nombre</option>
+
+        </select>
+
+<?php 
+   // los casos no pueden se registrados con fecha dia de manana
+   // osea lo maximo es el dia de hpy
+
+          $currentDate = date("d-m-Y");
+
+// Esta vendira siendo la fecha de hoy
+           $todayDate = date("Y-m-d",strtotime($currentDate));
+ ?>
+
+	Fecha de Registro
+  	<br>
+    <input type="date" name="dateRegisterCasoEpidemi" id="dateRegisterCasoEpidemi" class="form-control" placeholder="Fecha de Registro" max="<?php echo $todayDate; ?>">
+
+  	<br>
+    <input type="text" name="nombres" id="" class="form-control form-control-person" placeholder="Nombres" value="">
+
+  	<br>
+    <input type="text" name="apellidos" id="" class="form-control form-control-person" placeholder="Apellidos">
+<br>
+        <select name='idNacionalidad' id='' class="form-control" autocomplete='on' class="form-control" >
+            <option  value=''>Nacionalidad</option>
+            <option  value='1'>V</option>
+            <option value='2'>E</option>
+        </select>
+
+  	<br>
+    <input type="number" name="docIdentidad" id="" class="form-control" placeholder="Cedula">
+  <br>
+    <select name='idGenero' id='' class="form-control form-control-person">
+       <option value=''>Genero</option>
+       <option value='1'>Masculino</option>
+       <option value='2'>Femenino</option>
     </select>
-    
+<br>
+Fecha de Nacimiento
+  	<input type="date" name="fechaNacimiento" id="" class="form-control form-control-person" placeholder="">
 
-   	Fecha de Nacimiento
+<br>
+                <div class="form-group row">
+                  <div class="col-sm-3">
+                    <p>Telefono</p>
+                  </div>
 
-  	<input type="date" name="fechaNacimiento" id="" class="form-control" placeholder="Cedula" value="<?php if(isset($fechaNacimiento)) echo $fechaNacimiento; ?>">
+                  <div class="col-sm-3">
 
-  	<input type="number" name="telefono" id="" class="form-control" placeholder="Telefono" value="<?php if(isset($telefono)) echo $telefono; ?>">
+                    <input type="number" class="form-control
+                    form-control-user" id="telefonoPart1" name="telefonoPart1"  placeholder="0000">
+                  </div>
+                  
+                  <div class="col-sm-3">
+                    <input type="number" class="form-control
+                    form-control-user" id="telefonoPart2" name="telefonoPart2"  placeholder="0000">
+                  </div>
 
-  	<input type="number" name="idParroquia" id="" class="form-control" placeholder="Parroquia" value="<?php $idParroquia='958'; if(isset($idParroquia)) echo $idParroquia; ?>">
+                  <div class="col-sm-3">
+                    <input type="number" class="form-control
+                    form-control-user" id="telefonoPart3" name="telefonoPart3"  placeholder="000">
+                  </div>
+                </div>
+<br>
+  	<input type="number" name="idParroquia" id="" class="form-control" placeholder="Parroquia">
+<br>
+    <textarea rows="3" cols="40" name="direccion" id="" class="form-control" placeholder="Direccion"></textarea>
+<br>
+  	<input type="text" name="catalogKeyCIE10" id="" class="form-control" placeholder="Codigo: CIE-10" value="A000">
+<br>
+     <button class="btn btn-primary btn-user btn-block" type="submit" value="registerCasoEpidemi" name="registerCasoEpidemi">Registrar</button>
 
-    <textarea rows="3" cols="40" name="direccion" id="" class="form-control" placeholder="Direccion" required><?php if(isset($direccion)) echo $direccion;?></textarea>
+     <div class="responseProcessAjax"></div>
+              </form>
 
-  	<input type="text" name="CATALOG_KEY_CIE10" id="" class="form-control" placeholder="Codigo: CIE-10" value="<?php $CATALOG_KEY_CIE10 ='A000'; if(isset($CATALOG_KEY_CIE10)) echo $CATALOG_KEY_CIE10; ?>">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
 
-	<button class="btn btn-primary btn-block" type="submit" value="Registrar" name="registrar">REGISTRAR</button>
+
+      <script type="text/javascript">
+
+          $( document ).ready(function() {
+
+      // la fecha recomendad de registro de casos, es del dia de ayer, pero e ocaciones puede ser cambiada  
+      var todayDate = new Date;
 
 
-            </form>
+      var dateRegisterDefault = addOrRemoveDaysToDate(todayDate,1,false);
+
+      var dateRegisterDefaultPHP = dateRegisterDefault.toISOString().split('T')[0];
+
+      $('#dateRegisterCasoEpidemi').val(dateRegisterDefaultPHP);
+
+
+      var rangeDateRegisterMax = addOrRemoveDaysToDate(todayDate,1,true);
+
+  });
+
+
+
+      </script>
+

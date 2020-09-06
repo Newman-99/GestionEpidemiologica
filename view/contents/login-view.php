@@ -31,14 +31,13 @@
                   <button class="btn btn-primary btn-user btn-block" type="submit" value="loginSession" name="login">Ingresar</button>
                     
                     <div class="responseProcessAjax"></div>
-
                   </form>
                   <hr>
                   <div class="text-center">
-                    <a class="small" href="<?php echo SERVERURL; ?>forgot-password/">¿Se me olvido la contraseña?</a>
+                    <a class="small" href="<?php echo SERVERURL; ?>forgotPassword/">¿Se me olvido la contraseña?</a>
                   </div>
                   <div class="text-center">
-                    <a class="small" href="<?php echo SERVERURL; ?>register-user/">Crear una cuenta</a>
+                    <a class="small" href="<?php echo SERVERURL; ?>registerUser/">Crear una cuenta</a>
                   </div>
   
                   <?php require "./view/inc/linkRestartUser.php"; ?>

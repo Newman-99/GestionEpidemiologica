@@ -8,7 +8,7 @@
 	}
 
 	class loginController extends userController{
-
+// Iniamos y revismo el contador en cada pagina para cerrar la sesion
 
 
 	function __construct(){
@@ -247,7 +247,7 @@ public function loginUserController($dataUser){
 			session_destroy();
 
 			if(headers_sent()){
-				return "<script> window.location.href='".SERVERURL."login/';</script>";
+				return header("Location: ".SERVERURL);
 			}else{
 				return header("Location: ".SERVERURL);
 			}
@@ -289,16 +289,21 @@ public function loginUserController($dataUser){
 
 				session_unset();
 				session_destroy();
-
-					$alert=[
-					"Alert"=>"redirecting",
-					"URL"=>SERVERURL
+				
+				$alert=[
+				"Alert"=>"redirecting",
+				"URL"=>SERVERURL."dashboard/"
 				];
 
+				echo json_encode($alert);
+
+				exit();
+
+				header("Location: ".SERVERURL);
+		
 			}
 
-		}
-			
+		}			
 			echo json_encode($alert);
 			exit();
 	}

@@ -1143,6 +1143,7 @@ $table.="<div class='table-responsive'>
                   <thead>
                     <tr>
                       <th>Nro. </th>
+                     <th>Genero</th>
                       <th>Documento de Identidad</th>
                       <th>Alias</th>
                       <th>Nombres</th>
@@ -1158,6 +1159,7 @@ $table.="<div class='table-responsive'>
                   <tfoot>
                     <tr>
                        <th>Nro. </th>
+                      <th>Genero</th>
                       <th>Documento de Identidad</th>
                       <th>Alias</th>
                       <th>Nombres</th>
@@ -1179,12 +1181,22 @@ $table.="<div class='table-responsive'>
 				if ($rows['idNacionalidad'] === "1") {
 					$nacionalidad = "V";
 				}else{
+					$nacionalidad = "E";
+				}
 
-					$nacionalidad = "E";				}
+				if ($rows['idGenero'] == "1"){
+                  $rows['iconGenero'] = "male-user.png"; 
+                }elseif ($rows['idGenero'] == "2") {
+                  $rows['iconGenero'] = "fermale-user.png"; 
+                }
 
 			$table.='
                  <tr>
                     <td>'.$count.'</td>
+                    <td> 
+                    <span class="d-none">'.$rows["idGenero"].'</span>
+                    <img class="img-profile rounded-circle" width="40" src="'.SERVERURL.'view/img/'.$rows["iconGenero"].'"></td>
+
 		 			<td>'.$nacionalidad.'-'.$rows['docIdentidad'].'</td>
 					<td>'.$rows['aliasUsuario'].'</td>
                     <td>'.$rows['nombres'].'</td>

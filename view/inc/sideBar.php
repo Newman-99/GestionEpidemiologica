@@ -3,10 +3,10 @@
 
       <!-- Sidebar - Brand -->
       <a class="sidebar-brand d-flex align-items-center justify-content-center" href="<?php echo SERVERURL; ?>dashboard/">
-        <div class="sidebar-brand-icon rotate-n-15">
+        <div class="sidebar-brand-icon">
           <i class="fas fa-hospital"></i>
         </div>
-        <div class="sidebar-brand-text mx-3"><?php echo ORGANIZATION ?></div>
+        <div class="sidebar-brand-text mx-3 small"><?php echo ORGANIZATION ?></div>
       </a>
 
       <!-- Divider -->
@@ -18,53 +18,6 @@
           <i class="fas fa-bars"></i>
           <span>Inicio</span></a>
       </li>
-
-
-      <!-- Nav Item - Utilities Collapse Menu -->
-      <li class="nav-item">
-        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUtilities" aria-expanded="true" aria-controls="collapseUtilities">
-          <i class="fas fa-fw fa-wrench"></i>
-          <span>Utilities</span>
-        </a>
-        <div id="collapseUtilities" class="collapse" aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
-          <div class="bg-white py-2 collapse-inner rounded">
-            <h6 class="collapse-header">Custom Utilities:</h6>
-            <a class="collapse-item" href="<?php echo SERVERURL; ?>utilities-color/">Colors</a>
-            <a class="collapse-item" href="<?php echo SERVERURL; ?>utilities-border/">Borders</a>
-            <a class="collapse-item" href="<?php echo SERVERURL; ?>utilities-animation/">Animations</a>
-            <a class="collapse-item" href="<?php echo SERVERURL; ?>utilities-other/">Other</a>
-          </div>
-        </div>
-      </li>
-
-      <!-- Divider -->
-      <hr class="sidebar-divider">
-
-      <!-- Heading -->
-      <div class="sidebar-heading">
-        Addons
-      </div>
-
-      <!-- Nav Item - Pages Collapse Menu -->
-      <li class="nav-item">
-        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages" aria-expanded="true" aria-controls="collapsePages">
-          <i class="fas fa-fw fa-folder"></i>
-          <span>Pages</span>
-        </a>
-        <div id="collapsePages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
-          <div class="bg-white py-2 collapse-inner rounded">
-            <h6 class="collapse-header">Login Screens:</h6>
-            <a class="collapse-item" href="<?php echo SERVERURL; ?>login/">Ingresar Sesion</a>
-            <a class="collapse-item" href="<?php echo SERVERURL; ?>register-user/">Registrar</a>
-            <a class="collapse-item" href="<?php echo SERVERURL; ?>forgot-password/">Se me olvido la contrasena</a>
-            <div class="collapse-divider"></div>
-            <h6 class="collapse-header">Other Pages:</h6>
-            <a class="collapse-item" href="<?php echo SERVERURL; ?>404/">404 Page</a>
-            <a class="collapse-item" href="<?php echo SERVERURL; ?>blank/">Blank Page</a>
-          </div>
-        </div>
-      </li>
-
 
       <!-- Nav Item - Casos Epidemiologicos Collapse Menu -->
       <?php if ($_SESSION['idNivelPermiso'] == "1"): ?>
@@ -82,14 +35,25 @@
           </div>
         </div>
       </li>
-<?php endif ?>
 
+      <!-- Nav Item - CIE-10 Collapse Menu -->
 
+      <li class="nav-item">
+        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapse-cie10" aria-expanded="true" aria-controls="collapse-cie10">
+          <i class="fas fa-book-medical"></i>
+          <span>Catalogo CIE-10</span>
+        </a>
+        <div id="collapse-cie10" class="collapse" aria-labelledby="headingUsers" data-parent="#accordionSidebar">
+          <div class="bg-white py-2 collapse-inner rounded">
+            <h6 class="collapse-header">Gestion de Catalogo CIE-10:</h6>
+            <a class="collapse-item" href="<?php echo SERVERURL; ?>cie10Catalog/">Ver Catalogo</a>
+            <a class="collapse-item" href="<?php echo SERVERURL; ?>cie10DataUpdate/">Actualizacion</a>
+          </div>
+        </div>
+      </li>
 
 
       <!-- Nav Item - Users Collapse Menu -->
-      <?php if ($_SESSION['idNivelPermiso'] == "1"): ?>
-
       <li class="nav-item">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUsers" aria-expanded="true" aria-controls="collapseUsers">
           <i class="fas fa-fw fa-users-cog"></i>
@@ -105,21 +69,6 @@
       </li>
 <?php endif ?>
 
-
-
-      <!-- Nav Item - Charts -->
-      <li class="nav-item">
-        <a class="nav-link" href="<?php echo SERVERURL; ?>charts/">
-          <i class="fas fa-fw fa-chart-area"></i>
-          <span>Charts</span></a>
-      </li>
-
-      <!-- Nav Item - Tables -->
-      <li class="nav-item">
-        <a class="nav-link" href="<?php echo SERVERURL; ?>tables/">
-          <i class="fas fa-fw fa-table"></i>
-          <span>Tables</span></a>
-      </li>
 
       <!-- Divider -->
       <hr class="sidebar-divider d-none d-md-block">

@@ -102,7 +102,7 @@ $minDateValueAvailable = $activityLogController-> getFirstDateRecordsActivityLog
 
 
 
-  <script src="<?php echo SERVERURL; ?>view/js/queryLimiterActivityLog.js"></script>
+  <script src="<?php echo SERVERURL; ?>view/js/querysFieldsForTables.js"></script>
 
 
 <script type="text/javascript">
@@ -128,7 +128,7 @@ $('#minDateRange,#maxDateRange').change(function() {
 // ambos rangos de fecha deben poseer valores
 
 if (!isBlank(minDateRange) && !isBlank(maxDateRange)) {
-return queryLimiterActivityLog(requestedAliasUser,minDateRange,maxDateRange,url);  
+return queryFieldsToDataTablesActivityLog(requestedAliasUser,minDateRange,maxDateRange,url);  
 }
 
 })
@@ -150,7 +150,7 @@ var minDateRangeDefaulPHP = minDateRangeDefault.toISOString().split('T')[0];
 $('#minDateRange').val(minDateRangeDefaulPHP)
 $('#maxDateRange').val(todayDatePHP)
 
-return queryLimiterActivityLog(requestedAliasUser,minDateRangeDefaulPHP,todayDatePHP,url);    
+return queryFieldsToDataTablesActivityLog(requestedAliasUser,minDateRangeDefaulPHP,todayDatePHP,url);    
 
 }
 

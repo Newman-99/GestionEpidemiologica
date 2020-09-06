@@ -3,7 +3,10 @@ const FORM_AJAX = document.querySelectorAll(".formAjax");
 function captureDataForm (e){
 	e.preventDefault();
 
+
+
     var form=$(this);
+
 	let dataForm = new FormData(this);
 
 	let method = this.getAttribute("method");
@@ -37,15 +40,26 @@ function captureDataForm (e){
 		textMsjAlert=false;		
 	}else if(type==="query"){
 		textMsjAlert=false;
+	}else if(type==="files"){
+// parametos especiales para envio de archivos
+    var files = $('#fileCSVCIE10')[0].files[0];
+    dataForm.append('file',files);
+	contentTypes = false;
+  return sendFormDataAjax(action,dataForm,method,responseProcess,contentTypes);
+	
 	}else{
 		textMsjAlert="Quieres realizar la operación solicitada";
+
 	}
 
-
+	//serializeArray/
 
 	var contentFormFields = form.serialize();
 
      contentFormFields+='&operationType='+type;
+
+     //contentFormFields+='&file='+file;
+
 
 // Operaciones que no necesitan confirmacion
 if(textMsjAlert==false){
@@ -73,31 +87,55 @@ if(textMsjAlert==false){
 
 
 
-function sendFormDataAjax(action,ValuesAndFields,method,showResponseProcess){
+function sendFormDataAjax(action,ValuesAndFields,method,showResponseProcess,contentTypes = 'application/x-www-form-urlencoded'){
+
+window.onbeforeunload = function(e) {
+  return e;
+};
+
+var msgBackendProcessAjaxData = $("#msgBackendProcessAjaxData");
+
 	$.ajax({
 		url : action,
 		type: method,
  		data: ValuesAndFields,
-		cache: false,
         processData: false,
-	     /*contentType: "application/json; charset=utf-8",
-        dataType: "json",*/
-        xhr: function(){
+	  	contentType:contentTypes,
+ 		enctype: 'multipart/form-data',
+ 		cache: true,
+		xhr: function(){
         	var xhr = new window.XMLHttpRequest();
                 xhr.upload.addEventListener("progress", function(evt) {
                    if (evt.lengthComputable) {
                      var percentComplete = evt.loaded / evt.total;
                      percentComplete = parseInt(percentComplete * 100);
                        if(percentComplete<100){
-                        	showResponseProcess.html('<p class="text-center">Procesado... ('+percentComplete+'%)</p><div class="progress progress-striped active"><div class="progress-bar progress-bar-info" style="width: '+percentComplete+'%;"></div></div>');
+                        	showResponseProcess.html('<p class="text-center">Enviando... ('+percentComplete+'%)</p><div class="progress progress-striped active"><div class="progress-bar progress-bar-info" style="width: '+percentComplete+'%;"></div></div>');
                       	}else{
                       		showResponseProcess.html('<p class="text-center"></p>');
+
+
+    //mensaje cuando el bakend este procesando datos de ajax
+
+//    msgBackendProcessAjaxData.show();
+
+ msgBackendProcessAjaxData.html("</p>Procesando...<p>");
+
+
+  $(document).ajaxStop(function() {
+
+ msgBackendProcessAjaxData.html("");
+
+	$("#btnInsertCancelAjax").html("");
+
+   // msgBackendProcessAjaxData.hide();
+  });
                       	}
                       }
                     }, false);
                     return xhr;
-                },
-		success: function (response) {
+
+        },success: function (response) {
 		  			console.log(response);
 		  let operationResult = JSON.parse(response);
 
@@ -115,6 +153,7 @@ function sendFormDataAjax(action,ValuesAndFields,method,showResponseProcess){
 		}
 	});
 }
+
 
 
 FORM_AJAX.forEach(form => {
@@ -189,12 +228,4 @@ function ajaxSweetAlerts(alert){
 		}
 	}
 
-// Control de funcionalidades de formularios
-
-// si el checkbox de la persona ya existe se active, inabilita los campos innecesarios
-
-$('#siExistPerson').change(function() {
-
-	$(".form-control-person").prop('disabled', this.checked);
-
-});
+ 

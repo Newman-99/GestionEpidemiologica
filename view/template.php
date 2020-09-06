@@ -16,7 +16,6 @@
 
 	<?php 
 
-
   $requestAjax = false;
 
       require_once "./controller/loginController.php";

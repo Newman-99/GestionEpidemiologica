@@ -8,10 +8,18 @@
 
 	class casoEpidemiologicoController extends casoEpidemiologicoModel{
 
+		// para simular la herencia mediante colbaoracion de objetos
+	function __construct()
+	{
+			require_once "../controller/personaController.php";
+	}
+
+
+
 		public function addCasoEpidemiologicoController($dataCasoEpidemi){
 
 		 $docIdentidad = mainModel::cleanStringSQL($dataCasoEpidemi['docIdentidad']);
-		 $CATALOG_KEY_CIE10 = mainModel::cleanStringSQL($dataCasoEpidemi['CATALOG_KEY_CIE10']);
+		 $catalogKeyCIE10 = mainModel::cleanStringSQL($dataCasoEpidemi['catalogKeyCIE10']);
 		 $idParroquia = mainModel::cleanStringSQL($dataCasoEpidemi['idParroquia']);
 		 $direccion = mainModel::cleanStringSQL($dataCasoEpidemi['direccion']);
 		 $telefono = mainModel::cleanStringSQL($dataCasoEpidemi['telefono']);
@@ -20,21 +28,78 @@
 
 		if (mainModel::isDataEmtpy(
 		 $docIdentidad,
-		 $CATALOG_KEY_CIE10,
+		 $catalogKeyCIE10,
 		 $idParroquia,
 		 $direccion,
 		 $telefono,
 		 $dateRegisterCasoEpidemi)){
 
-			echo "Algo Vacio";
+				$alert=[
+					"Alert"=>"simple",
+					"Title"=>"Campos Vacios",
+					"Text"=>"Todos los campos del caso epidemiologico son obligatorios",
+					"Type"=>"error"
+				];
 
-		}else{
+				echo json_encode($alert);
+
+				exit();
+
+		}
+
+		// Registrar como persona
+
+		// Comprobar si existe o no la persona en la BD
+
+		$primaryKeyPersona = [
+
+			"idNacionalidad"=>$idNacionalidad,
+			"docIdentidad"=>$docIdentidad
+		];
+
+			$personaController = new personaController();
+
+			$SQL_isExistPersona = $personaController->getPersonaController($primaryKeyPersona);
+			$SQL_isExistPersona->execute();
+
+
+			if(isset($dataUser['siExistPerson']) && $dataUser['siExistPerson'] == "1" ){
+
+			if(!$SQL_isExistPersona->rowCount()){
+			$alert=[
+				"Alert"=>"simple",
+				"Title"=>"Datos no encontrados",
+				"Text"=>"No se encuentra una persona con esta cedula registrada ",
+				"Type"=>"error"
+			];
+
+				echo json_encode($alert);
+
+				exit();
+			}
+
+			}else{
+				// Si no existe y es una persona nueva comprabar que no este repetido en la BD
+			if($SQL_isExistPersona->rowCount()){
+			$alert=[
+				"Alert"=>"simple",
+				"Title"=>"Datos Duplicados",
+				"Text"=>"Ya se encuentra una persona con esta cedula registrada ",
+				"Type"=>"error"
+			];
+
+				echo json_encode($alert);
+
+				exit();
+			}
+
+		}
 
 
 		 $dataCasoEpidemi = array();
 
 		 $dataCasoEpidemi['docIdentidad'] = $docIdentidad;
-		 $dataCasoEpidemi['CATALOG_KEY_CIE10'] = $CATALOG_KEY_CIE10;
+		 $dataCasoEpidemi['catalogKeyCIE10'] = $catalogKeyCIE10;
 		 $dataCasoEpidemi['idParroquia'] = $idParroquia;
 		 $dataCasoEpidemi['direccion'] = $direccion;
 		 $dataCasoEpidemi['telefono'] = $telefono;
@@ -42,12 +107,12 @@
 
 			echo "<h1>REGISTRADO</h1>";
 
-			var_dump($dataCasoEpidemi);
+			//var_dump($dataCasoEpidemi);
 
-			 casoEpidemiologicoModel::addCasoEpidemiologicoModel($dataCasoEpidemi);
+			 //casoEpidemiologicoModel::addCasoEpidemiologicoModel($dataCasoEpidemi);
 
 
-				 	}
+				 	
 				 }
 
 
@@ -57,7 +122,7 @@
 
 		 $idCasoEpidemiologico = mainModel::cleanStringSQL($dataCasoEpidemi['idCasoEpidemiologico']);
 		 $docIdentidad = mainModel::cleanStringSQL($dataCasoEpidemi['docIdentidad']);
-		 $CATALOG_KEY_CIE10 = mainModel::cleanStringSQL($dataCasoEpidemi['CATALOG_KEY_CIE10']);
+		 $catalogKeyCIE10 = mainModel::cleanStringSQL($dataCasoEpidemi['catalogKeyCIE10']);
 		 $idParroquia = mainModel::cleanStringSQL($dataCasoEpidemi['idParroquia']);
 		 $direccion = mainModel::cleanStringSQL($dataCasoEpidemi['direccion']);
 		 $telefono = mainModel::cleanStringSQL($dataCasoEpidemi['telefono']);
@@ -66,7 +131,7 @@
 
 		if (mainModel::isDataEmtpy(
 		 $docIdentidad,
-		 $CATALOG_KEY_CIE10,
+		 $catalogKeyCIE10,
 		 $idParroquia,
 		 $direccion,
 		 $telefono,
@@ -80,7 +145,7 @@
 		 $dataCasoEpidemi = array();
 		 $dataCasoEpidemi['docIdentidad'] = $docIdentidad;
 		 $dataCasoEpidemi['idCasoEpidemiologico'] = $idCasoEpidemiologico;
-		 $dataCasoEpidemi['CATALOG_KEY_CIE10'] = $CATALOG_KEY_CIE10;
+		 $dataCasoEpidemi['catalogKeyCIE10'] = $catalogKeyCIE10;
 		 $dataCasoEpidemi['idParroquia'] = $idParroquia;
 		 $dataCasoEpidemi['direccion'] = $direccion;
 		 $dataCasoEpidemi['telefono'] = $telefono;

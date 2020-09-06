@@ -1,29 +1,29 @@
 <?php 
 
-var_dump($_POST);
-
 	$requestAjax = TRUE;
 
 	require_once "../config/app.php";
-	
-	if (isset($_POST['docIdentidad'])) {
-
-		require_once "../controller/personaController.php";
 
 		require_once "../controller/casoEpidemiologicoController.php";
 
+		$casoEpidemiologicoController = new casoEpidemiologicoController();
+	
+if (isset($_POST['operationType']) && $_POST['operationType'] == "register"){
 
+	 	$casoEpidemiologicoController->addCasoEpidemiologicoController($_POST);
+
+}elseif ($_POST['operationType'] === "delete") {
+	 	$casoEpidemiologicoController->deleteCasoEpidemiologicoController($_POST);
+	
 		//$personaController = new personaController();
 	 	//$personaController->getPersonaController($_POST);
-echo "<br><br>";		
-		$casoEpidemiologicoController = new casoEpidemiologicoController();
-	 	$casoEpidemiologicoController->deleteCasoEpidemiologicoController($_POST);
 	} else { 
-		
+		/*
 		session_start(["name"=> "dptoEpidemi"]);
 		session_unset();
 		session_destroy();
 		header("Location: ".SERVERURL."login/");
+		*/
 	}
 	
 
