@@ -32,10 +32,8 @@
 };
 
 
-      function queryFieldsToDataTablesCie10Catalog(requestedAliasUser,minDateRange,maxDateRange,action){
+      function queryFieldsToDataTablesCie10Catalog(url,idCapitulo){
     
-    var url = $('#urlToRequestQuery').val();
-
     var table = $('#dataTable').DataTable({
           "bSort": true,    
           "processing": true,
@@ -43,7 +41,9 @@
             'url' :url, // json datasource
             'type': "post",  // method  , by default get
           'data': {
-          'cie10listCatalog':true},
+          'cie10listCatalog':true,
+          'idCapitulo':idCapitulo
+        },
           "dataSrc":"",         
             },
             "columns":[

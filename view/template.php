@@ -1,6 +1,9 @@
+<?php  //echo SERVERURL.'dashboard/' ; 
+//var_dump($_GET['views']);
+
+?>
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
 
   <meta charset="utf-8">
@@ -27,8 +30,12 @@
 
 	$requestedView= $viewsController->getViewsController();	
 
-	if($requestedView == "register-user" || $requestedView == "login" || $requestedView == "404" || $requestedView == "forgot-password" || $requestedView == "restartUser"){
+//var_dump("/view/contents/".$requestedView."-view.php");
+
+	if($requestedView == "registerUser" || $requestedView == "login" || $requestedView == "404" || $requestedView == "forgotPassword" || $requestedView == "restartUser"){
       require_once "./view/contents/".$requestedView."-view.php";
+
+
 		}else{
 
       if(!isset($_SESSION['token_dptoEpidemi']) || !isset($_SESSION['aliasUser'])){
@@ -57,9 +64,9 @@
         <!-- End of Topbar -->
 
         <!-- Begin Page Content -->
-        <div class="container-fluid">
-	
-	<?php require_once $requestedView; ?>
+        <div class="container-fluid">	
+	<?php include $requestedView; ?>
+
         </div>
         <!-- /.container-fluid -->
 
@@ -91,4 +98,5 @@
 
 </body>
 </html>
+
 	

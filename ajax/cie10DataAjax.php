@@ -1,10 +1,10 @@
 <?php 
 
+		$requestAjax =  TRUE;
+
 	require_once "../config/app.php";
 
 //var_dump($_POST);
-		$requestAjax =  TRUE;
-
 	require_once "../controller/cie10DataController.php";
 	
 			$cie10DataController = new cie10DataController();
@@ -13,8 +13,8 @@
 		$cie10DataController->updateCie10DataController($_FILES);			
 
 		}elseif(isset($_POST['cie10listCatalog'])) {
-		$cie10DataController->paginatecie10DataController();			
-			
+
+		$cie10DataController->paginatecie10DataController($_POST);						
  }else { 
 /*		
 		session_start(["name"=> "systemDptoEpidemi"]);

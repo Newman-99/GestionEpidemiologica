@@ -20,6 +20,61 @@
               <div class='table-responsive'>
 
                 <table class='table table-bordered' id='dataTable' width='100%' cellspacing='0'>
+
+            <!-- start form to limit query-->
+          <select name='idCapitulo' id='idCapitulo' class="form-control" autocomplete='on' class="form-control" >
+
+            <option  value='01'>I CIERTAS ENFERMEDADES INFECCIOSAS Y PARASITARIAS</option>
+
+            <option  value='02'>III ENFERMEDADES DE LA SANGRE Y DE LOS ORGANOS HEMATOPOYETICOS, Y CIERTOS TRASTORNOS QUE AFECTAN EL MECANISMO DE LA INMUNIDAD</option>
+
+            <option  value='03'>IV   ENFERMEDADES ENDOCRINAS, NUTRICIONALES Y METABOLICAS</option>
+
+            <option  value='04'>V TRASTORNOS MENTALES Y DEL COMPORTAMIENTO</option>
+
+            <option  value='05'>VI ENFERMEDADES DEL SISTEMA NERVIOSO</option>
+
+            <option  value='06'>VII ENFERMEDADES DEL OJO Y SUS ANEXOS</option>
+
+            <option  value='07'>VIII ENFERMEDADES DE OIDO Y DE LA APOFISIS MASTOIDES</option>
+
+            <option  value='08'>IX ENFERMEDADES DEL SISTEMA CIRCULATORIO</option>
+
+            <option  value='09'>X  ENFERMEDADES DEL SISTEMA RESPIRATORIO</option>
+
+            <option  value='10'>XI ENFERMEDADES DEL SISTEMA DIGESTIVO</option>
+
+            <option  value='11'>XII ENFERMEDADES DE LA PIEL Y DEL TEJIDO SUBCUTANEO</option>
+
+            <option  value='12'>XIII ENFERMEDADES DEL SISTEMA OSTEOMUSCULAR Y DEL TEJIDO CONJUNTIVO</option>
+
+            <option  value='13'>XIV ENFERMEDADES DEL SISTEMA GENITOURINARIO</option>
+
+            <option  value='14'>XV EMBARAZO, PARTO Y PUERPERIO</option>
+
+            <option  value='15'>XVI CIERTAS AFECCIONES ORIGINADAS EN EL PERIODO PERINATAL</option>
+
+            <option  value='16'>XVII MALFORMACIONES CONGENITAS, DEFORMIDADES Y ANOMALIAS CROMOSOMICAS</option>
+
+            <option  value='17'>XVIII SINTOMAS, SIGNOS Y HALLAZGOS ANORMALES CLINICOS Y DE LABORATORIO, NO CLASIFICADOS EN OTRA PARTE</option>
+
+            <option  value='18'>XIX TRAUMATISMOS, ENVENENAMIENTOS Y ALGUNAS OTRAS CONSECUENCIAS DE CAUSAS EXTERNAS</option>
+
+            <option  value='19'>XXII CAUSAS PARA PROPOSITOS ESPECIALES</option>
+
+            <option  value='20'>XXI FACTORES QUE INFLUYEN EN EL ESTADO DE SALUD Y CONTACTO CON LOS SERVICIOS DE SALUD</option>
+
+            <option  value='21'>XX CAUSAS EXTERNAS DE MORBILIDAD Y MORTALIDAD</option>
+
+            <option  value='N/A'>N/A</option>
+
+            <option  value='NO'>NO</option>
+
+            <option value="">Todos</option>
+        </select>
+            <!-- Final form to limit query-->
+<br>
+    
                   <thead>
                     <tr>
                       <th>CONSECUTIVO</th>
@@ -183,9 +238,36 @@
   
     $( document ).ready(function() {
 
-return queryFieldsToDataTablesCie10Catalog();    
+//return queryFieldsToDataTablesCie10Catalog();    
 
 });
+
+
+  $( document ).ready(function() {
+ 
+requestQueryByActionToAction();
+
+function requestQueryByActionToAction(){
+
+    var url = $('#urlToRequestQuery').val();
+
+$('#idCapitulo').change(function() {
+    var idCapitulo  = $('#idCapitulo').val();
+
+      return queryFieldsToDataTablesCie10Catalog(url,idCapitulo);
+
+
+})
+
+// si no se dio click pero si se actualizo;
+
+    var idCapitulo  = $('#idCapitulo').val();
+
+      return queryFieldsToDataTablesCie10Catalog(url,idCapitulo);
+
+}
+
+  });
 
 
 </script>

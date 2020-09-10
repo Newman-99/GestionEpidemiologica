@@ -296,11 +296,8 @@ public function loginUserController($dataUser){
 				];
 
 				echo json_encode($alert);
-
-				exit();
-
 				header("Location: ".SERVERURL);
-		
+						exit();
 			}
 
 		}			

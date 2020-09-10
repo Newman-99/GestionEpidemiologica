@@ -41,6 +41,10 @@
 
   $(document).ajaxStart(function() {
 
+
+window.onbeforeunload = function(e) {
+  return e;
+};
     $("#btnInsertCancelAjax").html("<br><button class='btn btn-danger' name='btnCancelRequestAjax' onclick='location.reload();'>Cancelar</button>");
 });
 

@@ -1,5 +1,7 @@
 
 <?php 
+		$requestAjax =  TRUE;
+
 	if($requestAjax){
 		require_once "../model/cie10DataModel.php";
 	}else{
@@ -97,7 +99,7 @@ $sqlQuery = $connectDB->prepare("INSERT INTO dataCIE10(CONSECUTIVO, LETRA, CATAL
 :CONSECUTIVO,:LETRA,:CATALOG_KEY,:NOMBRE,:CODIGOX,:LSEX,:LINF,:LSUP,:TRIVIAL,:ERRADICADO,:N_INTER,:NIN,:NINMTOBS,:COD_SIT_LESION,:NO_CBD,:CBD,:NO_APH,:AF_PRIN,:DIA_SIS,:CLAVE_PROGRAMA_SIS,:COD_COMPLEMEN_MORBI,:DEF_FETAL_CM,:DEF_FETAL_CBD,:CLAVE_CAPITULO,:CAPITULO,:LISTA1,:GRUPO1,:LISTA5,:RUBRICA_TYPE,:YEAR_MODIFI,:YEAR_APLICACION,:VALID,:PRINMORTA,:PRINMORBI,:LM_MORBI,:LM_MORTA,:LGBD165,:LOMSBECK,:LGBD190,:NOTDIARIA,:NOTSEMANAL,:SISTEMA_ESPECIAL,:BIRMM,:CVE_CAUSA_TYPE,:CAUSA_TYPE,:EPI_MORTA,:EDAS_E_IRAS_EN_M5,:CSVE_MATERNAS_SEED_EPID,:EPI_MORTA_M5,:EPI_MORBI,:DEF_MATERNAS,:ES_CAUSES,:NUM_CAUSES,:ES_SUIVE_MORTA,:ES_SUIVE_MORB,:EPI_CLAVE,:EPI_CLAVE_DESC,:ES_SUIVE_NOTIN,:ES_SUIVE_EST_EPI,:ES_SUIVE_EST_BROTE,:SINAC,:PRIN_SINAC,:PRIN_SINAC_GRUPO,:DESCRIPCION_SINAC_GRUPO,:PRIN_SINAC_SUBGRUPO,:DESCRIPCION_SINAC_SUBGRUPO,:DAGA,:ASTERISCO);");
 
 
-for ($indiceFila = 1; $indiceFila < 300 /*count($dataForQuery)*/; $indiceFila++) {
+for ($indiceFila = 1; $indiceFila < count($dataForQuery); $indiceFila++) {
 $CONSECUTIVO = $dataForQuery[$indiceFila][0]; 
 $LETRA = $dataForQuery[$indiceFila][1]; 
 $CATALOG_KEY = $dataForQuery[$indiceFila][2]; 
@@ -271,9 +273,19 @@ $sqlQuery->execute(array("CONSECUTIVO"=>$CONSECUTIVO,
 }
 
 
-	public static function paginatecie10DataController(){
+	public static function paginatecie10DataController($parametersQuery){
 
- 	$queryForGetCie10Catalog = mainModel::runSimpleQuery('SELECT * FROM `dataCIE10`');
+	$sqlForGetCie10Catalog = 'SELECT * FROM dataCIE10 ';
+
+	$idCapitulo = mainModel::cleanStringSQL($parametersQuery['idCapitulo']);
+
+ 	if (!mainModel::isDataEmtpy($idCapitulo)) {
+
+ 		$sqlForGetCie10Catalog = $sqlForGetCie10Catalog." WHERE CLAVE_CAPITULO = '$idCapitulo'";
+}
+
+ 	$queryForGetCie10Catalog = mainModel::runSimpleQuery($sqlForGetCie10Catalog);
+
 
 			$dataJsonRocords = array();
 
@@ -284,7 +296,9 @@ $sqlQuery->execute(array("CONSECUTIVO"=>$CONSECUTIVO,
 					$dataJsonRocords[] = $rows;
 			}
 
-			echo json_encode($dataJsonRocords, JSON_UNESCAPED_UNICODE);
+//			echo json_encode($dataJsonRocords, JSON_UNESCAPED_UNICODE);
+
+			echo json_encode($dataJsonRocords);
 
 			exit();
 

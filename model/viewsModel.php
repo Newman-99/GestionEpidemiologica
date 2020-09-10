@@ -8,19 +8,22 @@ class viewsModel{
 
 						if (is_file("./view/contents/".$requestedView."-view.php")) {
 							$content = "view/contents/".$requestedView."-view.php";
+
 						}else{
 							$content = "404";
+
 						}
 
 					}elseif($requestedView=="login" || $requestedView == "index" ){
 						$content = "login";
 
-					}elseif ($requestedView=="register-user" || $requestedView=="forgot-password" || $requestedView=="restartUser"){
+					}elseif ($requestedView=="registerUser" || $requestedView=="forgotPassword" || $requestedView=="restartUser"){
 					   $content = $requestedView;
+
 					}else{
 						$content = "404";
-					}
 
+					}
 				return $content;
 			
 		}

@@ -6,7 +6,7 @@ const DB="dptoEpidemi";
 
 const USER = "root";
 
-const PASS="";
+const PASS="Junfanlee-32";
  
 const SGBD = "mysql:host=".SERVER.";dbname=".DB;
 

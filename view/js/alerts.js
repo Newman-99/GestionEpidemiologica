@@ -89,10 +89,6 @@ if(textMsjAlert==false){
 
 function sendFormDataAjax(action,ValuesAndFields,method,showResponseProcess,contentTypes = 'application/x-www-form-urlencoded'){
 
-window.onbeforeunload = function(e) {
-  return e;
-};
-
 var msgBackendProcessAjaxData = $("#msgBackendProcessAjaxData");
 
 	$.ajax({
@@ -114,13 +110,11 @@ var msgBackendProcessAjaxData = $("#msgBackendProcessAjaxData");
                       	}else{
                       		showResponseProcess.html('<p class="text-center"></p>');
 
-
     //mensaje cuando el bakend este procesando datos de ajax
 
 //    msgBackendProcessAjaxData.show();
 
  msgBackendProcessAjaxData.html("</p>Procesando...<p>");
-
 
   $(document).ajaxStop(function() {
 
