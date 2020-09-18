@@ -37,7 +37,7 @@
                 // 
               $requestedAliasUser = $loginController->decryption($userEncryptURl[1]);
 
-              if ($_SESSION["idNivelPermiso"] > 1 && strcmp($_SESSION["aliasUser"],$requestedAliasUser) != 0) {
+              if ($_SESSION["id_nivel_permiso"] > 1 && strcmp($_SESSION["aliasUser"],$requestedAliasUser) != 0) {
       
               echo $loginController->forceClosureController();
 
@@ -71,17 +71,17 @@
             <p class="form-control">
 
 
-          <?php if($fieldsUserRequested['idNacionalidad'] == 1){
+          <?php if($fieldsUserRequested['id_nacionalidad'] == 1){
             $fieldsUserRequested['nacionalidad']='V';}else{
             $fieldsUserRequested['nacionalidad']='E';
               }
             ?>
 
-          <?php echo $fieldsUserRequested['nacionalidad']."-".$fieldsUserRequested['docIdentidad']; ?>
+          <?php echo $fieldsUserRequested['nacionalidad']."-".$fieldsUserRequested['doc_identidad']; ?>
 
-            <input name= "idNacionalidad" type="hidden" value="<?php echo $fieldsUserRequested['idNacionalidad']; ?>">
+            <input name= "id_nacionalidad" type="hidden" value="<?php echo $fieldsUserRequested['id_nacionalidad']; ?>">
 
-            <input name= "docIdentidad" type="hidden" value="<?php echo $fieldsUserRequested['docIdentidad']; ?>">
+            <input name= "doc_identidad" type="hidden" value="<?php echo $fieldsUserRequested['doc_identidad']; ?>">
 
             </p>
           </div>
@@ -101,27 +101,27 @@
 
                 <div class="form-group row">
                   <div class="col-sm-6 mb-3 mb-sm-0">
-                <select name='idGenero' id='idGenero' class="form-control
+                <select name='id_genero' id='id_genero' class="form-control
                 form-control-person" autocomplete='on' class="form-control">
                       <option value="">Genero</option>
-                        <option <?php if($fieldsUserRequested['idGenero'] == 1) echo 'selected';?> value="1">Masculino</option>
-                        <option <?php if($fieldsUserRequested['idGenero'] == 2) echo 'selected'; ?> value="2">Femenino</option>
+                        <option <?php if($fieldsUserRequested['id_genero'] == 1) echo 'selected';?> value="1">Masculino</option>
+                        <option <?php if($fieldsUserRequested['id_genero'] == 2) echo 'selected'; ?> value="2">Femenino</option>
                     </select>
     
                   </div>
               <div class="col-sm-6">
                 <input type="date" class="form-control 
                 form-control-user
-                form-control-person" id="fechaNacimiento" name="fechaNacimiento" value="<?php if(isset($fieldsUserRequested['fechaNacimiento'])) echo $fieldsUserRequested['fechaNacimiento']; ?>" >
+                form-control-person" id="fecha_nacimiento" name="fecha_nacimiento" value="<?php if(isset($fieldsUserRequested['fecha_nacimiento'])) echo $fieldsUserRequested['fecha_nacimiento']; ?>" >
 
                 </div>
 
                 </div>
 
             <p class="form-control ">
-                <?php echo $fieldsUserRequested['aliasUsuario'];
+                <?php echo $fieldsUserRequested['usuario_alias'];
                 ?>
-            <input name= "aliasUser" type="hidden" value="<?php echo $fieldsUserRequested['aliasUsuario']; ?>">
+            <input name= "aliasUser" type="hidden" value="<?php echo $fieldsUserRequested['usuario_alias']; ?>">
 
             </p>
 
@@ -159,27 +159,27 @@
                                     
                 <div class="form-group row">
                   <div class="col-sm-6 mb-3 mb-sm-0">
-                <select name='idNivelPermiso' id='idNivelPermiso' class="form-control
-                form-control-person" autocomplete='on' class="form-control"<?php if ($_SESSION['idNivelPermiso'] != 1) echo "disabled"; ?>
+                <select name='id_nivel_permiso' id='id_nivel_permiso' class="form-control
+                form-control-person" autocomplete='on' class="form-control"<?php if ($_SESSION['id_nivel_permiso'] != 1) echo "disabled"; ?>
 >
                       <option value="">Nivel Permiso</option>
-                        <option <?php if($fieldsUserRequested['idNivelPermiso'] == 1) echo 'selected';?> value="1">Nivel: Administrador</option>
+                        <option <?php if($fieldsUserRequested['id_nivel_permiso'] == 1) echo 'selected';?> value="1">Nivel: Administrador</option>
 
-                        <option <?php if($fieldsUserRequested['idNivelPermiso'] == 2) echo 'selected'; ?> value="2">Nivel: Operador</option>
+                        <option <?php if($fieldsUserRequested['id_nivel_permiso'] == 2) echo 'selected'; ?> value="2">Nivel: Operador</option>
 
-                        <option <?php if($fieldsUserRequested['idNivelPermiso'] == 3) echo 'selected'; ?> value="2">Nivel: Invitado</option>
+                        <option <?php if($fieldsUserRequested['id_nivel_permiso'] == 3) echo 'selected'; ?> value="2">Nivel: Invitado</option>
 
                     </select>
     
                   </div>
 
                   <div class="col-sm-6 mb-3 mb-sm-0">
-                <select name='idEstado' id='idEstado' class="form-control
-                form-control-person" autocomplete='on' class="form-control" <?php if ($_SESSION['idNivelPermiso'] != 1) echo "disabled"; ?> >
+                <select name='id_estado' id='id_estado' class="form-control
+                form-control-person" autocomplete='on' class="form-control" <?php if ($_SESSION['id_nivel_permiso'] != 1) echo "disabled"; ?> >
                       <option value="">Estado</option>
-                        <option <?php if($fieldsUserRequested['idEstado'] == 0) echo 'selected';?> value="0">Estado: Inactivo</option>
-                        <option <?php if($fieldsUserRequested['idEstado'] == 1) echo 'selected'; ?> value="1">Estado: Activo</option>
-                        <option <?php if($fieldsUserRequested['idEstado'] == 2) echo 'selected'; ?> value="3">Estado: Reiniciado</option>
+                        <option <?php if($fieldsUserRequested['id_estado'] == 0) echo 'selected';?> value="0">Estado: Inactivo</option>
+                        <option <?php if($fieldsUserRequested['id_estado'] == 1) echo 'selected'; ?> value="1">Estado: Activo</option>
+                        <option <?php if($fieldsUserRequested['id_estado'] == 2) echo 'selected'; ?> value="2">Estado: Reiniciado</option>
                     </select>
     
                   </div>                

@@ -26,7 +26,7 @@
     </div>   
        <div class="col-sm-4 mb-3 mb-sm-0">
 
-          <select name='idNacionalidad' id='idNacionalidad' class="form-control user">
+          <select name='id_nacionalidad' id='id_nacionalidad' class="form-control user">
               
               <option value="">-</option>
                   
@@ -40,7 +40,7 @@
 
                   <div class="col-sm-5">
                     <input type="number" class="form-control form-control-user 
-                    " id="docIdentidad" name ="docIdentidad" placeholder="Documento de Identidad">
+                    " id="doc_identidad" name ="doc_identidad" placeholder="Documento de Identidad">
                   </div>
                 </div>
 
@@ -59,7 +59,7 @@
                 <div class="form-group row">
                   <div class="col-sm-6 mb-3 mb-sm-0">
 
-                <select name='idGenero' id='idGenero' class="form-control
+                <select name='id_genero' id='id_genero' class="form-control
                 form-control-person" autocomplete='on' class="form-control" >
                       <option value="">Genero</option>
                         <option value="1">Masculino</option>
@@ -70,7 +70,7 @@
               <div class="col-sm-6">
                 <input type="date" class="form-control 
                 form-control-user
-                form-control-person" id="fechaNacimiento" name="fechaNacimiento">
+                form-control-person" id="fecha_nacimiento" name="fecha_nacimiento">
 
                 </div>
 

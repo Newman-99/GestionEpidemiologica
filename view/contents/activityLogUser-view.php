@@ -6,11 +6,10 @@
 
   $requestedAliasUser = $loginController->decryption($userEncryptURl[1]);
 
-  if($_SESSION['idNivelPermiso']!=1 && strcmp($_SESSION["aliasUser"],$requestedAliasUser) != 0){
+  if($_SESSION['id_nivel_permiso']!=1 && strcmp($_SESSION["aliasUser"],$requestedAliasUser) != 0){
     echo $loginController->forceClosureController();
     exit();
   }
-
 
 ?>
 

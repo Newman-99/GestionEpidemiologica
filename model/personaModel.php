@@ -5,26 +5,26 @@
 
 			protected static function addPersonaModel($dataPersona){
 		$sqlQuery = mainModel::connectDB()->prepare("INSERT INTO personas(
-		 docIdentidad,
+		 doc_identidad,
 		 nombres,
 		 apellidos,
-		 fechaNacimiento,
-		 idNacionalidad,
-		 idGenero) VALUES (
-		 :docIdentidad,
+		 fecha_nacimiento,
+		 id_nacionalidad,
+		 id_genero) VALUES (
+		 :doc_identidad,
 		 :nombres,
 		 :apellidos,
-		 :fechaNacimiento,
-		 :idNacionalidad,
-		 :idGenero);");
+		 :fecha_nacimiento,
+		 :id_nacionalidad,
+		 :id_genero);");
 
 			return $sqlQuery->execute(array(
-		 "docIdentidad"=>$dataPersona['docIdentidad'],
+		 "doc_identidad"=>$dataPersona['doc_identidad'],
 		 "nombres"=>$dataPersona['nombres'],
 		 "apellidos"=>$dataPersona['apellidos'],
-		 "fechaNacimiento"=>$dataPersona['fechaNacimiento'],
-		 "idNacionalidad"=>$dataPersona['idNacionalidad'],
-		 "idGenero"=>$dataPersona['idGenero']));
+		 "fecha_nacimiento"=>$dataPersona['fecha_nacimiento'],
+		 "id_nacionalidad"=>$dataPersona['id_nacionalidad'],
+		 "id_genero"=>$dataPersona['id_genero']));
 
 		}
 
@@ -32,29 +32,36 @@
 		$sqlQuery = mainModel::connectDB()->prepare("UPDATE personas SET
 		 nombres = :nombres,
 		 apellidos = :apellidos,
-		 fechaNacimiento = :fechaNacimiento,
-		 idGenero = :idGenero WHERE docIdentidad = :docIdentidad AND idNacionalidad = :idNacionalidad;");
+		 fecha_nacimiento = :fecha_nacimiento,
+		 id_genero = :id_genero WHERE doc_identidad = :doc_identidad AND id_nacionalidad = :id_nacionalidad;");
 
 			return $sqlQuery->execute(array(
-		 "idNacionalidad"=>$dataPersona['idNacionalidad'],
-		 "docIdentidad"=>$dataPersona['docIdentidad'],
+		 "id_nacionalidad"=>$dataPersona['id_nacionalidad'],
+		 "doc_identidad"=>$dataPersona['doc_identidad'],
 		 "nombres"=>$dataPersona['nombres'],
 		 "apellidos"=>$dataPersona['apellidos'],
-		 "fechaNacimiento"=>$dataPersona['fechaNacimiento'],
-		 "idNacionalidad"=>$dataPersona['idNacionalidad'],
-		 "idGenero"=>$dataPersona['idGenero']));
+		 "fecha_nacimiento"=>$dataPersona['fecha_nacimiento'],
+		 "id_nacionalidad"=>$dataPersona['id_nacionalidad'],
+		 "id_genero"=>$dataPersona['id_genero']));
 
 		}
 
 
 			protected static function deletePersonaModel($dataPersona){
-		$sqlQuery = mainModel::connectDB()->prepare(mainModel::disableForeingDB()."DELETE FROM personas WHERE idNacionalidad =:idNacionalidad AND docIdentidad = :docIdentidad;".mainModel::enableForeingDB());
 
-			$sqlQuery->execute(array(
-		 "idNacionalidad"=>$dataPersona['idNacionalidad'],
-		 "docIdentidad"=>$dataPersona['docIdentidad']));
+		mainModel::disableForeingDB();
+		
+		$sqlQuery = mainModel::connectDB()->prepare("DELETE FROM personas WHERE id_nacionalidad =:id_nacionalidad AND doc_identidad = :doc_identidad;");
 
-			return $sqlQuery;
+		 $resultQuery = $sqlQuery->execute(array(
+		 "id_nacionalidad"=>$dataPersona['id_nacionalidad'],
+		 "doc_identidad"=>$dataPersona['doc_identidad']));
+	
+		mainModel::enableForeingDB();
+
+		return $resultQuery;
+
+
 		}
 
 			protected static function getPersonaModel($personAttributesFilter,$filterValues){

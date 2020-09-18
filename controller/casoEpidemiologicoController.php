@@ -18,18 +18,18 @@
 
 		public function addCasoEpidemiologicoController($dataCasoEpidemi){
 
-		 $docIdentidad = mainModel::cleanStringSQL($dataCasoEpidemi['docIdentidad']);
+		 $doc_identidad = mainModel::cleanStringSQL($dataCasoEpidemi['doc_identidad']);
 		 $catalogKeyCIE10 = mainModel::cleanStringSQL($dataCasoEpidemi['catalogKeyCIE10']);
-		 $idParroquia = mainModel::cleanStringSQL($dataCasoEpidemi['idParroquia']);
+		 $id_parroquia = mainModel::cleanStringSQL($dataCasoEpidemi['id_parroquia']);
 		 $direccion = mainModel::cleanStringSQL($dataCasoEpidemi['direccion']);
 		 $telefono = mainModel::cleanStringSQL($dataCasoEpidemi['telefono']);
 
 		 $dateRegisterCasoEpidemi = mainModel::cleanStringSQL($dataCasoEpidemi['dateRegisterCasoEpidemi']);
 
 		if (mainModel::isDataEmtpy(
-		 $docIdentidad,
+		 $doc_identidad,
 		 $catalogKeyCIE10,
-		 $idParroquia,
+		 $id_parroquia,
 		 $direccion,
 		 $telefono,
 		 $dateRegisterCasoEpidemi)){
@@ -53,8 +53,8 @@
 
 		$primaryKeyPersona = [
 
-			"idNacionalidad"=>$idNacionalidad,
-			"docIdentidad"=>$docIdentidad
+			"id_nacionalidad"=>$id_nacionalidad,
+			"doc_identidad"=>$doc_identidad
 		];
 
 			$personaController = new personaController();
@@ -98,9 +98,9 @@
 
 		 $dataCasoEpidemi = array();
 
-		 $dataCasoEpidemi['docIdentidad'] = $docIdentidad;
+		 $dataCasoEpidemi['doc_identidad'] = $doc_identidad;
 		 $dataCasoEpidemi['catalogKeyCIE10'] = $catalogKeyCIE10;
-		 $dataCasoEpidemi['idParroquia'] = $idParroquia;
+		 $dataCasoEpidemi['id_parroquia'] = $id_parroquia;
 		 $dataCasoEpidemi['direccion'] = $direccion;
 		 $dataCasoEpidemi['telefono'] = $telefono;
 		 $dataCasoEpidemi['fecha'] = $dateRegisterCasoEpidemi;
@@ -120,19 +120,19 @@
 		public function updateCasoEpidemiologicoController($dataCasoEpidemi){
 
 
-		 $idCasoEpidemiologico = mainModel::cleanStringSQL($dataCasoEpidemi['idCasoEpidemiologico']);
-		 $docIdentidad = mainModel::cleanStringSQL($dataCasoEpidemi['docIdentidad']);
+		 $id_caso_epidemiologico = mainModel::cleanStringSQL($dataCasoEpidemi['id_caso_epidemiologico']);
+		 $doc_identidad = mainModel::cleanStringSQL($dataCasoEpidemi['doc_identidad']);
 		 $catalogKeyCIE10 = mainModel::cleanStringSQL($dataCasoEpidemi['catalogKeyCIE10']);
-		 $idParroquia = mainModel::cleanStringSQL($dataCasoEpidemi['idParroquia']);
+		 $id_parroquia = mainModel::cleanStringSQL($dataCasoEpidemi['id_parroquia']);
 		 $direccion = mainModel::cleanStringSQL($dataCasoEpidemi['direccion']);
 		 $telefono = mainModel::cleanStringSQL($dataCasoEpidemi['telefono']);
 		 $dateRegisterCasoEpidemi = mainModel::cleanStringSQL($dataCasoEpidemi['dateRegisterCasoEpidemi']);
 
 
 		if (mainModel::isDataEmtpy(
-		 $docIdentidad,
+		 $doc_identidad,
 		 $catalogKeyCIE10,
-		 $idParroquia,
+		 $id_parroquia,
 		 $direccion,
 		 $telefono,
 		 $dateRegisterCasoEpidemi)){
@@ -143,10 +143,10 @@
 
 
 		 $dataCasoEpidemi = array();
-		 $dataCasoEpidemi['docIdentidad'] = $docIdentidad;
-		 $dataCasoEpidemi['idCasoEpidemiologico'] = $idCasoEpidemiologico;
+		 $dataCasoEpidemi['doc_identidad'] = $doc_identidad;
+		 $dataCasoEpidemi['id_caso_epidemiologico'] = $id_caso_epidemiologico;
 		 $dataCasoEpidemi['catalogKeyCIE10'] = $catalogKeyCIE10;
-		 $dataCasoEpidemi['idParroquia'] = $idParroquia;
+		 $dataCasoEpidemi['id_parroquia'] = $id_parroquia;
 		 $dataCasoEpidemi['direccion'] = $direccion;
 		 $dataCasoEpidemi['telefono'] = $telefono;
 		 $dataCasoEpidemi['fecha'] = $dateRegisterCasoEpidemi;
@@ -162,18 +162,18 @@
 				 }
 		public function deleteCasoEpidemiologicoController($dataCasoEpidemi){
 			
-		 $idCasoEpidemiologico = mainModel::cleanStringSQL($dataCasoEpidemi['idCasoEpidemiologico']);
+		 $id_caso_epidemiologico = mainModel::cleanStringSQL($dataCasoEpidemi['id_caso_epidemiologico']);
 		 
 		 
 		 			if (mainModel::isDataEmtpy(
-						 $idCasoEpidemiologico)) {
-			 		echo "<h1>idCasoEpidemiologico VACIO</h1>";
+						 $id_caso_epidemiologico)) {
+			 		echo "<h1>id_caso_epidemiologico VACIO</h1>";
 				 	}else{
 
 
 		 $dataCasoEpidemi = array();
 
-		 $dataCasoEpidemi['idCasoEpidemiologico'] = $idCasoEpidemiologico;
+		 $dataCasoEpidemi['id_caso_epidemiologico'] = $id_caso_epidemiologico;
 		 
 			echo "<h1>Eliminado</h1>";
 

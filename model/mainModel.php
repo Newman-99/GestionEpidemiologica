@@ -17,15 +17,26 @@
 
 
 		protected static function connectDB(){
-		$linkBD = new PDO(SGBD,USER,PASS);
-		$linkBD->exec("SET CHARACTER SET utf8");
+//		$linkBD = new PDO(SGBD,USER,PASS);
+//		$linkBD->exec("SET CHARACTER SET utf8");
+
+
+$DB=DB;
+
+$SERVER_PATH = SERVER_PATH;
+
+$PORT = PORT;
+
+    $linkBD = new PDO("pgsql:host=".$SERVER_PATH.";port=".$PORT.";dbname=".$DB."",USER,PASS);
+    $linkBD->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
 		return $linkBD;
 	}
 
 		protected static function runSimpleQuery($stringQuery){
+
 		$requestedSimpleQuery = self::connectDB()->prepare($stringQuery);
-		$requestedSimpleQuery->execute();
-		return $requestedSimpleQuery;
+		return $requestedSimpleQuery->execute();
 	}
 
 		public static function encryption($string){
@@ -204,11 +215,13 @@ protected static function checkPatterns($pattern,$string){
 		}
 
 protected static function disableForeingDB(){
-    return "SET FOREIGN_KEY_CHECKS=0; ";
+
+self::runSimpleQuery("select 'ALTER TABLE DISABLE TRIGGER ALL;' from information_schema.tables where table_schema = 'public';");
+
 }
 
 protected static function enableForeingDB(){
-    return " SET FOREIGN_KEY_CHECKS=1; ";
+self::runSimpleQuery("select 'ALTER TABLE ENABLE TRIGGER ALL;' from information_schema.tables where table_schema = 'public';");
 }
 
 
@@ -281,46 +294,46 @@ protected static function  isStringInRange($string,$rangeMin,$rangeMax){
 
 // funciones para la bitacora
 
-protected function  addUsuarioBitacora($dataUsuarioBitacora){
+protected function  addUsuarioBitacora($data_usuario_bitacora){
 
-	$sqlQuery = self::connectDB()->prepare("INSERT INTO usuarioBitacora(
-		usuarioAlias
-		,bitacoraCodigo
-		,bitacoraFecha
-		,bitacoraHoraInicio
-		,bitacoraHoraFinal
-		,bitacoraNivelUsuario
-		,bitacoraYear) VALUES (
-		:usuarioAlias, 
-		:bitacoraCodigo, 
-		:bitacoraFecha, 
-		:bitacoraHoraInicio, 
-		:bitacoraHoraFinal, 
-		:bitacoraNivelUsuario, 
-		:bitacoraYear)");
+	$sqlQuery = self::connectDB()->prepare("INSERT INTO usuario_bitacora(
+		usuario_alias
+		,bitacora_codigo
+		,bitacora_fecha
+		,bitacora_hora_inicio
+		,bitacora_hora_final
+		,bitacora_nivel_usuario
+		,bitacora_year) VALUES (
+		:usuario_alias, 
+		:bitacora_codigo, 
+		:bitacora_fecha, 
+		:bitacora_hora_inicio, 
+		:bitacora_hora_final, 
+		:bitacora_nivel_usuario, 
+		:bitacora_year)");
 
 			$sqlQuery->execute(array(
-		"usuarioAlias"=>$dataUsuarioBitacora['usuarioAlias'],
-		"bitacoraCodigo"=>$dataUsuarioBitacora['bitacoraCodigo'],
-		"bitacoraFecha"=>$dataUsuarioBitacora['bitacoraFecha'],
-		"bitacoraHoraInicio"=>$dataUsuarioBitacora['bitacoraHoraInicio'],
-		"bitacoraHoraFinal"=>$dataUsuarioBitacora['bitacoraHoraFinal'],
-		"bitacoraNivelUsuario"=>$dataUsuarioBitacora['bitacoraNivelUsuario'],
-		"bitacoraYear"=>$dataUsuarioBitacora['bitacoraYear']));
+		"usuario_alias"=>$data_usuario_bitacora['usuario_alias'],
+		"bitacora_codigo"=>$data_usuario_bitacora['bitacora_codigo'],
+		"bitacora_fecha"=>$data_usuario_bitacora['bitacora_fecha'],
+		"bitacora_hora_inicio"=>$data_usuario_bitacora['bitacora_hora_inicio'],
+		"bitacora_hora_final"=>$data_usuario_bitacora['bitacora_hora_final'],
+		"bitacora_nivel_usuario"=>$data_usuario_bitacora['bitacora_nivel_usuario'],
+		"bitacora_year"=>$data_usuario_bitacora['bitacora_year']));
 
 
 			return $sqlQuery;
 
 }
 
-protected function updateUsuarioBitacora($dataUsuarioBitacora){
+protected function updateUsuarioBitacora($data_usuario_bitacora){
 
-$sqlQuery = self::connectDB()->prepare("UPDATE `usuarioBitacora` SET 
-		bitacoraHoraFinal=:bitacoraHoraFinal WHERE bitacoraCodigo = :bitacoraCodigo");
+$sqlQuery = self::connectDB()->prepare("UPDATE usuario_bitacora SET 
+		bitacora_hora_final=:bitacora_hora_final WHERE bitacora_codigo = :bitacora_codigo");
 
 			$sqlQuery->execute(array(
-		"bitacoraHoraFinal"=>$dataUsuarioBitacora['bitacoraHoraFinal'],
-		"bitacoraCodigo"=>$dataUsuarioBitacora['bitacoraCodigo']));
+		"bitacora_hora_final"=>$data_usuario_bitacora['bitacora_hora_final'],
+		"bitacora_codigo"=>$data_usuario_bitacora['bitacora_codigo']));
 
 			return $sqlQuery;
 
@@ -328,14 +341,17 @@ $sqlQuery = self::connectDB()->prepare("UPDATE `usuarioBitacora` SET
 
 
 
-protected static function deleteBitacora($usuarioAlias){
+protected static function deleteBitacora($usuario_alias){
 
- $sqlQuery = self::connectDB()->prepare(self::disableForeingDB()."DELETE FROM `bitacora` WHERE  usuarioAlias = :usuarioAlias; ".self::enableForeingDB()); 
+	self::disableForeingDB();
+ 	
+ 	$sqlQuery = self::connectDB()->prepare(" DELETE FROM usuario_bitacora WHERE  usuario_alias = :usuario_alias; "); 
 	
-	$sqlQuery->execute(array("usuarioAlias"=>$usuarioAlias));
+	$resultQuery = $sqlQuery->execute(array("usuario_alias"=>$usuario_alias));
 
-	return $sqlQuery;
+	self::enableForeingDB();
 
+	return $resultQuery;
 }
 	
 // Comrpueba que un conjuntos de campos enviados tienen los mismo valores a los registrados en la base de datos

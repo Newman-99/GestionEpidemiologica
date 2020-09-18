@@ -4,24 +4,24 @@
 	{
 
 			protected static function addCasoEpidemiologicoModel($dataCasoEpidemi){
-		$sqlQuery = mainModel::connectDB()->prepare("INSERT INTO casosEpidemiologicos(
-		 docIdentidad,
-		 CATALOG_KEY_CIE10,
-		 idParroquia,
+		$sqlQuery = mainModel::connectDB()->prepare("INSERT INTO casos_epidemiologicos(
+		 doc_identidad,
+		 catalog_key_cie10,
+		 id_parroquia,
 		 direccion,
 		 telefono,
 		 fecha) VALUES (		
-		 :docIdentidad,
-		 :CATALOG_KEY_CIE10,
-		 :idParroquia,
+		 :doc_identidad,
+		 :catalog_key_cie10,
+		 :id_parroquia,
 		 :direccion,
 		 :telefono,
 		 :fecha);");
 
 			$sqlQuery->execute(array(
-		 "docIdentidad"=>$dataCasoEpidemi['docIdentidad'],
-		 "CATALOG_KEY_CIE10"=>$dataCasoEpidemi['CATALOG_KEY_CIE10'],
-		 "idParroquia"=>$dataCasoEpidemi['idParroquia'],
+		 "doc_identidad"=>$dataCasoEpidemi['doc_identidad'],
+		 "catalog_key_cie10"=>$dataCasoEpidemi['catalog_key_cie10'],
+		 "id_parroquia"=>$dataCasoEpidemi['id_parroquia'],
 		 "direccion"=>$dataCasoEpidemi['direccion'],
 		 "telefono"=>$dataCasoEpidemi['telefono'],
 		 "fecha"=>$dataCasoEpidemi['fecha']));
@@ -30,19 +30,19 @@
 		}	
 	
 	protected static function updateCasoEpidemiologicoModel($dataCasoEpidemi){
-		$sqlQuery = mainModel::connectDB()->prepare("UPDATE casosEpidemiologicos  SET 
-		 docIdentidad = :docIdentidad,
-		 CATALOG_KEY_CIE10 = :CATALOG_KEY_CIE10,
-		 idParroquia = :idParroquia,
+		$sqlQuery = mainModel::connectDB()->prepare("UPDATE casos_epidemiologicos  SET 
+		 doc_identidad = :doc_identidad,
+		 catalog_key_cie10 = :catalog_key_cie10,
+		 id_parroquia = :id_parroquia,
 		 direccion = :direccion,
 		 telefono = :telefono,
-		 fecha = :fecha WHERE idCasoEpidemiologico = :idCasoEpidemiologico;");
+		 fecha = :fecha WHERE id_caso_epidemiologico = :id_caso_epidemiologico;");
 
 			$sqlQuery->execute(array(
-		 "idCasoEpidemiologico" => $dataCasoEpidemi['idCasoEpidemiologico'],
-		 "docIdentidad" => $dataCasoEpidemi['docIdentidad'],
-		 "CATALOG_KEY_CIE10" => $dataCasoEpidemi['CATALOG_KEY_CIE10'],
-		 "idParroquia" => $dataCasoEpidemi['idParroquia'],
+		 "id_caso_epidemiologico" => $dataCasoEpidemi['id_caso_epidemiologico'],
+		 "doc_identidad" => $dataCasoEpidemi['doc_identidad'],
+		 "catalog_key_cie10" => $dataCasoEpidemi['catalog_key_cie10'],
+		 "id_parroquia" => $dataCasoEpidemi['id_parroquia'],
 		 "direccion" => $dataCasoEpidemi['direccion'],
 		 "telefono" => $dataCasoEpidemi['telefono'],
 		 "fecha" => $dataCasoEpidemi['fecha']));
@@ -53,10 +53,10 @@
 
 
 			protected static function deleteCasoEpidemiologicoModel($dataCasoEpidemi){
-		$sqlQuery = mainModel::connectDB()->prepare(mainModel::disableForeingDB()."DELETE FROM casosEpidemiologicos WHERE idCasoEpidemiologico = :idCasoEpidemiologico;".mainModel::enableForeingDB());
+		$sqlQuery = mainModel::connectDB()->prepare(mainModel::disableForeingDB()."DELETE FROM casos_epidemiologicos WHERE id_caso_epidemiologico = :id_caso_epidemiologico;".mainModel::enableForeingDB());
 
 			$sqlQuery->execute(array(
-		 "idCasoEpidemiologico"=>$dataCasoEpidemi['idCasoEpidemiologico']));
+		 "id_caso_epidemiologico"=>$dataCasoEpidemi['id_caso_epidemiologico']));
 
 			return $sqlQuery;
 		}

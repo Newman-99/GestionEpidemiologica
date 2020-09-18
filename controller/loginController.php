@@ -33,13 +33,13 @@ public function loginUserController($dataUser){
 			$currentDate =  mainModel::getDateCurrentSystem();
 
 			$currentHour = date("h:i:s a", $currentDate);
-
+ 
 			$dataSession=[
 			"aliasUser"=>$_SESSION["aliasUser"],
 			"tokenCurrentUser"=>$_SESSION["token_dptoEpidemi"],
-			"bitacoraHoraFinal"=>$currentHour,
+			"bitacora_hora_final"=>$currentHour,
 			"token_dptoEpidemi"=>$_SESSION["token_dptoEpidemi"],
-			"bitacoraCodigo"=>$_SESSION["bitacoraCodigo"]];
+			"bitacora_codigo"=>$_SESSION["bitacora_codigo"]];
 
 
 			$updateUsuarioBitacora = mainModel::updateUsuarioBitacora($dataSession);
@@ -104,21 +104,21 @@ public function loginUserController($dataUser){
 		while($valuesDataUser=$recordsUserSQL->fetch(PDO
 			::FETCH_ASSOC)){ 
 
-			$passEncryptDB = $valuesDataUser["passEncrypt"]; 
+			$pass_encryptDB = $valuesDataUser["pass_encrypt"]; 
 
-			$aliasUser = $valuesDataUser["aliasUsuario"]; 			
-			$docIdentidad = $valuesDataUser["docIdentidad"];
+			$aliasUser = $valuesDataUser["usuario_alias"]; 			
+			$doc_identidad = $valuesDataUser["doc_identidad"];
 
-			$idNivelPermiso = $valuesDataUser["idNivelPermiso"];
+			$id_nivel_permiso = $valuesDataUser["id_nivel_permiso"];
 
-			$idEstado = $valuesDataUser["idEstado"];			
+			$id_estado = $valuesDataUser["id_estado"];			
 		}
 
 			// Comprobar contrasenas
 
 			$passRequest = mainModel::encryption($passRequest);
 
-		    if (strcmp($passEncryptDB, $passRequest) != 0){
+		    if (strcmp($pass_encryptDB, $passRequest) != 0){
 				$alert=[
 				"Alert"=>"simple",
 				"Title"=>"Datos Invalidos",
@@ -137,24 +137,24 @@ public function loginUserController($dataUser){
 
 			$personController = new personaController();
 
-			$recordsPersonSQL = personaController::getPersonaController(array("docIdentidad"=>$docIdentidad));
+			$recordsPersonSQL = personaController::getPersonaController(array("doc_identidad"=>$doc_identidad));
 					
 			$recordsPersonSQL->execute();
 	
 			while($valuesDataPerson=$recordsPersonSQL->fetch(PDO
 			::FETCH_ASSOC)){ 
 
-			$nameUser = $valuesDataPerson["idGenero"]; 
+			$nameUser = $valuesDataPerson["id_genero"]; 
 			$nameUser = $valuesDataPerson["nombres"]; 
 			$lastNamesUser = $valuesDataPerson["apellidos"]; 
-			$idGeneroUser = $valuesDataPerson["idGenero"]; 
+			$id_generoUser = $valuesDataPerson["id_genero"]; 
 
 		}
 
 
 		// Comprobar que el estado del usuario se ha valido
 		
-		if($idEstado == 0 || $idEstado == 2){
+		if($id_estado == 0 || $id_estado == 2){
 				
 				$alert=[
 				"Alert"=>"simple",
@@ -181,22 +181,22 @@ public function loginUserController($dataUser){
 				$currentDate = date("Y-m-d", $currentDate);
 
 
-				$queryRecordsBitacora = mainModel::runSimpleQuery("SELECT id FROM bitacora");
+				$queryRecordsBitacora = mainModel::connectDB()->query("SELECT id_bitacora FROM usuario_bitacora");
 
 				$totalRecordsBitacora = ($queryRecordsBitacora->rowCount())+1;
 
-				$bitacoraCodigo = mainModel::generateRandomCode("CB",8,$totalRecordsBitacora);
+				$bitacora_codigo = mainModel::generateRandomCode("CB",8,$totalRecordsBitacora);
 
-				$dataUsuarioBitacora=[
-					"usuarioAlias"=>$aliasUser,
-					"bitacoraCodigo"=>$bitacoraCodigo,
-					"bitacoraFecha"=>$currentDate,
-					"bitacoraYear"=>$currentYear,
-					"bitacoraHoraInicio"=>$currentHour,
-					"bitacoraHoraFinal"=> NULL,//Se registrar cuando cierre secion
-					"bitacoraNivelUsuario"=>$idNivelPermiso];
+				$data_usuario_bitacora=[
+					"usuario_alias"=>$aliasUser,
+					"bitacora_codigo"=>$bitacora_codigo,
+					"bitacora_fecha"=>$currentDate,
+					"bitacora_year"=>$currentYear,
+					"bitacora_hora_inicio"=>$currentHour,
+					"bitacora_hora_final"=> NULL,//Se registrar cuando cierre secion
+					"bitacora_nivel_usuario"=>$id_nivel_permiso];
 
-					mainModel::addUsuarioBitacora($dataUsuarioBitacora);
+					mainModel::addUsuarioBitacora($data_usuario_bitacora);
 					
 				
 
@@ -204,21 +204,21 @@ public function loginUserController($dataUser){
 
 				$arrayNamesUser = explode (" ", $nameUser);
 				$arrayLastNamesUser = explode (" ", $lastNamesUser);			   
-				$_SESSION['docIdentidad']=$docIdentidad;
+				$_SESSION['doc_identidad']=$doc_identidad;
 				$_SESSION['aliasUser']=$aliasUser;
 
 				$_SESSION['nameUser']=$arrayNamesUser[0];
 				$_SESSION['lastNameUser']=$arrayLastNamesUser[0];
-				$_SESSION['idNivelPermiso']=$idNivelPermiso;
-				$_SESSION['idEstado']=$idEstado;
-				$_SESSION['idGeneroUser']=$idGeneroUser;
-				$_SESSION['bitacoraCodigo']=$bitacoraCodigo;
+				$_SESSION['id_nivel_permiso']=$id_nivel_permiso;
+				$_SESSION['id_estado']=$id_estado;
+				$_SESSION['id_generoUser']=$id_generoUser;
+				$_SESSION['bitacora_codigo']=$bitacora_codigo;
 
 				$_SESSION['token_dptoEpidemi']=md5(uniqid(mt_rand(),true));
 			
-				if ($idGeneroUser == "1"){
+				if ($id_generoUser == "1"){
                   $_SESSION['iconUser'] = "male-user.png"; 
-                }elseif ($idGeneroUser == "2") {
+                }elseif ($id_generoUser == "2") {
                   $_SESSION['iconUser'] = "fermale-user.png"; 
                 }
 
@@ -268,9 +268,9 @@ public function loginUserController($dataUser){
 			$dataSession=[
 			"aliasUser"=>$aliasUser,
 			"tokenCurrentUser"=>$tokenCurrentUser,
-			"bitacoraHoraFinal"=>$currentHour,
+			"bitacora_hora_final"=>$currentHour,
 			"token_dptoEpidemi"=>$_SESSION["token_dptoEpidemi"],
-			"bitacoraCodigo"=>$_SESSION["bitacoraCodigo"]];
+			"bitacora_codigo"=>$_SESSION["bitacora_codigo"]];
 
 			// si no se crea otra alert, imprimira este msj error
 				$alert=[
@@ -287,17 +287,14 @@ public function loginUserController($dataUser){
 			
 			if ($updateUsuarioBitacora->rowCount()) {
 
+
 				session_unset();
 				session_destroy();
-				
+			
 				$alert=[
-				"Alert"=>"redirecting",
-				"URL"=>SERVERURL."dashboard/"
+				"Alert"=>"simpleReload",
 				];
 
-				echo json_encode($alert);
-				header("Location: ".SERVERURL);
-						exit();
 			}
 
 		}			
@@ -342,8 +339,8 @@ public function forgotPassUserController($dataUser){
 				'type' => \PDO::PARAM_STR,
 				];
 
-				array_push($userAttributesUpdate, 'idEstado = :idEstado');
-				$userValuesUpdate['idEstado'] = [
+				array_push($userAttributesUpdate, 'id_estado = :id_estado');
+				$userValuesUpdate['id_estado'] = [
 				'value' => 0,
 				'type' => \PDO::PARAM_INT,
 				];
@@ -408,8 +405,8 @@ public function addDataForUserRestartController($dataUser){
 				'type' => \PDO::PARAM_STR,
 				];
 
-				array_push($userAttributesUpdate, 'idEstado = :idEstado');
-				$userValuesUpdate['idEstado'] = [
+				array_push($userAttributesUpdate, 'id_estado = :id_estado');
+				$userValuesUpdate['id_estado'] = [
 				'value' => 0,
 				'type' => \PDO::PARAM_INT,
 				];
@@ -440,10 +437,10 @@ public function addDataForUserRestartController($dataUser){
 
 	public static function randIconUserIMG(){
 
-	$idGeneroUser =mt_rand(1,2);
-	if ($idGeneroUser == "1"){
+	$id_generoUser =mt_rand(1,2);
+	if ($id_generoUser == "1"){
 		 return $iconUser = "male-user.png"; 
-			}elseif ($idGeneroUser == "2") {
+			}elseif ($id_generoUser == "2") {
 				 return $iconUser = "fermale-user.png"; 
            	}
 

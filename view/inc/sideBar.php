@@ -20,7 +20,7 @@
       </li>
 
       <!-- Nav Item - Casos Epidemiologicos Collapse Menu -->
-      <?php if ($_SESSION['idNivelPermiso'] == "1"): ?>
+      <?php if ($_SESSION['id_nivel_permiso'] == "1"): ?>
 
       <li class="nav-item">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseCasosEpidemi" aria-expanded="true" aria-controls="collapseCasosEpidemi">

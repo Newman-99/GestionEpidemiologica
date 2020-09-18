@@ -171,7 +171,7 @@
                   Mi Registro de Sesiones
                 </a>
 
-                <?php $URL_token_dptoEpidemi = SERVERURL."ajax/loginAjax.php?"."operationType=closeSession"."&tokenCurrentUser=".$loginController->encryption($_SESSION["token_dptoEpidemi"])?>
+              <?php $URL_token_dptoEpidemi = SERVERURL."ajax/loginAjax.php?"."operationType=closeSession"."&tokenCurrentUser=".$loginController->encryption($_SESSION["token_dptoEpidemi"])?>
 
                 <div class="dropdown-divider"></div>
                 <a class="dropdown-item btn-exit-system" href="<?php echo $URL_token_dptoEpidemi;?>">

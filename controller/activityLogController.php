@@ -12,25 +12,23 @@
 	class activityLogController extends userModel{
 
 
-	protected static $stringQueryForGetActivityLogUser = "SELECT SQL_CALC_FOUND_ROWS usr.alias aliasUsuario, usr.docIdentidad,
-	pers.docIdentidad, pers.nombres, pers.apellidos, pers.idNacionalidad, pers.idGenero,
-	nacion.descripcionNacionalidad,
-	gnro.descripcionGenero,
-	usrBit.idBitacora,usrBit.bitacoraCodigo,usrBit.bitacoraFecha,usrBit.bitacoraHoraInicio,usrBit.bitacoraHoraFinal,
-	usrBit.bitacoraNivelUsuario,usrNivl.descripcionNivelPermiso descripNivelPermisoBitacora ,usrBit.bitacoraYear
+	protected static $stringQueryForGetActivityLogUser = "SELECT usr.alias usuario_alias,usr.id_nacionalidad, usr.doc_identidad, 
+	pers.nombres, pers.apellidos, pers.id_genero,
+	nacion.descripcion_nacionalidad,
+	gnro.descripcion_genero,
+	usrBit.id_bitacora,usrBit.bitacora_codigo,usrBit.bitacora_fecha,usrBit.bitacora_hora_inicio,usrBit.bitacora_hora_final,
+	usrBit.bitacora_nivel_usuario,usrNivl.descripcion_nivel_permiso,usrBit.bitacora_year
 	FROM usuarios usr
-	INNER JOIN personas pers ON usr.docIdentidad = pers.docIdentidad
-	INNER JOIN nacionalidades nacion ON pers.idNacionalidad = nacion.idNacionalidad 
-	INNER JOIN generos gnro ON pers.idGenero = gnro.idGenero 
-	INNER JOIN usuarioBitacora usrBit ON usr.alias = usrBit.usuarioAlias 
-	INNER JOIN usuariosNiveles usrNivl ON usrBit.bitacoraNivelUsuario =  usrNivl.idNivelPermiso ";
+	INNER JOIN personas pers ON usr.doc_identidad = pers.doc_identidad
+	INNER JOIN nacionalidades nacion ON pers.id_nacionalidad = nacion.id_nacionalidad 
+	INNER JOIN generos gnro ON pers.id_genero = gnro.id_genero 
+	INNER JOIN usuario_bitacora usrBit ON usr.alias = usrBit.usuario_alias 
+	INNER JOIN usuarios_niveles usrNivl ON usrBit.bitacora_nivel_usuario =  usrNivl.id_nivel_permiso ";
 
 
 	public static function getFirstDateRecordsActivityLogUserController(){
 
-		$queryFirstDateRecords = mainModel::runSimpleQuery('SELECT bitacoraFecha FROM `usuarioBitacora` ORDER BY bitacoraFecha ASC  LIMIT 1');
-
-		$queryFirstDateRecords->execute();
+		$queryFirstDateRecords = mainModel::connectDB()->query('SELECT bitacora_fecha FROM usuario_bitacora ORDER BY bitacora_fecha ASC  LIMIT 1');
 
 		return $firstDateRecords = $queryFirstDateRecords->fetchColumn();
 
@@ -58,7 +56,7 @@ if (!empty($requestedAliasUser)) {
 // Operacionws para limitar la query segun la fecha
 if (!empty($minDateRange) AND !empty($maxDateRange) ) {
 
-	array_push($AttributesFilterForQuery," bitacoraFecha BETWEEN '$minDateRange' AND '$maxDateRange'");
+	array_push($AttributesFilterForQuery," bitacora_fecha BETWEEN '$minDateRange' AND '$maxDateRange'");
 }
 
 	if (!empty($AttributesFilterForQuery)) {
@@ -66,11 +64,9 @@ if (!empty($minDateRange) AND !empty($maxDateRange) ) {
 		  }
 
 	// Orden por default, en la vista DataTables se encargara de otras opciones de orden
-	$queryForGetActivityLogUser = mainModel::runSimpleQuery($queryForGetActivityLogUser." ORDER BY usrBit.idBitacora DESC");
+	$queryForGetActivityLogUser = mainModel::connectDB()->query($queryForGetActivityLogUser." ORDER BY usrBit.id_bitacora DESC");
 
 			$recordsCount = 1;
-
- 	$queryForGetActivityLogUser->execute();
                    
 			$dataJsonRocords = array();
 
@@ -78,46 +74,45 @@ if (!empty($minDateRange) AND !empty($maxDateRange) ) {
 
                    $dataFields=array();				
 
-				if ($rows['idGenero'] == "1"){
+				if ($rows['id_genero'] == "1"){
                   $rows['iconGenero'] = "male-user.png"; 
-                }elseif ($rows['idGenero'] == "2") {
+                }elseif ($rows['id_genero'] == "2") {
                   $rows['iconGenero'] = "fermale-user.png"; 
                 }
 
-             	if ($rows['idNacionalidad'] === "1") {
+             	if ($rows['id_nacionalidad'] == "1") {
 					$nacionalidad = "V";
 				}else{
-
 					$nacionalidad = "E";				
 				}
 
 
-             	if (userModel::isDataEmtpy($rows['bitacoraHoraFinal'])) {
-					$rows['bitacoraHoraFinal'] = "No Registrada";
+             	if (userModel::isDataEmtpy($rows['bitacora_hora_final'])) {
+					$rows['bitacora_hora_final'] = "No Registrada";
 				}
 
 				$rows['recordsCount']=$recordsCount++;	
                    
                  $dataFields['recordsCount']=$rows['recordsCount'];
 
-                 $dataFields['genero']= "<span class='d-none'>".$rows['idGenero']."</span>
+                 $dataFields['genero']= "<span class='d-none'>".$rows['id_genero']."</span>
                     <img class='img-profile rounded-circle' width='40' src=".SERVERURL."view/img/".$rows['iconGenero'].">";
 
-                $dataFields['docIdentidad']=$nacionalidad.'-'.$rows['docIdentidad'];
+                $dataFields['doc_identidad']=$nacionalidad.'-'.$rows['doc_identidad'];
 
-                $dataFields['aliasUsuario']=$rows['aliasUsuario'];
+                $dataFields['usuario_alias']=$rows['usuario_alias'];
 
                 $dataFields['nombres']=$rows['nombres'];
 
                 $dataFields['apellidos']=$rows['apellidos'];
 
-                $dataFields['descripNivelPermisoBitacora']=$rows['descripNivelPermisoBitacora'];
+                $dataFields['descripcion_nivel_permiso']=$rows['descripcion_nivel_permiso'];
 
-                $dataFields['bitacoraFecha']=$rows['bitacoraFecha'];
+                $dataFields['bitacora_fecha']=$rows['bitacora_fecha'];
 
-                $dataFields['bitacoraHoraInicio']=$rows['bitacoraHoraInicio'];
+                $dataFields['bitacora_hora_inicio']=$rows['bitacora_hora_inicio'];
 
-                $dataFields['bitacoraHoraFinal']=$rows['bitacoraHoraFinal'];
+                $dataFields['bitacora_hora_final']=$rows['bitacora_hora_final'];
 				
 				$dataJsonRocords[] = $dataFields;
 			}

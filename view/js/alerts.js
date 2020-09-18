@@ -174,6 +174,8 @@ function ajaxSweetAlerts(alert){
 				location.reload();
 			}
 		});
+	}else if(alert.Alert==="simpleReload"){
+			location.reload();	
 	}else if(alert.Alert==="clean"){
 		Swal.fire({
 			title: alert.Title,

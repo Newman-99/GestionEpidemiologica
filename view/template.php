@@ -1,5 +1,4 @@
-<?php  //echo SERVERURL.'dashboard/' ; 
-//var_dump($_GET['views']);
+<?php
 
 ?>
 <!DOCTYPE html>

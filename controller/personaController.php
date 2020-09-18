@@ -11,9 +11,9 @@
 	// Funciones para manejar datos (CRUD)
 		public function addPersonaController($dataPersona){
 		 
-		$docIdentidad = mainModel::cleanStringSQL($dataPersona['docIdentidad']);
+		$doc_identidad = mainModel::cleanStringSQL($dataPersona['doc_identidad']);
 		
-		 $docIdentidad = self::ClearUserSeparatedCharacters($docIdentidad);
+		 $doc_identidad = self::ClearUserSeparatedCharacters($doc_identidad);
 
 		 $nombres = mainModel::cleanStringSQL($dataPersona['nombres']);
 		 
@@ -23,13 +23,13 @@
 
 		$apellidos=self::filtterNombresApellidos($apellidos);
 
-		 $fechaNacimiento = mainModel::cleanStringSQL($dataPersona['fechaNacimiento']);		 	
+		 $fecha_nacimiento = mainModel::cleanStringSQL($dataPersona['fecha_nacimiento']);		 	
 		 
-		 $idNacionalidad = mainModel::cleanStringSQL($dataPersona['idNacionalidad']);
+		 $id_nacionalidad = mainModel::cleanStringSQL($dataPersona['id_nacionalidad']);
 		 
-		 $idGenero = mainModel::cleanStringSQL($dataPersona['idGenero']);
+		 $id_genero = mainModel::cleanStringSQL($dataPersona['id_genero']);
 
-		 $idGenero = mainModel::cleanStringSQL($dataPersona['idGenero']);
+		 $id_genero = mainModel::cleanStringSQL($dataPersona['id_genero']);
 
 		 $telefono = mainModel::cleanStringSQL($dataPersona['telefonoPart1'].$dataPersona['telefonoPart2'].$dataPersona['telefonoPart3']);
 
@@ -37,11 +37,11 @@
 
 
 		if (mainModel::isDataEmtpy(
-			$docIdentidad,
+			$doc_identidad,
 			$nombres,
 			$apellidos,
-			$fechaNacimiento,
-			$idNacionalidad,$idGenero,$telefono)) {
+			$fecha_nacimiento,
+			$id_nacionalidad,$id_genero,$telefono)) {
 
 			$alert=[
 				"Alert"=>"simple",
@@ -55,11 +55,11 @@
 				exit();
 			}
 
-			$isExistPerson = mainModel::runSimpleQuery("SELECT docIdentidad FROM `personas` WHERE docIdentidad =
-			'$docIdentidad' AND idNacionalidad =
-			'$idNacionalidad'");
+			$queryIsExistPerson = mainModel::connectDB()->query("SELECT doc_identidad FROM personas WHERE doc_identidad =
+			'$doc_identidad' AND id_nacionalidad =
+			'$id_nacionalidad'");
 
-			if($isExistPerson->rowCount()){
+			if($queryIsExistPerson->rowCount()){
 
 			$alert=[
 				"Alert"=>"simple",
@@ -74,7 +74,7 @@
 			}
 
 
-			if(!self::isValidDocIdentidad($docIdentidad)){
+			if(!self::isValiddoc_identidad($doc_identidad)){
 
 			$alert=[
 				"Alert"=>"simple",
@@ -88,7 +88,7 @@
 				exit();
 			}
 
-			if(!mainModel::isValidSelectionTwoOptions($idNacionalidad)){
+			if(!mainModel::isValidSelectionTwoOptions($id_nacionalidad)){
 
 			$alert=[
 				"Alert"=>"simple",
@@ -103,7 +103,7 @@
 			}
 
 
-			if(!mainModel::isValidSelectionTwoOptions($idGenero)){
+			if(!mainModel::isValidSelectionTwoOptions($id_genero)){
 
 			$alert=[
 				"Alert"=>"simple",
@@ -132,7 +132,7 @@
 			}
 
 
-			if (!mainModel::checkDate($fechaNacimiento)){
+			if (!mainModel::checkDate($fecha_nacimiento)){
 			$alert=[
 				"Alert"=>"simple",
 				"Title"=>"Datos Invalidos",
@@ -146,7 +146,7 @@
 		}
 
 
-		if (mainModel::isDateGreaterCurrentDate($fechaNacimiento)) {
+		if (mainModel::isDateGreaterCurrentDate($fecha_nacimiento)) {
 				$alert=[
 					"Alert"=>"simple",
 					"Title"=>"Datos Invalidos",
@@ -177,17 +177,17 @@
 
 		 $dataPersona = array();
 
-		 $dataPersona['docIdentidad'] = $docIdentidad;
+		 $dataPersona['doc_identidad'] = $doc_identidad;
 		 
 		 $dataPersona['nombres'] = $nombres;
 		 
 		 $dataPersona['apellidos'] = $apellidos;
 		 
-		 $dataPersona['fechaNacimiento'] = $fechaNacimiento;
+		 $dataPersona['fecha_nacimiento'] = $fecha_nacimiento;
 
-		 $dataPersona['idNacionalidad'] = $idNacionalidad;
+		 $dataPersona['id_nacionalidad'] = $id_nacionalidad;
 		 
-		 $dataPersona['idGenero'] = $idGenero;
+		 $dataPersona['id_genero'] = $id_genero;
 		
 		 personaModel::addPersonaModel($dataPersona);
 
@@ -196,29 +196,29 @@
 
 		public static function updatePersonaController($dataPersona){
 
-		 $docIdentidad = mainModel::cleanStringSQL($dataPersona['docIdentidad']);
+		 $doc_identidad = mainModel::cleanStringSQL($dataPersona['doc_identidad']);
 		 
 		 $nombres = mainModel::cleanStringSQL($dataPersona['nombres']);
 		 
 		 $apellidos = mainModel::cleanStringSQL($dataPersona['apellidos']);
 		 
-		 $fechaNacimiento = mainModel::cleanStringSQL($dataPersona['fechaNacimiento']);
+		 $fecha_nacimiento = mainModel::cleanStringSQL($dataPersona['fecha_nacimiento']);
 		 
-		 $idNacionalidad = mainModel::cleanStringSQL($dataPersona['idNacionalidad']);
+		 $id_nacionalidad = mainModel::cleanStringSQL($dataPersona['id_nacionalidad']);
 		 
-		 $idGenero = mainModel::cleanStringSQL($dataPersona['idGenero']);
+		 $id_genero = mainModel::cleanStringSQL($dataPersona['id_genero']);
 		
 		 $telefono = $dataPersona['telefonoPart1'].$dataPersona['telefonoPart2'].$dataPersona['telefonoPart3'];
 
 		 $telefono = mainModel::cleanStringSQL($telefono);
 
 		 			if (!isset(
-						 $docIdentidad,
+						 $doc_identidad,
 						 $nombres,
 						 $apellidos,
-						 $fechaNacimiento,
-						 $idNacionalidad,
-						 $idGenero)) {
+						 $fecha_nacimiento,
+						 $id_nacionalidad,
+						 $id_genero)) {
 
 			$alert=[
 				"Alert"=>"simple",
@@ -235,9 +235,9 @@
 
 
 
-			$isExistPerson = mainModel::runSimpleQuery("SELECT docIdentidad FROM `personas` WHERE docIdentidad =
-			'$docIdentidad' AND idNacionalidad =
-			'$idNacionalidad'");
+			$isExistPerson = mainModel::connectDB()->query("SELECT doc_identidad FROM personas WHERE doc_identidad =
+			'$doc_identidad' AND id_nacionalidad =
+			'$id_nacionalidad'");
 
 			if(!$isExistPerson->rowCount()){
 
@@ -253,7 +253,7 @@
 				exit();
 			}
 
-			if(!self::isValidDocIdentidad($docIdentidad)){
+			if(!self::isValiddoc_identidad($doc_identidad)){
 
 			$alert=[
 				"Alert"=>"simple",
@@ -268,7 +268,7 @@
 			}
 
 
-			if(!mainModel::isValidSelectionTwoOptions($idGenero)){
+			if(!mainModel::isValidSelectionTwoOptions($id_genero)){
 
 			$alert=[
 				"Alert"=>"simple",
@@ -297,7 +297,7 @@
 			}
 
 
-			if (!mainModel::checkDate($fechaNacimiento)){
+			if (!mainModel::checkDate($fecha_nacimiento)){
 			$alert=[
 				"Alert"=>"simple",
 				"Title"=>"Datos Invalidos",
@@ -311,7 +311,7 @@
 		}
 
 
-		if (mainModel::isDateGreaterCurrentDate($fechaNacimiento)) {
+		if (mainModel::isDateGreaterCurrentDate($fecha_nacimiento)) {
 				$alert=[
 					"Alert"=>"simple",
 					"Title"=>"Datos Invalidos",
@@ -342,17 +342,17 @@
 
 		 $dataPersona = array();
 
-		 $dataPersona['docIdentidad'] = $docIdentidad;
+		 $dataPersona['doc_identidad'] = $doc_identidad;
 		 
 		 $dataPersona['nombres'] = $nombres;
 		 
 		 $dataPersona['apellidos'] = $apellidos;
 		 
-		 $dataPersona['fechaNacimiento'] = $fechaNacimiento;
+		 $dataPersona['fecha_nacimiento'] = $fecha_nacimiento;
 		 
-		 $dataPersona['idNacionalidad'] = $idNacionalidad;
+		 $dataPersona['id_nacionalidad'] = $id_nacionalidad;
 		 
-		 $dataPersona['idGenero'] = $idGenero;
+		 $dataPersona['id_genero'] = $id_genero;
 		 
 		return personaModel::updatePersonaModel($dataPersona);
 
@@ -363,11 +363,11 @@
 
 		public function deletePersonaController($dataPersona){
 			
-		 $docIdentidad = mainModel::cleanStringSQL($dataPersona['docIdentidad']);
+		 $doc_identidad = mainModel::cleanStringSQL($dataPersona['doc_identidad']);
 		 
-		 $idNacionalidad = mainModel::cleanStringSQL($dataPersona['idNacionalidad']);
+		 $id_nacionalidad = mainModel::cleanStringSQL($dataPersona['id_nacionalidad']);
 
-		 	if (mainModel::isDataEmtpy($docIdentidad,$idNacionalidad)) {
+		 	if (mainModel::isDataEmtpy($doc_identidad,$id_nacionalidad)) {
 				$alert=[
 					"Alert"=>"simple",
 					"Title"=>"Datos Vacios",
@@ -382,15 +382,13 @@
 
 			$primaryKeyPersona = [
 
-				"idNacionalidad"=>$idNacionalidad,
-				"docIdentidad"=>$docIdentidad
+				"id_nacionalidad"=>$id_nacionalidad,
+				"doc_identidad"=>$doc_identidad
 			];
 
-			$SQL_isExistPersona = self::getPersonaController($primaryKeyPersona);
+			$queryIsExistPersona = mainModel::connectDB()->query("select doc_identidad from personas where id_nacionalidad = '$id_nacionalidad' and doc_identidad = '$doc_identidad'");
 			
-			$SQL_isExistPersona->execute();
-
-			if(!$SQL_isExistPersona->rowCount()){
+			if(!$queryIsExistPersona->rowCount()){
 			$alert=[
 				"Alert"=>"simple",
 				"Title"=>"Datos no encontrados",
@@ -403,7 +401,7 @@
 				exit();
 			}
 
-			 personaModel::deletePersonaModel($primaryKeyPersona);
+			 return personaModel::deletePersonaModel($primaryKeyPersona);
 
 							 
 
@@ -417,25 +415,25 @@
 
  		$filterValues = [];
 
-		if (isset($dataPersona["idNacionalidad"]) && !mainModel::isDataEmtpy($dataPersona["idNacionalidad"])) {
+		if (isset($dataPersona["id_nacionalidad"]) && !mainModel::isDataEmtpy($dataPersona["id_nacionalidad"])) {
 
-		 $idNacionalidad = mainModel::cleanStringSQL($dataPersona['idNacionalidad']);
+		 $id_nacionalidad = mainModel::cleanStringSQL($dataPersona['id_nacionalidad']);
 
-		 array_push($personAttributesFilter, 'idNacionalidad = :idNacionalidad');
-		$filterValues[':idNacionalidad'] = [
-		'value' => $idNacionalidad,
+		 array_push($personAttributesFilter, 'id_nacionalidad = :id_nacionalidad');
+		$filterValues[':id_nacionalidad'] = [
+		'value' => $id_nacionalidad,
 		'type' => \PDO::PARAM_STR,
 		];
 
 		}
 	
-	if (isset($dataPersona["docIdentidad"]) && !mainModel::isDataEmtpy($dataPersona["docIdentidad"])) {
+	if (isset($dataPersona["doc_identidad"]) && !mainModel::isDataEmtpy($dataPersona["doc_identidad"])) {
 
-		 $docIdentidad = mainModel::cleanStringSQL($dataPersona['docIdentidad']);
+		 $doc_identidad = mainModel::cleanStringSQL($dataPersona['doc_identidad']);
 		
-		array_push($personAttributesFilter, 'docIdentidad = :docIdentidad');
-		$filterValues[':docIdentidad'] = [
-		'value' => $docIdentidad,
+		array_push($personAttributesFilter, 'doc_identidad = :doc_identidad');
+		$filterValues[':doc_identidad'] = [
+		'value' => $doc_identidad,
 		'type' => \PDO::PARAM_STR,
 		];
 
@@ -466,25 +464,25 @@
 		}
 
 
-		if (isset($dataPersona["fechaNacimiento"]) && !mainModel::isDataEmtpy($dataPersona["fechaNacimiento"])) {
+		if (isset($dataPersona["fecha_nacimiento"]) && !mainModel::isDataEmtpy($dataPersona["fecha_nacimiento"])) {
 
-		array_push($personAttributesFilter, 'fechaNacimiento = :fechaNacimiento');
-		$filterValues[':fechaNacimiento'] = [
-		'value' => $fechaNacimiento,
+		array_push($personAttributesFilter, 'fecha_nacimiento = :fecha_nacimiento');
+		$filterValues[':fecha_nacimiento'] = [
+		'value' => $fecha_nacimiento,
 		'type' => \PDO::PARAM_STR,
 		];
 
-		 $fechaNacimiento = mainModel::cleanStringSQL($dataPersona['fechaNacimiento']);
+		 $fecha_nacimiento = mainModel::cleanStringSQL($dataPersona['fecha_nacimiento']);
 		 
 		 }
 
-		if (isset($dataPersona["idGenero"]) && !mainModel::isDataEmtpy($dataPersona["idGenero"])) {
+		if (isset($dataPersona["id_genero"]) && !mainModel::isDataEmtpy($dataPersona["id_genero"])) {
 		 
-		 $idGenero = mainModel::cleanStringSQL($dataPersona['idGenero']);
+		 $id_genero = mainModel::cleanStringSQL($dataPersona['id_genero']);
 
-		array_push($personAttributesFilter, 'idGenero = :idGenero');
-		$filterValues[':idGenero'] = [
-		'value' => $idGenero,
+		array_push($personAttributesFilter, 'id_genero = :id_genero');
+		$filterValues[':id_genero'] = [
+		'value' => $id_genero,
 		'type' => \PDO::PARAM_STR,
 		];
 	}
@@ -498,8 +496,8 @@
 
 // Funciones Para validar DATOS
 
-public static function isValidDocIdentidad($docIdentidad){
-    if(preg_match_all("/^[0-9]{7,8}$/",$docIdentidad)){
+public static function isValiddoc_identidad($doc_identidad){
+    if(preg_match_all("/^[0-9]{7,8}$/",$doc_identidad)){
         return TRUE;
     }
         return FALSE;

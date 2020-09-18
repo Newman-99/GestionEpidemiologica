@@ -98,23 +98,23 @@
   	<br>
     <input type="text" name="apellidos" id="" class="form-control form-control-person" placeholder="Apellidos">
 <br>
-        <select name='idNacionalidad' id='' class="form-control" autocomplete='on' class="form-control" >
+        <select name='id_nacionalidad' id='' class="form-control" autocomplete='on' class="form-control" >
             <option  value=''>Nacionalidad</option>
             <option  value='1'>V</option>
             <option value='2'>E</option>
         </select>
 
   	<br>
-    <input type="number" name="docIdentidad" id="" class="form-control" placeholder="Cedula">
+    <input type="number" name="doc_identidad" id="" class="form-control" placeholder="Cedula">
   <br>
-    <select name='idGenero' id='' class="form-control form-control-person">
+    <select name='id_genero' id='' class="form-control form-control-person">
        <option value=''>Genero</option>
        <option value='1'>Masculino</option>
        <option value='2'>Femenino</option>
     </select>
 <br>
 Fecha de Nacimiento
-  	<input type="date" name="fechaNacimiento" id="" class="form-control form-control-person" placeholder="">
+  	<input type="date" name="fecha_nacimiento" id="" class="form-control form-control-person" placeholder="">
 
 <br>
                 <div class="form-group row">
@@ -139,7 +139,7 @@ Fecha de Nacimiento
                   </div>
                 </div>
 <br>
-  	<input type="number" name="idParroquia" id="" class="form-control" placeholder="Parroquia">
+  	<input type="number" name="id_parroquia" id="" class="form-control" placeholder="Parroquia">
 <br>
     <textarea rows="3" cols="40" name="direccion" id="" class="form-control" placeholder="Direccion"></textarea>
 <br>

@@ -20,11 +20,11 @@
                     <p class="mb-4">Rellena los campos correctamente para que el reinico se ha autorizado por un administrador y se ha reactivada su cuenta</p>
                   </div>
 
-<?php        $queryIsExistUserReload = $loginController->getUserController(array("idEstado"=>2)); 
+<?php        $queryIsExistUserReload = $loginController->getUserController(array("id_estado"=>2)); 
 
         $queryIsExistUserReload->execute(); 
 
-        if (!$queryIsExistUserReload->rowCount() || isset($_SESSION)){
+        if (!$queryIsExistUserReload->rowCount()){
                 echo $loginController->forceClosureController();
               }
 

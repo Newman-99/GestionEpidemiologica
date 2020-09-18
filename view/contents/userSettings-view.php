@@ -63,9 +63,9 @@
 
                 <div class="form-group">
             <p class="form-control">
-                <?php echo $fieldsUserRequested['aliasUsuario'];
+                <?php echo $fieldsUserRequested['usuario_alias'];
                 ?>
-            <input name= "aliasUser" type="hidden" value="<?php echo $fieldsUserRequested['aliasUsuario']; ?>">
+            <input name= "aliasUser" type="hidden" value="<?php echo $fieldsUserRequested['usuario_alias']; ?>">
 
             </p>
             </div>

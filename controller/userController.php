@@ -10,13 +10,13 @@
 
 		public function addUserController($dataUser){
 		
-		 $idNacionalidad = mainModel::cleanStringSQL($dataUser["idNacionalidad"]);
+		 $id_nacionalidad = mainModel::cleanStringSQL($dataUser["id_nacionalidad"]);
 
-		 $docIdentidad = mainModel::cleanStringSQL($dataUser["docIdentidad"]);
+		 $doc_identidad = mainModel::cleanStringSQL($dataUser["doc_identidad"]);
 		 	// 3 = Invitado en DB
-		 $idNivelPermiso = "3";
+		 $id_nivel_permiso = "3";
 		 	// 0 = Inactivo  en DB		 	
-		 $idEstado = "0";
+		 $id_estado = "0";
 
 		$aliasUser = mainModel::cleanStringSQL($dataUser["aliasUser"]);
 
@@ -39,10 +39,10 @@
 		 //			
 
 		if (mainModel::isDataEmtpy($aliasUser,
-		 	$docIdentidad,
+		 	$doc_identidad,
 		 	$password,
 		 	$passwordConfirm, 
-		 	$email,$idNacionalidad,$question1,$question2)){
+		 	$email,$id_nacionalidad,$question1,$question2)){
 
 				$alert=[
 					"Alert"=>"simple",
@@ -64,8 +64,8 @@
 
 		$primaryKeyPersona = [
 
-			"idNacionalidad"=>$idNacionalidad,
-			"docIdentidad"=>$docIdentidad
+			"id_nacionalidad"=>$id_nacionalidad,
+			"doc_identidad"=>$doc_identidad
 		];
 
 			require_once "../controller/personaController.php";
@@ -237,10 +237,10 @@
 
 
 			$dataUser=[
-			"idNacionalidad"=>$idNacionalidad,
-			"docIdentidad"=>$docIdentidad,
-			"idNivelPermiso"=>$idNivelPermiso,
-			"idEstado"=>$idEstado,
+			"id_nacionalidad"=>$id_nacionalidad,
+			"doc_identidad"=>$doc_identidad,
+			"id_nivel_permiso"=>$id_nivel_permiso,
+			"id_estado"=>$id_estado,
 			"aliasUser"=>$aliasUser,
 			"question1"=>mainModel::encryption($question1),
 			"question2"=>mainModel::encryption($question2),
@@ -285,9 +285,9 @@
 				
 	public function updateUserController($dataUser){
 		 
-		 $idNacionalidad = mainModel::cleanStringSQL($dataUser["idNacionalidad"]);
+		 $id_nacionalidad = mainModel::cleanStringSQL($dataUser["id_nacionalidad"]);
 
-		 $docIdentidad = mainModel::cleanStringSQL($dataUser["docIdentidad"]);
+		 $doc_identidad = mainModel::cleanStringSQL($dataUser["doc_identidad"]);
 
 		 $aliasUser = mainModel::cleanStringSQL($dataUser["aliasUser"]);
 
@@ -297,26 +297,43 @@
 
 		 $email = mainModel::cleanStringSQL($dataUser["email"]);
 		 
-		 $fechaNacimiento = mainModel::cleanStringSQL($dataUser["fechaNacimiento"]);
+		 $fecha_nacimiento = mainModel::cleanStringSQL($dataUser["fecha_nacimiento"]);
 
 		 $nombres = mainModel::cleanStringSQL($dataUser["nombres"]);
 
 		 $apellidos = mainModel::cleanStringSQL($dataUser["apellidos"]);
 
 
-		 $idGenero = mainModel::cleanStringSQL($dataUser["idGenero"]);
+		 $id_genero = mainModel::cleanStringSQL($dataUser["id_genero"]);
+
+if (mainModel::isDataEmtpy($id_nacionalidad,$doc_identidad,$aliasUser,$telefono,$email,$fecha_nacimiento,$nombres,$apellidos,$id_genero,$dataUser['id_nivel_permiso']) ||
+	$dataUser['id_estado'] == ''){
+				$alert=[
+					"Alert"=>"simple",
+					"Title"=>"Campos Vacios",
+					"Text"=>"No se encuentra ningun dato para actualizar",
+					"Type"=>"error"
+				];
+
+				echo json_encode($alert);
+
+				exit();
+ 
+			}
+
 
 		 // para datos principales del usuario
 		$userAttributesUpdate = [];
 
  		$userValuesUpdate = [];
 
+
  		// Campos del usuario como persona a comparar con la BD
  		$fieldstoComparePerson = [
-		 "fechaNacimiento"=>$fechaNacimiento,
+		 "fecha_nacimiento"=>$fecha_nacimiento,
 		 "nombres"=>$nombres,
 		 "apellidos"=>$apellidos,
-		 "idGenero"=>$idGenero 			
+		 "id_genero"=>$id_genero 			
  		];
 
 
@@ -334,13 +351,13 @@
 		}
 
 
-				$personValuesUpdate['docIdentidad'] = [
-				'value' => $docIdentidad,
+				$personValuesUpdate['doc_identidad'] = [
+				'value' => $doc_identidad,
 				'type' => \PDO::PARAM_INT,
 				];
 
-				$personValuesUpdate['idNacionalidad'] = [
-				'value' => $idNacionalidad,
+				$personValuesUpdate['id_nacionalidad'] = [
+				'value' => $id_nacionalidad,
 				'type' => \PDO::PARAM_INT,
 				];
 
@@ -367,29 +384,29 @@
 
 		$fieldstoCompareUser=["telefono"=>$telefono,"email"=>$email];
 
-		 if (isset($dataUser["idNivelPermiso"]) AND $dataUser['idNivelPermiso'] != 0){
+		 if (isset($dataUser["id_nivel_permiso"]) AND $dataUser['id_nivel_permiso'] != 0){
 
-		 $idNivelPermiso = mainModel::cleanStringSQL($dataUser["idNivelPermiso"]);
+		 $id_nivel_permiso = mainModel::cleanStringSQL($dataUser["id_nivel_permiso"]);
 
-				array_push($userAttributesUpdate, 'idNivelPermiso = :idNivelPermiso');
-				$userValuesUpdate['idNivelPermiso'] = [
-				'value' => $idNivelPermiso,
+				array_push($userAttributesUpdate, 'id_nivel_permiso = :id_nivel_permiso');
+				$userValuesUpdate['id_nivel_permiso'] = [
+				'value' => $id_nivel_permiso,
 				'type' => \PDO::PARAM_INT,
 				];
 
-		 	$fieldstoCompareUser["idNivelPermiso"] = $idNivelPermiso;
+		 	$fieldstoCompareUser["id_nivel_permiso"] = $id_nivel_permiso;
 		}
 
-		 if (isset($dataUser["idEstado"])) {
+		 if (isset($dataUser["id_estado"])) {
 
-		 $idEstado = mainModel::cleanStringSQL($dataUser["idEstado"]);
+		 $id_estado = mainModel::cleanStringSQL($dataUser["id_estado"]);
 
-				array_push($userAttributesUpdate, 'idEstado = :idEstado');
-				$userValuesUpdate['idEstado'] = [
-				'value' => $idEstado,
+				array_push($userAttributesUpdate, 'id_estado = :id_estado');
+				$userValuesUpdate['id_estado'] = [
+				'value' => $id_estado,
 				'type' => \PDO::PARAM_INT,
 				];
-			$fieldstoCompareUser["idEstado"] = $idEstado;
+			$fieldstoCompareUser["id_estado"] = $id_estado;
 		 }
 
 
@@ -405,7 +422,7 @@
 			
 			$personaController = new personaController();
 
- 		$queryToGetPerson = $personaController->getPersonaController(array("docIdentidad"=>$docIdentidad,"idNacionalidad"=>$idNacionalidad));
+ 		$queryToGetPerson = $personaController->getPersonaController(array("doc_identidad"=>$doc_identidad,"id_nacionalidad"=>$id_nacionalidad));
 
 
 		$fieldsEqualDatabasePerson = mainModel::isFieldsEqualToThoseInTheDatabase($queryToGetPerson,$fieldstoComparePerson);
@@ -428,6 +445,10 @@
 
 			// HAcemos las operaciones de actualizacion principales
 
+
+			$resultUpdateUser = false;
+			$resultUpdatePerson = false;
+
 			$resultUpdatePerson = $personaController::updatePersonaController($dataUser);
 
 			$resultUpdateUser = userModel::updateUserModel($userValuesUpdate,$userAttributesUpdate);
@@ -435,21 +456,22 @@
 
 			// Impimirmo el resultado de la operacion
 			$alert=[
+				"Alert"=>"simple",
+				"Title"=>"Ocurrio un error inesperado",
+				"Text"=>"Error en la actualizacion del usuario",
+				"Type"=>"error"
+			];
+
+			if ($resultUpdateUser && $resultUpdatePerson) {
+
+			$alert=[
 				"Alert"=>"reload",
 				"Title"=>"Operacion Exitosa",
 				"Text"=>"Datos del usuarios actualizados",
 				"Type"=>"success"
 			];
 
-
-			if (!$resultUpdateUser || !$resultUpdatePerson) {
 			
-			$alert=[
-				"Alert"=>"simple",
-				"Title"=>"Ocurrio un error inesperado",
-				"Text"=>"Error en la actualizacion del usuario",
-				"Type"=>"error"
-			];
 
 			}
 
@@ -479,12 +501,12 @@
 
 	// Comprobamos que exista el susuario
 
-		$queryGetUserStatus = mainModel::runSimpleQuery("SELECT idEstado FROM `usuarios` WHERE alias =
+		$queryGetUserStatus = mainModel::runSimpleQuery("SELECT id_estado FROM usuarios WHERE alias =
 			'$aliasUser'");
 
 		$queryGetUserStatus->execute();
 
-		$idEstado = $queryGetUserStatus->fetchColumn();
+		$id_estado = $queryGetUserStatus->fetchColumn();
 
 		if(!$queryGetUserStatus->rowCount()){
 				
@@ -501,7 +523,7 @@
 			}
 
 		// si estado es 0 no tiene permiso de cambiar datos de seguridad
-		if($idEstado == 0){
+		if($id_estado == 0){
 				
 				$alert=[
 				"Alert"=>"simple",
@@ -518,7 +540,7 @@
 
 		// si esta funcion es llamada por restar USer verificara que el estado No se ha activo
 if ($dataUser["operationType"] == "restart") {
-		if($idEstado == 1){
+		if($id_estado == 1){
 				
 				$alert=[
 				"Alert"=>"simple",
@@ -598,7 +620,7 @@ $resultQueryUpdatePass = self::passwordUpdateController($dataUser);
 
 		if (isset($dataUser["newQuestion1"]) && !mainModel::isDataEmtpy($dataUser["newQuestion1"])) {
 
-		$dataUpdateQuestions = ["newQuestion"=>$dataUser["newQuestion1"],"aliasUser"=>$aliasUser,"idPregunta"=>'1'];
+		$dataUpdateQuestions = ["newQuestion"=>$dataUser["newQuestion1"],"aliasUser"=>$aliasUser,"id_pregunta"=>'1'];
 
 		$resultQueryUpdateQuestion1 = self::questionUpdateController($dataUpdateQuestions);
 
@@ -607,7 +629,7 @@ $resultQueryUpdatePass = self::passwordUpdateController($dataUser);
 
 		if (isset($dataUser["newQuestion2"]) && !mainModel::isDataEmtpy($dataUser["newQuestion2"])) {
 
-		$dataUpdateQuestions = ["newQuestion"=>$dataUser["newQuestion2"],"aliasUser"=>$aliasUser,"idPregunta"=>'2'];
+		$dataUpdateQuestions = ["newQuestion"=>$dataUser["newQuestion2"],"aliasUser"=>$aliasUser,"id_pregunta"=>'2'];
 
 		$resultQueryUpdateQuestion2 = self::questionUpdateController($dataUpdateQuestions);
 
@@ -664,14 +686,14 @@ protected static function passwordCorrespondDatabase($dataUser){
 
 		$password = mainModel::cleanStringSQL($dataUser["password"]);
 
-		$queryGetpassEncrypt = mainModel::runSimpleQuery("SELECT passEncrypt FROM `usuarios` WHERE alias =
+		$queryGetpass_encrypt = mainModel::runSimpleQuery("SELECT pass_encrypt FROM usuarios WHERE alias =
 			'$aliasUser'");
 
-		$queryGetpassEncrypt->execute();
+		$queryGetpass_encrypt->execute();
 
-		$passEncryptDB = mainModel::decryption($queryGetpassEncrypt->fetchColumn());
+		$pass_encryptDB = mainModel::decryption($queryGetpass_encrypt->fetchColumn());
 				
-		    if (strcmp($passEncryptDB, $password) != 0){
+		    if (strcmp($pass_encryptDB, $password) != 0){
 				$alert=[
 				"Alert"=>"simple",
 				"Title"=>"Datos Invalidos",
@@ -731,7 +753,7 @@ protected static function passwordCorrespondDatabase($dataUser){
 			}
 		
 			$userAttributesUpdate = [];
-				array_push($userAttributesUpdate, 'passEncrypt = :password');
+				array_push($userAttributesUpdate, 'pass_encrypt = :password');
 				$userValuesUpdate['password'] = [
 				'value' => mainModel::encryption($newPassword),
 				'type' => \PDO::PARAM_STR];
@@ -758,7 +780,7 @@ protected static function passwordCorrespondDatabase($dataUser){
 		while($valuesDataUser=$recordsUserSQL->fetch(PDO
 			::FETCH_ASSOC)){ 
 
-			if ($valuesDataUser["idPregunta"] == 1) {
+			if ($valuesDataUser["id_pregunta"] == 1) {
 
 				$registeredQuestion1 = mainModel::decryption($valuesDataUser['respuesta']);
 
@@ -794,7 +816,7 @@ protected static function passwordCorrespondDatabase($dataUser){
 
 		$newQuestion = mainModel::cleanStringSQL($dataUser["newQuestion"]);
 
-		$idPregunta = mainModel::cleanStringSQL($dataUser["idPregunta"]);
+		$id_pregunta = mainModel::cleanStringSQL($dataUser["id_pregunta"]);
 
 		// Verificamos que la pregunta no este repetida
 		$recordsUserSQL = userController::getUserController(array("aliasUser"=>$aliasUser));
@@ -806,7 +828,7 @@ protected static function passwordCorrespondDatabase($dataUser){
 			::FETCH_ASSOC)){ 
 
 
-			if ($valuesDataUser["idPregunta"] == 1) {
+			if ($valuesDataUser["id_pregunta"] == 1) {
 				$registeredQuestion1 = mainModel::decryption($valuesDataUser['respuesta']);
 
 				}else{
@@ -815,21 +837,6 @@ protected static function passwordCorrespondDatabase($dataUser){
 				}
 
 		}
-
-		   if(strcmp($registeredQuestion1,$newQuestion)== 0 || strcmp($registeredQuestion2,$newQuestion)== 0){
-
-			$alert=[
-			"Alert"=>"simple",
-			"Title"=>"Datos Invalidos",
-			"Text"=>"Las preguntas de seguridad no deben ser iguales a las registradas",
-			"Type"=>"error"
-				];
-		
-				echo json_encode($alert);
-
-				exit();
-			}
-
 
 		   if(strlen($newQuestion)<3){
 
@@ -845,7 +852,7 @@ protected static function passwordCorrespondDatabase($dataUser){
 				exit();
 			}
 
-		$dataUpdateQuestions = ["aliasUser"=>$aliasUser,"idPregunta"=>$idPregunta,"respuesta"=>mainModel::encryption($newQuestion)];
+		$dataUpdateQuestions = ["aliasUser"=>$aliasUser,"id_pregunta"=>$id_pregunta,"respuesta"=>mainModel::encryption($newQuestion)];
 
 		return $resultQueryUpdateQuestion = userModel::updateUserQuestionModel($dataUpdateQuestions);
 
@@ -855,32 +862,19 @@ protected static function passwordCorrespondDatabase($dataUser){
 
 		public static function deleteUserController($dataUser){
 
-		$aliasUser = mainModel::cleanStringSQL($dataUser['aliasUsuario']);
+		$aliasUser = mainModel::decryption(mainModel::cleanStringSQL($dataUser['usuario_alias']));
 
 
-		$docIdentidad = mainModel::cleanStringSQL($dataUser['docIdentidad']);
+		$doc_identidad = mainModel::decryption(mainModel::cleanStringSQL($dataUser['doc_identidad']));
 
 
-		$idNacionalidad = mainModel::cleanStringSQL($dataUser['idNacionalidad']);
-
-
-		
-if (!isset($dataUser['confirmDelete'])) {
-		 $aliasUser = mainModel::decryption($dataUser['aliasUsuario']);
-
-		 $docIdentidad = mainModel::decryption($dataUser['docIdentidad']);
-
-		 $idNacionalidad = mainModel::decryption($dataUser['idNacionalidad']);
-
-
-			$queryRecordUser=self::getUserController(array("aliasUser"=>$aliasUser));
-
-			$queryRecordUser->execute();
-
-			$dataRecordUser = $queryRecordUser->fetch();				 
+		$id_nacionalidad = mainModel::decryption(mainModel::cleanStringSQL($dataUser['id_nacionalidad']));
 
 
 		 	if (mainModel::isDataEmtpy($aliasUser)) {
+
+		 		var_dump($doc_identidad,$aliasUser);
+		 		exit();
 			$alert=[
 				"Alert"=>"simple",
 				"Title"=>"Datos Vacios",
@@ -908,22 +902,35 @@ if (!isset($dataUser['confirmDelete'])) {
 			exit();
 			}
 
+		
+if (!isset($dataUser['confirmDelete'])) {
+
 		// Si la persona  solo tiene un usuario y no presenta un caso epidemiologico, elimanos datos personales del BD pero primero avisamos
 
 
-		$userRecordsPerDocIdentidad = mainModel::runSimpleQuery("SELECT alias FROM `usuarios` WHERE docIdentidad =
-			'$docIdentidad'");
-
-		$casosEpidemiRecordsPerDocIdentidad = mainModel::runSimpleQuery("SELECT docIdentidad FROM `casosEpidemiologicos` WHERE docIdentidad =
-			'$docIdentidad'");
+		$userRecordsPerdoc_identidad = mainModel::connectDB()->query("SELECT alias FROM usuarios WHERE doc_identidad =
+			'$doc_identidad'");
 
 
-		if ($userRecordsPerDocIdentidad->rowCount()==1 && $casosEpidemiRecordsPerDocIdentidad->rowCount() == 0) {
+		$casosEpidemiRecordsPerdoc_identidad = mainModel::connectDB()->query("SELECT doc_identidad FROM casos_epidemiologicos WHERE doc_identidad =
+			'$doc_identidad'");
+
+
+		if ($userRecordsPerdoc_identidad->rowCount()==1 && $casosEpidemiRecordsPerdoc_identidad->rowCount() == 0) {
+
+		$aliasUser = mainModel::encryption($aliasUser);
+
+		$doc_identidad = mainModel::encryption($doc_identidad);
+
+		$id_nacionalidad = mainModel::encryption($id_nacionalidad);
+
+
 					$alert=[
+
 						"Alert"=>"confirmation",
 						"Text"=>"Esta persona no posee mas usuarios ni presenta un caso epidemiologico por lo que se eliminara del sistema completamente",
 						"Url"=>"".SERVERURL."ajax/userAjax.php",
-						"Data"=>"docIdentidad=$docIdentidad&aliasUsuario=$aliasUser&idNacionalidad=$idNacionalidad&operationType=delete&confirmDelete=true",
+						"Data"=>"doc_identidad=$doc_identidad&usuario_alias=$aliasUser&id_nacionalidad=$id_nacionalidad&operationType=delete&confirmDelete=true",
 						"Method"=>"POST"];
 					
 					echo json_encode($alert);
@@ -931,12 +938,12 @@ if (!isset($dataUser['confirmDelete'])) {
 					exit();
 		}
 	}
-		
 
-		mainModel::deleteBitacora($aliasUser);
+		$resultQueryDeletePersona = TRUE;
 
+		$resultQueryDeleteBitacora = mainModel::deleteBitacora($aliasUser);
 
-		userModel::deleteUserModel(array('aliasUser'=>$aliasUser));
+		$resultQueryDeleteUser = userModel::deleteUserModel(array('aliasUser'=>$aliasUser));
 
 		// Eliminacion de la persona
 		if (isset($dataUser['confirmDelete'])) {
@@ -946,24 +953,40 @@ if (!isset($dataUser['confirmDelete'])) {
 		$personaController = new personaController();
 		
 		$primaryKeyPersona = [
-			"idNacionalidad"=>$idNacionalidad,
-			"docIdentidad"=>$docIdentidad];
+			"id_nacionalidad"=>$id_nacionalidad,
+			"doc_identidad"=>$doc_identidad];
 		
-		$personaController->deletePersonaController($primaryKeyPersona);
+		$resultQueryDeletePersona = $personaController->deletePersonaController($primaryKeyPersona);
+		
 		}
 		
-
-
 			$alert=[
 				"Alert"=>"reload",
 				"Title"=>"Operacion Exitosa",
 				"Text"=>"El usuario ha sido eliminado",
 				"Type"=>"success"
 			];
-			
-			echo json_encode($alert);
 
-			exit();
+			$totalResultQuerys = $resultQueryDeleteUser * $resultQueryDeleteBitacora * $resultQueryDeletePersona;
+			
+			if (!$totalResultQuerys) {
+
+			$alert=[
+				"Alert"=>"simple",
+				"Title"=>"Ocurrio un error inesperado",
+				"Text"=>"Error en la eliminacion del usuario",
+				"Type"=>"error"
+			];
+
+
+
+
+			}
+
+				echo json_encode($alert);
+
+				exit();	 	
+
 
 				 }
 
@@ -973,23 +996,23 @@ if (!isset($dataUser['confirmDelete'])) {
 
  		$filterValues = [];
 
-		if (isset($dataUser["idNacionalidad"]) && !mainModel::isDataEmtpy($dataUser["idNacionalidad"])) {
+		if (isset($dataUser["id_nacionalidad"]) && !mainModel::isDataEmtpy($dataUser["id_nacionalidad"])) {
 
-		$idNacionalidad = mainModel::cleanStringSQL($dataUser["idNacionalidad"]);
+		$id_nacionalidad = mainModel::cleanStringSQL($dataUser["id_nacionalidad"]);
 
-		array_push($userAttributesFilter, 'usr.idNacionalidad = :idNacionalidad');
-		$filterValues[':idNacionalidad'] = [
-		'value' => $idNacionalidad,
+		array_push($userAttributesFilter, 'usr.id_nacionalidad = :id_nacionalidad');
+		$filterValues[':id_nacionalidad'] = [
+		'value' => $id_nacionalidad,
 		'type' => \PDO::PARAM_STR,
 		];}
 
-		if (isset($dataUser["docIdentidad"]) && !mainModel::isDataEmtpy($dataUser["docIdentidad"])) {
+		if (isset($dataUser["doc_identidad"]) && !mainModel::isDataEmtpy($dataUser["doc_identidad"])) {
 
-		$docIdentidad = mainModel::cleanStringSQL($dataUser["docIdentidad"]);
+		$doc_identidad = mainModel::cleanStringSQL($dataUser["doc_identidad"]);
 
-		array_push($userAttributesFilter, 'usr.docIdentidad = :docIdentidad');
-		$filterValues[':docIdentidad'] = [
-		'value' => $docIdentidad,
+		array_push($userAttributesFilter, 'usr.doc_identidad = :doc_identidad');
+		$filterValues[':doc_identidad'] = [
+		'value' => $doc_identidad,
 		'type' => \PDO::PARAM_STR,
 		];}
 
@@ -1003,24 +1026,24 @@ if (!isset($dataUser['confirmDelete'])) {
 		'type' => \PDO::PARAM_STR,
 		];}
 
-		if (isset($dataUser["idNivelPermiso"]) && !mainModel::isDataEmtpy($$dataUser["idNivelPermiso"])) {
+		if (isset($dataUser["id_nivel_permiso"]) && !mainModel::isDataEmtpy($$dataUser["id_nivel_permiso"])) {
 
-		$idNivelPermiso = mainModel::cleanStringSQL($dataUser["idNivelPermiso"]);
+		$id_nivel_permiso = mainModel::cleanStringSQL($dataUser["id_nivel_permiso"]);
 
-		array_push($userAttributesFilter, 'idNivelPermiso = :idNivelPermiso');
-		$filterValues[':idNivelPermiso'] = [
-		'value' => $idNivelPermiso,
+		array_push($userAttributesFilter, 'id_nivel_permiso = :id_nivel_permiso');
+		$filterValues[':id_nivel_permiso'] = [
+		'value' => $id_nivel_permiso,
 		'type' => \PDO::PARAM_INT,
 		];}
 
 
-		if (isset($dataUser["idEstado"]) && !mainModel::isDataEmtpy($dataUser["idEstado"])) {
+		if (isset($dataUser["id_estado"]) && !mainModel::isDataEmtpy($dataUser["id_estado"])) {
 
-		$idEstado = mainModel::cleanStringSQL($dataUser["idEstado"]);
+		$id_estado = mainModel::cleanStringSQL($dataUser["id_estado"]);
 
-		array_push($userAttributesFilter, 'usr.idEstado = :idEstado');
-		$filterValues[':idEstado'] = [
-		'value' => $idEstado,
+		array_push($userAttributesFilter, 'usr.id_estado = :id_estado');
+		$filterValues[':id_estado'] = [
+		'value' => $id_estado,
 		'type' => \PDO::PARAM_STR,
 		];}
 
@@ -1053,10 +1076,8 @@ if (!isset($dataUser['confirmDelete'])) {
 
  		$userValuesUpdate = [];
 
-		$queryIsExistUser = mainModel::runSimpleQuery("SELECT alias FROM `usuarios` WHERE alias = '$aliasUser'");
+		$queryIsExistUser = mainModel::connectDB()->query("SELECT alias FROM usuarios WHERE alias = '$aliasUser'");
 					
-		$queryIsExistUser->execute();
-
 
 		if(!$queryIsExistUser->rowCount()){
 				
@@ -1078,8 +1099,8 @@ if (!isset($dataUser['confirmDelete'])) {
 				'type' => \PDO::PARAM_STR,
 				];
 
-				array_push($userAttributesUpdate, 'idEstado = :idEstado');
-				$userValuesUpdate['idEstado'] = [
+				array_push($userAttributesUpdate, 'id_estado = :id_estado');
+				$userValuesUpdate['id_estado'] = [
 				'value' => 2,
 				'type' => \PDO::PARAM_INT,
 				];
@@ -1116,17 +1137,15 @@ public static function paginateUserController($currentPaginate,$nivelUser,$alias
 	$aliasUser= mainModel::cleanStringSQL($aliasUser);
 
 
-	$connectDB = mainModel::connectDB();
-
 	$stringQueryForGetUsers = userModel::stringQueryForGetUser();
 
-	$recordsQueryUser = $connectDB->query($stringQueryForGetUsers." WHERE usr.alias != '$aliasUser' AND usr.alias != 'Master' GROUP BY usr.alias ORDER BY usr.docIdentidad ASC");
-
+	$recordsQueryUser = mainModel::connectDB()->query($stringQueryForGetUsers." WHERE usr.alias != '$aliasUser' AND usr.alias != 'Master' 
+		");
+//		GROUP BY usr.alias,pers.doc_identidad,nacion.id_nacionalidad 
+//ORDER BY usr.alias ASC
 	$dataRecordsQueryUser = $recordsQueryUser->fetchAll();
 
-	$totalRecordsQueryUser=$connectDB->query("SELECT FOUND_ROWS()");
-
-	$totalRecordsQueryUser=(int)$totalRecordsQueryUser->fetchColumn();
+	$totalRecordsQueryUser=$recordsQueryUser->rowCount();
 
 	$nroRecordsDisplay = $totalRecordsQueryUser;
 
@@ -1178,15 +1197,15 @@ $table.="<div class='table-responsive'>
 
 			foreach ($dataRecordsQueryUser as $rows) {
 
-				if ($rows['idNacionalidad'] === "1") {
+				if ($rows['id_nacionalidad'] == "1") {
 					$nacionalidad = "V";
 				}else{
 					$nacionalidad = "E";
 				}
 
-				if ($rows['idGenero'] == "1"){
+				if ($rows['id_genero'] == "1"){
                   $rows['iconGenero'] = "male-user.png"; 
-                }elseif ($rows['idGenero'] == "2") {
+                }elseif ($rows['id_genero'] == "2") {
                   $rows['iconGenero'] = "fermale-user.png"; 
                 }
 
@@ -1194,18 +1213,18 @@ $table.="<div class='table-responsive'>
                  <tr>
                     <td>'.$count.'</td>
                     <td> 
-                    <span class="d-none">'.$rows["idGenero"].'</span>
+                    <span class="d-none">'.$rows["id_genero"].'</span>
                     <img class="img-profile rounded-circle" width="40" src="'.SERVERURL.'view/img/'.$rows["iconGenero"].'"></td>
 
-		 			<td>'.$nacionalidad.'-'.$rows['docIdentidad'].'</td>
-					<td>'.$rows['aliasUsuario'].'</td>
+		 			<td>'.$nacionalidad.'-'.$rows['doc_identidad'].'</td>
+					<td>'.$rows['usuario_alias'].'</td>
                     <td>'.$rows['nombres'].'</td>
                     <td>'.$rows['apellidos'].'</td>
-		 			<td>'.$rows['descripcionNivelPermiso'].'</td>
-		 			<td>'.$rows['descripcionEstado'].'</td>
+		 			<td>'.$rows['descripcion_nivel_permiso'].'</td>
+		 			<td>'.$rows['descripcion_estado'].'</td>
 		 			<td>'.$rows['email'].'</td>
 		 			<td>
-	                  <a href="'.SERVERURL.'dataAccount/'.mainModel::encryption($rows['aliasUsuario']).'" class="btn btn-info btn-circle btn-sm">
+	                  <a href="'.SERVERURL.'dataAccount/'.mainModel::encryption($rows['usuario_alias']).'" class="btn btn-info btn-circle btn-sm">
 	                    <i class="fas  fa-plus"></i>
 	                  </a>
 		 			</td>
@@ -1214,11 +1233,11 @@ $table.="<div class='table-responsive'>
 				<td>
 		 		<form class="formAjax" action="'.SERVERURL.'ajax/userAjax.php" method="POST" data-form="restart" enctypy="multipart/form-data" autocomplete="off">
 					
-					<input name= "aliasUser" type="hidden" value="'.mainModel::encryption($rows['aliasUsuario']).'">
+					<input name= "aliasUser" type="hidden" value="'.mainModel::encryption($rows['usuario_alias']).'">
 
-					<input name= "idNacionalidad" type="hidden" value="'.mainModel::encryption($rows['idNacionalidad']).'">
+					<input name= "id_nacionalidad" type="hidden" value="'.mainModel::encryption($rows['id_nacionalidad']).'">
 
-					<input name= "docIdentidad" type="hidden" value="'.mainModel::encryption($rows['docIdentidad']).'">
+					<input name= "doc_identidad" type="hidden" value="'.mainModel::encryption($rows['doc_identidad']).'">
 
 						<button type="submit" value = "delete" class="btn btn-warning btn-circle btn-sm">
 	                    <i class="fas fa-redo"></i>
@@ -1230,11 +1249,11 @@ $table.="<div class='table-responsive'>
 		 			<td>
 		 		<form class="formAjax" action="'.SERVERURL.'ajax/userAjax.php" method="POST" data-form="delete" enctypy="multipart/form-data" autocomplete="off">
 					
-					<input name= "aliasUsuario" type="hidden" value="'.mainModel::encryption($rows['aliasUsuario']).'">
+					<input name= "usuario_alias" type="hidden" value="'.mainModel::encryption($rows['usuario_alias']).'">
 
-					<input name= "idNacionalidad" type="hidden" value="'.mainModel::encryption($rows['idNacionalidad']).'">
+					<input name= "id_nacionalidad" type="hidden" value="'.mainModel::encryption($rows['id_nacionalidad']).'">
 
-					<input name= "docIdentidad" type="hidden" value="'.mainModel::encryption($rows['docIdentidad']).'">
+					<input name= "doc_identidad" type="hidden" value="'.mainModel::encryption($rows['doc_identidad']).'">
 
 						<button type="submit" value = "delete" class="btn btn-danger btn-circle btn-sm">
 	                    <i class="fas fa-trash"></i>
@@ -1309,28 +1328,28 @@ $table.="</tbody>
 
 	 public static function printUserTypeCountController(){
 		
-		$userAdmins = userModel::userTypeCounterModel('idNivelPermiso',1);
+		$userAdmins = userModel::userTypeCounterModel('id_nivel_permiso',1);
 		
-		$userOperators = userModel::userTypeCounterModel('idNivelPermiso',2);
+		$userOperators = userModel::userTypeCounterModel('id_nivel_permiso',2);
 
-		$userInviteds = userModel::userTypeCounterModel('idNivelPermiso',3);
+		$userInviteds = userModel::userTypeCounterModel('id_nivel_permiso',3);
 
-		$userActives = userModel::userTypeCounterModel('idEstado',1);
+		$userActives = userModel::userTypeCounterModel('id_estado',1);
 
-		$userInactives = userModel::userTypeCounterModel('idEstado',0);
+		$userInactives = userModel::userTypeCounterModel('id_estado',0);
 
-		$userRestarts = userModel::userTypeCounterModel('idEstado',2);
+		$userRestarts = userModel::userTypeCounterModel('id_estado',2);
 
 		$usersTotal = userModel::userTypeCounterModel('alias',NULL);
 
 		$dataCounTypeUsers = [
-		'userAdmins' => $userAdmins->rowCount(),
-		'userOperators' => $userOperators->rowCount(),
-		'userInviteds' => $userInviteds->rowCount(),
-		'userActives' => $userActives->rowCount(),
-		'userInactives' => $userInactives->rowCount(),
-		'usersTotal' => $usersTotal->rowCount(),
-		'userRestarts' => $userRestarts->rowCount()
+		'userAdmins' => $userAdmins,
+		'userOperators' => $userOperators,
+		'userInviteds' => $userInviteds,
+		'userActives' => $userActives,
+		'userInactives' => $userInactives,
+		'usersTotal' => $usersTotal,
+		'userRestarts' => $userRestarts
 	];
 
         echo "
