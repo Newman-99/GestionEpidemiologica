@@ -12,9 +12,9 @@
 	if (isset($_FILES['fileCSVCIE10'])) {
 		$cie10DataController->updateCie10DataController($_FILES);			
 
-		}elseif(isset($_POST['cie10listCatalog'])) {
+		}elseif(isset($_GET['cie10listCatalog'])) {
 
-		$cie10DataController->paginatecie10DataController($_POST);						
+		$cie10DataController->paginatecie10DataController(/*$_POST*/);						
  }else { 
 /*		
 		session_start(["name"=> "systemDptoEpidemi"]);

@@ -20,7 +20,7 @@
       </li>
 
       <!-- Nav Item - Casos Epidemiologicos Collapse Menu -->
-      <?php if ($_SESSION['id_nivel_permiso'] == "1"): ?>
+      <?php if ($_SESSION['id_nivel_permiso'] == "2"): ?>
 
       <li class="nav-item">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseCasosEpidemi" aria-expanded="true" aria-controls="collapseCasosEpidemi">
@@ -35,6 +35,7 @@
           </div>
         </div>
       </li>
+<?php endif ?>
 
       <!-- Nav Item - CIE-10 Collapse Menu -->
 
@@ -47,12 +48,17 @@
           <div class="bg-white py-2 collapse-inner rounded">
             <h6 class="collapse-header">Gestion de Catalogo CIE-10:</h6>
             <a class="collapse-item" href="<?php echo SERVERURL; ?>cie10Catalog/">Ver Catalogo</a>
+            <?php if ($_SESSION['id_nivel_permiso'] == "1"): ?>
             <a class="collapse-item" href="<?php echo SERVERURL; ?>cie10DataUpdate/">Actualizacion</a>
+
+          <?php endif ?>
+
           </div>
         </div>
       </li>
 
 
+      <?php if ($_SESSION['id_nivel_permiso'] == "1"): ?>
       <!-- Nav Item - Users Collapse Menu -->
       <li class="nav-item">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUsers" aria-expanded="true" aria-controls="collapseUsers">

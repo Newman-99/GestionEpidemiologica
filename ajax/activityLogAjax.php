@@ -6,7 +6,7 @@
 	require_once "../controller/activityLogController.php";
 	
 			$activityLogController = new activityLogController();
-	if ($_POST['operationType'] === "query" || TRUE) {
-               $activityLogController->paginateActivityLogUserController($_POST);
+	if (isset($_GET['activityLogSessions'])) {
+               $activityLogController->getTableDataActivityLogSessionsController();
 		}
  ?>

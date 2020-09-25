@@ -8,29 +8,25 @@
 	
 
 	class mainModel{
-		
-
-		function __construct()
-	{
+	
+	function __construct(){
     date_default_timezone_set("America/Caracas");
 	}
 
 
 		protected static function connectDB(){
-//		$linkBD = new PDO(SGBD,USER,PASS);
-//		$linkBD->exec("SET CHARACTER SET utf8");
 
+		try {			
+	$DB = new PDO("pgsql:host=".SERVER_PATH.";port=".PORT.";dbname=".DB."",USER,PASS, array(
+				PDO::ATTR_PERSISTENT => true, PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8'));
+    $DB->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-$DB=DB;
+		return $DB;
 
-$SERVER_PATH = SERVER_PATH;
+		} catch (PDOException $e) {
+		    error_log("Failed to connect to database: ".$e->getMessage());
+		}				
 
-$PORT = PORT;
-
-    $linkBD = new PDO("pgsql:host=".$SERVER_PATH.";port=".$PORT.";dbname=".$DB."",USER,PASS);
-    $linkBD->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-
-		return $linkBD;
 	}
 
 		protected static function runSimpleQuery($stringQuery){
@@ -385,8 +381,552 @@ protected static function isFieldsEqualToThoseInTheDatabase($query,$fieldstoComp
 			
 			return false;
 		}
+
+	protected static function getTableData($table, $index_column, $columns) {
+		// Paging
+    /*
+     * Script:    DataTables server-side script for PHP and PostgreSQL
+     * Copyright: 2010 - Allan Jardine
+     * License:   GPL v2 or BSD (3-point)
+     */
+     
+    /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+     * Easy set variables
+     */
+     
+    /* Array of database columns which should be read and sent back to DataTables. Use a space where
+     * you want to insert a non-database field (for example a counter or static image)
+     */
+    $aColumns = $columns;
+     
+    /* Indexed column (used for fast and accurate table cardinality) */
+    $sIndexColumn = $index_column;
+     
+    /* DB table to use */
+    $sTable = $table;
+
+    /* Database connection information */
+    $gaSql['user']       = USER;
+    $gaSql['password']   = PASS;
+    $gaSql['db']         = DB;
+    $gaSql['server']     = SERVER_PATH;
+     
+   
+     
+    /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+     * If you just want to use the basic configuration for DataTables with PHP server-side, there is
+     * no need to edit below this line
+     */
+     
+    /*
+     * DB connection
+     */
+    $gaSql['link'] = pg_connect(
+        " host=".$gaSql['server'].
+        " dbname=".$gaSql['db'].
+        " user=".$gaSql['user'].
+        " password=".$gaSql['password']
+    ) or die('Could not connect: ' . pg_last_error());
+     
+     
+    /*
+     * Paging
+     */
+    $sLimit = "";
+    if ( isset( $_GET['iDisplayStart'] ) && $_GET['iDisplayLength'] != '-1' )
+    {
+        $sLimit = "LIMIT ".intval( $_GET['iDisplayLength'] )." OFFSET ".
+            intval( $_GET['iDisplayStart'] );
+    }
+     
+     
+    /*
+     * Ordering
+     */
+    if ( isset( $_GET['iSortCol_0'] ) )
+    {
+        $sOrder = "ORDER BY  ";
+        for ( $i=0 ; $i<intval( $_GET['iSortingCols'] ) ; $i++ )
+        {
+            if ( $_GET[ 'bSortable_'.intval($_GET['iSortCol_'.$i]) ] == "true" )
+            {
+                $sOrder .= $aColumns[ intval( $_GET['iSortCol_'.$i] ) ]."
+                    ".($_GET['sSortDir_'.$i]==='asc' ? 'asc' : 'desc').", ";
+            }
+        }
+         
+        $sOrder = substr_replace( $sOrder, "", -2 );
+        if ( $sOrder == "ORDER BY" )
+        {
+            $sOrder = "";
+        }
+    }
+     
+     
+    /*
+     * Filtering
+     * NOTE This assumes that the field that is being searched on is a string typed field (ie. one
+     * on which ILIKE can be used). Boolean fields etc will need a modification here.
+     */
+    $sWhere = "";
+    if ( $_GET['sSearch'] != "" )
+    {
+        $sWhere = "WHERE (";
+        for ( $i=0 ; $i<count($aColumns) ; $i++ )
+        {
+            if ( $_GET['bSearchable_'.$i] == "true" )
+            {
+                $sWhere .= $aColumns[$i]."::text ILIKE '%".pg_escape_string( $_GET['sSearch'] )."%' OR ";
+            }
+        }
+        $sWhere = substr_replace( $sWhere, "", -3 );
+        $sWhere .= ")";
+    }
+     
+    /* Individual column filtering */
+    for ( $i=0 ; $i<count($aColumns) ; $i++ )
+    {
+        if ( $_GET['bSearchable_'.$i] == "true" && $_GET['sSearch_'.$i] != '' )
+        {
+            if ( $sWhere == "" )
+            {
+                $sWhere = "WHERE ";
+            }
+            else
+            {
+                $sWhere .= " AND ";
+            }
+            $sWhere .= $aColumns[$i]." ILIKE '%".pg_escape_string($_GET['sSearch_'.$i])."%' ";
+        }
+    }
+     
+          // Script para solictar la data del CIE10 por capitulos
+ 	if (!self::isDataEmtpy($_GET['idCapitulo'] )) {
+      		$idCapitulo = self::cleanStringSQL($_GET['idCapitulo']);
+            if ( $sWhere == "" )
+            {
+                $sWhere = "WHERE ";
+            }
+            else
+            {
+                $sWhere .= " AND ";
+            }
+			$sWhere.=" CLAVE_CAPITULO = '$idCapitulo' ";    	
+		}
+
+     
+    $sQuery = "
+        SELECT ".str_replace(" , ", " ", implode(", ", $aColumns))."
+        FROM   $sTable
+        $sWhere
+        $sOrder
+        $sLimit
+    ";
+    $rResult = pg_query( $gaSql['link'], $sQuery ) or die(pg_last_error());
+     
+    $sQuery = "
+        SELECT $sIndexColumn
+        FROM   $sTable
+    ";
+    $rResultTotal = pg_query( $gaSql['link'], $sQuery ) or die(pg_last_error());
+    $iTotal = pg_num_rows($rResultTotal);
+    pg_free_result( $rResultTotal );
+     
+    if ( $sWhere != "" )
+    {
+        $sQuery = "
+            SELECT $sIndexColumn
+            FROM   $sTable
+            $sWhere
+        ";
+
+        $rResultFilterTotal = pg_query( $gaSql['link'], $sQuery ) or die(pg_last_error());
+        $iFilteredTotal = pg_num_rows($rResultFilterTotal);
+        pg_free_result( $rResultFilterTotal );
+    }
+    else
+    {
+        $iFilteredTotal = $iTotal;
+    }
+
+     
+
+    /*
+     * Output
+     */
+    $output = array(
+        "sEcho" => intval($_GET['sEcho']),
+        "iTotalRecords" => $iTotal,
+        "iTotalDisplayRecords" => $iFilteredTotal,
+        "aaData" => array()
+    );
+     
+    while ( $aRow = pg_fetch_array($rResult, null, PGSQL_ASSOC) )
+    {
+        $row = array();
+        for ( $i=0 ; $i<count($aColumns) ; $i++ )
+        {
+            if ( $aColumns[$i] == "version" )
+            {
+                /* Special output formatting for 'version' column */
+                $row[] = ($aRow[ $aColumns[$i] ]=="0") ? '-' : $aRow[ $aColumns[$i] ];
+            }
+            else if ( $aColumns[$i] != ' ' )
+            {
+                /* General output */
+                $row[] = $aRow[ $aColumns[$i] ];
+            }
+        }
+        $output['aaData'][] = $row;
+    }
+
+    echo json_encode( $output );
+     
+    // Free resultset
+    pg_free_result( $rResult );
+     
+    // Closing connection
+    pg_close( $gaSql['link'] );
+
+    	}
+
+// server side para obtenener dadaTatbles con consultas inner join
+	public static function getTableForJoins($columnsInnerJoin,$tablesJoins,$sIndexColumn,$orderForRowCounts = '',$nameColumnsTable) {
+
+
+    /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+     * Easy set variables
+     */
+     
+    /* Array of database columns which should be read and sent back to DataTables. Use a space where
+     * you want to insert a non-database field (for example a counter or static image)
+     */
+  
+
+// se separan los inidices y el nombre de las columnas del join
+
+// sintax: index.nameColumn
+// nameColumn es el nombre del campo e index es la abreviacion de la tabla al que pertence
+
+  $indexsAndNamesColumnsJoin = [];
+
+  foreach ($columnsInnerJoin as $indexsAndNamesColumns) {
+	$indexsAndNamesColumnsJoin[] = explode(".", $indexsAndNamesColumns);
+}
+
+	$indexsJoin=[];
+
+for ($i = 0; $i < count($indexsAndNamesColumnsJoin); $i++) {
+     $indexsJoin[] = $indexsAndNamesColumnsJoin[$i][0];
+}
+
+
+$nameColumnsJoin=[];
+for ($i = 0; $i < count($indexsAndNamesColumnsJoin); $i++) {
+     $nameColumnsJoin[] = $indexsAndNamesColumnsJoin[$i][1];
+}
+	// Array inicial en caso de anadir mas colums despues
+	
+	// Principalmente para obviar la column rowNumber
+ $nameInitialJoinColumns = $nameColumnsJoin;
+
+//para agregar la funcion de conteo de filas en la query
+if (!empty($orderForRowCounts)) {
+
+$row_number = "row_number() over(".$orderForRowCounts.")";
+
+$columnsInnerJoin = self::arrayInsert($columnsInnerJoin,array($row_number),1);
+$nameColumnsJoin = self::arrayInsert($nameColumnsJoin,array('row_number'),1);
 }
 
 
 
+    /* Indexed column (used for fast and accurate table cardinality) */
+    $sIndexColumn = $sIndexColumn;
+     
+    /* DB tables joins to use */
+    $sTable = $tablesJoins;
 
+
+
+        /* Database connection information */
+    $gaSql['user']       = USER;
+    $gaSql['password']   = PASS;
+    $gaSql['db']         = DB;
+    $gaSql['server']     = SERVER_PATH;
+
+
+ /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+     * If you just want to use the basic configuration for DataTables with PHP server-side, there is
+     * no need to edit below this line
+     */
+     
+    /*
+     * DB connection
+     */
+    $gaSql['link'] = pg_connect(
+        " host=".$gaSql['server'].
+        " dbname=".$gaSql['db'].
+        " user=".$gaSql['user'].
+        " password=".$gaSql['password']
+    ) or die('Could not connect: ' . pg_last_error());
+     
+     
+    /*
+     * Paging
+     */
+    $sLimit = "";
+    if ( isset( $_GET['iDisplayStart'] ) && $_GET['iDisplayLength'] != '-1' )
+    {
+        $sLimit = "LIMIT ".intval( $_GET['iDisplayLength'] )." OFFSET ".
+            intval( $_GET['iDisplayStart'] );
+    }
+    /*
+     * Ordering
+     */
+    if ( isset( $_GET['iSortCol_0'] ) )
+    {
+        $sOrder = "ORDER BY  ";
+        for ( $i=0 ; $i<intval( $_GET['iSortingCols'] ) ; $i++ )
+        {
+            if ( $_GET[ 'bSortable_'.intval($_GET['iSortCol_'.$i]) ] == "true")
+            {
+            	//&& $nameColumnsJoin[$i] != 'row_number'
+                $sOrder .= $nameColumnsJoin[ intval( $_GET['iSortCol_'.$i] ) ]."
+                    ".($_GET['sSortDir_'.$i]==='asc' ? 'asc' : 'desc').", ";
+            }
+        }
+         
+        $sOrder = substr_replace( $sOrder, "", -2 );
+
+        if ( $sOrder == "ORDER BY" )
+        {
+            $sOrder = "";
+        }
+    }
+   
+
+       /*
+     * Filtering
+     * NOTE This assumes that the field that is being searched on is a string typed field (ie. one
+     * on which ILIKE can be used). Boolean fields etc will need a modification here.
+ */
+
+    $sWhere = "";
+    //var_dump($nameInitialJoinColumns);
+    if ( $_GET['sSearch'] != "" )
+    {
+        $sWhere = "WHERE (";
+        //1 para obviar el indexColumn
+        for ( $i=1 ; $i<count($nameInitialJoinColumns) ; $i++ )
+        {
+
+
+/*    	if (isset($_GET['bSearchable_'.$i]))
+        {*/
+
+            if ( $_GET['bSearchable_'.$i] == "true" )
+            {
+
+                $sWhere .= $indexsJoin[$i].".".$nameInitialJoinColumns[$i]."::text ILIKE '%".pg_escape_string( $_GET['sSearch'] )."%' OR ";
+            //}
+        }
+        }
+        $sWhere = substr_replace( $sWhere, "", -3 );
+        $sWhere .= ")";
+    }
+
+          // Script para solictar la data por usuarios
+ 	if (!self::isDataEmtpy($_GET['requestedAliasUser'] )) {
+      		$requestedAliasUser = self::cleanStringSQL($_GET['requestedAliasUser']);
+            if ( $sWhere == "" )
+            {
+                $sWhere = "WHERE ";
+            }
+            else
+            {
+                $sWhere .= " AND ";
+            }
+			$sWhere.=" usr.alias = '$requestedAliasUser' ";    	
+		}
+
+		if (!empty($_GET['minDateRange']) AND !empty($_GET['maxDateRange']) ) {
+
+		 $minDateRange = mainModel::cleanStringSQL($_GET['minDateRange']);
+
+		 $maxDateRange = mainModel::cleanStringSQL($_GET['maxDateRange']);
+
+            if ( $sWhere == "" )
+            {
+                $sWhere = "WHERE ";
+            }
+            else
+            {
+                $sWhere .= " AND ";
+            }
+			$sWhere.=" usrBit.bitacora_fecha BETWEEN '$minDateRange' AND '$maxDateRange'";    	
+     }
+
+    /* Individual column filtering */
+    for ( $i=1 ; $i<count($nameInitialJoinColumns) ; $i++ )
+    {
+        		# code...
+
+        if (isset($_GET['bSearchable_'.$i]))
+        {
+    	
+        if ( $_GET['bSearchable_'.$i] == "true" && $_GET['sSearch_'.$i] != '')
+        {
+            if ( $sWhere == "" )
+            {
+                $sWhere = "WHERE ";
+            }
+            else
+            {
+                $sWhere .= " AND ";
+            }
+            $sWhere .= $indexsJoin[$i].".".$nameInitialJoinColumns[$i]." ILIKE '%".pg_escape_string($_GET['sSearch_'.$i])."%' ";
+        }
+    }
+}
+
+    $sQuery = "
+        SELECT ".str_replace(" , ", " ", implode(", ", $columnsInnerJoin))."
+        FROM   $sTable
+        $sWhere
+        $sOrder
+        $sLimit
+
+    ";
+
+    $rResult = pg_query( $gaSql['link'], $sQuery ) or die(pg_last_error());
+
+    $sQuery = "
+        SELECT $sIndexColumn
+        FROM   $sTable
+    ";
+
+
+    $rResultTotal = pg_query( $gaSql['link'], $sQuery ) or die(pg_last_error());
+    $iTotal = pg_num_rows($rResultTotal);
+    pg_free_result( $rResultTotal );
+     
+    if ( $sWhere != "" )
+    {
+        $sQuery = "
+            SELECT $sIndexColumn
+            FROM   $sTable
+            $sWhere
+        ";
+
+
+        $rResultFilterTotal = pg_query( $gaSql['link'], $sQuery ) or die(pg_last_error());
+        $iFilteredTotal = pg_num_rows($rResultFilterTotal);
+        pg_free_result( $rResultFilterTotal );
+    }
+    else
+    {
+        $iFilteredTotal = $iTotal;
+    }
+
+    $output = array(
+        "sEcho" => intval($_GET['sEcho']),
+        "iTotalRecords" => $iTotal,
+        "iTotalDisplayRecords" => $iFilteredTotal,
+        "aaData" => array()
+    );
+     
+
+         /*
+     * Output
+     */
+
+    while ( $aRow = pg_fetch_array($rResult, null, PGSQL_ASSOC) )
+    {
+
+
+        $row = array();
+        for ( $i=0 ; $i<count($nameColumnsTable) ; $i++ )
+        {
+
+            if ( $nameColumnsTable[$i] == "version" )
+            {
+                /* Special output formatting for 'version' column */
+                $row[] = ($aRow[ $nameColumnsTable[$i] ]=="0") ? '-' : $aRow[ $nameColumnsTable[$i] ];
+            }
+            else if ( $nameColumnsTable[$i] != ' ' ){
+                /* General output */
+
+				if ($aRow['id_genero'] == "1"){
+                  $iconGenero = "male-user.png"; 
+                }elseif ($aRow['id_genero'] == "2") {
+                  $iconGenero = "fermale-user.png"; 
+                }
+
+             	if ($aRow['id_nacionalidad'] == "1") {
+					$nacionalidad = "V";
+				}else{
+					$nacionalidad = "E";				
+				}          
+                   $dataFields = array();
+
+                $dataFields['id_bitacora']=$aRow['id_bitacora'];
+
+                $dataFields['row_number']=$aRow['row_number'];
+
+                 $dataFields['genero']= "<span class='d-none'>".$aRow['id_genero']."</span>
+                    <img class='img-profile rounded-circle' width='40' src=".SERVERURL."view/img/".$iconGenero.">";
+
+                $dataFields['doc_identidad']=$nacionalidad.'-'.$aRow['doc_identidad'];
+
+                $dataFields['alias']=$aRow['alias'];
+
+                $dataFields['nombres']=$aRow['nombres'];
+
+                $dataFields['apellidos']=$aRow['apellidos'];
+
+                $dataFields['descripcion_nivel_permiso']=$aRow['descripcion_nivel_permiso'];
+
+                $dataFields['bitacora_fecha']=$aRow['bitacora_fecha'];
+
+                $dataFields['bitacora_hora_inicio']=$aRow['bitacora_hora_inicio'];
+				
+
+             	if (userModel::isDataEmtpy($aRow['bitacora_hora_final'])) {
+					$dataFields['bitacora_hora_final'] = "No Registrada";
+				}else{
+
+					 $dataFields['bitacora_hora_final']=$aRow['bitacora_hora_final'];
+				}
+       	$row[] = $dataFields[$nameColumnsTable[$i]];
+            }
+
+        }
+
+        $output['aaData'][] = $row;
+    }
+    echo json_encode( $output );
+     
+    // Free resultset
+    pg_free_result( $rResult );
+     
+    // Closing connection
+    pg_close( $gaSql['link'] );
+
+    exit();
+
+	
+	}
+
+
+    	public static function arrayInsert($array,$arrayInsert,$pos){
+            $arrayResult = array_merge(
+            array_slice($array, 0, $pos),
+            $arrayInsert,
+            array_slice($array, $pos));
+            
+            return $arrayResult;
+		}
+
+
+}

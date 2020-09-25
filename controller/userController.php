@@ -501,7 +501,7 @@ if (mainModel::isDataEmtpy($id_nacionalidad,$doc_identidad,$aliasUser,$telefono,
 
 	// Comprobamos que exista el susuario
 
-		$queryGetUserStatus = mainModel::runSimpleQuery("SELECT id_estado FROM usuarios WHERE alias =
+		$queryGetUserStatus = mainModel::connectDB()->query("SELECT id_estado FROM usuarios WHERE alias =
 			'$aliasUser'");
 
 		$queryGetUserStatus->execute();

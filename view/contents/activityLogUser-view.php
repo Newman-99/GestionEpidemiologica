@@ -33,7 +33,7 @@
            $minDateRangeDefault = date("Y-m-d",strtotime($currentDate."- 7 days"));
 
 //es la feha con el registro mas viejo
-$minDateValueAvailable = $activityLogController-> getFirstDateRecordsActivityLogUserController();
+$minDateValueAvailable = $activityLogController-> getFirstDateRecordsActivityLogSessionsController();
            ?>
 
         <div class='card shadow mb-4'>
@@ -64,7 +64,9 @@ $minDateValueAvailable = $activityLogController-> getFirstDateRecordsActivityLog
                 <table class='table table-bordered' id='dataTable' width='100%' cellspacing='0'>
                   <thead>
                     <tr>
-                       <th>Nro. </th>
+
+                      <th >id_bitacora</th>
+                      <th>Nro. </th>
                       <th>Genero</th>
                       <th>Documento de Identidad</th>
                       <th>Alias de Usuario</th>
@@ -78,7 +80,8 @@ $minDateValueAvailable = $activityLogController-> getFirstDateRecordsActivityLog
                   </thead>
                   <tfoot>
                     <tr>
-                       <th>Nro. </th>
+                      <th>id_bitacora</th>
+                      <th>Nro. </th>
                       <th>Genero</th>
                       <th>Documento de Identidad</th>
                       <th>Alias de Usuario</th>
