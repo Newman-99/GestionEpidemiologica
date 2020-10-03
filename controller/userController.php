@@ -1,12 +1,24 @@
 	<?php 
 
+		// para colaboracion de objetos
+		require_once "personController.php";
+
 	if($requestAjax){
 		require_once "../model/userModel.php";
+
 	}else{
 		require_once "./model/userModel.php";
 	}
 
 	class userController extends userModel{
+		
+		protected static $personController;
+
+		function __construct()
+			{
+
+			self::$personController = new personController();
+		}
 
 		public function addUserController($dataUser){
 		
@@ -34,9 +46,9 @@
 
 
 		 $email = mainModel::cleanStringSQL($dataUser["email"]);
-		 // Comprobar si las password son iguales
-		 // 
-		 //			
+
+		$siExistPerson = 0;
+
 
 		if (mainModel::isDataEmtpy($aliasUser,
 		 	$doc_identidad,
@@ -57,28 +69,19 @@
 
 			}
 
-		
-		// Registrar como persona
 
-		// Comprobar si existe o no la persona en la BD
+		// Comprobar si existe o no la person en la BD
 
-		$primaryKeyPersona = [
+		$queryIsExistperson = mainModel::connectDB()->query("SELECT id_nacionalidad,doc_identidad FROM personas WHERE id_nacionalidad = '$id_nacionalidad' AND doc_identidad = '$doc_identidad'");
 
-			"id_nacionalidad"=>$id_nacionalidad,
-			"doc_identidad"=>$doc_identidad
-		];
-
-			require_once "../controller/personaController.php";
-
-			$personaController = new personaController();
-
-			$SQL_isExistPersona = $personaController->getPersonaController($primaryKeyPersona);
-			$SQL_isExistPersona->execute();
+			$queryIsExistperson->execute();
 
 
 			if(isset($dataUser['siExistPerson']) && $dataUser['siExistPerson'] == "1" ){
 
-			if(!$SQL_isExistPersona->rowCount()){
+			$siExistPerson = 1;
+
+			if(!$queryIsExistperson->rowCount()){
 			$alert=[
 				"Alert"=>"simple",
 				"Title"=>"Datos no encontrados",
@@ -92,12 +95,12 @@
 			}
 
 			}else{
-				// Si no existe y es una persona nueva comprabar que no este repetido en la BD
-			if($SQL_isExistPersona->rowCount()){
+				// Si no existe y es una person nueva comprabar que no este repetido en la BD
+			if($queryIsExistperson->rowCount()){
 			$alert=[
 				"Alert"=>"simple",
 				"Title"=>"Datos Duplicados",
-				"Text"=>"Ya se encuentra una persona con esta cedula registrada ",
+				"Text"=>"Ya se encuentra una person con esta cedula registrada ",
 				"Type"=>"error"
 			];
 
@@ -109,11 +112,11 @@
 		}
 			// Validar exist el alias de usuario
 		 
-		 $SQL_isExistUser=self::getUserController(array("aliasUser"=>$aliasUser));
+		$queryIsExistUser = mainModel::connectDB()->query("SELECT alias FROM usuarios WHERE alias = '$aliasUser'");
 
-		$SQL_isExistUser->execute();		 
+		$queryIsExistUser->execute();		 
 
-		if($SQL_isExistUser->rowCount()){
+		if($queryIsExistUser->rowCount()){
 				
 				$alert=[
 				"Alert"=>"simple",
@@ -128,7 +131,8 @@
 
 			}
 
-    		if(strlen($aliasUser)<5 || strlen($aliasUser)>20 || preg_match('/\s/',$aliasUser)){
+
+		if(strlen($aliasUser)<5 || strlen($aliasUser)>20 || preg_match('/\s/',$aliasUser)){
 				
 				$alert=[
 				"Alert"=>"simple",
@@ -147,6 +151,19 @@
 
 			}
 
+		if(!self::$personController->isValidNroTlf($telefono)){
+			
+			$alert=[
+				"Alert"=>"simple",
+				"Title"=>"Datos Invalidos",
+				"Text"=>"El Nro de Telefono es invalido",
+				"Type"=>"error"
+			];
+
+				echo json_encode($alert);
+
+				exit();
+			}
 
 		if (!self::isValidEmail($email)) {
 				$alert=[
@@ -161,6 +178,64 @@
 
 		}
 
+			// si otra persona ya tiene este correo a parte del usuario a registrar
+
+		$queryIfMailOccupiedAnotherPerson = mainModel::connectDB()->query("SELECT id_nacionalidad,doc_identidad,email FROM usuarios WHERE email = '$email'");
+
+			$doc_identidadUserToRegister = $id_nacionalidad.'-'.$doc_identidad;
+
+		while($recordsMailsUserPerson=$queryIfMailOccupiedAnotherPerson->fetch(PDO
+			::FETCH_ASSOC)){ 
+
+			$recordsDoc_identidad = $recordsMailsUserPerson['id_nacionalidad'].'-'.$recordsMailsUserPerson['doc_identidad'];
+
+			if ($recordsDoc_identidad != $doc_identidadUserToRegister) {
+
+			$alert=[
+			"Alert"=>"simple",
+			"Title"=>"Datos Duplicados",
+			"Text"=>"Este correo ya esta ocupado por otra persona",
+			"Type"=>"error"
+				];
+		
+				echo json_encode($alert);
+
+				exit();
+
+			}
+
+
+		}
+
+
+			// si otra persona ya tiene este telefono a parte del usuario a registrar 
+
+		$queryIfTlfOccupiedAnotherPerson = mainModel::connectDB()->query("SELECT id_nacionalidad,doc_identidad,email FROM usuarios WHERE telefono = '$telefono'");
+
+			$doc_identidadUserToRegister = $id_nacionalidad.'-'.$doc_identidad;
+
+		while($recordsTlfUserPerson=$queryIfTlfOccupiedAnotherPerson->fetch(PDO
+			::FETCH_ASSOC)){ 
+
+			$recordsDoc_identidad = $recordsTlfUserPerson['id_nacionalidad'].'-'.$recordsTlfUserPerson['doc_identidad'];
+
+			if ($recordsDoc_identidad != $doc_identidadUserToRegister) {
+
+			$alert=[
+			"Alert"=>"simple",
+			"Title"=>"Datos Duplicados",
+			"Text"=>"Este telefono ya esta ocupado por otra persona",
+			"Type"=>"error"
+				];
+		
+				echo json_encode($alert);
+
+				exit();
+
+			}
+
+
+		}
 
 		   if(strlen($question1)<3 || strlen($question2)<3 ){
 
@@ -202,10 +277,7 @@
 				echo json_encode($alert);
 
 				exit();
-
 		}
-
-
 
 		if (!self::isValidPassword($password)) {
 				$alert=[
@@ -230,13 +302,11 @@
 				exit();
 			}
 
-			// Se espera hasta que termina la validacion de usuarios y no hay errors
-			if(!isset($dataUser['siExistPerson'])){
-			$personaController->addPersonaController($dataUser);			
-			}
 
+		
 
-			$dataUser=[
+			// data ya limpia
+			$dataUserToRegister=[
 			"id_nacionalidad"=>$id_nacionalidad,
 			"doc_identidad"=>$doc_identidad,
 			"id_nivel_permiso"=>$id_nivel_permiso,
@@ -246,45 +316,25 @@
 			"question2"=>mainModel::encryption($question2),
 			"password"=>mainModel::encryption($password),
 			"telefono"=>$telefono,
-			"email"=>$email];
-			
-			$queryAddUser= userModel::addUserModel($dataUser);
-			
-			if(!$queryAddUser->rowCount()){
+			"email"=>$email,
+			"siExistPerson"=>$siExistPerson
+		];
 
-			$alert=[
-				"Alert"=>"simple",
-				"Title"=>"Ha ocurrido un error inesperado",
-				"Text"=>"No se ha podido registar el usuario en el sistema",
-				"Type"=>"error"
-			];
+				// si no existe la person la creamos
+			if(!$siExistPerson){
 
-			echo json_encode($alert);
+				$dataPerson = self::$personController->addPersonControllerr($dataUser);
 
-			exit();
-
+				$dataUser = array_merge($dataUserToRegister,$dataPerson);
 			}
 
-			$alert=[
-				"Alert"=>"clean",
-				"Title"=>"Operacion Exitosa",
-				"Text"=>"Usuario Registrado
-				<br>
-				Por favor contacte con el administrador para su autorizacion en el sistema",
-				"Type"=>"success"
-			];
+		 echo userModel::addUserModel($dataUserToRegister);			
 
-
-			echo json_encode($alert);
-
-			exit();
-		
-
-		}
+	}
 
 				
 	public function updateUserController($dataUser){
-		 
+	
 		 $id_nacionalidad = mainModel::cleanStringSQL($dataUser["id_nacionalidad"]);
 
 		 $doc_identidad = mainModel::cleanStringSQL($dataUser["doc_identidad"]);
@@ -296,22 +346,25 @@
 		 $telefono = mainModel::cleanStringSQL($telefono);
 
 		 $email = mainModel::cleanStringSQL($dataUser["email"]);
-		 
+
 		 $fecha_nacimiento = mainModel::cleanStringSQL($dataUser["fecha_nacimiento"]);
 
 		 $nombres = mainModel::cleanStringSQL($dataUser["nombres"]);
 
 		 $apellidos = mainModel::cleanStringSQL($dataUser["apellidos"]);
 
-
 		 $id_genero = mainModel::cleanStringSQL($dataUser["id_genero"]);
+
+		// si hay error imprime mensaje y exit()
+	$dataPerson = self::$personController->updatePersonaController($dataUser);
+
 
 if (mainModel::isDataEmtpy($id_nacionalidad,$doc_identidad,$aliasUser,$telefono,$email,$fecha_nacimiento,$nombres,$apellidos,$id_genero,$dataUser['id_nivel_permiso']) ||
 	$dataUser['id_estado'] == ''){
 				$alert=[
 					"Alert"=>"simple",
 					"Title"=>"Campos Vacios",
-					"Text"=>"No se encuentra ningun dato para actualizar",
+					"Text"=>"No se encuentra ningun dato para actualizar o alguno necesario esta vacio",
 					"Type"=>"error"
 				];
 
@@ -328,15 +381,6 @@ if (mainModel::isDataEmtpy($id_nacionalidad,$doc_identidad,$aliasUser,$telefono,
  		$userValuesUpdate = [];
 
 
- 		// Campos del usuario como persona a comparar con la BD
- 		$fieldstoComparePerson = [
-		 "fecha_nacimiento"=>$fecha_nacimiento,
-		 "nombres"=>$nombres,
-		 "apellidos"=>$apellidos,
-		 "id_genero"=>$id_genero 			
- 		];
-
-
 		if (!self::isValidEmail($email)) {
 				$alert=[
 					"Alert"=>"simple",
@@ -350,7 +394,34 @@ if (mainModel::isDataEmtpy($id_nacionalidad,$doc_identidad,$aliasUser,$telefono,
 
 		}
 
+			// si otra persona ya tiene este correo a parte del usuario a registrar
 
+		$queryIfMailOccupiedAnotherPerson = mainModel::connectDB()->query("SELECT id_nacionalidad,doc_identidad,email FROM usuarios WHERE email = '$email'");
+
+			$doc_identidadUserToRegister = $id_nacionalidad.'-'.$doc_identidad;
+
+		while($recordsMailsUserPerson=$queryIfMailOccupiedAnotherPerson->fetch(PDO
+			::FETCH_ASSOC)){ 
+
+			$recordsDoc_identidad = $recordsMailsUserPerson['id_nacionalidad'].'-'.$recordsMailsUserPerson['doc_identidad'];
+
+			if ($recordsDoc_identidad != $doc_identidadUserToRegister) {
+
+			$alert=[
+			"Alert"=>"simple",
+			"Title"=>"Datos Duplicados",
+			"Text"=>"Este correo ya esta ocupado por otra persona",
+			"Type"=>"error"
+				];
+		
+				echo json_encode($alert);
+
+				exit();
+
+			}
+
+
+		}
 				$personValuesUpdate['doc_identidad'] = [
 				'value' => $doc_identidad,
 				'type' => \PDO::PARAM_INT,
@@ -367,7 +438,6 @@ if (mainModel::isDataEmtpy($id_nacionalidad,$doc_identidad,$aliasUser,$telefono,
 				];
 
 
-
 				array_push($userAttributesUpdate, 'email = :email');
 				$userValuesUpdate['email'] = [
 				'value' => $email,
@@ -382,9 +452,11 @@ if (mainModel::isDataEmtpy($id_nacionalidad,$doc_identidad,$aliasUser,$telefono,
 				];
 
 
-		$fieldstoCompareUser=["telefono"=>$telefono,"email"=>$email];
+		$userDataTocomparedWithDatabase=["telefono"=>$telefono,"email"=>$email];
 
-		 if (isset($dataUser["id_nivel_permiso"]) AND $dataUser['id_nivel_permiso'] != 0){
+		// isset cuando el id_nivel_permiso no se muestra en form por seguridad
+
+		 if (isset($dataUser["id_nivel_permiso"]) && $dataUser['id_nivel_permiso'] != 0){
 
 		 $id_nivel_permiso = mainModel::cleanStringSQL($dataUser["id_nivel_permiso"]);
 
@@ -394,8 +466,10 @@ if (mainModel::isDataEmtpy($id_nacionalidad,$doc_identidad,$aliasUser,$telefono,
 				'type' => \PDO::PARAM_INT,
 				];
 
-		 	$fieldstoCompareUser["id_nivel_permiso"] = $id_nivel_permiso;
+		 	$userDataTocomparedWithDatabase["id_nivel_permiso"] = $id_nivel_permiso;
 		}
+
+		// isset cuando el id_estado no se muestra en form por seguridad
 
 		 if (isset($dataUser["id_estado"])) {
 
@@ -406,7 +480,7 @@ if (mainModel::isDataEmtpy($id_nacionalidad,$doc_identidad,$aliasUser,$telefono,
 				'value' => $id_estado,
 				'type' => \PDO::PARAM_INT,
 				];
-			$fieldstoCompareUser["id_estado"] = $id_estado;
+			$userDataTocomparedWithDatabase["id_estado"] = $id_estado;
 		 }
 
 
@@ -414,21 +488,10 @@ if (mainModel::isDataEmtpy($id_nacionalidad,$doc_identidad,$aliasUser,$telefono,
 
  		$queryToGetUser = self::getUserController(array("aliasUser"=>$aliasUser));
 
-		$fieldsEqualDatabaseUser = mainModel::isFieldsEqualToThoseInTheDatabase($queryToGetUser,$fieldstoCompareUser);
-
-		 // Tambien lo hacemos con los datos personales
-
-			require_once "../controller/personaController.php";
-			
-			$personaController = new personaController();
-
- 		$queryToGetPerson = $personaController->getPersonaController(array("doc_identidad"=>$doc_identidad,"id_nacionalidad"=>$id_nacionalidad));
+		$ifUserDataUpdateIsSameDatabase = mainModel::isFieldsEqualToThoseInTheDatabase($queryToGetUser,$userDataTocomparedWithDatabase);
 
 
-		$fieldsEqualDatabasePerson = mainModel::isFieldsEqualToThoseInTheDatabase($queryToGetPerson,$fieldstoComparePerson);
-
- 
-			if ($fieldsEqualDatabaseUser AND $fieldsEqualDatabasePerson) {
+			if ($ifUserDataUpdateIsSameDatabase && $dataPerson['ifPersonDataUpdateIsSameDatabase']) {
 
 			$alert=[
 				"Alert"=>"simple",
@@ -443,43 +506,7 @@ if (mainModel::isDataEmtpy($id_nacionalidad,$doc_identidad,$aliasUser,$telefono,
 
 			}
 
-			// HAcemos las operaciones de actualizacion principales
-
-
-			$resultUpdateUser = false;
-			$resultUpdatePerson = false;
-
-			$resultUpdatePerson = $personaController::updatePersonaController($dataUser);
-
-			$resultUpdateUser = userModel::updateUserModel($userValuesUpdate,$userAttributesUpdate);
-
-
-			// Impimirmo el resultado de la operacion
-			$alert=[
-				"Alert"=>"simple",
-				"Title"=>"Ocurrio un error inesperado",
-				"Text"=>"Error en la actualizacion del usuario",
-				"Type"=>"error"
-			];
-
-			if ($resultUpdateUser && $resultUpdatePerson) {
-
-			$alert=[
-				"Alert"=>"reload",
-				"Title"=>"Operacion Exitosa",
-				"Text"=>"Datos del usuarios actualizados",
-				"Type"=>"success"
-			];
-
-			
-
-			}
-
-				echo json_encode($alert);
-
-				exit();	 	
-
-
+			echo userModel::updateUserModel($userValuesUpdate,$userAttributesUpdate,$dataPerson);
 			}
 
 
@@ -852,7 +879,10 @@ protected static function passwordCorrespondDatabase($dataUser){
 				exit();
 			}
 
-		$dataUpdateQuestions = ["aliasUser"=>$aliasUser,"id_pregunta"=>$id_pregunta,"respuesta"=>mainModel::encryption($newQuestion)];
+		$dataUpdateQuestions = 
+		["aliasUser"=>$aliasUser,
+		"id_pregunta"=>$id_pregunta,
+		"respuesta"=>mainModel::encryption($newQuestion)];
 
 		return $resultQueryUpdateQuestion = userModel::updateUserQuestionModel($dataUpdateQuestions);
 
@@ -872,9 +902,6 @@ protected static function passwordCorrespondDatabase($dataUser){
 
 
 		 	if (mainModel::isDataEmtpy($aliasUser)) {
-
-		 		var_dump($doc_identidad,$aliasUser);
-		 		exit();
 			$alert=[
 				"Alert"=>"simple",
 				"Title"=>"Datos Vacios",
@@ -902,10 +929,9 @@ protected static function passwordCorrespondDatabase($dataUser){
 			exit();
 			}
 
-		
 if (!isset($dataUser['confirmDelete'])) {
 
-		// Si la persona  solo tiene un usuario y no presenta un caso epidemiologico, elimanos datos personales del BD pero primero avisamos
+		// Si la person  solo tiene un usuario y no presenta un caso epidemiologico, elimanos datos personles del BD pero primero avisamos
 
 
 		$userRecordsPerdoc_identidad = mainModel::connectDB()->query("SELECT alias FROM usuarios WHERE doc_identidad =
@@ -939,54 +965,27 @@ if (!isset($dataUser['confirmDelete'])) {
 		}
 	}
 
-		$resultQueryDeletePersona = TRUE;
 
-		$resultQueryDeleteBitacora = mainModel::deleteBitacora($aliasUser);
-
-		$resultQueryDeleteUser = userModel::deleteUserModel(array('aliasUser'=>$aliasUser));
-
-		// Eliminacion de la persona
-		if (isset($dataUser['confirmDelete'])) {
-
-		require_once "../controller/personaController.php";
-	
-		$personaController = new personaController();
+		// recoger datos limpios
 		
-		$primaryKeyPersona = [
+		$dataUserToDelete = ['aliasUser'=>$aliasUser,
+		'doc_identidad' => $doc_identidad,
+		'id_nacionalidad' => $id_nacionalidad];
+
+		// si existe la confirmacion de Eliminacion de la person
+		if (isset($dataUser['confirmDelete'])) {
+		
+		$primaryKeyperson = [
 			"id_nacionalidad"=>$id_nacionalidad,
 			"doc_identidad"=>$doc_identidad];
 		
-		$resultQueryDeletePersona = $personaController->deletePersonaController($primaryKeyPersona);
-		
+		// si hay algun error se detiene el code e imprime msj
+		self::$personController->deletePersonController($primaryKeyperson);
+
+		$dataUserToDelete['deletePerson'] = TRUE;
 		}
 		
-			$alert=[
-				"Alert"=>"reload",
-				"Title"=>"Operacion Exitosa",
-				"Text"=>"El usuario ha sido eliminado",
-				"Type"=>"success"
-			];
-
-			$totalResultQuerys = $resultQueryDeleteUser * $resultQueryDeleteBitacora * $resultQueryDeletePersona;
-			
-			if (!$totalResultQuerys) {
-
-			$alert=[
-				"Alert"=>"simple",
-				"Title"=>"Ocurrio un error inesperado",
-				"Text"=>"Error en la eliminacion del usuario",
-				"Type"=>"error"
-			];
-
-
-
-
-			}
-
-				echo json_encode($alert);
-
-				exit();	 	
-
+		echo userModel::deleteUserModel($dataUserToDelete);
 
 				 }
 
@@ -1130,33 +1129,18 @@ if (!isset($dataUser['confirmDelete'])) {
 				exit();	 		
 	}
 
-public static function paginateUserController($currentPaginate,$nivelUser,$aliasUser){
+public static function paginateUserController($currentAliasUser){
 
-	$currentPaginate= mainModel::cleanStringSQL($currentPaginate);
-	$nivelUser= mainModel::cleanStringSQL($nivelUser);
-	$aliasUser= mainModel::cleanStringSQL($aliasUser);
+	$currentAliasUser= mainModel::cleanStringSQL($currentAliasUser);
 
 
 	$stringQueryForGetUsers = userModel::stringQueryForGetUser();
 
-	$recordsQueryUser = mainModel::connectDB()->query($stringQueryForGetUsers." WHERE usr.alias != '$aliasUser' AND usr.alias != 'Master' 
+	$queryForGetUsers = mainModel::connectDB()->query($stringQueryForGetUsers." WHERE usr.alias != '$currentAliasUser' AND usr.alias != 'Master' 
 		");
-//		GROUP BY usr.alias,pers.doc_identidad,nacion.id_nacionalidad 
-//ORDER BY usr.alias ASC
-	$dataRecordsQueryUser = $recordsQueryUser->fetchAll();
-
-	$totalRecordsQueryUser=$recordsQueryUser->rowCount();
-
-	$nroRecordsDisplay = $totalRecordsQueryUser;
-
-	$currentPaginate = (isset($currentPaginate) && $currentPaginate>0) ? (int)$currentPaginate : 1 ;
-
-	$initialRecords = ($currentPaginate>0) ? (($currentPaginate*$nroRecordsDisplay)-$nroRecordsDisplay) :0;
-
-	$nroPaginates = ceil($totalRecordsQueryUser/$nroRecordsDisplay);
-
 
 $table = "";
+
 $table.="<div class='table-responsive'>
                 <table class='table table-bordered' id='dataTable' width='100%' cellspacing='0'>
                   <thead>
@@ -1192,10 +1176,9 @@ $table.="<div class='table-responsive'>
                   </tfoot>
                   <tbody>";
 
-		if ($totalRecordsQueryUser>=1 && $currentPaginate<=$nroPaginates) { 
-			$count = $initialRecords+1;
-
-			foreach ($dataRecordsQueryUser as $rows) {
+         $count = 1;
+		while($rows=$queryForGetUsers->fetch(PDO
+			::FETCH_ASSOC)){ 
 
 				if ($rows['id_nacionalidad'] == "1") {
 					$nacionalidad = "V";
@@ -1267,34 +1250,10 @@ $table.="<div class='table-responsive'>
 			$count ++;
 			
 			}
-		}else{
 
-			if ($totalRecordsQueryUser>=1) {
-		$table.='
-			<tr>
-			<td colspan="10">
-			<a href="'.SERVERURL.'user-list/" class="btn btn-success btn-icon-split">
-              <span class="icon text-white-50">
-                <i class="fas fa-redo"></i>
-              </span>
-              <span class="text">Recargar Lista</span>
-            </a>
-            </td>
-			</tr>';
-
-			}else{
-			$table.="
-			<tr>
-				<td colspan='10'>No hay registros en el sistema</td>
-			</tr>
-			";
-			}
-		}
 $table.="</tbody>
                 </table>
               </div>";
-
-
 
 	return $table;
 

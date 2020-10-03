@@ -21,7 +21,7 @@
    
 
 
-  <!-- Funcionalidades cortas personalizadas para el sistema-->
+  <!-- Funcionalidades cortas personlizadas para el sistema-->
 
 <script src="<?php echo SERVERURL; ?>view/js/myScripts.js" ></script>
 

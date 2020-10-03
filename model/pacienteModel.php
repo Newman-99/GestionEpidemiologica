@@ -1,6 +1,6 @@
-<?php 	require_once "personaModel.php";
+<?php 	require_once "personModel.php";
 
-	class pacienteModel extends personaModel{
+	class pacienteModel extends personModel{
 
 			protected static function addPacienteModel($dataPaciente){
 

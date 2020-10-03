@@ -1,15 +1,42 @@
 <?php 
 	
-	require_once "mainModel.php";
+	require_once "personModel.php";
 
 	/**
 	 * 
 	 */
-	class userModel extends mainModel
+	class userModel extends personModel
 	{
 	
-	protected static function addUserModel($dataUser){
-		$sqlQuery = mainModel::connectDB()->prepare("INSERT INTO usuarios ( 
+	public static function addUserModel($dataUser){
+		
+
+		$DB_transacc = mainModel::connectDB();
+
+		$DB_transacc->beginTransaction();
+
+	try {
+		//si no existe la persona
+	if(!isset($dataUser['siExistPerson'])){
+		// registrar como person
+		$sqlQuery  = personModel::stringQueryAddPersonModel();
+
+		$sqlQuery = $DB_transacc->prepare($sqlQuery);
+
+		$sqlQuery->execute(array(
+		 "doc_identidad"=>$dataUser['doc_identidad'],
+		 "nombres"=>$dataUser['nombres'],
+		 "apellidos"=>$dataUser['apellidos'],
+		 "fecha_nacimiento"=>$dataUser['fecha_nacimiento'],
+		 "id_nacionalidad"=>$dataUser['id_nacionalidad'],
+		 "id_genero"=>$dataUser['id_genero']));
+
+		$sqlQuery->closeCursor();
+		}		
+
+		//registrar como usuario
+		
+		$sqlQuery = $DB_transacc->prepare("INSERT INTO usuarios ( 
 			alias,
 			id_nacionalidad,
 		 	doc_identidad,
@@ -37,7 +64,9 @@
 		"email"=>$dataUser['email'],
 		"telefono"=>$dataUser['telefono']));
 
-		$sqlQuery = mainModel::connectDB()->prepare("INSERT INTO usuarios_preguntas(
+		$sqlQuery->closeCursor();
+
+		$sqlQuery = $DB_transacc->prepare("INSERT INTO usuarios_preguntas(
 		usuario_alias,
 	 	id_pregunta,
 	 	respuesta) VALUES (
@@ -50,18 +79,70 @@
 		"id_pregunta"=>"1",
 		"respuesta"=>$dataUser["question1"]));
 
+		$sqlQuery->closeCursor();
+
 		$sqlQuery->execute(array(
 		"usuario_alias"=>$dataUser['aliasUser'],
 		"id_pregunta"=>"2",
 		"respuesta"=>$dataUser["question2"]));
 
-			return $sqlQuery;
+		$sqlQuery->closeCursor();
+
+			$alert=[
+				"Alert"=>"reload",
+				"Title"=>"Operacion Exitosa",
+				"Text"=>"Usuario Registrado
+				<br>
+				Por favor contacte con el administrador para su autorizacion en el sistema",
+				"Type"=>"success"
+			];
+
+			$DB_transacc->commit();
+			
+			}catch (Exception $e) {
+
+			$DB_transacc->rollBack();
+
+			$alert=[
+				"Alert"=>"simple",
+				"Title"=>"Ha ocurrido un error inesperado",
+				"Text"=>"No se ha podido registar el usuario en el sistema <br>
+					Error".$e->getMessage()."",
+				"Type"=>"error"
+			];
+		}
+
+		 return json_encode($alert);
+
 	}	
 
 
-	protected static function updateUserModel($userValuesUpdate,$userAttributesUpdate){
+	public static function updateUserModel($userValuesUpdate,$userAttributesUpdate,$dataPerson){
+		
+		$DB_transacc = mainModel::connectDB();
 
+		$DB_transacc->beginTransaction();
 
+	try {
+
+// si no son los mismos datos obviamos la consulta
+if (!$dataPerson['ifPersonDataUpdateIsSameDatabase']) {
+		$sqlQuery  = personModel::stringQueryUpdatePersonModel();
+
+		$sqlQuery = $DB_transacc->prepare($sqlQuery);
+
+		 $sqlQuery->execute(array(
+		 "id_nacionalidad"=>$dataPerson['id_nacionalidad'],
+		 "doc_identidad"=>$dataPerson['doc_identidad'],
+		 "nombres"=>$dataPerson['nombres'],
+		 "apellidos"=>$dataPerson['apellidos'],
+		 "fecha_nacimiento"=>$dataPerson['fecha_nacimiento'],
+		 "id_nacionalidad"=>$dataPerson['id_nacionalidad'],
+		 "id_genero"=>$dataPerson['id_genero']));
+
+		$sqlQuery->closeCursor();
+
+	}
 		$sqlQuery = mainModel::connectDB()->prepare("UPDATE usuarios 
 			SET 	".implode(",",$userAttributesUpdate)." WHERE alias = :aliasUser;");
 
@@ -70,11 +151,39 @@
 		    $sqlQuery->bindParam($key, $values['value'], $values['type']);
 		  }
 
-		  return $sqlQuery->execute();
+		  $sqlQuery->execute();
+
+		  $sqlQuery->closeCursor();
+			
+			$alert=[
+				"Alert"=>"reload",
+				"Title"=>"Operacion Exitosa",
+				"Text"=>"Datos del usuarios actualizados",
+				"Type"=>"success"
+			];
+
+		  	$DB_transacc->commit();
+			
+			}catch (Exception $e) {
+
+			$DB_transacc->rollBack();
+
+			$alert=[
+				"Alert"=>"simple",
+				"Title"=>"Ocurrio un error inesperado",
+				"Text"=>"Error en la actualizacion del usuario <br>
+					Error".$e->getMessage()."",
+				"Type"=>"error"
+			];
+
+		}
+
+			return json_encode($alert);
 
 	}
 
-		protected static function updateUserQuestionModel($dataUpdateQuestions){
+
+		public static function updateUserQuestionModel($dataUpdateQuestions){
 
 
 		$sqlQuery = mainModel::connectDB()->prepare("UPDATE usuarios_preguntas 
@@ -85,30 +194,86 @@
 		}	
 
 
-			protected static function deleteUserModel($dataUser){
+	public static function deleteUserModel($dataUser){
 
-				mainModel::disableForeingDB();
+		$DB_transacc = mainModel::connectDB();
+		$DB_transacc->beginTransaction();
 
+	try {
 
-		$sqlQuery = mainModel::connectDB()->prepare("DELETE FROM usuarios_preguntas WHERE usuario_alias = :aliasUser;");
+		$DB_transacc->query(parent::$stringQuerydisableForeingDB);
+
+		// borrar usuario
+		$sqlQuery = $DB_transacc->prepare("DELETE FROM usuarios WHERE alias = :aliasUser;");
+
+		$sqlQuery->execute(array("aliasUser"=>$dataUser['aliasUser']));
+
+		  $sqlQuery->closeCursor();
+
+		// borrar preguntas
+		$sqlQuery = $DB_transacc->prepare("DELETE FROM usuarios_preguntas WHERE usuario_alias = :aliasUser;");
 
 			$sqlQuery->execute(array(
 			 "aliasUser"=>$dataUser['aliasUser']));
 
-			$resultQueryQuestions = $sqlQuery->execute();
+			$sqlQuery->execute();
 
-		$sqlQuery = mainModel::connectDB()->prepare(" DELETE FROM usuarios WHERE alias = :aliasUser;");
+		  $sqlQuery->closeCursor();
 
-			$resultQueryUsers = $sqlQuery->execute(array(
-		 "aliasUser"=>$dataUser['aliasUser']));
+		  // borrar bitacora de sessiones
+		  
+		   	$sqlQuery = $DB_transacc->prepare(mainModel::$stringQueryDeleteBitacora); 
+	
+			$sqlQuery->execute(array("usuario_alias"=>$dataUser['aliasUser']));
 
-				mainModel::enableForeingDB();
-				//return un valoor boooleano
-				return $resultQueryUsers*$resultQueryUsers;
+		  		$sqlQuery->closeCursor();
+		  
+		  	// borrar como persona
+		if (isset($dataUser['deletePerson'])) {
+		
+		$stringQueryDeletePersonModel = personModel::stringQueryDeletePersonModel();
+
+		$sqlQuery = $DB_transacc->prepare($stringQueryDeletePersonModel);
+
+		  $sqlQuery->execute(array(
+		 "id_nacionalidad"=>$dataUser['id_nacionalidad'],
+		 "doc_identidad"=>$dataUser['doc_identidad']));
+	
 
 		}
 
-			protected static function getUserModel($userAttributesFilter,$filterValues){
+		  			$alert=[
+				"Alert"=>"reload",
+				"Title"=>"Operacion Exitosa",
+				"Text"=>"El usuario ha sido eliminado",
+				"Type"=>"success"
+			];
+
+
+		$DB_transacc->query(parent::$stringQueryEnableForeingDB);
+			
+			$DB_transacc->commit();
+			
+			}catch (Exception $e) {
+
+			$DB_transacc->rollBack();
+
+			$alert=[
+				"Alert"=>"simple",
+				"Title"=>"Ocurrio un error inesperado",
+				"Text"=>"Error en la eliminacion del usuario <br>
+					Error".$e->getMessage()."",
+				"Type"=>"error"
+			];
+
+		}
+
+			return json_encode($alert);
+		
+
+		}
+
+			public static function getUserModel($userAttributesFilter,$filterValues){
 
   
 		    $sqlQuery=self::stringQueryForGetUser();                  
@@ -127,7 +292,7 @@
 		   
 			}
 
-			protected static function stringQueryForGetUser(){
+			public static function stringQueryForGetUser(){
 				$stringQueryForGetUser = ' SELECT  DISTINCT ON (usr.alias) usr.alias usuario_alias,usr.id_nacionalidad,usr.doc_identidad, usr.id_nivel_permiso, usr.id_estado, usr.pass_encrypt, usr.email, usr.telefono, pers.nombres, pers.apellidos, pers.fecha_nacimiento, pers.id_genero,
 				nacion.descripcion_nacionalidad,
 				gnro.descripcion_genero,
@@ -144,7 +309,7 @@
 				return $stringQueryForGetUser;
 			}
 		
-	 protected static function userTypeCounterModel($userAttribute,$userType){
+	 public static function userTypeCounterModel($userAttribute,$userType){
 
 	 $WHERE = "";
 

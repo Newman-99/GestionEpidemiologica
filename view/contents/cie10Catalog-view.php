@@ -26,46 +26,47 @@
 
             <option  value='01'>I CIERTAS ENFERMEDADES INFECCIOSAS Y PARASITARIAS</option>
 
-            <option  value='02'>III ENFERMEDADES DE LA SANGRE Y DE LOS ORGANOS HEMATOPOYETICOS, Y CIERTOS TRASTORNOS QUE AFECTAN EL MECANISMO DE LA INMUNIDAD</option>
+            <option  value='02'>II TUMORES (NEOPLASIAS)</option>
 
-            <option  value='03'>IV   ENFERMEDADES ENDOCRINAS, NUTRICIONALES Y METABOLICAS</option>
+            <option  value='03'>III ENFERMEDADES DE LA SANGRE Y DE LOS ORGANOS HEMATOPOYETICOS, Y CIERTOS TRASTORNOS QUE AFECTAN EL MECANISMO DE LA INMUNIDAD</option>
 
-            <option  value='04'>V TRASTORNOS MENTALES Y DEL COMPORTAMIENTO</option>
+            <option  value='04'>IV ENFERMEDADES ENDOCRINAS, NUTRICIONALES Y METABOLICAS</option>
 
-            <option  value='05'>VI ENFERMEDADES DEL SISTEMA NERVIOSO</option>
+            <option  value='05'>V TRASTORNOS MENTALES Y DEL COMPORTAMIENTO</option>
 
-            <option  value='06'>VII ENFERMEDADES DEL OJO Y SUS ANEXOS</option>
+            <option  value='06'>VI ENFERMEDADES DEL SISTEMA NERVIOSO</option>
 
-            <option  value='07'>VIII ENFERMEDADES DE OIDO Y DE LA APOFISIS MASTOIDES</option>
+            <option  value='07'>VII ENFERMEDADES DEL OJO Y SUS ANEXOS</option>
 
-            <option  value='08'>IX ENFERMEDADES DEL SISTEMA CIRCULATORIO</option>
+            <option  value='08'>VIII ENFERMEDADES DE OIDO Y DE LA APOFISIS MASTOIDES</option>
 
-            <option  value='09'>X  ENFERMEDADES DEL SISTEMA RESPIRATORIO</option>
+            <option  value='09'>IX ENFERMEDADES DEL SISTEMA CIRCULATORIO</option>
 
-            <option  value='10'>XI ENFERMEDADES DEL SISTEMA DIGESTIVO</option>
+            <option  value='10'>X  ENFERMEDADES DEL SISTEMA RESPIRATORIO</option>
 
-            <option  value='11'>XII ENFERMEDADES DE LA PIEL Y DEL TEJIDO SUBCUTANEO</option>
+            <option  value='11'>XI ENFERMEDADES DEL SISTEMA DIGESTIVO</option>
 
-            <option  value='12'>XIII ENFERMEDADES DEL SISTEMA OSTEOMUSCULAR Y DEL TEJIDO CONJUNTIVO</option>
+            <option  value='12'>XII ENFERMEDADES DE LA PIEL Y DEL TEJIDO SUBCUTANEO</option>
 
-            <option  value='13'>XIV ENFERMEDADES DEL SISTEMA GENITOURINARIO</option>
+            <option  value='13'>XIII ENFERMEDADES DEL SISTEMA OSTEOMUSCULAR Y DEL TEJIDO CONJUNTIVO</option>
 
-            <option  value='14'>XV EMBARAZO, PARTO Y PUERPERIO</option>
+            <option  value='14'>XIV ENFERMEDADES DEL SISTEMA GENITOURINARIO</option>
 
-            <option  value='15'>XVI CIERTAS AFECCIONES ORIGINADAS EN EL PERIODO PERINATAL</option>
+            <option  value='15'>XV EMBARAZO, PARTO Y PUERPERIO</option>
 
-            <option  value='16'>XVII MALFORMACIONES CONGENITAS, DEFORMIDADES Y ANOMALIAS CROMOSOMICAS</option>
+            <option  value='16'>XVI CIERTAS AFECCIONES ORIGINADAS EN EL PERIODO PERINATAL</option>
 
-            <option  value='17'>XVIII SINTOMAS, SIGNOS Y HALLAZGOS ANORMALES CLINICOS Y DE LABORATORIO, NO CLASIFICADOS EN OTRA PARTE</option>
+            <option  value='17'>XVII MALFORMACIONES CONGENITAS, DEFORMIDADES Y ANOMALIAS CROMOSOMICAS</option>
 
-            <option  value='18'>XIX TRAUMATISMOS, ENVENENAMIENTOS Y ALGUNAS OTRAS CONSECUENCIAS DE CAUSAS EXTERNAS</option>
+            <option  value='18'>XVIII SINTOMAS, SIGNOS Y HALLAZGOS ANORMALES CLINICOS Y DE LABORATORIO, NO CLASIFICADOS EN OTRA PARTE</option>
 
-            <option  value='19'>XXII CAUSAS PARA PROPOSITOS ESPECIALES</option>
+            <option  value='19'>XIX TRAUMATISMOS, ENVENENAMIENTOS Y ALGUNAS OTRAS CONSECUENCIAS DE CAUSAS EXTERNAS</option>
 
-            <option  value='20'>XXI FACTORES QUE INFLUYEN EN EL ESTADO DE SALUD Y CONTACTO CON LOS SERVICIOS DE SALUD</option>
+            <option  value='22'>XXII CAUSAS PARA PROPOSITOS ESPECIALES</option>
 
-            <option  value='21'>XX CAUSAS EXTERNAS DE MORBILIDAD Y MORTALIDAD</option>
+            <option  value='20'>XX CAUSAS EXTERNAS DE MORBILIDAD Y MORTALIDAD</option>
 
+            <option  value='21'>XXI FACTORES QUE INFLUYEN EN EL ESTADO DE SALUD Y CONTACTO CON LOS SERVICIOS DE SALUD</option>
             <option  value='N/A'>N/A</option>
 
             <option  value='NO'>NO</option>
@@ -232,7 +233,7 @@
                         </div>
           </div>
 
-  <script src="<?php echo SERVERURL; ?>view/js/querysFieldsForTables.js"></script>
+  <script src="<?php echo SERVERURL; ?>view/js/scriptsRequestDataFromBakend.js"></script>
 
 <script type="text/javascript">
   

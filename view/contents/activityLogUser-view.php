@@ -104,12 +104,12 @@ $minDateValueAvailable = $activityLogController-> getFirstDateRecordsActivityLog
 
 
 
-  <script src="<?php echo SERVERURL; ?>view/js/querysFieldsForTables.js"></script>
+  <script src="<?php echo SERVERURL; ?>view/js/scriptsRequestDataFromBakend.js"></script>
 
 
 <script type="text/javascript">
 
-//  limitación de consulta personalizada
+//  limitación de consulta personlizada
 //  Si hace click en btnQueryLimiter usa los valores de los neuvos campos
 //  si no hace click usa los datos por default
 

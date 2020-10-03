@@ -8,19 +8,25 @@
 	
 
 	class mainModel{
-	
+
+	public static $stringQuerydisableForeingDB = "select 'ALTER TABLE DISABLE TRIGGER ALL;' from information_schema.tables where table_schema = 'public'";
+
+
+	public static $stringQueryEnableForeingDB = "select 'ALTER TABLE ENABLE TRIGGER ALL;' from information_schema.tables where table_schema = 'public';";
+
+	public static $stringQueryDeleteBitacora = "DELETE FROM usuario_bitacora WHERE  usuario_alias = :usuario_alias;";
+
 	function __construct(){
     date_default_timezone_set("America/Caracas");
-	}
+    	}
 
 
-		protected static function connectDB(){
+		public static function connectDB(){
 
 		try {			
 	$DB = new PDO("pgsql:host=".SERVER_PATH.";port=".PORT.";dbname=".DB."",USER,PASS, array(
 				PDO::ATTR_PERSISTENT => true, PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8'));
     $DB->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-
 		return $DB;
 
 		} catch (PDOException $e) {
@@ -341,7 +347,7 @@ protected static function deleteBitacora($usuario_alias){
 
 	self::disableForeingDB();
  	
- 	$sqlQuery = self::connectDB()->prepare(" DELETE FROM usuario_bitacora WHERE  usuario_alias = :usuario_alias; "); 
+ 	$sqlQuery = self::connectDB()->prepare(self::$stringQueryDeleteBitacora); 
 	
 	$resultQuery = $sqlQuery->execute(array("usuario_alias"=>$usuario_alias));
 
@@ -352,13 +358,13 @@ protected static function deleteBitacora($usuario_alias){
 	
 // Comrpueba que un conjuntos de campos enviados tienen los mismo valores a los registrados en la base de datos
 
-protected static function isFieldsEqualToThoseInTheDatabase($query,$fieldstoCompare){
+protected static function isFieldsEqualToThoseInTheDatabase($queryToGet,$fieldstoCompare){
 
 		$matchCounterFieldsToCompare = count($fieldstoCompare);
 
- 		$query->execute();
+ 		$queryToGet->execute();
 
-		$records = $query->fetch(PDO::FETCH_BOTH);
+		$records = $queryToGet->fetch(PDO::FETCH_BOTH);
 
  		$matchCounterDatabaseFields = 0;
 		 
@@ -713,7 +719,6 @@ $nameColumnsJoin = self::arrayInsert($nameColumnsJoin,array('row_number'),1);
  */
 
     $sWhere = "";
-    //var_dump($nameInitialJoinColumns);
     if ( $_GET['sSearch'] != "" )
     {
         $sWhere = "WHERE (";

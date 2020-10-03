@@ -132,22 +132,22 @@ public function loginUserController($dataUser){
     	}
 
 
-		// Obtener datos de persona
-			require_once "../controller/personaController.php";
+		// Obtener datos de person
+			require_once "../controller/personController.php";
 
-			$personController = new personaController();
+			$personController = new personController();
 
-			$recordsPersonSQL = personaController::getPersonaController(array("doc_identidad"=>$doc_identidad));
+			$recordspersonasQL = personController::getpersonController(array("doc_identidad"=>$doc_identidad));
 					
-			$recordsPersonSQL->execute();
+			$recordspersonasQL->execute();
 	
-			while($valuesDataPerson=$recordsPersonSQL->fetch(PDO
+			while($valuesdataPerson=$recordspersonasQL->fetch(PDO
 			::FETCH_ASSOC)){ 
 
-			$nameUser = $valuesDataPerson["id_genero"]; 
-			$nameUser = $valuesDataPerson["nombres"]; 
-			$lastNamesUser = $valuesDataPerson["apellidos"]; 
-			$id_generoUser = $valuesDataPerson["id_genero"]; 
+			$nameUser = $valuesdataPerson["id_genero"]; 
+			$nameUser = $valuesdataPerson["nombres"]; 
+			$lastNamesUser = $valuesdataPerson["apellidos"]; 
+			$id_generoUser = $valuesdataPerson["id_genero"]; 
 
 		}
 

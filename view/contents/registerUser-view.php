@@ -20,7 +20,7 @@
               <div class="form-group row">
 
        <div class="col-sm-3 mb-3 mb-sm-0">
-       <span alt="¿La persona ya ha sido registrada como paciente o usuario?">¿Persona ya registrada?<input type="checkbox" name="siExistPerson" id="siExistPerson" class="form-control form-control-user" value="1">  
+       <span alt="¿La person ya ha sido registrada como paciente o usuario?">¿person ya registrada?<input type="checkbox" name="siExistPerson" id="siExistPerson" class="form-control form-control-user" value="1">  
         </span>
 
     </div>   

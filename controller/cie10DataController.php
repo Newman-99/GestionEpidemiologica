@@ -81,21 +81,21 @@ $reader->open($filePath);
 
 // iniciamos la transaccion sql
 
+$DB_transacc = mainModel::connectDB();
+
+$DB_transacc->beginTransaction();
+
 try {
 
+$DB_transacc->query(mainModel::$stringQuerydisableForeingDB);
 
-$connectDB = mainModel::connectDB();
-
-$connectDB->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-
-$connectDB->beginTransaction();
-
-$queryDeleteAll = $connectDB->prepare(mainModel::disableForeingDB().' DELETE FROM data_cie10; '.mainModel::enableForeingDB());
+$queryDeleteAll = $DB_transacc->prepare('DELETE FROM data_cie10;');
 
 $queryDeleteAll->execute();
+
 $queryDeleteAll->closeCursor();
 
-$sqlQuery = $connectDB->prepare("INSERT INTO data_cie10(CONSECUTIVO, LETRA, CATALOG_KEY, NOMBRE, CODIGOX, LSEX, LINF, LSUP, TRIVIAL, ERRADICADO, N_INTER, NIN, NINMTOBS, COD_SIT_LESION, NO_CBD, CBD, NO_APH, AF_PRIN, DIA_SIS, CLAVE_PROGRAMA_SIS, COD_COMPLEMEN_MORBI, DEF_FETAL_CM, DEF_FETAL_CBD, CLAVE_CAPITULO, CAPITULO, LISTA1, GRUPO1, LISTA5, RUBRICA_TYPE, YEAR_MODIFI, YEAR_APLICACION, VALID, PRINMORTA, PRINMORBI, LM_MORBI, LM_MORTA, LGBD165, LOMSBECK, LGBD190, NOTDIARIA, NOTSEMANAL, SISTEMA_ESPECIAL, BIRMM, CVE_CAUSA_TYPE, CAUSA_TYPE, EPI_MORTA, EDAS_E_IRAS_EN_M5, CSVE_MATERNAS_SEED_EPID, EPI_MORTA_M5, EPI_MORBI, DEF_MATERNAS, ES_CAUSES, NUM_CAUSES, ES_SUIVE_MORTA, ES_SUIVE_MORB, EPI_CLAVE, EPI_CLAVE_DESC, ES_SUIVE_NOTIN, ES_SUIVE_EST_EPI, ES_SUIVE_EST_BROTE, SINAC, PRIN_SINAC, PRIN_SINAC_GRUPO, DESCRIPCION_SINAC_GRUPO, PRIN_SINAC_SUBGRUPO, DESCRIPCION_SINAC_SUBGRUPO, DAGA, ASTERISCO) VALUES (
+$sqlQuery = $DB_transacc->prepare("INSERT INTO data_cie10(CONSECUTIVO, LETRA, CATALOG_KEY, NOMBRE, CODIGOX, LSEX, LINF, LSUP, TRIVIAL, ERRADICADO, N_INTER, NIN, NINMTOBS, COD_SIT_LESION, NO_CBD, CBD, NO_APH, AF_PRIN, DIA_SIS, CLAVE_PROGRAMA_SIS, COD_COMPLEMEN_MORBI, DEF_FETAL_CM, DEF_FETAL_CBD, CLAVE_CAPITULO, CAPITULO, LISTA1, GRUPO1, LISTA5, RUBRICA_TYPE, YEAR_MODIFI, YEAR_APLICACION, VALID, PRINMORTA, PRINMORBI, LM_MORBI, LM_MORTA, LGBD165, LOMSBECK, LGBD190, NOTDIARIA, NOTSEMANAL, SISTEMA_ESPECIAL, BIRMM, CVE_CAUSA_TYPE, CAUSA_TYPE, EPI_MORTA, EDAS_E_IRAS_EN_M5, CSVE_MATERNAS_SEED_EPID, EPI_MORTA_M5, EPI_MORBI, DEF_MATERNAS, ES_CAUSES, NUM_CAUSES, ES_SUIVE_MORTA, ES_SUIVE_MORB, EPI_CLAVE, EPI_CLAVE_DESC, ES_SUIVE_NOTIN, ES_SUIVE_EST_EPI, ES_SUIVE_EST_BROTE, SINAC, PRIN_SINAC, PRIN_SINAC_GRUPO, DESCRIPCION_SINAC_GRUPO, PRIN_SINAC_SUBGRUPO, DESCRIPCION_SINAC_SUBGRUPO, DAGA, ASTERISCO) VALUES (
 :CONSECUTIVO,:LETRA,:CATALOG_KEY,:NOMBRE,:CODIGOX,:LSEX,:LINF,:LSUP,:TRIVIAL,:ERRADICADO,:N_INTER,:NIN,:NINMTOBS,:COD_SIT_LESION,:NO_CBD,:CBD,:NO_APH,:AF_PRIN,:DIA_SIS,:CLAVE_PROGRAMA_SIS,:COD_COMPLEMEN_MORBI,:DEF_FETAL_CM,:DEF_FETAL_CBD,:CLAVE_CAPITULO,:CAPITULO,:LISTA1,:GRUPO1,:LISTA5,:RUBRICA_TYPE,:YEAR_MODIFI,:YEAR_APLICACION,:VALID,:PRINMORTA,:PRINMORBI,:LM_MORBI,:LM_MORTA,:LGBD165,:LOMSBECK,:LGBD190,:NOTDIARIA,:NOTSEMANAL,:SISTEMA_ESPECIAL,:BIRMM,:CVE_CAUSA_TYPE,:CAUSA_TYPE,:EPI_MORTA,:EDAS_E_IRAS_EN_M5,:CSVE_MATERNAS_SEED_EPID,:EPI_MORTA_M5,:EPI_MORBI,:DEF_MATERNAS,:ES_CAUSES,:NUM_CAUSES,:ES_SUIVE_MORTA,:ES_SUIVE_MORB,:EPI_CLAVE,:EPI_CLAVE_DESC,:ES_SUIVE_NOTIN,:ES_SUIVE_EST_EPI,:ES_SUIVE_EST_BROTE,:SINAC,:PRIN_SINAC,:PRIN_SINAC_GRUPO,:DESCRIPCION_SINAC_GRUPO,:PRIN_SINAC_SUBGRUPO,:DESCRIPCION_SINAC_SUBGRUPO,:DAGA,:ASTERISCO);");
 
 
@@ -241,38 +241,39 @@ $sqlQuery->execute(array("CONSECUTIVO"=>$CONSECUTIVO,
 
 }
 
-    $connectDB->commit();
+$sqlQuery->closeCursor();
+
+		$DB_transacc->query(mainModel::$stringQueryEnableForeingDB);
 
 			$alert=[
-				"Alert"=>"simple",
+				"Alert"=>"reload",
 				"Title"=>"Operacion Exitosa",
 				"Text"=>"Catalogo CIE-10 Actualizado",
 				"Type"=>"success"
 			];
 
-				echo json_encode($alert);
-    		exit();
-}catch (Exception $e) {
-    $connectDB->rollback();
-    
 
+    $DB_transacc->commit();
+
+
+}catch (Exception $e) {
 
 			$alert=[
 				"Alert"=>"simple",
-				"Title"=>"Erro en la Base de Datos",
-				"Text"=>"
-				Error: ". $e->getMessage()."
-				",
+				"Title"=>"Ocurrio un error inesperado",
+				"Text"=>"Error en la Actualizacion del Catalogo CIE-10 <br> Error: ". $e->getMessage()."",
 				"Type"=>"success"
 			];
 
-			echo json_encode($alert);
-    		exit();
+    $DB_transacc->rollBack();
 
 }
+
+				echo json_encode($alert);
+
 }
 
-	public static function paginatecie10DataController(/*$parametersQuery*/){
+	public static function paginatecie10DataController(){
 
 mainModel::getTableData('data_cie10', 'consecutivo',
 	array('consecutivo',
@@ -344,33 +345,103 @@ mainModel::getTableData('data_cie10', 'consecutivo',
 'daga', 
 'asterisco'));
 
+	}
 
-/*
-	$idCapitulo = mainModel::cleanStringSQL($parametersQuery['idCapitulo']);
+	// funcion para mostrar datos en el select dinamico y buscador del cie-10
+	public static function getCasesCIE10($dataGetCIE10){
+	$queryGetCasesCie10 = "SELECT catalog_key,nombre FROM data_cie10";
 
- 	if (!mainModel::isDataEmtpy($idCapitulo)) {
+	$idCapituloCIE10 = mainModel::cleanStringSQL($dataGetCIE10['idCapituloCIE10']);
 
- 		$sqlForGetCie10Catalog = $sqlForGetCie10Catalog." WHERE CLAVE_CAPITULO = '$idCapitulo'";
-}
+	if(isset($dataGetCIE10['searchByChapter'])) {
 
- 	$queryForGetCie10Catalog = mainModel::connectDB()->query($sqlForGetCie10Catalog);
+		// todos los captulos
+		if ($idCapituloCIE10 != '00') {
 
-			$dataJsonRocords = array();
+			$queryGetCasesCie10 = $queryGetCasesCie10." WHERE clave_capitulo = '$idCapituloCIE10'";
+		}
 
-			while($rows = $queryForGetCie10Catalog->fetch(PDO::FETCH_ASSOC)) {
+		$queryGetCasesCie10 = mainModel::connectDB()->prepare($queryGetCasesCie10);
+		
+		 $queryGetCasesCie10->execute();
 
-					$dataJsonRocords[] = $rows;
-			}
+		$dataJsonCasesCIE10=[];
 
+		 if (!$queryGetCasesCie10->rowCount()) {
+			$dataJsonCasesCIE10[] = array('nombre' =>'Casos epidemologicos no encontrados','catalog_key'=>'');
 
-//			echo json_encode($dataJsonRocords, JSON_UNESCAPED_UNICODE);
+		echo json_encode($dataJsonCasesCIE10);
+		exit();
 
-			echo json_encode($dataJsonRocords);
-*/
+		 }
 
+		while($recordsCasesCie10=$queryGetCasesCie10->fetch(PDO
+			::FETCH_ASSOC)){ 
+
+			$dataJsonCasesCIE10[] = $recordsCasesCie10;
+		}
+				
+		echo json_encode($dataJsonCasesCIE10);
+		exit();
 	}
 
 
+	if(isset($dataGetCIE10['valueSearch'])) {
 
+	$columnsSearch = array('catalog_key','nombre');
+
+		// buscar patron en las columnas
+
+        $where = "WHERE (";
+        for ( $i=0 ; $i<count($columnsSearch) ; $i++ )
+        {
+                $where .= 'UNACCENT('.$columnsSearch[$i]."::text) ILIKE '%".mainModel::cleanStringSQL($dataGetCIE10['valueSearch'])."%' OR ";
+        }
+        $where = substr_replace( $where, "", -3 );
+        $where .= ")";
+	
+		// si ha selecionado un capitulo
+	 	if (!mainModel::isDataEmtpy($idCapituloCIE10)) {
+                $where .= " AND ";
+
+				$where.=" clave_capitulo = '$idCapituloCIE10' ";    	
+		}
+
+	// armar query
+
+
+	$querySearchPatternCIE10 = "
+        SELECT ".str_replace(" , ", " ", implode(", ",$columnsSearch))."
+        FROM   data_cie10
+        $where";
+
+		$querySearchPatternCIE10 = mainModel::connectDB()->prepare($querySearchPatternCIE10);
+		
+		 $querySearchPatternCIE10->execute();
+	
+			$dataJsonCasesCIE10=[];
+			
+			// verficar resultado query
+		 if (!$querySearchPatternCIE10->rowCount()) {
+
+			$dataJsonCasesCIE10[] = array('nombre' =>'Casos epidemologicos no encontrados','catalog_key'=>'');
+
+		echo json_encode($dataJsonCasesCIE10);
+		exit();
+
+		 }
+
+		 // recoger data de la query
+		 
+		while($recordsCasesCie10=$querySearchPatternCIE10->fetch(PDO::FETCH_ASSOC)){ 
+
+			$dataJsonCasesCIE10[] = $recordsCasesCie10;
+		}
+				
+		echo json_encode($dataJsonCasesCIE10);
+		exit();
+	}
+
+	}
 }
  ?>

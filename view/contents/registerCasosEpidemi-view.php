@@ -15,66 +15,77 @@
    <form class="formAjax form-group text-center user" action="<?php echo SERVERURL; ?>ajax/casosEpidemiAjax.php" method="POST" data-form="register" autocomplete="off">
             
 
-       <span alt="¿La persona ya ha sido registrada como paciente o usuario?">¿Persona ya registrada?<input type="checkbox" name="siExistPerson" id="siExistPerson" class="form-control form-control-user" value="1">  
+    <input type="hidden" name="urlAjax" id="urlAjax"  class='form-control' value='<?php echo SERVERURL; ?>ajax/cie10DataAjax.php'>
+
+
+       <span alt="¿La person ya ha sido registrada como paciente o usuario?">¿person ya registrada?<input type="checkbox" name="siExistPerson" id="siExistPerson" class="form-control form-control-user" value="1">  
         </span>
 
 
 
 	<!-- Solo valido para el form de actualizar // solo test -->	
   	<br>
-          <select name='idCapitulo' id='' class="form-control" autocomplete='on' class="form-control" >
+          <select name='idCapituloCIE10' id='idCapituloCIE10' class="form-control" autocomplete='on' class="form-control" >
 
-            <option value="">Capitulos</option>
+            <option value="">Seleccionar Capitulos CIE-10</option>
 
             <option  value='01'>I CIERTAS ENFERMEDADES INFECCIOSAS Y PARASITARIAS</option>
 
-            <option  value='02'>III ENFERMEDADES DE LA SANGRE Y DE LOS ORGANOS HEMATOPOYETICOS, Y CIERTOS TRASTORNOS QUE AFECTAN EL MECANISMO DE LA INMUNIDAD</option>
+            <option  value='02'>II TUMORES (NEOPLASIAS)</option>
 
-            <option  value='03'>IV   ENFERMEDADES ENDOCRINAS, NUTRICIONALES Y METABOLICAS</option>
+            <option  value='03'>III ENFERMEDADES DE LA SANGRE Y DE LOS ORGANOS HEMATOPOYETICOS, Y CIERTOS TRASTORNOS QUE AFECTAN EL MECANISMO DE LA INMUNIDAD</option>
 
-            <option  value='04'>V TRASTORNOS MENTALES Y DEL COMPORTAMIENTO</option>
+            <option  value='04'>IV ENFERMEDADES ENDOCRINAS, NUTRICIONALES Y METABOLICAS</option>
 
-            <option  value='05'>VI ENFERMEDADES DEL SISTEMA NERVIOSO</option>
+            <option  value='05'>V TRASTORNOS MENTALES Y DEL COMPORTAMIENTO</option>
 
-            <option  value='06'>VII ENFERMEDADES DEL OJO Y SUS ANEXOS</option>
+            <option  value='06'>VI ENFERMEDADES DEL SISTEMA NERVIOSO</option>
 
-            <option  value='07'>VIII ENFERMEDADES DE OIDO Y DE LA APOFISIS MASTOIDES</option>
+            <option  value='07'>VII ENFERMEDADES DEL OJO Y SUS ANEXOS</option>
 
-            <option  value='08'>IX ENFERMEDADES DEL SISTEMA CIRCULATORIO</option>
+            <option  value='08'>VIII ENFERMEDADES DE OIDO Y DE LA APOFISIS MASTOIDES</option>
 
-            <option  value='09'>X  ENFERMEDADES DEL SISTEMA RESPIRATORIO</option>
+            <option  value='09'>IX ENFERMEDADES DEL SISTEMA CIRCULATORIO</option>
 
-            <option  value='10'>XI ENFERMEDADES DEL SISTEMA DIGESTIVO</option>
+            <option  value='10'>X  ENFERMEDADES DEL SISTEMA RESPIRATORIO</option>
 
-            <option  value='11'>XII ENFERMEDADES DE LA PIEL Y DEL TEJIDO SUBCUTANEO</option>
+            <option  value='11'>XI ENFERMEDADES DEL SISTEMA DIGESTIVO</option>
 
-            <option  value='12'>XIII ENFERMEDADES DEL SISTEMA OSTEOMUSCULAR Y DEL TEJIDO CONJUNTIVO</option>
+            <option  value='12'>XII ENFERMEDADES DE LA PIEL Y DEL TEJIDO SUBCUTANEO</option>
 
-            <option  value='13'>XIV ENFERMEDADES DEL SISTEMA GENITOURINARIO</option>
+            <option  value='13'>XIII ENFERMEDADES DEL SISTEMA OSTEOMUSCULAR Y DEL TEJIDO CONJUNTIVO</option>
 
-            <option  value='14'>XV EMBARAZO, PARTO Y PUERPERIO</option>
+            <option  value='14'>XIV ENFERMEDADES DEL SISTEMA GENITOURINARIO</option>
 
-            <option  value='15'>XVI CIERTAS AFECCIONES ORIGINADAS EN EL PERIODO PERINATAL</option>
+            <option  value='15'>XV EMBARAZO, PARTO Y PUERPERIO</option>
 
-            <option  value='16'>XVII MALFORMACIONES CONGENITAS, DEFORMIDADES Y ANOMALIAS CROMOSOMICAS</option>
+            <option  value='16'>XVI CIERTAS AFECCIONES ORIGINADAS EN EL PERIODO PERINATAL</option>
 
-            <option  value='17'>XVIII SINTOMAS, SIGNOS Y HALLAZGOS ANORMALES CLINICOS Y DE LABORATORIO, NO CLASIFICADOS EN OTRA PARTE</option>
+            <option  value='17'>XVII MALFORMACIONES CONGENITAS, DEFORMIDADES Y ANOMALIAS CROMOSOMICAS</option>
 
-            <option  value='18'>XIX TRAUMATISMOS, ENVENENAMIENTOS Y ALGUNAS OTRAS CONSECUENCIAS DE CAUSAS EXTERNAS</option>
+            <option  value='18'>XVIII SINTOMAS, SIGNOS Y HALLAZGOS ANORMALES CLINICOS Y DE LABORATORIO, NO CLASIFICADOS EN OTRA PARTE</option>
 
-            <option  value='19'>XXII CAUSAS PARA PROPOSITOS ESPECIALES</option>
+            <option  value='19'>XIX TRAUMATISMOS, ENVENENAMIENTOS Y ALGUNAS OTRAS CONSECUENCIAS DE CAUSAS EXTERNAS</option>
 
-            <option  value='20'>XXI FACTORES QUE INFLUYEN EN EL ESTADO DE SALUD Y CONTACTO CON LOS SERVICIOS DE SALUD</option>
+            <option  value='22'>XXII CAUSAS PARA PROPOSITOS ESPECIALES</option>
 
-            <option  value='21'>XX CAUSAS EXTERNAS DE MORBILIDAD Y MORTALIDAD</option>
+            <option  value='20'>XX CAUSAS EXTERNAS DE MORBILIDAD Y MORTALIDAD</option>
+
+            <option  value='21'>XXI FACTORES QUE INFLUYEN EN EL ESTADO DE SALUD Y CONTACTO CON LOS SERVICIOS DE SALUD</option>
+
+            <option  value='N/A'>N/A</option>
+
+            <option  value='NO'>NO</option>
+
+            <!--<option  value='00'>Todos</option>-->
 
         </select>
 
-    <input type="text" name="searchName" id="searchName" class="form-control" placeholder="Buscar Nombre">
+    <input type="text" name="searchCIE10" id="searchCIE10" class="form-control" placeholder="Buscar Nombre del Caso CIE-10">
+  
+    <select name='catalogKeyCIE10' id='catalogKeyCIE10' class="form-control" autocomplete='on' class="form-control" >
 
-          <select name='CATALOG_KEY' id='' class="form-control" autocomplete='on' class="form-control" >
-
-            <option value="">Selecionar Nombre</option>
+            <option value="">Selecionar Capitulo  o CIE-10 Buscar Nombre </option>
 
         </select>
 
@@ -143,8 +154,7 @@ Fecha de Nacimiento
 <br>
     <textarea rows="3" cols="40" name="direccion" id="" class="form-control" placeholder="Direccion"></textarea>
 <br>
-  	<input type="text" name="catalogKeyCIE10" id="" class="form-control" placeholder="Codigo: CIE-10" value="A000">
-<br>
+
      <button class="btn btn-primary btn-user btn-block" type="submit" value="registerCasoEpidemi" name="registerCasoEpidemi">Registrar</button>
 
      <div class="responseProcessAjax"></div>
@@ -157,11 +167,15 @@ Fecha de Nacimiento
       </div>
 
 
+  <script src="<?php echo SERVERURL; ?>view/js/scriptsRequestDataFromBakend.js"></script>
+
       <script type="text/javascript">
 
           $( document ).ready(function() {
 
-      // la fecha recomendad de registro de casos, es del dia de ayer, pero e ocaciones puede ser cambiada  
+      // Establecer fecha de registro en input
+      
+      // la fecha recomendada de registro de casos, es del dia de ayer, pero e ocaciones puede ser cambiada  
       var todayDate = new Date;
 
 
@@ -176,7 +190,45 @@ Fecha de Nacimiento
 
   });
 
+  // Al seleccionar un capitulo CIE10 se mostraran los casos CIE10 correspondientes en el select dinamico
 
 
-      </script>
+      $('#idCapituloCIE10').on('change',function(){
+
+          var urlAjax = $('#urlAjax').val();
+
+          var idCapituloCIE10 = $(this).val();
+
+          if(idCapituloCIE10 != ''){
+          getCasesCIE10ByidCapitulo(idCapituloCIE10,urlAjax);
+          }
+      });
+
+  
+  // Al escribir en el input buscador se mostraran los casos CIE10 correspondientes en el select dinamico
+   
+  $(document).on('keyup', '#searchCIE10', function()
+{
+
+  var urlAjax = $('#urlAjax').val();
+
+  var idCapituloCIE10 = $('#idCapituloCIE10').val();
+
+
+  var valueSearch=$(this).val();
+
+    if (valueSearch!="")
+    {
+      getCasesCIE10BySearchPattern(valueSearch,idCapituloCIE10,urlAjax)
+    }
+    else
+    {
+      // si esta vacio llenamos con el cap seleccionado
+      getCasesCIE10ByidCapitulo();
+    }
+
+
+});
+
+</script>
 

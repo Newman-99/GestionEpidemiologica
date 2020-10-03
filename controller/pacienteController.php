@@ -3,15 +3,15 @@
 $requestAjax = TRUE;
 
 	if($requestAjax){
-		require_once "../controller/personaController.php";
+		require_once "../controller/personController.php";
 	}else{
-		require_once "./controller/personaController.php";
+		require_once "./controller/personController.php";
 	}
 
-	class pacienteController extends personaController{
+	class pacienteController extends personController{
 
 		public function addPacienteController($dataPaciente){
-			return personaController::addPersonaController($dataPaciente);
+			return personController::addPersonControllerr($dataPaciente);
 		}
 	}
 

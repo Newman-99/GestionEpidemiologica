@@ -34,7 +34,7 @@
               if (!isset($paginateURl[1])){
                   $paginateURl[1] = "";
               }
-              echo $userController->paginateUserController($paginateURl[1],$_SESSION['id_nivel_permiso'],$_SESSION['aliasUser']);
+              echo $userController->paginateUserController($_SESSION['aliasUser']);
 
               ?>
     

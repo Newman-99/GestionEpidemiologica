@@ -1,37 +1,37 @@
-<?php 	$requestAjax = TRUE;
+<?php
 
 	if($requestAjax){
-		require_once "../model/personaModel.php";
+		require_once "../model/personModel.php";
 	}else{
-		require_once "./model/personaModel.php";
+		require_once "./model/personModel.php";
 	}
 
-	class personaController extends personaModel{
+	class personController extends personModel{
 
 	// Funciones para manejar datos (CRUD)
-		public function addPersonaController($dataPersona){
+		public function addPersonControllerr($dataPerson){
 		 
-		$doc_identidad = mainModel::cleanStringSQL($dataPersona['doc_identidad']);
+		$doc_identidad = mainModel::cleanStringSQL($dataPerson['doc_identidad']);
 		
 		 $doc_identidad = self::ClearUserSeparatedCharacters($doc_identidad);
 
-		 $nombres = mainModel::cleanStringSQL($dataPersona['nombres']);
+		 $nombres = mainModel::cleanStringSQL($dataPerson['nombres']);
 		 
-		 $apellidos = mainModel::cleanStringSQL($dataPersona['apellidos']);
+		 $apellidos = mainModel::cleanStringSQL($dataPerson['apellidos']);
 
 		$nombres=self::filtterNombresApellidos($nombres);
 
 		$apellidos=self::filtterNombresApellidos($apellidos);
 
-		 $fecha_nacimiento = mainModel::cleanStringSQL($dataPersona['fecha_nacimiento']);		 	
+		 $fecha_nacimiento = mainModel::cleanStringSQL($dataPerson['fecha_nacimiento']);		 	
 		 
-		 $id_nacionalidad = mainModel::cleanStringSQL($dataPersona['id_nacionalidad']);
+		 $id_nacionalidad = mainModel::cleanStringSQL($dataPerson['id_nacionalidad']);
 		 
-		 $id_genero = mainModel::cleanStringSQL($dataPersona['id_genero']);
+		 $id_genero = mainModel::cleanStringSQL($dataPerson['id_genero']);
 
-		 $id_genero = mainModel::cleanStringSQL($dataPersona['id_genero']);
+		 $id_genero = mainModel::cleanStringSQL($dataPerson['id_genero']);
 
-		 $telefono = mainModel::cleanStringSQL($dataPersona['telefonoPart1'].$dataPersona['telefonoPart2'].$dataPersona['telefonoPart3']);
+		 $telefono = mainModel::cleanStringSQL($dataPerson['telefonoPart1'].$dataPerson['telefonoPart2'].$dataPerson['telefonoPart3']);
 
 		 $telefono = self::ClearUserSeparatedCharacters($telefono);
 
@@ -46,7 +46,7 @@
 			$alert=[
 				"Alert"=>"simple",
 				"Title"=>"Campos Vacios",
-				"Text"=>"Todos los datos personales son obligatorios",
+				"Text"=>"Todos los datos personles son obligatorios",
 				"Type"=>"error"
 			];
 
@@ -64,7 +64,7 @@
 			$alert=[
 				"Alert"=>"simple",
 				"Title"=>"Datos Invalidos",
-				"Text"=>"Ya se encuentra una persona con este documento de identidad",
+				"Text"=>"Ya se encuentra una person con este documento de identidad",
 				"Type"=>"error"
 			];
 
@@ -175,40 +175,40 @@
 
 
 
-		 $dataPersona = array();
+		 $dataPerson = array();
 
-		 $dataPersona['doc_identidad'] = $doc_identidad;
+		 $dataPerson['doc_identidad'] = $doc_identidad;
 		 
-		 $dataPersona['nombres'] = $nombres;
+		 $dataPerson['nombres'] = $nombres;
 		 
-		 $dataPersona['apellidos'] = $apellidos;
+		 $dataPerson['apellidos'] = $apellidos;
 		 
-		 $dataPersona['fecha_nacimiento'] = $fecha_nacimiento;
+		 $dataPerson['fecha_nacimiento'] = $fecha_nacimiento;
 
-		 $dataPersona['id_nacionalidad'] = $id_nacionalidad;
+		 $dataPerson['id_nacionalidad'] = $id_nacionalidad;
 		 
-		 $dataPersona['id_genero'] = $id_genero;
+		 $dataPerson['id_genero'] = $id_genero;
 		
-		 personaModel::addPersonaModel($dataPersona);
-
+		return $dataPerson;
+		
 				 	}				
 
 
-		public static function updatePersonaController($dataPersona){
+		public static function updatePersonaController($dataPerson){
 
-		 $doc_identidad = mainModel::cleanStringSQL($dataPersona['doc_identidad']);
+		 $doc_identidad = mainModel::cleanStringSQL($dataPerson['doc_identidad']);
 		 
-		 $nombres = mainModel::cleanStringSQL($dataPersona['nombres']);
+		 $nombres = mainModel::cleanStringSQL($dataPerson['nombres']);
 		 
-		 $apellidos = mainModel::cleanStringSQL($dataPersona['apellidos']);
+		 $apellidos = mainModel::cleanStringSQL($dataPerson['apellidos']);
 		 
-		 $fecha_nacimiento = mainModel::cleanStringSQL($dataPersona['fecha_nacimiento']);
+		 $fecha_nacimiento = mainModel::cleanStringSQL($dataPerson['fecha_nacimiento']);
 		 
-		 $id_nacionalidad = mainModel::cleanStringSQL($dataPersona['id_nacionalidad']);
+		 $id_nacionalidad = mainModel::cleanStringSQL($dataPerson['id_nacionalidad']);
 		 
-		 $id_genero = mainModel::cleanStringSQL($dataPersona['id_genero']);
+		 $id_genero = mainModel::cleanStringSQL($dataPerson['id_genero']);
 		
-		 $telefono = $dataPersona['telefonoPart1'].$dataPersona['telefonoPart2'].$dataPersona['telefonoPart3'];
+		 $telefono = $dataPerson['telefonoPart1'].$dataPerson['telefonoPart2'].$dataPerson['telefonoPart3'];
 
 		 $telefono = mainModel::cleanStringSQL($telefono);
 
@@ -233,6 +233,19 @@
 
 			}
 
+	 		// Campos del usuario como person a comparar con la BD
+	 		$personDataTocomparedWithDatabase = [
+			 "fecha_nacimiento"=>$fecha_nacimiento,
+			 "nombres"=>$nombres,
+			 "apellidos"=>$apellidos,
+			 "id_genero"=>$id_genero 			
+	 		];
+
+
+	 	$queryToGetPerson = self::getpersonController(array("doc_identidad"=>$doc_identidad,"id_nacionalidad"=>$id_nacionalidad));
+
+		$ifPersonDataUpdateIsSameDatabase = mainModel::isFieldsEqualToThoseInTheDatabase($queryToGetPerson,$personDataTocomparedWithDatabase);
+ 
 
 
 			$isExistPerson = mainModel::connectDB()->query("SELECT doc_identidad FROM personas WHERE doc_identidad =
@@ -244,7 +257,7 @@
 			$alert=[
 				"Alert"=>"simple",
 				"Title"=>"Datos Invalidos",
-				"Text"=>"Ya se encuentra una persona con este documento de identidad",
+				"Text"=>"Ya se encuentra una person con este documento de identidad",
 				"Type"=>"error"
 			];
 
@@ -340,32 +353,35 @@
 
 
 
-		 $dataPersona = array();
+		 $dataPerson = array();
 
-		 $dataPersona['doc_identidad'] = $doc_identidad;
+		 $dataPerson['doc_identidad'] = $doc_identidad;
 		 
-		 $dataPersona['nombres'] = $nombres;
+		 $dataPerson['nombres'] = $nombres;
 		 
-		 $dataPersona['apellidos'] = $apellidos;
+		 $dataPerson['apellidos'] = $apellidos;
 		 
-		 $dataPersona['fecha_nacimiento'] = $fecha_nacimiento;
+		 $dataPerson['fecha_nacimiento'] = $fecha_nacimiento;
 		 
-		 $dataPersona['id_nacionalidad'] = $id_nacionalidad;
+		 $dataPerson['id_nacionalidad'] = $id_nacionalidad;
 		 
-		 $dataPersona['id_genero'] = $id_genero;
-		 
-		return personaModel::updatePersonaModel($dataPersona);
-
+		 $dataPerson['id_genero'] = $id_genero;
 				 	
+
+			// si la datos nuevos son los mismos a los de la BD, obviaremos la consulta en model
+
+		 $dataPerson['ifPersonDataUpdateIsSameDatabase'] = $ifPersonDataUpdateIsSameDatabase;
+
+		 return $dataPerson;
 
 				 }
 
 
-		public function deletePersonaController($dataPersona){
+		public function deletePersonController($dataPerson){
 			
-		 $doc_identidad = mainModel::cleanStringSQL($dataPersona['doc_identidad']);
+		 $doc_identidad = mainModel::cleanStringSQL($dataPerson['doc_identidad']);
 		 
-		 $id_nacionalidad = mainModel::cleanStringSQL($dataPersona['id_nacionalidad']);
+		 $id_nacionalidad = mainModel::cleanStringSQL($dataPerson['id_nacionalidad']);
 
 		 	if (mainModel::isDataEmtpy($doc_identidad,$id_nacionalidad)) {
 				$alert=[
@@ -380,19 +396,19 @@
 
 				 	}
 
-			$primaryKeyPersona = [
+			$primaryKeyperson = [
 
 				"id_nacionalidad"=>$id_nacionalidad,
 				"doc_identidad"=>$doc_identidad
 			];
 
-			$queryIsExistPersona = mainModel::connectDB()->query("select doc_identidad from personas where id_nacionalidad = '$id_nacionalidad' and doc_identidad = '$doc_identidad'");
+			$queryIsExistperson = mainModel::connectDB()->query("select doc_identidad from personas where id_nacionalidad = '$id_nacionalidad' and doc_identidad = '$doc_identidad'");
 			
-			if(!$queryIsExistPersona->rowCount()){
+			if(!$queryIsExistperson->rowCount()){
 			$alert=[
 				"Alert"=>"simple",
 				"Title"=>"Datos no encontrados",
-				"Text"=>"No se encuentra una persona con esta cedula registrada ",
+				"Text"=>"No se encuentra una person con esta cedula registrada ",
 				"Type"=>"error"
 			];
 
@@ -400,26 +416,23 @@
 
 				exit();
 			}
-
-			 return personaModel::deletePersonaModel($primaryKeyPersona);
-
 							 
 
 				 }
 
 
 
-		public static function getPersonaController($dataPersona){
+		public static function getpersonController($dataPerson){
 
-		$personAttributesFilter = [];
+		$personttributesFilter = [];
 
  		$filterValues = [];
 
-		if (isset($dataPersona["id_nacionalidad"]) && !mainModel::isDataEmtpy($dataPersona["id_nacionalidad"])) {
+		if (isset($dataPerson["id_nacionalidad"]) && !mainModel::isDataEmtpy($dataPerson["id_nacionalidad"])) {
 
-		 $id_nacionalidad = mainModel::cleanStringSQL($dataPersona['id_nacionalidad']);
+		 $id_nacionalidad = mainModel::cleanStringSQL($dataPerson['id_nacionalidad']);
 
-		 array_push($personAttributesFilter, 'id_nacionalidad = :id_nacionalidad');
+		 array_push($personttributesFilter, 'id_nacionalidad = :id_nacionalidad');
 		$filterValues[':id_nacionalidad'] = [
 		'value' => $id_nacionalidad,
 		'type' => \PDO::PARAM_STR,
@@ -427,11 +440,11 @@
 
 		}
 	
-	if (isset($dataPersona["doc_identidad"]) && !mainModel::isDataEmtpy($dataPersona["doc_identidad"])) {
+	if (isset($dataPerson["doc_identidad"]) && !mainModel::isDataEmtpy($dataPerson["doc_identidad"])) {
 
-		 $doc_identidad = mainModel::cleanStringSQL($dataPersona['doc_identidad']);
+		 $doc_identidad = mainModel::cleanStringSQL($dataPerson['doc_identidad']);
 		
-		array_push($personAttributesFilter, 'doc_identidad = :doc_identidad');
+		array_push($personttributesFilter, 'doc_identidad = :doc_identidad');
 		$filterValues[':doc_identidad'] = [
 		'value' => $doc_identidad,
 		'type' => \PDO::PARAM_STR,
@@ -439,11 +452,11 @@
 
 	}		
 
-		if (isset($dataPersona["nombres"]) && !mainModel::isDataEmtpy($dataPersona["nombres"])) {
+		if (isset($dataPerson["nombres"]) && !mainModel::isDataEmtpy($dataPerson["nombres"])) {
 
-		 $nombres = mainModel::cleanStringSQL($dataPersona['nombres']);
+		 $nombres = mainModel::cleanStringSQL($dataPerson['nombres']);
 
-		array_push($personAttributesFilter, 'nombres = :nombres');
+		array_push($personttributesFilter, 'nombres = :nombres');
 		$filterValues[':nombres'] = [
 		'value' => $nombres,
 		'type' => \PDO::PARAM_STR,
@@ -451,11 +464,11 @@
 
 		}
 		 
-		if (isset($dataPersona["apellidos"]) && !mainModel::isDataEmtpy($dataPersona["apellidos"])) {
+		if (isset($dataPerson["apellidos"]) && !mainModel::isDataEmtpy($dataPerson["apellidos"])) {
 
-		 $apellidos = mainModel::cleanStringSQL($dataPersona['apellidos']);
+		 $apellidos = mainModel::cleanStringSQL($dataPerson['apellidos']);
 			
-		array_push($personAttributesFilter, 'apellidos = :apellidos');
+		array_push($personttributesFilter, 'apellidos = :apellidos');
 		$filterValues[':apellidos'] = [
 		'value' => $apellidos,
 		'type' => \PDO::PARAM_STR,
@@ -464,23 +477,23 @@
 		}
 
 
-		if (isset($dataPersona["fecha_nacimiento"]) && !mainModel::isDataEmtpy($dataPersona["fecha_nacimiento"])) {
+		if (isset($dataPerson["fecha_nacimiento"]) && !mainModel::isDataEmtpy($dataPerson["fecha_nacimiento"])) {
 
-		array_push($personAttributesFilter, 'fecha_nacimiento = :fecha_nacimiento');
+		array_push($personttributesFilter, 'fecha_nacimiento = :fecha_nacimiento');
 		$filterValues[':fecha_nacimiento'] = [
 		'value' => $fecha_nacimiento,
 		'type' => \PDO::PARAM_STR,
 		];
 
-		 $fecha_nacimiento = mainModel::cleanStringSQL($dataPersona['fecha_nacimiento']);
+		 $fecha_nacimiento = mainModel::cleanStringSQL($dataPerson['fecha_nacimiento']);
 		 
 		 }
 
-		if (isset($dataPersona["id_genero"]) && !mainModel::isDataEmtpy($dataPersona["id_genero"])) {
+		if (isset($dataPerson["id_genero"]) && !mainModel::isDataEmtpy($dataPerson["id_genero"])) {
 		 
-		 $id_genero = mainModel::cleanStringSQL($dataPersona['id_genero']);
+		 $id_genero = mainModel::cleanStringSQL($dataPerson['id_genero']);
 
-		array_push($personAttributesFilter, 'id_genero = :id_genero');
+		array_push($personttributesFilter, 'id_genero = :id_genero');
 		$filterValues[':id_genero'] = [
 		'value' => $id_genero,
 		'type' => \PDO::PARAM_STR,
@@ -488,7 +501,7 @@
 	}
 
 
-			return personaModel::getPersonaModel($personAttributesFilter,$filterValues);
+			return personModel::getPersonModel($personttributesFilter,$filterValues);
 
 		}
 

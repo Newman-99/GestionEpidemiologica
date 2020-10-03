@@ -102,6 +102,7 @@ var msgBackendProcessAjaxData = $("#msgBackendProcessAjaxData");
 		xhr: function(){
         	var xhr = new window.XMLHttpRequest();
                 xhr.upload.addEventListener("progress", function(evt) {
+                	
                    if (evt.lengthComputable) {
                      var percentComplete = evt.loaded / evt.total;
                      percentComplete = parseInt(percentComplete * 100);
@@ -110,21 +111,21 @@ var msgBackendProcessAjaxData = $("#msgBackendProcessAjaxData");
                       	}else{
                       		showResponseProcess.html('<p class="text-center"></p>');
 
-    //mensaje cuando el bakend este procesando datos de ajax
+						    //mensaje cuando el bakend este procesando datos de ajax
 
-//    msgBackendProcessAjaxData.show();
+						//    msgBackendProcessAjaxData.show();
 
- msgBackendProcessAjaxData.html("</p>Procesando...<p>");
+						 msgBackendProcessAjaxData.html("</p>Procesando...<p>");
 
-  $(document).ajaxStop(function() {
+						  $(document).ajaxStop(function() {
 
- msgBackendProcessAjaxData.html("");
+						 msgBackendProcessAjaxData.html("");
 
-	$("#btnInsertCancelAjax").html("");
+							$("#btnInsertCancelAjax").html("");
 
-   // msgBackendProcessAjaxData.hide();
-  });
-                      	}
+						   // msgBackendProcessAjaxData.hide();
+						  });
+						                      	}
                       }
                     }, false);
                     return xhr;

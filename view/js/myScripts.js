@@ -1,4 +1,4 @@
-//Funcionalidades cortas personalizadas para el sistema
+//Funcionalidades cortas personlizadas para el sistema
 
 // My scripts
 
@@ -23,7 +23,7 @@ function isBlank(str) {
 
 // Control de funcionalidades de formularios
 
-// si el checkbox de la persona ya existe se active, inabilita los campos innecesarios
+// si el checkbox de la person ya existe se active, inabilita los campos innecesarios
 
     $( document ).ready(function() {
 

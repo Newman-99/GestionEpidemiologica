@@ -1,11 +1,11 @@
 <?php 
-
+	
 	require_once "../config/app.php";
 
 		$requestAjax =  TRUE;
 
 	require_once "../controller/userController.php";
-	
+		
 			$userController = new userController();
 
 	if ($_POST['operationType'] === "save") {

@@ -11,18 +11,22 @@
 		// para simular la herencia mediante colbaoracion de objetos
 	function __construct()
 	{
-			require_once "../controller/personaController.php";
+			require_once "../controller/personController.php";
 	}
 
 
 
 		public function addCasoEpidemiologicoController($dataCasoEpidemi){
 
-		 $doc_identidad = mainModel::cleanStringSQL($dataCasoEpidemi['doc_identidad']);
-		 $catalogKeyCIE10 = mainModel::cleanStringSQL($dataCasoEpidemi['catalogKeyCIE10']);
-		 $id_parroquia = mainModel::cleanStringSQL($dataCasoEpidemi['id_parroquia']);
-		 $direccion = mainModel::cleanStringSQL($dataCasoEpidemi['direccion']);
-		 $telefono = mainModel::cleanStringSQL($dataCasoEpidemi['telefono']);
+		$doc_identidad = mainModel::cleanStringSQL($dataCasoEpidemi['doc_identidad']);
+		$catalogKeyCIE10 = mainModel::cleanStringSQL($dataCasoEpidemi['catalogKeyCIE10']);
+		$id_parroquia = mainModel::cleanStringSQL($dataCasoEpidemi['id_parroquia']);
+		 
+		$direccion = mainModel::cleanStringSQL($dataCasoEpidemi['direccion']);
+
+	 	$telefono = $dataUser['telefonoPart1'].$dataUser['telefonoPart2'].$dataUser['telefonoPart3'];
+
+		 $telefono = mainModel::cleanStringSQL($telefono);
 
 		 $dateRegisterCasoEpidemi = mainModel::cleanStringSQL($dataCasoEpidemi['dateRegisterCasoEpidemi']);
 
@@ -47,29 +51,29 @@
 
 		}
 
-		// Registrar como persona
+		// Registrar como person
 
-		// Comprobar si existe o no la persona en la BD
+		// Comprobar si existe o no la person en la BD
 
-		$primaryKeyPersona = [
+		$primaryKeyperson = [
 
 			"id_nacionalidad"=>$id_nacionalidad,
 			"doc_identidad"=>$doc_identidad
 		];
 
-			$personaController = new personaController();
+			$personController = new personController();
 
-			$SQL_isExistPersona = $personaController->getPersonaController($primaryKeyPersona);
-			$SQL_isExistPersona->execute();
+			$QueryIsExistperson = $personController->getpersonController($primaryKeyperson);
+			$QueryIsExistperson->execute();
 
 
 			if(isset($dataUser['siExistPerson']) && $dataUser['siExistPerson'] == "1" ){
 
-			if(!$SQL_isExistPersona->rowCount()){
+			if(!$QueryIsExistperson->rowCount()){
 			$alert=[
 				"Alert"=>"simple",
 				"Title"=>"Datos no encontrados",
-				"Text"=>"No se encuentra una persona con esta cedula registrada ",
+				"Text"=>"No se encuentra una person con esta cedula registrada ",
 				"Type"=>"error"
 			];
 
@@ -79,12 +83,12 @@
 			}
 
 			}else{
-				// Si no existe y es una persona nueva comprabar que no este repetido en la BD
-			if($SQL_isExistPersona->rowCount()){
+				// Si no existe y es una person nueva comprabar que no este repetido en la BD
+			if($QueryIsExistperson->rowCount()){
 			$alert=[
 				"Alert"=>"simple",
 				"Title"=>"Datos Duplicados",
-				"Text"=>"Ya se encuentra una persona con esta cedula registrada ",
+				"Text"=>"Ya se encuentra una person con esta cedula registrada ",
 				"Type"=>"error"
 			];
 
@@ -96,13 +100,16 @@
 		}
 
 
-		 $dataCasoEpidemi = array();
+		$dataCasoEpidemi = 
+		["doc_identidad"=>$doc_identidad,
+		"catalogKeyCIE10"=>$catalogKeyCIE10,
+		"direccion"=>$direccion,
+		"telefono"=>$telefono,
+		"fecha"=>$id_pregunta,
+		"id_pregunta"=>$dateRegisterCasoEpidemi];
 
-		 $dataCasoEpidemi['doc_identidad'] = $doc_identidad;
-		 $dataCasoEpidemi['catalogKeyCIE10'] = $catalogKeyCIE10;
-		 $dataCasoEpidemi['id_parroquia'] = $id_parroquia;
-		 $dataCasoEpidemi['direccion'] = $direccion;
 		 $dataCasoEpidemi['telefono'] = $telefono;
+		 
 		 $dataCasoEpidemi['fecha'] = $dateRegisterCasoEpidemi;
 
 			echo "<h1>REGISTRADO</h1>";

@@ -29,19 +29,26 @@
 
 	$requestedView= $viewsController->getViewsController();	
 
-//var_dump("/view/contents/".$requestedView."-view.php");
-
 	if($requestedView == "registerUser" || $requestedView == "login" || $requestedView == "404" || $requestedView == "forgotPassword" || $requestedView == "restartUser"){
-      require_once "./view/contents/".$requestedView."-view.php";
 
+		// si ya esta la session activa, no entra a registerUser, login, forgotPassword,restartUser
+		
+      if(isset($_SESSION['token_dptoEpidemi']) &&isset($_SESSION['aliasUser']) && $requestedView != "404"){
+		header('Location: '.SERVERURL.'dashboard/');
+		exit();      	
+		}else{
+
+		}
+
+      require_once "./view/contents/".$requestedView."-view.php";
 
 		}else{
 
-      if(!isset($_SESSION['token_dptoEpidemi']) || !isset($_SESSION['aliasUser'])){
-        echo $loginController->forceClosureController();
+      if(!isset($_SESSION['token_dptoEpidemi']) && !isset($_SESSION['aliasUser'])){
+		echo $loginController->forceClosureController();
         exit();
-
       }
+
 	?>
 	
 <body id="page-top">

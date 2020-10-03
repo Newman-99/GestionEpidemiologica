@@ -15,8 +15,8 @@ if (isset($_POST['operationType']) && $_POST['operationType'] == "register"){
 }elseif ($_POST['operationType'] === "delete") {
 	 	$casoEpidemiologicoController->deleteCasoEpidemiologicoController($_POST);
 	
-		//$personaController = new personaController();
-	 	//$personaController->getPersonaController($_POST);
+		//$personController = new personController();
+	 	//$personController->getpersonController($_POST);
 	} else { 
 		/*
 		session_start(["name"=> "dptoEpidemi"]);

@@ -20,7 +20,7 @@
       </li>
 
       <!-- Nav Item - Casos Epidemiologicos Collapse Menu -->
-      <?php if ($_SESSION['id_nivel_permiso'] == "2"): ?>
+      <?php if ($_SESSION['id_nivel_permiso'] != "2" || $_SESSION['id_nivel_permiso'] != "0" ): ?>
 
       <li class="nav-item">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseCasosEpidemi" aria-expanded="true" aria-controls="collapseCasosEpidemi">
@@ -73,7 +73,7 @@
           </div>
         </div>
       </li>
-<?php endif ?>
+<?php endif; ?>
 
 
       <!-- Divider -->

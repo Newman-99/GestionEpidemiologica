@@ -14,7 +14,7 @@
               <div class="col-lg-6 d-none d-lg-block bg-user-image"><img src="<?php echo SERVERURL.'view/img/male-user.png'; ?>"></div>
               <div class="col-lg-6">
                 <div class="p-5">
-                  <div class="text-center">
+                    <div class="text-center">
                     <h1 class="h4 text-gray-900 mb-4">Iniciar Sesion</h1>
                   </div>
                 <form class="formAjax form-group text-center user" action="<?php echo SERVERURL; ?>ajax/loginAjax.php" method="POST" data-form="login" autocomplete="off">
