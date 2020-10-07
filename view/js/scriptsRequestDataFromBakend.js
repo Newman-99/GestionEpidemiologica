@@ -1,5 +1,5 @@
 
-      function queryFieldsToDataTablesActivityLog(requestedAliasUser,minDateRange,maxDateRange,action){
+      function getDataActivityLogForDataTables(requestedAliasUser,minDateRange,maxDateRange,action){
     var table = $('#dataTable').DataTable({
        "aaSorting": [[ 1, "asc" ]], // Sort by first column descending
         "bProcessing": true,
@@ -20,7 +20,7 @@
 };
 
 
-      function queryFieldsToDataTablesCie10Catalog(url,idCapitulo){
+      function getDataCIE10CatalogForDataTables(url,idCapitulo){
     
     var table = $('#dataTable').DataTable({
 
@@ -37,39 +37,54 @@
 };
 
 // devolvera datos para el select dinamico
-function getCasesCIE10BySearchPattern(valueSearch,idCapituloCIE10,urlAjax){
+function getCasesCIE10BySearchPattern(valueSearch,idCapituloCIE10,actionForAjax){
 
   $.ajax({
       type:'POST',
-      url: urlAjax,
+      url: actionForAjax,
       data:{'valueSearch': valueSearch,
           'idCapituloCIE10':idCapituloCIE10,'getCasesCIE10':true},
      success:function(casesCIE10){
       console.log(casesCIE10); 
       casesCIE10 = JSON.parse(casesCIE10);
-      $('#casesCIE10').empty();
+      $('#catalogKeyCIE10').empty();
       casesCIE10.forEach(function(casesCIE10){
-        $('#casesCIE10').append('<option value='+casesCIE10.catalog_key+'>'+casesCIE10.catalog_key + ' - ' + casesCIE10.nombre + '</option>')
+        $('#catalogKeyCIE10').append('<option value='+casesCIE10.catalog_key+'>'+casesCIE10.catalog_key + ' - ' + casesCIE10.nombre + '</option>')
         })                   
       }
     }); 
   }
 
 // devolvera datos para el select dinamico
-function getCasesCIE10ByidCapitulo(idCapituloCIE10,urlAjax){
+function getCasesCIE10ByidCapitulo(idCapituloCIE10,actionForAjax){
   $.ajax({
       type:'POST',
-      url: urlAjax,
+      url: actionForAjax,
       data:{'idCapituloCIE10':
       idCapituloCIE10,'getCasesCIE10':true,'searchByChapter':true},
       success:function(casesCIE10){
-      console.log(casesCIE10);
       casesCIE10 = JSON.parse(casesCIE10);
-      $('#casesCIE10').empty();
+      $('#catalogKeyCIE10').empty();
+      console.log(casesCIE10);
       casesCIE10.forEach(function(casesCIE10){
-        $('#casesCIE10').append('<option value='+casesCIE10.catalog_key+'>'+casesCIE10.catalog_key + ' - ' + casesCIE10.nombre + '</option>')
+     $('#catalogKeyCIE10').append('<option value='+casesCIE10.catalog_key+'>'+casesCIE10.catalog_key + ' - ' + casesCIE10.nombre + '</option>')
         })
        }
      }); 
 }
 
+
+function getParroquias(actionForAjax){
+  $.ajax({
+      type:'POST',
+      url: actionForAjax,
+      data:{'getParroquias':true},
+      success:function(dataJson){
+      var parroquias = JSON.parse(dataJson);
+      console.log(parroquias);
+      parroquias.forEach(function(parroquias){
+     $('#id_parroquia').append('<option value='+parroquias.id_parroquia+'>'+ parroquias.parroquia + '</option>')
+        })
+       }
+     }); 
+}

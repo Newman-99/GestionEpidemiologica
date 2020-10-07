@@ -177,18 +177,16 @@
 
 		 $dataPerson = array();
 
-		 $dataPerson['doc_identidad'] = $doc_identidad;
-		 
-		 $dataPerson['nombres'] = $nombres;
-		 
-		 $dataPerson['apellidos'] = $apellidos;
-		 
-		 $dataPerson['fecha_nacimiento'] = $fecha_nacimiento;
+				$dataPerson = 
+		["id_nacionalidad"=>$id_nacionalidad,
+		"doc_identidad"=>$doc_identidad,		
+		"nombres"=>$nombres,
+		"apellidos"=>$apellidos,
+		"fecha_nacimiento"=>$fecha_nacimiento,
+		"id_genero"=>$id_genero,
+		"telefono"=>$telefono,
+		];
 
-		 $dataPerson['id_nacionalidad'] = $id_nacionalidad;
-		 
-		 $dataPerson['id_genero'] = $id_genero;
-		
 		return $dataPerson;
 		
 				 	}				
@@ -402,9 +400,9 @@
 				"doc_identidad"=>$doc_identidad
 			];
 
-			$queryIsExistperson = mainModel::connectDB()->query("select doc_identidad from personas where id_nacionalidad = '$id_nacionalidad' and doc_identidad = '$doc_identidad'");
+			$queryIsExistPerson = mainModel::connectDB()->query("select doc_identidad from personas where id_nacionalidad = '$id_nacionalidad' and doc_identidad = '$doc_identidad'");
 			
-			if(!$queryIsExistperson->rowCount()){
+			if(!$queryIsExistPerson->rowCount()){
 			$alert=[
 				"Alert"=>"simple",
 				"Title"=>"Datos no encontrados",

@@ -130,7 +130,7 @@ $('#minDateRange,#maxDateRange').change(function() {
 // ambos rangos de fecha deben poseer valores
 
 if (!isBlank(minDateRange) && !isBlank(maxDateRange)) {
-return queryFieldsToDataTablesActivityLog(requestedAliasUser,minDateRange,maxDateRange,url);  
+return getDataActivityLogForDataTables(requestedAliasUser,minDateRange,maxDateRange,url);  
 }
 
 })
@@ -152,7 +152,7 @@ var minDateRangeDefaulPHP = minDateRangeDefault.toISOString().split('T')[0];
 $('#minDateRange').val(minDateRangeDefaulPHP)
 $('#maxDateRange').val(todayDatePHP)
 
-return queryFieldsToDataTablesActivityLog(requestedAliasUser,minDateRangeDefaulPHP,todayDatePHP,url);    
+return getDataActivityLogForDataTables(requestedAliasUser,minDateRangeDefaulPHP,todayDatePHP,url);    
 
 }
 

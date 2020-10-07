@@ -239,7 +239,7 @@
   
     $( document ).ready(function() {
 
-//return queryFieldsToDataTablesCie10Catalog();    
+//return getDataCIE10CatalogForDataTables();    
 
 });
 
@@ -255,7 +255,7 @@ function requestQueryByActionToAction(){
 $('#idCapitulo').change(function() {
     var idCapitulo  = $('#idCapitulo').val();
 
-      return queryFieldsToDataTablesCie10Catalog(url,idCapitulo);
+      return getDataCIE10CatalogForDataTables(url,idCapitulo);
 
 
 })
@@ -264,7 +264,7 @@ $('#idCapitulo').change(function() {
 
     var idCapitulo  = $('#idCapitulo').val();
 
-      return queryFieldsToDataTablesCie10Catalog(url,idCapitulo);
+      return getDataCIE10CatalogForDataTables(url,idCapitulo);
 
 }
 

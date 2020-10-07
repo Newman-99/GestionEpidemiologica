@@ -3,7 +3,7 @@
 	class personModel extends mainModel
 	{
 
-			private static function stringQueryAddPersonModel(){
+			public static function stringQueryAddPersonModel(){
 		
 		return $sqlQuery = "INSERT INTO personas(
 		 doc_identidad,

@@ -23,7 +23,7 @@
 
   <!-- Funcionalidades cortas personlizadas para el sistema-->
 
-<script src="<?php echo SERVERURL; ?>view/js/myScripts.js" ></script>
+<script src="<?php echo SERVERURL; ?>view/js/miniScrips.js" ></script>
 
 <!-- congiguracion json de lenguaje para Datatables -->  
 

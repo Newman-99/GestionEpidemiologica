@@ -19,7 +19,7 @@
           <span>Inicio</span></a>
       </li>
 
-      <!-- Nav Item - Casos Epidemiologicos Collapse Menu -->
+      <!-- Nav Item - Casos epidemis Collapse Menu -->
       <?php if ($_SESSION['id_nivel_permiso'] != "2" || $_SESSION['id_nivel_permiso'] != "0" ): ?>
 
       <li class="nav-item">

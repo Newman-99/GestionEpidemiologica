@@ -13,19 +13,16 @@
 
 	if (isset($_FILES['fileCSVCIE10'])) {
 
-	ini_set('memory_limit','512M');
-
-
-//			var_dump($_FILES);
-
 		$cie10DataController->updateCie10DataController($_FILES);			
 
 
 		}elseif(isset($_GET['cie10listCatalog'])) {
 
-		$cie10DataController->paginatecie10DataController(/*$_POST*/);						
+		$cie10DataController->paginatecie10DataController();						
 
 		}elseif(isset($_POST['getCasesCIE10'])) {
+
+		ini_set('memory_limit','512M');
 	
 		$cie10DataController->getCasesCIE10($_POST);		
 

@@ -10,14 +10,13 @@
 	
 	public static function addUserModel($dataUser){
 		
-
 		$DB_transacc = mainModel::connectDB();
 
 		$DB_transacc->beginTransaction();
 
 	try {
 		//si no existe la persona
-	if(!isset($dataUser['siExistPerson'])){
+	if(!$dataUser['siExistPerson']){
 		// registrar como person
 		$sqlQuery  = personModel::stringQueryAddPersonModel();
 
@@ -88,6 +87,8 @@
 
 		$sqlQuery->closeCursor();
 
+			$DB_transacc->commit();
+
 			$alert=[
 				"Alert"=>"reload",
 				"Title"=>"Operacion Exitosa",
@@ -97,7 +98,6 @@
 				"Type"=>"success"
 			];
 
-			$DB_transacc->commit();
 			
 			}catch (Exception $e) {
 
@@ -110,6 +110,7 @@
 					Error".$e->getMessage()."",
 				"Type"=>"error"
 			];
+
 		}
 
 		 return json_encode($alert);

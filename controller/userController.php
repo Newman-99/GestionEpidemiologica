@@ -72,16 +72,13 @@
 
 		// Comprobar si existe o no la person en la BD
 
-		$queryIsExistperson = mainModel::connectDB()->query("SELECT id_nacionalidad,doc_identidad FROM personas WHERE id_nacionalidad = '$id_nacionalidad' AND doc_identidad = '$doc_identidad'");
-
-			$queryIsExistperson->execute();
-
+		$queryIsExistPerson = mainModel::connectDB()->query("SELECT id_nacionalidad,doc_identidad FROM personas WHERE id_nacionalidad = '$id_nacionalidad' AND doc_identidad = '$doc_identidad'");
 
 			if(isset($dataUser['siExistPerson']) && $dataUser['siExistPerson'] == "1" ){
 
 			$siExistPerson = 1;
 
-			if(!$queryIsExistperson->rowCount()){
+			if(!$queryIsExistPerson->rowCount()){
 			$alert=[
 				"Alert"=>"simple",
 				"Title"=>"Datos no encontrados",
@@ -96,7 +93,7 @@
 
 			}else{
 				// Si no existe y es una person nueva comprabar que no este repetido en la BD
-			if($queryIsExistperson->rowCount()){
+			if($queryIsExistPerson->rowCount()){
 			$alert=[
 				"Alert"=>"simple",
 				"Title"=>"Datos Duplicados",
@@ -306,7 +303,7 @@
 		
 
 			// data ya limpia
-			$dataUserToRegister=[
+			$dataUserValid=[
 			"id_nacionalidad"=>$id_nacionalidad,
 			"doc_identidad"=>$doc_identidad,
 			"id_nivel_permiso"=>$id_nivel_permiso,
@@ -325,10 +322,10 @@
 
 				$dataPerson = self::$personController->addPersonControllerr($dataUser);
 
-				$dataUser = array_merge($dataUserToRegister,$dataPerson);
+				$dataUserValid = array_merge($dataUserValid,$dataPerson);
 			}
 
-		 echo userModel::addUserModel($dataUserToRegister);			
+		 echo userModel::addUserModel($dataUserValid);			
 
 	}
 
@@ -931,14 +928,14 @@ protected static function passwordCorrespondDatabase($dataUser){
 
 if (!isset($dataUser['confirmDelete'])) {
 
-		// Si la person  solo tiene un usuario y no presenta un caso epidemiologico, elimanos datos personles del BD pero primero avisamos
+		// Si la person  solo tiene un usuario y no presenta un caso epidemi, elimanos datos personles del BD pero primero avisamos
 
 
 		$userRecordsPerdoc_identidad = mainModel::connectDB()->query("SELECT alias FROM usuarios WHERE doc_identidad =
 			'$doc_identidad'");
 
 
-		$casosEpidemiRecordsPerdoc_identidad = mainModel::connectDB()->query("SELECT doc_identidad FROM casos_epidemiologicos WHERE doc_identidad =
+		$casosEpidemiRecordsPerdoc_identidad = mainModel::connectDB()->query("SELECT doc_identidad FROM casos_epidemis WHERE doc_identidad =
 			'$doc_identidad'");
 
 
@@ -954,7 +951,7 @@ if (!isset($dataUser['confirmDelete'])) {
 					$alert=[
 
 						"Alert"=>"confirmation",
-						"Text"=>"Esta persona no posee mas usuarios ni presenta un caso epidemiologico por lo que se eliminara del sistema completamente",
+						"Text"=>"Esta persona no posee mas usuarios ni presenta un caso epidemi por lo que se eliminara del sistema completamente",
 						"Url"=>"".SERVERURL."ajax/userAjax.php",
 						"Data"=>"doc_identidad=$doc_identidad&usuario_alias=$aliasUser&id_nacionalidad=$id_nacionalidad&operationType=delete&confirmDelete=true",
 						"Method"=>"POST"];

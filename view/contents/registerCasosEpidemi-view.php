@@ -7,21 +7,29 @@
           <div class="col-lg-7">
             <div class="p-5">
               <div class="text-center">
-                <h1 class="h3 mb-2 text-gray-800">Seguridad</h1>
+               <h1 class="h3 mb-4 text-gray-800">Registrar Caso epidemiologico</h1>
               </div>
 
- <h1 class="h3 mb-4 text-gray-800">Registrar Caso Epidemiologico</h1>
  
-   <form class="formAjax form-group text-center user" action="<?php echo SERVERURL; ?>ajax/casosEpidemiAjax.php" method="POST" data-form="register" autocomplete="off">
+   <form class="formAjax form-group text-center user" action="<?php echo SERVERURL; ?>ajax/casosEpidemiAjax.php" method="POST" data-form="register" autocomplete="off" name="formAjax" id="formAjax">
             
 
-    <input type="hidden" name="urlAjax" id="urlAjax"  class='form-control' value='<?php echo SERVERURL; ?>ajax/cie10DataAjax.php'>
+    <input type="hidden" name="actionForAjax" id="actionForAjax"  class='form-control' value='<?php echo SERVERURL; ?>ajax/cie10DataAjax.php'>
 
 
        <span alt="¿La person ya ha sido registrada como paciente o usuario?">¿person ya registrada?<input type="checkbox" name="siExistPerson" id="siExistPerson" class="form-control form-control-user" value="1">  
         </span>
 
 
+    <br>
+        <select name='id_nacionalidad' id='id_nacionalidad' class="form-control" autocomplete='on' class="form-control" >
+            <option  value=''>Nacionalidad</option>
+            <option  value='1'>V</option>
+            <option value='2'>E</option>
+        </select>
+
+    <br>
+    <input type="number" name="doc_identidad" id="doc_identidad" class="form-control" placeholder="Cedula">
 
 	<!-- Solo valido para el form de actualizar // solo test -->	
   	<br>
@@ -81,7 +89,11 @@
 
         </select>
 
+    <br>
+
     <input type="text" name="searchCIE10" id="searchCIE10" class="form-control" placeholder="Buscar Nombre del Caso CIE-10">
+
+    <br>
   
     <select name='catalogKeyCIE10' id='catalogKeyCIE10' class="form-control" autocomplete='on' class="form-control" >
 
@@ -92,31 +104,25 @@
 <?php 
    // los casos no pueden se registrados con fecha dia de manana
    // osea lo maximo es el dia de hpy
-
-          $currentDate = date("d-m-Y");
+        $currentDate = date("d-m-Y");
 
 // Esta vendira siendo la fecha de hoy
-           $todayDate = date("Y-m-d",strtotime($currentDate));
+
+       $maxDateAllowed = date("Y-m-d",strtotime($currentDate."- 1 days"));
+
+       $minDateAllowed = date("Y-m-d",strtotime($maxDateAllowed."- 7 days"));
+          
  ?>
 
 	Fecha de Registro
   	<br>
-    <input type="date" name="dateRegisterCasoEpidemi" id="dateRegisterCasoEpidemi" class="form-control" placeholder="Fecha de Registro" max="<?php echo $todayDate; ?>">
+    <input type="date" name="dateRegistercasoEpidemi" id="dateRegistercasoEpidemi" class="form-control" placeholder="Fecha de Registro" max="<?php echo $maxDateAllowed; ?>" min="<?php echo $minDateAllowed; ?>">
 
   	<br>
-    <input type="text" name="nombres" id="" class="form-control form-control-person" placeholder="Nombres" value="">
+    <input type="text" name="nombres" id="nombres" class="form-control form-control-person" placeholder="Nombres" value="">
 
   	<br>
-    <input type="text" name="apellidos" id="" class="form-control form-control-person" placeholder="Apellidos">
-<br>
-        <select name='id_nacionalidad' id='' class="form-control" autocomplete='on' class="form-control" >
-            <option  value=''>Nacionalidad</option>
-            <option  value='1'>V</option>
-            <option value='2'>E</option>
-        </select>
-
-  	<br>
-    <input type="number" name="doc_identidad" id="" class="form-control" placeholder="Cedula">
+    <input type="text" name="apellidos" id="apellidos" class="form-control form-control-person" placeholder="Apellidos">
   <br>
     <select name='id_genero' id='' class="form-control form-control-person">
        <option value=''>Genero</option>
@@ -125,7 +131,7 @@
     </select>
 <br>
 Fecha de Nacimiento
-  	<input type="date" name="fecha_nacimiento" id="" class="form-control form-control-person" placeholder="">
+  	<input type="date" name="fecha_nacimiento" id="fecha_nacimiento" class="form-control form-control-person">
 
 <br>
                 <div class="form-group row">
@@ -136,26 +142,29 @@ Fecha de Nacimiento
                   <div class="col-sm-3">
 
                     <input type="number" class="form-control
-                    form-control-user" id="telefonoPart1" name="telefonoPart1"  placeholder="0000">
+                    form-control-user" id="telefonoPart1" name="telefonoPart1"placeholder="0000">
                   </div>
                   
                   <div class="col-sm-3">
                     <input type="number" class="form-control
-                    form-control-user" id="telefonoPart2" name="telefonoPart2"  placeholder="0000">
+                    form-control-user" id="telefonoPart2" name="telefonoPart2" placeholder="0000">
                   </div>
 
                   <div class="col-sm-3">
                     <input type="number" class="form-control
-                    form-control-user" id="telefonoPart3" name="telefonoPart3"  placeholder="000">
+                    form-control-user" id="telefonoPart3" name="telefonoPart3" placeholder="000">
                   </div>
                 </div>
 <br>
-  	<input type="number" name="id_parroquia" id="" class="form-control" placeholder="Parroquia">
-<br>
-    <textarea rows="3" cols="40" name="direccion" id="" class="form-control" placeholder="Direccion"></textarea>
+        <select name='id_parroquia' id='id_parroquia' class="form-control" autocomplete='on' class="form-control" >
+            <option  value=''>Seleccionar Parroquia</option>
+        </select>
 <br>
 
-     <button class="btn btn-primary btn-user btn-block" type="submit" value="registerCasoEpidemi" name="registerCasoEpidemi">Registrar</button>
+    <textarea rows="3" cols="40" name="direccion" id="direccion" class="form-control" placeholder="Direccion"></textarea>
+<br>
+
+     <button class="btn btn-primary btn-user btn-block" type="submit" value="registercasoEpidemi" name="registercasoEpidemi">Registrar</button>
 
      <div class="responseProcessAjax"></div>
               </form>
@@ -173,6 +182,7 @@ Fecha de Nacimiento
 
           $( document ).ready(function() {
 
+
       // Establecer fecha de registro en input
       
       // la fecha recomendada de registro de casos, es del dia de ayer, pero e ocaciones puede ser cambiada  
@@ -183,52 +193,84 @@ Fecha de Nacimiento
 
       var dateRegisterDefaultPHP = dateRegisterDefault.toISOString().split('T')[0];
 
-      $('#dateRegisterCasoEpidemi').val(dateRegisterDefaultPHP);
+      $('#dateRegistercasoEpidemi').val(dateRegisterDefaultPHP);
 
 
       var rangeDateRegisterMax = addOrRemoveDaysToDate(todayDate,1,true);
 
-  });
 
-  // Al seleccionar un capitulo CIE10 se mostraran los casos CIE10 correspondientes en el select dinamico
+    // auto llenado del selecte para las parroquias  
+  
+      var actionForAjax = "localhost/projects/dptoEpidemi/ajax/casosEpidemiAjax.php";
 
+//      var actionForAjax = $('#formAjax').getAttribute("action");
 
       $('#idCapituloCIE10').on('change',function(){
 
-          var urlAjax = $('#urlAjax').val();
+          var actionForAjax = $('#actionForAjax').val();
 
           var idCapituloCIE10 = $(this).val();
 
           if(idCapituloCIE10 != ''){
-          getCasesCIE10ByidCapitulo(idCapituloCIE10,urlAjax);
+          getCasesCIE10ByidCapitulo(idCapituloCIE10,actionForAjax);
+          }
+
+  });
+
+
+  // Al seleccionar un capitulo CIE10  los casos correspondientes en el select
+
+      $('#idCapituloCIE10').on('change',function(){
+
+          var actionForAjax = $('#actionForAjax').val();
+
+          var idCapituloCIE10 = $(this).val();
+
+          if(idCapituloCIE10 != ''){
+          getCasesCIE10ByidCapitulo(idCapituloCIE10,actionForAjax);
           }
       });
 
-  
-  // Al escribir en el input buscador se mostraran los casos CIE10 correspondientes en el select dinamico
-   
-  $(document).on('keyup', '#searchCIE10', function()
-{
 
-  var urlAjax = $('#urlAjax').val();
+
+  // Al escribir en el input buscador se mostraran los casos CIE10 correspondientes en el select
+  
+var timeForRequestSearch = "";
+
+  $(document).on('keyup', '#searchCIE10', function(){
+
+    clearTimeout(timeForRequestSearch);   
+
+  var actionForAjax = $('#actionForAjax').val();
 
   var idCapituloCIE10 = $('#idCapituloCIE10').val();
-
 
   var valueSearch=$(this).val();
 
     if (valueSearch!="")
     {
-      getCasesCIE10BySearchPattern(valueSearch,idCapituloCIE10,urlAjax)
+        timeForRequestSearch = setTimeout(function(){ getCasesCIE10BySearchPattern(valueSearch,idCapituloCIE10,actionForAjax); }, 2000);
     }
     else
     {
       // si esta vacio llenamos con el cap seleccionado
-      getCasesCIE10ByidCapitulo();
+             getCasesCIE10ByidCapitulo();
     }
 
 
 });
+
+        // llenar select parroquia
+  
+        var selectParroquia = document.getElementById("id_parroquia");
+        var form = document.getElementById('formAjax');
+        var actionForAjax = form.getAttribute("action");
+        selectParroquia.addEventListener("focus",getParroquias(actionForAjax), true);
+
+
+      });
+
+
 
 </script>
 
