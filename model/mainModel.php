@@ -296,7 +296,7 @@ protected static function  isStringInRange($string,$rangeMin,$rangeMax){
 
 // funciones para la bitacora
 
-protected function  addUsuarioBitacora($data_usuario_bitacora){
+protected function  addUsuarioBitacora($dataUserBitacora){
 
 	$sqlQuery = self::connectDB()->prepare("INSERT INTO usuario_bitacora(
 		usuario_alias
@@ -315,29 +315,27 @@ protected function  addUsuarioBitacora($data_usuario_bitacora){
 		:bitacora_year)");
 
 			$sqlQuery->execute(array(
-		"usuario_alias"=>$data_usuario_bitacora['usuario_alias'],
-		"bitacora_codigo"=>$data_usuario_bitacora['bitacora_codigo'],
-		"bitacora_fecha"=>$data_usuario_bitacora['bitacora_fecha'],
-		"bitacora_hora_inicio"=>$data_usuario_bitacora['bitacora_hora_inicio'],
-		"bitacora_hora_final"=>$data_usuario_bitacora['bitacora_hora_final'],
-		"bitacora_nivel_usuario"=>$data_usuario_bitacora['bitacora_nivel_usuario'],
-		"bitacora_year"=>$data_usuario_bitacora['bitacora_year']));
+		"usuario_alias"=>$dataUserBitacora['usuario_alias'],
+		"bitacora_codigo"=>$dataUserBitacora['bitacora_codigo'],
+		"bitacora_fecha"=>$dataUserBitacora['bitacora_fecha'],
+		"bitacora_hora_inicio"=>$dataUserBitacora['bitacora_hora_inicio'],
+		"bitacora_hora_final"=>$dataUserBitacora['bitacora_hora_final'],
+		"bitacora_nivel_usuario"=>$dataUserBitacora['bitacora_nivel_usuario'],
+		"bitacora_year"=>$dataUserBitacora['bitacora_year']));
 
 
 			return $sqlQuery;
 
 }
 
-protected function updateUsuarioBitacora($data_usuario_bitacora){
+protected function updateUsuarioBitacora($dataUserBitacora){
 
 $sqlQuery = self::connectDB()->prepare("UPDATE usuario_bitacora SET 
 		bitacora_hora_final=:bitacora_hora_final WHERE bitacora_codigo = :bitacora_codigo");
 
-			$sqlQuery->execute(array(
-		"bitacora_hora_final"=>$data_usuario_bitacora['bitacora_hora_final'],
-		"bitacora_codigo"=>$data_usuario_bitacora['bitacora_codigo']));
-
-			return $sqlQuery;
+			return $sqlQuery->execute(array(
+		"bitacora_hora_final"=>$dataUserBitacora['bitacora_hora_final'],
+		"bitacora_codigo"=>$dataUserBitacora['bitacora_codigo']));
 
 }
 

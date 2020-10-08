@@ -1,5 +1,4 @@
 	<?php 
-
 		// para colaboracion de objetos
 		require_once "personController.php";
 
@@ -12,7 +11,7 @@
 
 	class userController extends userModel{
 		
-		protected static $personController;
+		public static $personController;
 
 		function __construct()
 			{

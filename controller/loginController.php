@@ -1,6 +1,5 @@
 <?php 	
-
-
+		// para colaboracion de objetos
 	if($requestAjax){
 		require_once "../controller/userController.php";
 	}else{
@@ -9,10 +8,7 @@
 
 	class loginController extends userController{
 // Iniamos y revismo el contador en cada pagina para cerrar la sesion
-
-
 	function __construct(){
-
 
 		session_start(['name'=>'dptoEpidemi']);	
 
@@ -30,6 +26,7 @@ public function loginUserController($dataUser){
 
 			if (isset($_SESSION['aliasUser'])) {
 
+
 			$currentDate =  mainModel::getDateCurrentSystem();
 
 			$currentHour = date("h:i:s a", $currentDate);
@@ -44,7 +41,7 @@ public function loginUserController($dataUser){
 
 			$updateUsuarioBitacora = mainModel::updateUsuarioBitacora($dataSession);
 			
-			if (!$updateUsuarioBitacora->rowCount()) {
+			if (!$updateUsuarioBitacora) {
 				$alert=[
 					"Alert"=>"simple",
 					"Title"=>"Ocurrio un error inesperado",
@@ -107,6 +104,9 @@ public function loginUserController($dataUser){
 			$pass_encryptDB = $valuesDataUser["pass_encrypt"]; 
 
 			$aliasUser = $valuesDataUser["usuario_alias"]; 			
+
+			$id_nacionalidad = $valuesDataUser["id_nacionalidad"];
+
 			$doc_identidad = $valuesDataUser["doc_identidad"];
 
 			$id_nivel_permiso = $valuesDataUser["id_nivel_permiso"];
@@ -133,12 +133,15 @@ public function loginUserController($dataUser){
 
 
 		// Obtener datos de person
-			require_once "../controller/personController.php";
 
-			$personController = new personController();
+    	$primaryKeyPerson = array("doc_identidad"=>$doc_identidad,'id_nacionalidad'=>$id_nacionalidad);
 
-			$recordspersonasQL = personController::getpersonController(array("doc_identidad"=>$doc_identidad));
-					
+
+    		// para instaciar el object person
+			 parent::__construct();
+
+			$recordspersonasQL = parent::$personController->getpersonController($primaryKeyPerson);
+
 			$recordspersonasQL->execute();
 	
 			while($valuesdataPerson=$recordspersonasQL->fetch(PDO
@@ -187,7 +190,7 @@ public function loginUserController($dataUser){
 
 				$bitacora_codigo = mainModel::generateRandomCode("CB",8,$totalRecordsBitacora);
 
-				$data_usuario_bitacora=[
+				$dataUserBitacora=[
 					"usuario_alias"=>$aliasUser,
 					"bitacora_codigo"=>$bitacora_codigo,
 					"bitacora_fecha"=>$currentDate,
@@ -196,7 +199,7 @@ public function loginUserController($dataUser){
 					"bitacora_hora_final"=> NULL,//Se registrar cuando cierre secion
 					"bitacora_nivel_usuario"=>$id_nivel_permiso];
 
-					mainModel::addUsuarioBitacora($data_usuario_bitacora);
+					mainModel::addUsuarioBitacora($dataUserBitacora);
 					
 				
 
@@ -205,6 +208,7 @@ public function loginUserController($dataUser){
 				$arrayNamesUser = explode (" ", $nameUser);
 				$arrayLastNamesUser = explode (" ", $lastNamesUser);			   
 				$_SESSION['doc_identidad']=$doc_identidad;
+				$_SESSION['id_nacionalidad']=$id_nacionalidad;
 				$_SESSION['aliasUser']=$aliasUser;
 
 				$_SESSION['nameUser']=$arrayNamesUser[0];
@@ -221,8 +225,7 @@ public function loginUserController($dataUser){
                 }elseif ($id_generoUser == "2") {
                   $_SESSION['iconUser'] = "fermale-user.png"; 
                 }
-
-
+						
 				$alert=[
 				"Alert"=>"redirecting",
 				"URL"=>SERVERURL."dashboard/"
@@ -283,10 +286,8 @@ public function loginUserController($dataUser){
 
 			if($tokenCurrentUser==$_SESSION['token_dptoEpidemi']){
 
-			$updateUsuarioBitacora = mainModel::updateUsuarioBitacora($dataSession);
-			
-			if ($updateUsuarioBitacora->rowCount()) {
-
+			mainModel::updateUsuarioBitacora($dataSession);
+					
 
 				session_unset();
 				session_destroy();
@@ -294,8 +295,6 @@ public function loginUserController($dataUser){
 				$alert=[
 				"Alert"=>"simpleReload",
 				];
-
-			}
 
 		}			
 			echo json_encode($alert);

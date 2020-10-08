@@ -20,10 +20,10 @@
 
 		$sqlQuery->execute(array(
 		 "doc_identidad"=>$datacasoEpidemi['doc_identidad'],
+		"id_nacionalidad"=>$datacasoEpidemi['id_nacionalidad'],
 		 "nombres"=>$datacasoEpidemi['nombres'],
 		 "apellidos"=>$datacasoEpidemi['apellidos'],
 		 "fecha_nacimiento"=>$datacasoEpidemi['fecha_nacimiento'],
-		 "id_nacionalidad"=>$datacasoEpidemi['id_nacionalidad'],
 		 "id_genero"=>$datacasoEpidemi['id_genero']));
 
 		$sqlQuery->closeCursor();
@@ -55,6 +55,55 @@
 		 "direccion"=>$datacasoEpidemi['direccion'],
 		 "telefono"=>$datacasoEpidemi['telefono'],
 		 "fecha_registro"=>$datacasoEpidemi['fecha_registro']));
+
+		$sqlQuery->closeCursor();
+
+		// registrar bitacora
+		// 
+
+           $queryGetIdEpidemiCaseToRegister = mainModel::connectDB()->query("SELECT id_caso_epidemi FROM public.casos_epidemi ORDER BY id_caso_epidemi DESC limit 1;");
+
+			$idEpidemiCaseToRegister = $queryGetIdEpidemiCaseToRegister->fetchColumn();
+
+
+			$datacasoEpidemi["id_caso_epidemi"]=$idEpidemiCaseToRegister;
+
+		$sqlQuery = $DB_transacc->prepare("INSERT INTO casos_epidemi_bitacora(
+					usuario_alias,
+					 bitacora_fecha,
+					 bitacora_hora,
+					 bitacora_year,
+					 id_tipo_operacion, id_caso_epidemi,
+					 catalog_key_cie10,
+					 id_nacionalidad_caso, 
+					 doc_identidad_caso,
+					 id_nacionalidad_usuario,
+					 doc_identidad_usuario)
+				VALUES (:usuario_alias,
+				:bitacora_fecha,
+				:bitacora_hora,
+				:bitacora_year,
+				:id_tipo_operacion,
+				:id_caso_epidemi,
+				:catalog_key_cie10,
+				:id_nacionalidad_caso,
+				:doc_identidad_caso,
+				:id_nacionalidad_usuario,
+				:doc_identidad_usuario);");
+
+			$sqlQuery->execute(array(
+		 "usuario_alias"=>$datacasoEpidemi['usuario_alias'],
+		 "bitacora_fecha"=>$datacasoEpidemi['bitacora_fecha'],
+		 "bitacora_hora"=>$datacasoEpidemi['bitacora_hora'],
+		 "bitacora_year"=>$datacasoEpidemi['bitacora_year'],
+		 "id_tipo_operacion"=>$datacasoEpidemi['id_tipo_operacion'],
+		 "id_caso_epidemi"=>$datacasoEpidemi['id_caso_epidemi'],
+		 "catalog_key_cie10"=>$datacasoEpidemi['catalog_key_cie10'],
+		 "id_nacionalidad_caso"=>$datacasoEpidemi['id_nacionalidad'],
+		 "doc_identidad_caso"=>$datacasoEpidemi['doc_identidad'],
+		 "id_nacionalidad_usuario"=>$datacasoEpidemi['id_nacionalidad_usuario'],
+		 "doc_identidad_usuario"=>$datacasoEpidemi['doc_identidad_usuario'],
+		));
 
 		$sqlQuery->closeCursor();
 

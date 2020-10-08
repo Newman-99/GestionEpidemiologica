@@ -185,6 +185,30 @@
 			}
 
 
+			// data para registro de bitcora
+
+				$currentDate =  mainModel::getDateCurrentSystem();
+
+
+				$currentYear = date("Y", $currentDate);
+
+				$currentHour = date("h:i:s a", $currentDate);
+
+				$currentDate = date("Y-m-d", $currentDate);
+
+		session_start(['name'=>'dptoEpidemi']);	
+
+		$dataCasosEpidemiBitacora = 
+		["id_nacionalidad_usuario"=>$_SESSION['id_nacionalidad'],
+		"doc_identidad_usuario"=>$_SESSION['doc_identidad'],
+		"usuario_alias"=>$_SESSION['aliasUser'],
+		"bitacora_fecha"=>$currentDate,
+		"bitacora_year"=>$currentYear,
+		"bitacora_hora"=>$currentHour,
+		"id_tipo_operacion"=>'1', // tipo registro
+		"catalog_key_cie10"=>$catalog_key_cie10];			
+
+		$dataCasoEpidemiReady = array_merge($dataCasoEpidemiReady,$dataCasosEpidemiBitacora);
 
 			echo casoEpidemiModel::addCasoEpidemiModel($dataCasoEpidemiReady);
 
