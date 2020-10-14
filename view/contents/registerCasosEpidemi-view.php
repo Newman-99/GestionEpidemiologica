@@ -116,7 +116,7 @@
 
 	Fecha de Registro
   	<br>
-    <input type="date" name="dateRegistercasoEpidemi" id="dateRegistercasoEpidemi" class="form-control" placeholder="Fecha de Registro" max="<?php echo $maxDateAllowed; ?>" min="<?php echo $minDateAllowed; ?>">
+    <input type="date" name="dateRegistercasosEpidemi" id="dateRegistercasosEpidemi" class="form-control" placeholder="Fecha de Registro" max="<?php echo $maxDateAllowed; ?>" min="<?php echo $minDateAllowed; ?>">
 
   	<br>
     <input type="text" name="nombres" id="nombres" class="form-control form-control-person" placeholder="Nombres" value="">
@@ -164,7 +164,7 @@ Fecha de Nacimiento
     <textarea rows="3" cols="40" name="direccion" id="direccion" class="form-control" placeholder="Direccion"></textarea>
 <br>
 
-     <button class="btn btn-primary btn-user btn-block" type="submit" value="registercasoEpidemi" name="registercasoEpidemi">Registrar</button>
+     <button class="btn btn-primary btn-user btn-block" type="submit" value="registercasosEpidemi" name="registercasosEpidemi">Registrar</button>
 
      <div class="responseProcessAjax"></div>
               </form>
@@ -193,7 +193,7 @@ Fecha de Nacimiento
 
       var dateRegisterDefaultPHP = dateRegisterDefault.toISOString().split('T')[0];
 
-      $('#dateRegistercasoEpidemi').val(dateRegisterDefaultPHP);
+      $('#dateRegistercasosEpidemi').val(dateRegisterDefaultPHP);
 
 
       var rangeDateRegisterMax = addOrRemoveDaysToDate(todayDate,1,true);

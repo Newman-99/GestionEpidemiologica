@@ -4,19 +4,22 @@
 
 	require_once "../config/app.php";
 
-		require_once "../controller/casoEpidemiController.php";
+		require_once "../controller/casosEpidemiController.php";
 
-		$casoEpidemiController = new casoEpidemiController();
+		$casosEpidemiController = new casosEpidemiController();
 	
 if (isset($_POST['operationType']) && $_POST['operationType'] == "register"){
 
-	 	$casoEpidemiController->addcasoEpidemiController($_POST);
+	 	$casosEpidemiController->addcasosEpidemiController($_POST);
 
 }elseif (isset($_POST['operationType']) && $_POST['operationType'] === "delete") {
-	 	$casoEpidemiController->deletecasoEpidemiController($_POST);
+	 	$casosEpidemiController->deletecasosEpidemiController($_POST);
 
-}elseif ($_POST['getParroquias']) {
-	 	$casoEpidemiController->getParroquias();
+}elseif (isset($_POST['getParroquias'])) {
+	 	$casosEpidemiController->getParroquias();
+
+}elseif (isset($_GET['viewCasosEpidemi'])) {
+	 	$casosEpidemiController->getDataTablesCasosEpidemiController();
 	
 		} else { 
 		/*
@@ -27,6 +30,4 @@ if (isset($_POST['operationType']) && $_POST['operationType'] == "register"){
 		*/
 	}
 	
-
-
  ?>   

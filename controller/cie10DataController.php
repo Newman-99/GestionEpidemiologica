@@ -411,7 +411,7 @@ $sqlQuery->closeCursor();
 
 	public static function paginatecie10DataController(){
 
-mainModel::getTableData('data_cie10', 'consecutivo',
+mainModel::getDataTableServerSideModel('data_cie10', 'consecutivo',
 	array('consecutivo',
 'letra',
 'catalog_key',

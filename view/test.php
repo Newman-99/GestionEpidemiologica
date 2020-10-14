@@ -1,5 +1,5 @@
 <?php 
-    protected static function getTableData($table, $index_column, $columns) {
+    protected static function getDataTableServerSideModel($table, $index_column, $columns) {
         // Paging
     /*
      * Script:    DataTables server-side script for PHP and PostgreSQL

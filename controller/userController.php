@@ -1142,14 +1142,14 @@ $table.="<div class='table-responsive'>
                   <thead>
                     <tr>
                       <th>Nro. </th>
-                     <th>Genero</th>
+                     <th></th>
+                      <th></th>
                       <th>Documento de Identidad</th>
                       <th>Alias</th>
                       <th>Nombres</th>
                       <th>Apellidos</th>
                       <th>Nivel de Permiso</th>
                       <th>Estado</th>
-                      <th>Email</th>
                       <th></th>
                       <th></th>
                       <th></th>
@@ -1158,14 +1158,14 @@ $table.="<div class='table-responsive'>
                   <tfoot>
                     <tr>
                        <th>Nro. </th>
-                      <th>Genero</th>
+                      <th></th>
+                      <th></th>
                       <th>Documento de Identidad</th>
                       <th>Alias</th>
                       <th>Nombres</th>
                       <th>Apellidos</th>
                       <th>Nivel de Permiso</th>
                       <th>Estado</th>
-                      <th>Email</th>
                       <th></th>
                       <th></th>
                     </tr>
@@ -1177,9 +1177,11 @@ $table.="<div class='table-responsive'>
 			::FETCH_ASSOC)){ 
 
 				if ($rows['id_nacionalidad'] == "1") {
-					$nacionalidad = "V";
+					$nacionalidad = "V-";					
+					$rows['id_nacionalidad']=$nacionalidad;
 				}else{
-					$nacionalidad = "E";
+					$nacionalidad = "E-";
+					$rows['id_nacionalidad']=$nacionalidad;
 				}
 
 				if ($rows['id_genero'] == "1"){
@@ -1194,14 +1196,13 @@ $table.="<div class='table-responsive'>
                     <td> 
                     <span class="d-none">'.$rows["id_genero"].'</span>
                     <img class="img-profile rounded-circle" width="40" src="'.SERVERURL.'view/img/'.$rows["iconGenero"].'"></td>
-
-		 			<td>'.$nacionalidad.'-'.$rows['doc_identidad'].'</td>
+		 			<td>'.$nacionalidad.'</td>
+		 			<td>'.$rows['doc_identidad'].'</td>
 					<td>'.$rows['usuario_alias'].'</td>
                     <td>'.$rows['nombres'].'</td>
                     <td>'.$rows['apellidos'].'</td>
 		 			<td>'.$rows['descripcion_nivel_permiso'].'</td>
 		 			<td>'.$rows['descripcion_estado'].'</td>
-		 			<td>'.$rows['email'].'</td>
 		 			<td>
 	                  <a href="'.SERVERURL.'dataAccount/'.mainModel::encryption($rows['usuario_alias']).'" class="btn btn-info btn-circle btn-sm">
 	                    <i class="fas  fa-plus"></i>

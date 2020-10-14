@@ -126,7 +126,7 @@
 
 	try {
 
-// si no son los mismos datos obviamos la consulta
+// si no son los mismos datos personales acualizamos
 if (!$dataPerson['ifPersonDataUpdateIsSameDatabase']) {
 		$sqlQuery  = personModel::stringQueryUpdatePersonModel();
 
@@ -144,6 +144,7 @@ if (!$dataPerson['ifPersonDataUpdateIsSameDatabase']) {
 		$sqlQuery->closeCursor();
 
 	}
+		// tomo solo los valores diferentes y enviados en el form
 		$sqlQuery = mainModel::connectDB()->prepare("UPDATE usuarios 
 			SET 	".implode(",",$userAttributesUpdate)." WHERE alias = :aliasUser;");
 
@@ -288,6 +289,8 @@ if (!$dataPerson['ifPersonDataUpdateIsSameDatabase']) {
 
 		  foreach($filterValues as $key => $values) {
 		    $sqlQuery->bindParam($key, $values['value'], $values['type']);
+
+		    
 		  }
 		     return $sqlQuery;
 		   
@@ -326,9 +329,6 @@ if (!$dataPerson['ifPersonDataUpdateIsSameDatabase']) {
 	
 
 	}
-
-
-
 
 
  ?>

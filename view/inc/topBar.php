@@ -166,7 +166,7 @@
                   <i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>
                   Configuraciones
                 </a>
-                <a class="dropdown-item" href="<?php echo SERVERURL; ?>activityLogUser/<?php echo $loginController->encryption($_SESSION['aliasUser']);?>/">
+                <a class="dropdown-item" href="<?php echo SERVERURL; ?>activityLogSessions/<?php echo $loginController->encryption($_SESSION['aliasUser']);?>/">
                   <i class="fas fa-list fa-sm fa-fw mr-2 text-gray-400"></i>
                   Mi Registro de Sesiones
                 </a>
