@@ -1,11 +1,11 @@
 
-      function getDataActivityLogForDataTables(requestedAliasUser,minDateRange,maxDateRange,action){
+      function getDataActivityLogSessionsForDataTables(requestedAliasUser,minDateRange,maxDateRange,action){
     var table = $('#dataTable').DataTable({
        "aaSorting": [[ 1, "asc" ]], // Sort by first column descending
         "bProcessing": true,
         "bDeferRender": true, 
         "bServerSide": true,
-        "sAjaxSource": action+"?activityLogSessions=view&minDateRange="+minDateRange+"&maxDateRange="+maxDateRange+"&requestedAliasUser="+requestedAliasUser, 
+        "sAjaxSource": action+"?activityLogSessions=view&minDateRange="+minDateRange+"&maxDateRange="+maxDateRange+"&requestedAliasUser="+requestedAliasUser+"&nameDateFieldDB="+'bitacora_fecha', 
         "columnDefs": [ 
             {
                 "targets": [ 0 ],
@@ -17,7 +17,7 @@
 
     });
   
-};
+}
 
 
       function getDataCIE10CatalogForDataTables(url,idCapitulo){
@@ -74,6 +74,25 @@ function getCasesCIE10ByidCapitulo(idCapituloCIE10,actionForAjax){
 }
 
 
+function getDataCasosEpidemiForDataTables(requestedPersonEpidemi,minDateRange,maxDateRange,action){
+    var table = $('#dataTable').DataTable({
+       "aaSorting": [[ 1, "asc" ]], // Sort by first column descending
+        "bProcessing": true,
+        "bDeferRender": true, 
+        "bServerSide": true,
+        "sAjaxSource": action+"?viewCasosEpidemi=true&minDateRange="+minDateRange+"&maxDateRange="+maxDateRange+"&requestedPersonEpidemi="+requestedPersonEpidemi+"&nameDateFieldDB="+'fecha_registro'/*, 
+        "columnDefs": [ 
+            {
+                "targets": [ 0 ],
+                "visible": false,
+                "searchable": false                
+            }
+          ]*/,'language': LANGUAGE_SPANISH_DATATABLES,
+                "bDestroy": true,
+
+    });
+  }
+
 function getParroquias(actionForAjax){
   $.ajax({
       type:'POST',
@@ -88,3 +107,5 @@ function getParroquias(actionForAjax){
        }
      }); 
 }
+
+

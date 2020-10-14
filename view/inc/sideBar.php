@@ -23,14 +23,14 @@
       <?php if ($_SESSION['id_nivel_permiso'] != "2" || $_SESSION['id_nivel_permiso'] != "0" ): ?>
 
       <li class="nav-item">
-        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseCasosEpidemi" aria-expanded="true" aria-controls="collapseCasosEpidemi">
+        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsecasosEpidemi" aria-expanded="true" aria-controls="collapsecasosEpidemi">
           <i class="fas fa-file-medical"></i>
           <span>Casos Epidemilogicos</span>
         </a>
-        <div id="collapseCasosEpidemi" class="collapse" aria-labelledby="headingUsers" data-parent="#accordionSidebar">
+        <div id="collapsecasosEpidemi" class="collapse" aria-labelledby="headingUsers" data-parent="#accordionSidebar">
           <div class="bg-white py-2 collapse-inner rounded">
             <h6 class="collapse-header">Gestion de Casos:</h6>
-            <a class="collapse-item" href="<?php echo SERVERURL; ?>registerCasosEpidemi/">Lista de Casos</a>
+            <a class="collapse-item" href="<?php echo SERVERURL; ?>casosEpidemiList/">Lista de Casos</a>
             <a class="collapse-item" href="<?php echo SERVERURL; ?>registerCasosEpidemi/">Registro de Casos</a>
           </div>
         </div>
@@ -69,7 +69,7 @@
           <div class="bg-white py-2 collapse-inner rounded">
             <h6 class="collapse-header">Gestion de Usuarios:</h6>
             <a class="collapse-item" href="<?php echo SERVERURL; ?>userList/">Lista de Usuarios</a>
-            <a class="collapse-item" href="<?php echo SERVERURL; ?>activityLogUser/">Registro de Sesiones</a>
+            <a class="collapse-item" href="<?php echo SERVERURL; ?>activityLogSessions/">Registro de Sesiones</a>
           </div>
         </div>
       </li>
