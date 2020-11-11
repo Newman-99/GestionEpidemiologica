@@ -127,7 +127,7 @@
 	try {
 
 // si no son los mismos datos personales acualizamos
-if (!$dataPerson['ifPersonDataUpdateIsSameDatabase']) {
+if (!$dataPerson['ifUpdatePerson']) {
 		$sqlQuery  = personModel::stringQueryUpdatePersonModel();
 
 		$sqlQuery = $DB_transacc->prepare($sqlQuery);
@@ -244,6 +244,8 @@ if (!$dataPerson['ifPersonDataUpdateIsSameDatabase']) {
 
 		}
 
+		$DB_transacc->query(parent::$stringQueryEnableForeingDB);
+
 		  			$alert=[
 				"Alert"=>"reload",
 				"Title"=>"Operacion Exitosa",
@@ -251,8 +253,6 @@ if (!$dataPerson['ifPersonDataUpdateIsSameDatabase']) {
 				"Type"=>"success"
 			];
 
-
-		$DB_transacc->query(parent::$stringQueryEnableForeingDB);
 			
 			$DB_transacc->commit();
 			
@@ -297,18 +297,19 @@ if (!$dataPerson['ifPersonDataUpdateIsSameDatabase']) {
 			}
 
 			public static function stringQueryForGetUser(){
-				$stringQueryForGetUser = ' SELECT  DISTINCT ON (usr.alias) usr.alias usuario_alias,usr.id_nacionalidad,usr.doc_identidad, usr.id_nivel_permiso, usr.id_estado, usr.pass_encrypt, usr.email, usr.telefono, pers.nombres, pers.apellidos, pers.fecha_nacimiento, pers.id_genero,
+				$stringQueryForGetUser = " SELECT  DISTINCT ON (usr.alias) usr.alias usuario_alias,usr.id_nacionalidad,usr.doc_identidad, usr.id_nivel_permiso, usr.id_estado, usr.pass_encrypt, usr.email, usr.telefono, pers.nombres, pers.apellidos, pers.fecha_nacimiento, pers.id_genero,
 				nacion.descripcion_nacionalidad,
 				gnro.descripcion_genero,
 				usrEtdo.descripcion_estado,
 				usrNivl.descripcion_nivel_permiso,
-				usrQuest.id_pregunta,usrQuest.respuesta FROM usuarios usr
+				usrQuest.id_pregunta,usrQuest.respuesta,(nacion.descripcion_nacionalidad || '' || pers.doc_identidad) AS doc_identidad_complete
+ 				FROM usuarios usr
 				INNER JOIN personas pers ON usr.doc_identidad = pers.doc_identidad
 				INNER JOIN nacionalidades nacion ON pers.id_nacionalidad = nacion.id_nacionalidad 
 				INNER JOIN generos gnro ON pers.id_genero = gnro.id_genero 
 				INNER JOIN usuarios_estados usrEtdo ON usr.id_estado =  usrEtdo.id_estado
 				INNER JOIN usuarios_niveles usrNivl ON usr.id_nivel_permiso =  usrNivl.id_nivel_permiso
-				INNER JOIN usuarios_preguntas usrQuest ON usr.alias =  usrQuest.usuario_alias ';
+				INNER JOIN usuarios_preguntas usrQuest ON usr.alias =  usrQuest.usuario_alias ";
 
 				return $stringQueryForGetUser;
 			}

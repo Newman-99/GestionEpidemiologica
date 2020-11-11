@@ -263,6 +263,7 @@ return false;
 // Para caracteres que usuarios usualmente usam para separar en un input
 public static function ClearUserSeparatedCharacters($inputString){
     $inputString=preg_replace("/\.|-|\s/", "",$inputString);
+   
     return $inputString;
 	}
 
@@ -314,7 +315,7 @@ protected function  addUsuarioBitacora($dataUserBitacora){
 		:bitacora_nivel_usuario, 
 		:bitacora_year)");
 
-			$sqlQuery->execute(array(
+			return $sqlQuery->execute(array(
 		"usuario_alias"=>$dataUserBitacora['usuario_alias'],
 		"bitacora_codigo"=>$dataUserBitacora['bitacora_codigo'],
 		"bitacora_fecha"=>$dataUserBitacora['bitacora_fecha'],
@@ -323,21 +324,52 @@ protected function  addUsuarioBitacora($dataUserBitacora){
 		"bitacora_nivel_usuario"=>$dataUserBitacora['bitacora_nivel_usuario'],
 		"bitacora_year"=>$dataUserBitacora['bitacora_year']));
 
-
-			return $sqlQuery;
-
 }
 
 protected function updateUsuarioBitacora($dataUserBitacora){
 
-$sqlQuery = self::connectDB()->prepare("UPDATE usuario_bitacora SET 
+		$DB_transacc = mainModel::connectDB();
+
+		$DB_transacc->beginTransaction();
+
+	try {
+
+$sqlQuery = $DB_transacc->prepare("UPDATE usuario_bitacora SET 
 		bitacora_hora_final=:bitacora_hora_final WHERE bitacora_codigo = :bitacora_codigo");
 
-			return $sqlQuery->execute(array(
+			$sqlQuery->execute(array(
 		"bitacora_hora_final"=>$dataUserBitacora['bitacora_hora_final'],
 		"bitacora_codigo"=>$dataUserBitacora['bitacora_codigo']));
 
-}
+		$sqlQuery->closeCursor();
+
+			$DB_transacc->commit();
+
+				$alert=[
+				"Alert"=>"simpleReload",
+				];
+
+				session_unset();
+				session_destroy();
+			
+			}catch (Exception $e) {
+
+			$DB_transacc->rollBack();
+
+				$alert=[
+					"Alert"=>"simple",
+					"Title"=>"Ocurrio un error inesperado",
+					"Text"=>"No se pudo cerrar la sesion en el sistema <br>
+					Error".$e->getMessage()."",
+					"Type"=>"error"
+
+				];
+
+		}
+
+		 return json_encode($alert);
+
+	}	
 
 
 

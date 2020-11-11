@@ -90,13 +90,8 @@ try {
 
 $DB_transacc->query(mainModel::$stringQuerydisableForeingDB);
 
-$queryDeleteAll = $DB_transacc->prepare('DELETE FROM data_cie10;');
 
-$queryDeleteAll->execute();
-
-$queryDeleteAll->closeCursor();
-
-$sqlQuery = $DB_transacc->prepare("INSERT INTO data_cie10(CONSECUTIVO,
+$queryInsertCie10 = 'INSERT INTO data_cie10(CONSECUTIVO,
  LETRA,
  CATALOG_KEY,
  NOMBRE,
@@ -231,14 +226,128 @@ $sqlQuery = $DB_transacc->prepare("INSERT INTO data_cie10(CONSECUTIVO,
 :PRIN_SINAC_SUBGRUPO,
 :DESCRIPCION_SINAC_SUBGRUPO,
 :DAGA,
-:ASTERISCO);");
+:ASTERISCO)';
+
+$ifExistRecordsInDataCIE10 = $DB_transacc->query('SELECT CONSECUTIVO FROM data_cie10 LIMIT 1;');
+	// si no hay registros insertamos datos
+if (!$ifExistRecordsInDataCIE10->rowCount()) {
+$sqlQuery = $DB_transacc->prepare($queryInsertCie10);
+}else{
+
+
+$sqlQuery = $DB_transacc->prepare($queryInsertCie10."
+ON CONFLICT (CATALOG_KEY) DO UPDATE SET
+	  CONSECUTIVO=:CONSECUTIVO
+	, LETRA=:LETRA
+	, CATALOG_KEY=:CATALOG_KEY
+	, NOMBRE=:NOMBRE
+	, CODIGOX=:CODIGOX
+	, LSEX=:LSEX
+	, LINF=:LINF
+	, LSUP=:LSUP
+	, TRIVIAL=:TRIVIAL
+	, ERRADICADO=:ERRADICADO
+	, N_INTER=:N_INTER
+	, NIN=:NIN
+	, NINMTOBS=:NINMTOBS
+	, COD_SIT_LESION=:COD_SIT_LESION
+	, NO_CBD=:NO_CBD
+	, CBD=:CBD
+	, NO_APH=:NO_APH
+	, AF_PRIN=:AF_PRIN
+	, DIA_SIS=:DIA_SIS
+	, CLAVE_PROGRAMA_SIS=:CLAVE_PROGRAMA_SIS
+	, COD_COMPLEMEN_MORBI=:COD_COMPLEMEN_MORBI
+	, DEF_FETAL_CM=:DEF_FETAL_CM
+	, DEF_FETAL_CBD=:DEF_FETAL_CBD
+	, CLAVE_CAPITULO=:CLAVE_CAPITULO
+	, CAPITULO=:CAPITULO
+	, LISTA1=:LISTA1
+	, GRUPO1=:GRUPO1
+	, LISTA5=:LISTA5
+	, RUBRICA_TYPE=:RUBRICA_TYPE
+	, YEAR_MODIFI=:YEAR_MODIFI
+	, YEAR_APLICACION=:YEAR_APLICACION
+	, VALID=:VALID
+	, PRINMORTA=:PRINMORTA
+	, PRINMORBI=:PRINMORBI
+	, LM_MORBI=:LM_MORBI
+	, LM_MORTA=:LM_MORTA
+	, LGBD165=:LGBD165
+	, LOMSBECK=:LOMSBECK
+	, LGBD190=:LGBD190
+	, NOTDIARIA=:NOTDIARIA
+	, NOTSEMANAL=:NOTSEMANAL
+	, SISTEMA_ESPECIAL=:SISTEMA_ESPECIAL
+	, BIRMM=:BIRMM
+	, CVE_CAUSA_TYPE=:CVE_CAUSA_TYPE
+	, CAUSA_TYPE=:CAUSA_TYPE
+	, EPI_MORTA=:EPI_MORTA
+	, EDAS_E_IRAS_EN_M5=:EDAS_E_IRAS_EN_M5
+	, CSVE_MATERNAS_SEED_EPID=:CSVE_MATERNAS_SEED_EPID
+	, EPI_MORTA_M5=:EPI_MORTA_M5
+	, EPI_MORBI=:EPI_MORBI
+	, DEF_MATERNAS=:DEF_MATERNAS
+	, ES_CAUSES=:ES_CAUSES
+	, NUM_CAUSES=:NUM_CAUSES
+	, ES_SUIVE_MORTA=:ES_SUIVE_MORTA
+	, ES_SUIVE_MORB=:ES_SUIVE_MORB
+	, EPI_CLAVE=:EPI_CLAVE
+	, EPI_CLAVE_DESC=:EPI_CLAVE_DESC
+	, ES_SUIVE_NOTIN=:ES_SUIVE_NOTIN
+	, ES_SUIVE_EST_EPI=:ES_SUIVE_EST_EPI
+	, ES_SUIVE_EST_BROTE=:ES_SUIVE_EST_BROTE
+	, SINAC=:SINAC
+	, PRIN_SINAC=:PRIN_SINAC
+	, PRIN_SINAC_GRUPO=:PRIN_SINAC_GRUPO
+	, DESCRIPCION_SINAC_GRUPO=:DESCRIPCION_SINAC_GRUPO
+	, PRIN_SINAC_SUBGRUPO=:PRIN_SINAC_SUBGRUPO
+	, DESCRIPCION_SINAC_SUBGRUPO=:DESCRIPCION_SINAC_SUBGRUPO
+	, DAGA=:DAGA
+	, ASTERISCO=:ASTERISCO");
+}
+
+/*
+$queryDeleteAll = $DB_transacc->prepare('DELETE FROM data_cie10;');
+
+$queryDeleteAll->execute();
+
+$queryDeleteAll->closeCursor();
+*/
+
+
+$queryGetRecordsCatalogKeyCie10 = $DB_transacc->query("SELECT CATALOG_KEY FROM data_cie10");
+
+		$recordsCatalogKeyCie10 = array();
+		
+		while($rows=$queryGetRecordsCatalogKeyCie10->fetch(PDO
+			::FETCH_ASSOC)){ 
+
+			$recordsCatalogKeyCie10[] = $rows['catalog_key'];
+		}
+
+
+		$catalogKeyCie10ToRegister = array();
 
 
 for ($indiceFila = 1; $indiceFila < count($dataForQuery); $indiceFila++) {
 
+// si no existe el caso en la hoja y la tabla esta vacia se elemina
+/*
+$ifExistCaseCIE10 = $DB_transacc->query("SELECT CATALOG_KEY FROM data_cie10 WHERE CATALOG_KEY ='$CATALOG_KEY'");
+
+if (!$ifExistCaseCIE10->rowCount() && $ifExistRecordsInDataCIE10->rowCount()) {
+
+$DB_transacc->query("DELETE FROM data_cie10 WHERE  CATALOG_KEY ='$CATALOG_KEY'");
+}
+*/
+
+
 $CONSECUTIVO = $dataForQuery[$indiceFila][0]; 
 $LETRA = $dataForQuery[$indiceFila][1]; 
 $CATALOG_KEY = $dataForQuery[$indiceFila][2]; 
+$catalogKeyCie10ToRegister[] = $CATALOG_KEY;
+
 $NOMBRE = $dataForQuery[$indiceFila][3]; 
 $CODIGOX = $dataForQuery[$indiceFila][4]; 
 $LSEX = $dataForQuery[$indiceFila][5]; 
@@ -374,6 +483,18 @@ $sqlQuery->execute(array("CONSECUTIVO"=>$CONSECUTIVO,
 "DESCRIPCION_SINAC_SUBGRUPO"=>$DESCRIPCION_SINAC_SUBGRUPO, 
 "DAGA"=>$DAGA, 
 "ASTERISCO"=>$ASTERISCO));
+
+}
+
+// si un caso registrado no esta en los nuevos registros este se eleminara
+if ($ifExistRecordsInDataCIE10->rowCount()) {
+
+for ($i=0; $i <count($recordsCatalogKeyCie10) ; $i++) { 
+		
+		if (!in_array($recordsCatalogKeyCie10[$i], $catalogKeyCie10ToRegister)) {
+			$DB_transacc->query("DELETE FROM data_cie10 WHERE  CATALOG_KEY ='$recordsCatalogKeyCie10[$i]'");
+		}
+}
 
 }
 

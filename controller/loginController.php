@@ -12,7 +12,7 @@
 
 		session_start(['name'=>'dptoEpidemi']);	
 
-	if (isset($_SESSION['timeout']) && (time() - $_SESSION['timeout'] > 10800)) {
+	if (isset($_SESSION['timeout']) && (time() - $_SESSION['timeout'] > 28800)) {
 			
 			self::forceClosureController();
 
@@ -241,19 +241,20 @@ public function loginUserController($dataUser){
 
 			// si hay una sesion iniciada, se usa closeControllerSession para que registre la bitacora
 			if (isset($_SESSION['aliasUser'])) {
+
 					$dataSession=[
 			"tokenCurrentUser"=>mainModel::encryption($_SESSION["token_dptoEpidemi"])];
+
 			self::closeControllerSession($dataSession);
-	}
+
+			exit();
+	}else{
 
 			session_unset();
 			session_destroy();
 
-			if(headers_sent()){
 				return header("Location: ".SERVERURL);
-			}else{
-				return header("Location: ".SERVERURL);
-			}
+	}
 
 			}
 
@@ -276,27 +277,24 @@ public function loginUserController($dataUser){
 			"bitacora_codigo"=>$_SESSION["bitacora_codigo"]];
 
 			// si no se crea otra alert, imprimira este msj error
-				$alert=[
-					"Alert"=>"simple",
-					"Title"=>"Ocurrio un error inesperado",
-					"Text"=>"No se pudo cerrar la sesion en el sistema",
-					"Type"=>"error"
-
-				];
-
 			if($tokenCurrentUser==$_SESSION['token_dptoEpidemi']){
 
-			mainModel::updateUsuarioBitacora($dataSession);
-					
 
-				session_unset();
-				session_destroy();
-			
-				$alert=[
-				"Alert"=>"simpleReload",
-				];
+			mainModel::updateUsuarioBitacora($dataSession);
+
+			exit();			
 
 		}			
+
+		// si hay alerta de updateBitacoraModel
+		$alert=[
+		"Alert"=>"simple",
+		"Title"=>"Ocurrio un error inesperado",
+		"Text"=>"No se pudo cerrar la sesion en el sistema",
+		"Type"=>"error"
+
+				];
+
 			echo json_encode($alert);
 			exit();
 	}

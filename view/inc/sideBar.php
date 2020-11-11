@@ -31,7 +31,10 @@
           <div class="bg-white py-2 collapse-inner rounded">
             <h6 class="collapse-header">Gestion de Casos:</h6>
             <a class="collapse-item" href="<?php echo SERVERURL; ?>casosEpidemiList/">Lista de Casos</a>
-            <a class="collapse-item" href="<?php echo SERVERURL; ?>registerCasosEpidemi/">Registro de Casos</a>
+
+            <a class="collapse-item" href="<?php echo SERVERURL; ?>reportEPI/">Reportes EPI</a>
+
+            <a class="collapse-item" href="<?php echo SERVERURL; ?>activityLogCasosEpidemi/">Registro de Operaciones</a>
           </div>
         </div>
       </li>

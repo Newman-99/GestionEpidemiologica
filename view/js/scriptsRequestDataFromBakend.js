@@ -73,21 +73,75 @@ function getCasesCIE10ByidCapitulo(idCapituloCIE10,actionForAjax){
      }); 
 }
 
-
-function getDataCasosEpidemiForDataTables(requestedPersonEpidemi,minDateRange,maxDateRange,action){
+function getDataActivityLogCasosEpidemiForDataTables(requestedUser,minDateRange,maxDateRange,action){
     var table = $('#dataTable').DataTable({
        "aaSorting": [[ 1, "asc" ]], // Sort by first column descending
         "bProcessing": true,
         "bDeferRender": true, 
         "bServerSide": true,
-        "sAjaxSource": action+"?viewCasosEpidemi=true&minDateRange="+minDateRange+"&maxDateRange="+maxDateRange+"&requestedPersonEpidemi="+requestedPersonEpidemi+"&nameDateFieldDB="+'fecha_registro'/*, 
-        "columnDefs": [ 
-            {
-                "targets": [ 0 ],
-                "visible": false,
+        "sAjaxSource": action+"?activityLogCasosEpidemi=true&minDateRange="+minDateRange+"&maxDateRange="+maxDateRange+"&requestedUser="+requestedUser+"&nameDateFieldDB="+'bitacora_fecha',
+     "aoColumnDefs": [      {
+        // id_genero
+      "targets": [ 0 ],
+      "visible": false,
                 "searchable": false                
-            }
-          ]*/,'language': LANGUAGE_SPANISH_DATATABLES,
+      }]
+        ,'language': LANGUAGE_SPANISH_DATATABLES,
+                "bDestroy": true,
+    });
+}
+
+function getDataCasosEpidemiForDataTables(requestedPersonEpidemi,minDateRange,maxDateRange,action){
+    var table = $('#dataTable').DataTable({
+//       "aaSorting": [[ 0, "asc" ]], // Sort by first column descending
+        "bProcessing": true,
+        "bDeferRender": true, 
+        "bServerSide": true,
+        "sAjaxSource": action+"?viewCasosEpidemi=true&minDateRange="+minDateRange+"&maxDateRange="+maxDateRange+"&requestedPersonEpidemi="+requestedPersonEpidemi+"&nameDateFieldDB="+'fecha_registro',
+    "aoColumnDefs": [
+
+      {
+        // id_genero
+      "targets": [ 2 ],
+      "visible": false,
+                "searchable": false                
+      },
+
+      {
+        // id_nacionalidad_caso
+      "targets": [ 4 ],
+      "visible": false,
+                "searchable": false                
+      },
+
+      {
+        // doc_identidad_caso
+      "targets": [ 5 ],
+      "visible": false,
+                "searchable": false                
+      },
+
+      {
+        // comlumn clave_captitulo_cie10
+      "targets": [11],
+      "visible": false,
+                "searchable": false                
+      },
+
+      {
+        //id_parroquia
+      "targets": [ 15 ],
+      "visible": false,
+                "searchable": false                
+      },
+      
+      {
+        "mData": null,
+        "sDefaultContent": '<button name= "delete" id= "delete" value="delete" class="btn btn-danger btn-circle btn-sm delete"><i class="fas fa-trash"></i> </button> <button value = "update" name = "update" id = "update" class="btn btn-warning btn-circle btn-sm"><i class="fas fa-redo"></i></button>',
+
+        "aTargets": [23]
+      }
+        ],'language': LANGUAGE_SPANISH_DATATABLES,
                 "bDestroy": true,
 
     });

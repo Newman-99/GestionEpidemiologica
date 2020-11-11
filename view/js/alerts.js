@@ -24,47 +24,19 @@ function captureDataForm (e){
 		body: dataForm
 	}
 
-	let textMsjAlert;
 
-	if(type==="save"){
-		textMsjAlert="Los datos quedaran guardados en el sistema";
-	}else if(type==="delete"){
-		textMsjAlert="Los datos serán eliminados completamente del sistema";
-	}else if(type==="update"){
-		textMsjAlert="Los datos del sistema serán actualizados";
-	}else if(type==="search"){
-		textMsjAlert="Se eliminará el término de búsqueda y tendrás que escribir uno nuevo";
-	}else if(type==="config"){
-		textMsjAlert="Las configuraciones se guardaran en el sistema";		
-	}else if(type==="login"){
-		textMsjAlert=false;		
-	}else if(type==="query"){
-		textMsjAlert=false;
-	}else if(type==="files"){
-// parametos especiales para envio de archivos
-    var files = $('#fileCSVCIE10')[0].files[0];
-    dataForm.append('file',files);
-	contentTypes = false;
-  return sendFormDataAjax(action,dataForm,method,responseProcess,contentTypes);
+	var textMsjAlert =  msjForAlertForm(type);
 	
-	}else{
-		textMsjAlert="Quieres realizar la operación solicitada";
+	var formFields = form.serialize();
 
-	}
+     formFields+='&operationType='+type;
 
-	//serializeArray/
-
-	var contentFormFields = form.serialize();
-
-     contentFormFields+='&operationType='+type;
-
-     //contentFormFields+='&file='+file;
-
+     console.log(formFields);
 
 // Operaciones que no necesitan confirmacion
 if(textMsjAlert==false){
 
-			return sendFormDataAjax(action,contentFormFields,method,responseProcess);
+			return sendFormDataAjax(action,formFields,method,responseProcess);
 }
 
 	Swal.fire({
@@ -78,7 +50,22 @@ if(textMsjAlert==false){
 		cancelButtonText: 'Cancelar'
 	}).then((result) => {
 		if(result.value){
-			return sendFormDataAjax(action,contentFormFields,method,responseProcess);
+
+			if(type==="files"){
+
+			// parametos especiales para envio de archivos
+			    var file = $('#fileCSVCIE10')[0].files[0];
+
+			    dataForm.append('file',file);
+				contentTypes = false;
+				  return sendFormDataAjax(action,dataForm,method,responseProcess,contentTypes);
+
+					}else{
+
+						return sendFormDataAjax(action,formFields,method,responseProcess);
+
+					}
+
 			}
 	});
 
@@ -87,7 +74,7 @@ if(textMsjAlert==false){
 
 
 
-function sendFormDataAjax(action,ValuesAndFields,method,showResponseProcess,contentTypes = 'application/x-www-form-urlencoded'){
+function sendFormDataAjax(action,ValuesAndFields,method,showResponseProcess='',contentTypes = 'application/x-www-form-urlencoded'){
 
 var msgBackendProcessAjaxData = $("#msgBackendProcessAjaxData");
 
@@ -102,7 +89,7 @@ var msgBackendProcessAjaxData = $("#msgBackendProcessAjaxData");
 		xhr: function(){
         	var xhr = new window.XMLHttpRequest();
                 xhr.upload.addEventListener("progress", function(evt) {
-                	
+               
                    if (evt.lengthComputable) {
                      var percentComplete = evt.loaded / evt.total;
                      percentComplete = parseInt(percentComplete * 100);
@@ -131,13 +118,21 @@ var msgBackendProcessAjaxData = $("#msgBackendProcessAjaxData");
                     return xhr;
 
         },success: function (response) {
-		  			console.log(response);
-		  let operationResult = JSON.parse(response);
 
+        	console.log(response);
+        	
+		  let operationResult = JSON.parse(response);
+		 
 		  if (typeof operationResult.Alert != 'undefined') {		
-			return ajaxSweetAlerts(operationResult);
+			ajaxSweetAlerts(operationResult);
 			}
-			return operationResult;
+
+		 if (typeof operationResult.reloadDataTable != 'undefined') {					
+			$('#dataTable').DataTable().ajax.reload( null, false );
+			}
+
+
+			//return operationResult;
 		},error: function (e) {
   			alert("Error: " + e);
 
@@ -164,6 +159,8 @@ function ajaxSweetAlerts(alert){
 			type: alert.Type,
 			confirmButtonText: 'Aceptar'
 		});
+
+
 	}else if(alert.Alert==="reload"){
 		Swal.fire({
 			title: alert.Title,
@@ -225,4 +222,28 @@ function ajaxSweetAlerts(alert){
 		}
 	}
 
- 
+function msjForAlertForm(typeMsj){
+
+ 	var textMsjAlert;
+
+	if(typeMsj==="save"){
+		textMsjAlert="Los datos quedaran guardados en el sistema";
+	}else if(typeMsj==="delete"){
+		textMsjAlert="Los datos serán eliminados completamente del sistema";
+	}else if(typeMsj==="update"){
+		textMsjAlert="Los datos del sistema serán actualizados";
+	}else if(typeMsj==="search"){
+		textMsjAlert="Se eliminará el término de búsqueda y tendrás que escribir uno nuevo";
+	}else if(typeMsj==="config"){
+		textMsjAlert="Las configuraciones se guardaran en el sistema";		
+	}else if(typeMsj==="login"){
+		textMsjAlert=false;		
+	}else if(typeMsj==="query"){
+		textMsjAlert=false;
+	}else if(typeMsj==="files"){
+	textMsjAlert="Los datos de cargaran en el sistema";	
+	}else{
+		textMsjAlert="Quieres realizar la operación solicitada";
+	}
+	return textMsjAlert;
+}

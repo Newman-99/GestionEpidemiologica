@@ -19,7 +19,7 @@
             <div class='card-body'>
               <div class='table-responsive'>
 
-                <table class='table table-bordered' id='dataTable' width='100%' cellspacing='0'>
+                <table class='table table-bordered table-striped table-striped' id='dataTable' width='100%' cellspacing='0'>
 
             <!-- start form to limit query-->
           <select name='idCapitulo' id='idCapitulo' class="form-control" autocomplete='on' class="form-control" >

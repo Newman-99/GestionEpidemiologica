@@ -16,73 +16,83 @@
 ?>
 
           <!-- Page Heading -->
-          <h1 class="h3 mb-2 text-gray-800">Lista de Casos Epidemioloficos</h1>
+          <h1 class="h3 mb-2 text-gray-800">Lista de Casos Epidemiologicos</h1>
           
           <!-- <p class="mb-4">DataTables is a third party plugin that is used to generate the demo table below. For more information about DataTables, pleas>
           -->
 
-          <?php
-  
-            $requestAjax = FALSE;
-           require_once "./controller/casosEpidemiController.php";
-          $casosEpidemiController= new casosEpidemiController();
-
-        $currentDate = date("d-m-Y");
-
-// Esta vendira siendo la fecha de hoy
-
-         $maxDateAllowed = date("Y-m-d",strtotime($currentDate.'- 1 days'));
-
-           $minDateRangeDefault = date("Y-m-d",strtotime($currentDate."- 8 days"));
-
-//es la feha con el registro mas viejo
-$minDateValueAvailable = $casosEpidemiController-> getFirstDateRecordscasosEpidemiController();
-           ?>
-
         <div class='card shadow mb-4'>
             <div class='card-header py-3'>
-              <h6 class='m-0 font-weight-bold text-primary'>Lista de Usuarios</h6>
+              <h6 class='m-0 font-weight-bold text-primary'>Lista de Casos Epidemiologicos</h6>
             </div>
+
             <div class='card-body'>
-  
+
+<!-- Button trigger modal -->
+<button type="button" class="btn btn-primary registerCasosEpidemiModal" data-toggle="modal" data-target="#registerCasosEpidemiModal">
+  Registrar Nuevo
+</button>
+
+<?php  require_once "./view/inc/formRegisterCasosEpidemi.php";?>
+
   <div class='table-responsive'>
 
 
            <!-- Formulario para limitar fecha mediante el Backend -->
           <div class='form-group col-sm-2'>
 
+          <?php  
+            $requestAjax = FALSE;
+           require_once "./controller/casosEpidemiController.php";
+          $casosEpidemiController= new casosEpidemiController();
+
+        $currentDate = date("Y-m-d");
+
+          //es la feha con el registro mas viejo
+          $minDateValueAvailable = $casosEpidemiController-> getFirstDateRecordscasosEpidemiController();
+           ?>
+
           <input type='date' class='form-control' id='minDateRange' name='minDateRange'
-          min ='<?php echo $minDateValueAvailable; ?>' max = '<?php echo $maxDateAllowed; ?>'
+          min ='<?php echo $minDateValueAvailable; ?>' max = '<?php echo $currentDate; ?>'
           >
 
-          <input type='date' class='form-control' id='maxDateRange' name='maxDateRange' min ='<?php echo $minDateValueAvailable; ?>' max = '<?php echo $maxDateAllowed; ?>'>
+          <input type='date' class='form-control' id='maxDateRange' name='maxDateRange' min ='<?php echo $minDateValueAvailable; ?>' max = '<?php echo $currentDate; ?>'>
 
-          <input type="hidden" name="urlToRequestQuery" id="urlToRequestQuery"  class='form-control' value='<?php echo SERVERURL; ?>ajax/casosEpidemiAjax.php'>
+          <input type="hidden" name="actionForAjax" id="actionForAjax"  class='form-control' value='<?php echo SERVERURL; ?>ajax/casosEpidemiAjax.php'>
          
           <input type='hidden' class='form-control' id='requestedPersonEpidemi' name='requestedPersonEpidemi' value='<?php echo $requestedPersonEpidemi; ?>'>
 
           </div>
            <!-- FINAL Formulario para limitar fecha mediante el Backend -->
 
-                <table class='table table-bordered' id='dataTable' width='100%' cellspacing='0'>
+
+                <table class='table table-bordered table-striped table-striped' id='dataTable' name = 'dataTable' width='100%' cellspacing='0'>
                   <thead>
                     <tr>
                       <th>Nro. </th>
                       <th >Id Caso</th>
+                      <th>id_genero</th>
                       <th></th>
-                      <th></th>
+                      <th>id_nacionalidad_caso</th>
+                      <th>doc_identidad_caso</th>
                       <th>Documento de Identidad</th>
+                      <th>Fecha de Nacimiento</th>
+                      <th>Edad</th>
                       <th>Nombres</th>
                       <th>Apellidos</th>
+                      <th>clave_capitulo_cie10</th>
                       <th>Codigo CIE-10</th>
                       <th>Nombre CIE-10</th>
-                      <th>Fecha</th>
+                      <th>Fecha de Registro</th>
+                      <th>id_parroquia</th>
                       <th>Parroquia</th>
                       <th>Direccion</th>
                       <th>Telefono</th>
                       <th>Usuario</th>
-                      <th>Fecha de Registro</th>
+                      <th>Documento de Identidad</th>
+                      <th>Fecha de Bitacora</th>
                       <th>Hora de Registro</th>
+                      <th></th>
                     </tr>
                   </thead>
 
@@ -90,20 +100,28 @@ $minDateValueAvailable = $casosEpidemiController-> getFirstDateRecordscasosEpide
                     <tr>
                       <th>Nro. </th>
                       <th >Id Caso</th>
+                      <th>id_genero</th>
                       <th></th>
-                      <th></th>
+                      <th>doc_identidad_caso</th>
+                      <th>id_nacionalidad_caso</th>
                       <th>Documento de Identidad</th>
+                      <th>Fecha de Nacimiento</th>
+                      <th>Edad</th>
                       <th>Nombres</th>
                       <th>Apellidos</th>
+                      <th>clave_capitulo_cie10</th>
                       <th>Codigo CIE-10</th>
                       <th>Nombre CIE-10</th>
-                      <th>Fecha</th>
+                      <th>Fecha de Registro</th>
+                      <th>id_parroquia</th>
                       <th>Parroquia</th>
                       <th>Direccion</th>
                       <th>Telefono</th>
                       <th>Usuario</th>
-                      <th>Fecha de Registro</th>
+                      <th>Documento de Identidad</th>
+                      <th>Fecha de Bitacora</th>
                       <th>Hora de Registro</th>
+                      <th></th>
                     </tr>
                   </tfoot>
                   <tbody>
@@ -113,7 +131,6 @@ $minDateValueAvailable = $casosEpidemiController-> getFirstDateRecordscasosEpide
               </div>
            </div>
       </div>
-
 
 
   <script src="<?php echo SERVERURL; ?>view/js/scriptsRequestDataFromBakend.js"></script>
@@ -129,11 +146,12 @@ $minDateValueAvailable = $casosEpidemiController-> getFirstDateRecordscasosEpide
 
   $( document ).ready(function() {
  
+
 requestQueryByActionToAction();
 
 function requestQueryByActionToAction(){
 
-    var url = $('#urlToRequestQuery').val();
+    var url = $('#actionForAjax').val();
     var requestedPersonEpidemi = $('#requestedPersonEpidemi').val();
 
 $('#minDateRange,#maxDateRange').change(function() {
@@ -150,19 +168,17 @@ return getDataCasosEpidemiForDataTables(requestedPersonEpidemi,minDateRange,maxD
 // si no se dio click pero si se actualizo;
 
 // Esta vendira siendo la fecha de hoy
-var maxDateAllowed = new Date;
+var currentDate = new Date;
 
-var maxDateAllowed = addOrRemoveDaysToDate(maxDateAllowed,1,false);
+//var maxDateAllowed = addOrRemoveDaysToDate(maxDateAllowed,1,false);
 
-var maxDateAllowedPHP = maxDateAllowed.toISOString().split('T')[0];
+// para pasar de formato js a aaaa-mm-dd de PHP
+var maxDateAllowedPHP = currentDate.toISOString().split('T')[0];
 
-var minDateRangeDefault = addOrRemoveDaysToDate(maxDateAllowed,7,false);
+var minDateRangeDefault = addOrRemoveDaysToDate(currentDate,7,false);
 
-// [ara pasar de formato js a aaaa-mm-dd de PHP
 var minDateRangeDefaulPHP = minDateRangeDefault.toISOString().split('T')[0];
 
-
-//alert($('#maxDateRange').attr('min'));
 $('#minDateRange').val(minDateRangeDefaulPHP)
 $('#maxDateRange').val(maxDateAllowedPHP)
 
@@ -170,6 +186,228 @@ return getDataCasosEpidemiForDataTables(requestedPersonEpidemi,minDateRangeDefau
 
 }
 
+
+  var table = $('#dataTable');
+
+  $('button.registerCasosEpidemiModal').on('click',function(){
+
+    $(".modal-title").text("Registrar Caso Epidemiologico");
+
+    $(".btn-caso-epidemi").text("Registrar");   
+
+     $('#catalogKeyCIE10').empty().append('<option value="">Selecionar Capitulo  o CIE-10 Buscar Nombre </option>');
+
+  $(".form-control-person").prop('disabled', false);
+
+
+      $('.formAjax').trigger("reset");
+
+      
+      // Establecer parametros de fecha de registro del caso epidmi
+      
+      // la fecha recomendada de registro de casos, es del dia de ayer, pero e ocaciones puede ser cambiada  
+
+var currentDate = new Date;
+
+var maxDateAllowed = addOrRemoveDaysToDate(currentDate,1,false);
+
+var maxDateAllowedPHP = maxDateAllowed.toISOString().split('T')[0];
+
+var minDateRangeDefault = addOrRemoveDaysToDate(maxDateAllowed,7,false);
+
+var minDateRangeDefaulPHP = minDateRangeDefault.toISOString().split('T')[0];
+
+         document.getElementById("fecha_registro").setAttribute("min",minDateRangeDefaulPHP );
+
+         document.getElementById("fecha_registro").setAttribute("max", maxDateAllowedPHP);
+
+         document.getElementById("fecha_registro").setAttribute("max", maxDateAllowedPHP);
+
+      $('#fecha_registro').val(maxDateAllowedPHP);
+
+
+      $("#si-exist-person").css("display", "block");
+
+      // rellenar el maximo y minimo de fecha registro
+  
+    $("#id_nacionalidad").prop('disabled', false);
+
+    $("#doc_identidad").prop('disabled', false);
+
+    document.getElementById("id_caso_epidemi").setAttribute("value",'');
+
+    document.getElementById("formAjax").setAttribute("data-form", 'register');
+
+  });
+
+
+
+  $(table).on('click','button#delete',function(){
+
+    var tr = $(this).parents('tr');
+
+    var data = $(table).DataTable().row(tr).data();
+  
+    deleteCasosEpidemi(data);
+  
+  });
+
+  $(table).on('click','button#update',function(){
+    var tr = $(this).parents('tr');
+   
+    var data = $(table).DataTable().row(tr).data();
+  
+    updateCasosEpidemi(data);
+  
+  });
+
+function deleteCasosEpidemi(data){
+
+    var id_caso_epidemi = data[1];
+
+    var id_nacionalidad = data[4];
+
+    var doc_identidad = data[5];
+
+    var catalog_key_cie10 = data[12];
+
+    var fecha_registro = data[14];
+
+    var textMsjAlert = 'Los datos del Caso Epidemiologico seran elimnados del sistema';
+
+/*
+var dataCasoEpidemi = {
+  id_nacionalidad: id_nacionalidad,
+  doc_identidad: doc_identidad,
+  id_caso_epidemi: id_caso_epidemi,
+  catalog_key_cie10: catalog_key_cie10,
+  fecha_registro: fecha_registro,
+  operationType: 'delete'
+
+ };
+*/
+var dataCasoEpidemi = 
+  'id_nacionalidad='+id_nacionalidad+
+  '&doc_identidad='+doc_identidad+
+  '&id_caso_epidemi='+id_caso_epidemi+
+  '&catalog_key_cie10='+catalog_key_cie10+
+  '&fecha_registro='+fecha_registro+
+  '&operationType='+'delete';
+
+    var actionForAjax = $('#actionForAjax').val();
+
+          Swal.fire({
+            title: '¿Estás seguro?',
+            text: textMsjAlert,
+            type: 'question',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Aceptar',
+            cancelButtonText: 'Cancelar'
+          }).then((result) => {
+            if(result.value){
+
+                    return sendFormDataAjax(actionForAjax,dataCasoEpidemi,'POST');
+
+                    table.ajax.reload()
+
+              }
+        });
+
+}
+
+function updateCasosEpidemi(data){
+
+    var id_caso_epidemi = data[1];
+
+    var id_genero = data[2];
+
+    var id_nacionalidad = data[4];
+
+    var doc_identidad = data[5];
+
+    var fecha_nacimiento = data[7];
+
+    var nombres = data[9];
+
+    var apellidos = data[10];
+
+    var clave_capitulo_cie10 = data[11];
+
+    var catalog_key_cie10 = data[12];
+
+    var fecha_registro = data[14];
+
+    var id_parroquia = data[15];
+
+    var direccion = data[17];
+    
+    var telefono = data[18];
+
+    $("#id_nacionalidad").val(id_nacionalidad);
+
+    $("#doc_identidad").val(doc_identidad);
+
+    $("#id_nacionalidad_update").val(id_nacionalidad);
+
+    $("#doc_identidad_update").val(doc_identidad);
+
+    $("#fecha_nacimiento").val(fecha_nacimiento);
+
+    $("#nombres").val(nombres);
+
+    $("#apellidos").val(apellidos);
+
+    $("#idCapituloCIE10").val(clave_capitulo_cie10);
+
+          var actionAjaxForCie10 = $('#actionAjaxForCie10').val();
+
+    getCasesCIE10ByidCapitulo(clave_capitulo_cie10,actionAjaxForCie10);
+
+    $("#catalogKeyCIE10").val(catalog_key_cie10);
+
+
+    $("#fecha_registro").val(fecha_registro);
+
+    $("#id_parroquia").val(id_parroquia);
+
+    $("#direccion").val(direccion);
+    
+    telefono = telefono.match(/.{1,4}/g);
+    
+    $("#telefonoPart1").val(telefono[0]);
+
+    $("#telefonoPart2").val(telefono[1]);
+
+    $("#telefonoPart3").val(telefono[2]);
+
+    $("#id_genero").val(id_genero);
+    
+    $("#id_parroquia").val(id_parroquia);
+
+
+    var textMsjAlert = 'Los datos del Caso Epidemiologico seran Modificados';
+
+    
+    $(".modal-title").text("Editar Caso Epidemiologico");
+
+    $(".btn-caso-epidemi").text("Editar");   
+
+    $('#registerCasosEpidemiModal').modal('show');       
+
+    $("#si-exist-person").css("display", "none");
+
+    $("#id_nacionalidad").prop('disabled', true);
+
+    $("#doc_identidad").prop('disabled', true);
+
+
+    document.getElementById("id_caso_epidemi").setAttribute("value", id_caso_epidemi);
+  
+    document.getElementById("formAjax").setAttribute("data-form", 'update');
+}
+  
   });
 
 

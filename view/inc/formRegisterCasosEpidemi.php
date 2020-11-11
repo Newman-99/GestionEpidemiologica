@@ -1,24 +1,33 @@
-        <!-- Page Heading -->
  
-    <div class="card o-hidden border-0 shadow-lg my-5">
-      <div class="card-body p-0">
-        <!-- Nested Row within Card Body -->
-        <div class="row">
-          <div class="col-lg-7">
-            <div class="p-5">
-              <div class="text-center">
-               <h1 class="h3 mb-4 text-gray-800">Registrar Caso epidemiologico</h1>
-              </div>
+ <!-- Modal For New Refister -->
 
- 
+<div class="modal fade" id="registerCasosEpidemiModal" tabindex="-1" role="dialog" aria-labelledby="registerCasosEpidemiModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="registerCasosEpidemiModalLabel">Registrar Caso epidemiologico</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+
    <form class="formAjax form-group text-center user" action="<?php echo SERVERURL; ?>ajax/casosEpidemiAjax.php" method="POST" data-form="register" autocomplete="off" name="formAjax" id="formAjax">
             
+    <input type="hidden" name="actionAjaxForCie10" id="actionAjaxForCie10"  class='form-control' value='<?php echo SERVERURL; ?>ajax/cie10DataAjax.php'>
 
-    <input type="hidden" name="actionForAjax" id="actionForAjax"  class='form-control' value='<?php echo SERVERURL; ?>ajax/cie10DataAjax.php'>
+    <input type="hidden" name="id_caso_epidemi" id="id_caso_epidemi"  class='form-control' value=''>
 
+    <input type="hidden" name="id_nacionalidad_update" id="id_nacionalidad_update"  class='form-control' value=''>
+
+    <input type="hidden" name="doc_identidad_update" id="doc_identidad_update"  class='form-control' value=''>
+
+    <div id="si-exist-person">
 
        <span alt="¿La person ya ha sido registrada como paciente o usuario?">¿person ya registrada?<input type="checkbox" name="siExistPerson" id="siExistPerson" class="form-control form-control-user" value="1">  
         </span>
+
+  </div>
 
 
     <br>
@@ -116,7 +125,7 @@
 
 	Fecha de Registro
   	<br>
-    <input type="date" name="fecha_registro" id="fecha_registro" class="form-control" placeholder="Fecha de Registro" max="<?php echo $maxDateAllowed; ?>" min="<?php echo $minDateAllowed; ?>">
+    <input type="date" name="fecha_registro" id="fecha_registro" class="form-control" placeholder="Fecha de Registro" max="" min="">
 
   	<br>
     <input type="text" name="nombres" id="nombres" class="form-control form-control-person" placeholder="Nombres" value="">
@@ -124,7 +133,8 @@
   	<br>
     <input type="text" name="apellidos" id="apellidos" class="form-control form-control-person" placeholder="Apellidos">
   <br>
-    <select name='id_genero' id='' class="form-control form-control-person">
+
+    <select name='id_genero' id='id_genero' class="form-control form-control-person" autocomplete='on'>
        <option value=''>Genero</option>
        <option value='1'>Masculino</option>
        <option value='2'>Femenino</option>
@@ -164,16 +174,22 @@ Fecha de Nacimiento
     <textarea rows="3" cols="40" name="direccion" id="direccion" class="form-control" placeholder="Direccion"></textarea>
 <br>
 
-     <button class="btn btn-primary btn-user btn-block" type="submit" value="registercasosEpidemi" name="registercasosEpidemi">Registrar</button>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+
+     <button class="btn btn-primary btn-user btn-caso-epidemi btn-block" type="submit" value="btn-caso-epidemi" name="btn-caso-epidemi">Registrar</button>
 
      <div class="responseProcessAjax"></div>
-              </form>
+             
+       </form>
 
-              </div>
-            </div>
-          </div>
-        </div>
       </div>
+    </div>
+  </div>
+</div>
+  
+
 
 
   <script src="<?php echo SERVERURL; ?>view/js/scriptsRequestDataFromBakend.js"></script>
@@ -182,37 +198,17 @@ Fecha de Nacimiento
 
           $( document ).ready(function() {
 
-
-      // Establecer fecha de registro en input
-      
-      // la fecha recomendada de registro de casos, es del dia de ayer, pero e ocaciones puede ser cambiada  
-      var todayDate = new Date;
-
-
-      var dateRegisterDefault = addOrRemoveDaysToDate(todayDate,1,false);
-
-      var dateRegisterDefaultPHP = dateRegisterDefault.toISOString().split('T')[0];
-
-      $('#fecha_registro').val(dateRegisterDefaultPHP);
-
-
-      var rangeDateRegisterMax = addOrRemoveDaysToDate(todayDate,1,true);
-
-
-    // auto llenado del selecte para las parroquias  
   
-      var actionForAjax = "localhost/projects/dptoEpidemi/ajax/casosEpidemiAjax.php";
-
-//      var actionForAjax = $('#formAjax').getAttribute("action");
+//      var actionAjaxForCie10 = $('#formAjax').getAttribute("action");
 
       $('#idCapituloCIE10').on('change',function(){
 
-          var actionForAjax = $('#actionForAjax').val();
+          var actionAjaxForCie10 = $('#actionAjaxForCie10').val();
 
           var idCapituloCIE10 = $(this).val();
 
           if(idCapituloCIE10 != ''){
-          getCasesCIE10ByidCapitulo(idCapituloCIE10,actionForAjax);
+          getCasesCIE10ByidCapitulo(idCapituloCIE10,actionAjaxForCie10);
           }
 
   });
@@ -222,12 +218,12 @@ Fecha de Nacimiento
 
       $('#idCapituloCIE10').on('change',function(){
 
-          var actionForAjax = $('#actionForAjax').val();
+          var actionAjaxForCie10 = $('#actionAjaxForCie10').val();
 
           var idCapituloCIE10 = $(this).val();
 
           if(idCapituloCIE10 != ''){
-          getCasesCIE10ByidCapitulo(idCapituloCIE10,actionForAjax);
+          getCasesCIE10ByidCapitulo(idCapituloCIE10,actionAjaxForCie10);
           }
       });
 
@@ -241,7 +237,7 @@ var timeForRequestSearch = "";
 
     clearTimeout(timeForRequestSearch);   
 
-  var actionForAjax = $('#actionForAjax').val();
+  var actionAjaxForCie10 = $('#actionAjaxForCie10').val();
 
   var idCapituloCIE10 = $('#idCapituloCIE10').val();
 
@@ -249,7 +245,7 @@ var timeForRequestSearch = "";
 
     if (valueSearch!="")
     {
-        timeForRequestSearch = setTimeout(function(){ getCasesCIE10BySearchPattern(valueSearch,idCapituloCIE10,actionForAjax); }, 2000);
+        timeForRequestSearch = setTimeout(function(){ getCasesCIE10BySearchPattern(valueSearch,idCapituloCIE10,actionAjaxForCie10); }, 2000);
     }
     else
     {
@@ -264,8 +260,8 @@ var timeForRequestSearch = "";
   
         var selectParroquia = document.getElementById("id_parroquia");
         var form = document.getElementById('formAjax');
-        var actionForAjax = form.getAttribute("action");
-        selectParroquia.addEventListener("focus",getParroquias(actionForAjax), true);
+        var actionAjaxForCie10 = form.getAttribute("action");
+        selectParroquia.addEventListener("focus",getParroquias(actionAjaxForCie10), true);
 
 
       });

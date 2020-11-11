@@ -68,7 +68,6 @@
 
 			}
 
-
 		// Comprobar si existe o no la person en la BD
 
 		$queryIsExistPerson = mainModel::connectDB()->query("SELECT id_nacionalidad,doc_identidad FROM personas WHERE id_nacionalidad = '$id_nacionalidad' AND doc_identidad = '$doc_identidad'");
@@ -487,7 +486,7 @@ if (mainModel::isDataEmtpy($id_nacionalidad,$doc_identidad,$aliasUser,$telefono,
 		$ifUserDataUpdateIsSameDatabase = mainModel::isFieldsEqualToThoseInTheDatabase($queryToGetUser,$userDataTocomparedWithDatabase);
 
 
-			if ($ifUserDataUpdateIsSameDatabase && $dataPerson['ifPersonDataUpdateIsSameDatabase']) {
+			if ($ifUserDataUpdateIsSameDatabase && $dataPerson['ifUpdatePerson']) {
 
 			$alert=[
 				"Alert"=>"simple",
@@ -916,7 +915,7 @@ protected static function passwordCorrespondDatabase($dataUser){
 			
 			$alert=[
 				"Alert"=>"simple",
-				"Title"=>"Ocurrio un error inesperado",
+				"Title"=>"Operacion no Permitida",
 				"Text"=>"El usuarios super administrador no puede ser eliminado",
 				"Type"=>"error"
 			];
@@ -925,20 +924,35 @@ protected static function passwordCorrespondDatabase($dataUser){
 			exit();
 			}
 
+		$queryIsUserExistBitacoraCasosEpidemi = mainModel::connectDB()->query("SELECT usuario_alias FROM casos_epidemi_bitacora WHERE usuario_alias = '$aliasUser' LIMIT 1");
+
+
+		if ($queryIsUserExistBitacoraCasosEpidemi->rowCount()>1) {
+			$alert=[
+				"Alert"=>"simple",
+				"Title"=>"Operacion no Permitida",
+				"Text"=>"El usuarios posee registros de Casos Epidemilogicos asignados, por lo que no se puede eliminar",
+				"Type"=>"error"
+			];
+			echo json_encode($alert);
+
+			exit();
+
+			}
+
 if (!isset($dataUser['confirmDelete'])) {
 
 		// Si la person  solo tiene un usuario y no presenta un caso epidemi, elimanos datos personles del BD pero primero avisamos
 
 
-		$userRecordsPerdoc_identidad = mainModel::connectDB()->query("SELECT alias FROM usuarios WHERE doc_identidad =
+		$queryIfExistUserPerPerson = mainModel::connectDB()->query("SELECT alias FROM usuarios WHERE id_nacionalidad = '$id_nacionalidad' AND doc_identidad =
 			'$doc_identidad'");
 
 
-		$casosEpidemiRecordsPerdoc_identidad = mainModel::connectDB()->query("SELECT doc_identidad FROM casos_epidemis WHERE doc_identidad =
+		$queryIsExistPersonPerCasosEpidemi = mainModel::connectDB()->query("SELECT doc_identidad FROM casos_epidemi WHERE id_nacionalidad = '$id_nacionalidad' AND doc_identidad =
 			'$doc_identidad'");
 
-
-		if ($userRecordsPerdoc_identidad->rowCount()==1 && $casosEpidemiRecordsPerdoc_identidad->rowCount() == 0) {
+		if ($queryIfExistUserPerPerson->rowCount()==1 && $queryIsExistPersonPerCasosEpidemi->rowCount() == 0) {
 
 		$aliasUser = mainModel::encryption($aliasUser);
 
@@ -950,7 +964,7 @@ if (!isset($dataUser['confirmDelete'])) {
 					$alert=[
 
 						"Alert"=>"confirmation",
-						"Text"=>"Esta persona no posee mas usuarios ni presenta un caso epidemi por lo que se eliminara del sistema completamente",
+						"Text"=>"Esta persona no posee mas usuarios ni presenta un caso epidemioligico por lo que se eliminara del sistema completamente",
 						"Url"=>"".SERVERURL."ajax/userAjax.php",
 						"Data"=>"doc_identidad=$doc_identidad&usuario_alias=$aliasUser&id_nacionalidad=$id_nacionalidad&operationType=delete&confirmDelete=true",
 						"Method"=>"POST"];
@@ -1138,12 +1152,11 @@ public static function paginateUserController($currentAliasUser){
 $table = "";
 
 $table.="<div class='table-responsive'>
-                <table class='table table-bordered' id='dataTable' width='100%' cellspacing='0'>
+                <table class='table table-bordered table-striped' id='dataTable' width='100%' cellspacing='0'>
                   <thead>
                     <tr>
                       <th>Nro. </th>
                      <th></th>
-                      <th></th>
                       <th>Documento de Identidad</th>
                       <th>Alias</th>
                       <th>Nombres</th>
@@ -1158,7 +1171,6 @@ $table.="<div class='table-responsive'>
                   <tfoot>
                     <tr>
                        <th>Nro. </th>
-                      <th></th>
                       <th></th>
                       <th>Documento de Identidad</th>
                       <th>Alias</th>
@@ -1175,15 +1187,6 @@ $table.="<div class='table-responsive'>
          $count = 1;
 		while($rows=$queryForGetUsers->fetch(PDO
 			::FETCH_ASSOC)){ 
-
-				if ($rows['id_nacionalidad'] == "1") {
-					$nacionalidad = "V-";					
-					$rows['id_nacionalidad']=$nacionalidad;
-				}else{
-					$nacionalidad = "E-";
-					$rows['id_nacionalidad']=$nacionalidad;
-				}
-
 				if ($rows['id_genero'] == "1"){
                   $rows['iconGenero'] = "male-user.png"; 
                 }elseif ($rows['id_genero'] == "2") {
@@ -1196,8 +1199,7 @@ $table.="<div class='table-responsive'>
                     <td> 
                     <span class="d-none">'.$rows["id_genero"].'</span>
                     <img class="img-profile rounded-circle" width="40" src="'.SERVERURL.'view/img/'.$rows["iconGenero"].'"></td>
-		 			<td>'.$nacionalidad.'</td>
-		 			<td>'.$rows['doc_identidad'].'</td>
+		 			<td>'.$rows['doc_identidad_complete'].'</td>
 					<td>'.$rows['usuario_alias'].'</td>
                     <td>'.$rows['nombres'].'</td>
                     <td>'.$rows['apellidos'].'</td>
@@ -1219,7 +1221,7 @@ $table.="<div class='table-responsive'>
 
 					<input name= "doc_identidad" type="hidden" value="'.mainModel::encryption($rows['doc_identidad']).'">
 
-						<button type="submit" value = "delete" class="btn btn-warning btn-circle btn-sm">
+						<button type="submit" value = "restart" class="btn btn-warning btn-circle btn-sm">
 	                    <i class="fas fa-redo"></i>
 	                     </button>
 	                     <div class="responseProcessAjax"></div>

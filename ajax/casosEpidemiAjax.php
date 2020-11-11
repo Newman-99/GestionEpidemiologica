@@ -13,13 +13,21 @@ if (isset($_POST['operationType']) && $_POST['operationType'] == "register"){
 	 	$casosEpidemiController->addcasosEpidemiController($_POST);
 
 }elseif (isset($_POST['operationType']) && $_POST['operationType'] === "delete") {
-	 	$casosEpidemiController->deletecasosEpidemiController($_POST);
+	
+	 	$casosEpidemiController->deleteCasosEpidemiController($_POST);
+
+}elseif (isset($_POST['operationType']) && $_POST['operationType'] === "update") {
+	 	$casosEpidemiController->updateCasosEpidemiController($_POST);
 
 }elseif (isset($_POST['getParroquias'])) {
 	 	$casosEpidemiController->getParroquias();
 
 }elseif (isset($_GET['viewCasosEpidemi'])) {
 	 	$casosEpidemiController->getDataTablesCasosEpidemiController();
+
+}elseif (isset($_POST['viewReportEpi'])) {
+
+	 	$casosEpidemiController->getDataTablesEPIController($_POST);
 	
 		} else { 
 		/*
@@ -29,5 +37,6 @@ if (isset($_POST['operationType']) && $_POST['operationType'] == "register"){
 		header("Location: ".SERVERURL."login/");
 		*/
 	}
+
 	
  ?>   

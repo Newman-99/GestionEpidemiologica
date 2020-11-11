@@ -22,8 +22,8 @@
           <?php
   
             $requestAjax = FALSE;
-           require_once "./controller/activityLogSessionsController.php";
-          $activityLogSessionsController= new activityLogSessionsController();
+           require_once "./controller/activityLogCasosEpidemiController.php";
+          $activityLogCasosEpidemi= new activityLogCasosEpidemiController();
 
           $currentDate = date("d-m-Y");
 
@@ -33,7 +33,7 @@
            $minDateRangeDefault = date("Y-m-d",strtotime($currentDate."- 7 days"));
 
 //es la feha con el registro mas viejo
-$minDateValueAvailable = $activityLogSessionsController-> getFirstDateRecordsActivityLogSessionsController();
+$minDateValueAvailable = $activityLogCasosEpidemi-> getFirstDateRecordsActivityLogCasosEpidemi();
            ?>
 
         <div class='card shadow mb-4'>
@@ -54,43 +54,43 @@ $minDateValueAvailable = $activityLogSessionsController-> getFirstDateRecordsAct
 
           <input type='date' class='form-control' id='maxDateRange' name='maxDateRange' min ='<?php echo $minDateValueAvailable; ?>' max = '<?php echo $todayDate; ?>'>
 
-          <input type="hidden" name="urlToRequestQuery" id="urlToRequestQuery"  class='form-control' value='<?php echo SERVERURL; ?>ajax/activityLogSessionsAjax.php'>
+          <input type="hidden" name="urlToRequestQuery" id="urlToRequestQuery"  class='form-control' value='<?php echo SERVERURL; ?>ajax/activityLogCasosEpidemiAjax.php'>
          
           <input type='hidden' class='form-control' id='requestedAliasUser' name='requestedAliasUser' value='<?php echo $requestedAliasUser; ?>'>
 
           </div>
            <!-- FINAL Formulario para limitar fecha mediante el Backend -->
 
-                <table class='table table-bordered table-striped table-striped' id='dataTable' width='100%' cellspacing='0'>
+                <table class='table table-bordered table-striped' id='dataTable' width='100%' cellspacing='0'>
                   <thead>
                     <tr>
 
                       <th >id_bitacora</th>
                       <th>Nro. </th>
-                      <th></th>
+                      <th>ID Caso Epimiologico</th>
                       <th>Documento de Identidad</th>
+                      <th>Codigo CIE-10</th>
+                      <th>Fecha de Registro</th>
                       <th>Alias de Usuario</th>
-                      <th>Nombres</th>
-                      <th>Apellidos</th>
-                      <th>Nivel de Permiso</th>
-                      <th>Fecha</th>
-                      <th>Hora de Entrada</th>
-                      <th>Hora de Cierre</th>
+                      <th>Documento de Identidad</th>
+                      <th>Operacion</th>    
+                      <th>Fecha de Bitacora</th>
+                      <th>Hora de Bitacora</th>
                     </tr>
                   </thead>
                   <tfoot>
                     <tr>
-                      <th>id_bitacora</th>
+                      <th >id_bitacora</th>
                       <th>Nro. </th>
-                      <th></th>
+                      <th>ID Caso Epimiologico</th>
                       <th>Documento de Identidad</th>
+                      <th>Codigo CIE-10</th>
+                      <th>Fecha de Registro</th>
                       <th>Alias de Usuario</th>
-                      <th>Nombres</th>
-                      <th>Apellidos</th>
-                      <th>Nivel de Permiso</th>
-                      <th>Fecha</th>
-                      <th>Hora de Entrada</th>
-                      <th>Hora de Cierre</th>
+                      <th>Documento de Identidad</th>
+                      <th>Operacion</th>    
+                      <th>Fecha de Bitacora</th>
+                      <th>Hora de Bitacora</th>
                     </tr>
                   </tfoot>
                   <tbody>
@@ -130,7 +130,7 @@ $('#minDateRange,#maxDateRange').change(function() {
 // ambos rangos de fecha deben poseer valores
 
 if (!isBlank(minDateRange) && !isBlank(maxDateRange)) {
-return getDataActivityLogSessionsForDataTables(requestedAliasUser,minDateRange,maxDateRange,url);  
+return getDataActivityLogCasosEpidemiForDataTables(requestedAliasUser,minDateRange,maxDateRange,url);  
 }
 
 })
@@ -152,7 +152,7 @@ var minDateRangeDefaulPHP = minDateRangeDefault.toISOString().split('T')[0];
 $('#minDateRange').val(minDateRangeDefaulPHP)
 $('#maxDateRange').val(todayDatePHP)
 
-return getDataActivityLogSessionsForDataTables(requestedAliasUser,minDateRangeDefaulPHP,todayDatePHP,url);    
+return getDataActivityLogCasosEpidemiForDataTables(requestedAliasUser,minDateRangeDefaulPHP,todayDatePHP,url);    
 
 }
 

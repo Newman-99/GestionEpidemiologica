@@ -45,6 +45,7 @@ CREATE OR REPLACE VIEW activity_log_sessions_view AS SELECT
   gnro.descripcion_genero,
     pers.id_nacionalidad,
     nacion.descripcion_nacionalidad,
+  (nacion.descripcion_nacionalidad || '' || pers.doc_identidad) AS doc_identidad_complete,
   usr.doc_identidad,
     usr.alias,
     pers.nombres,
@@ -81,6 +82,8 @@ CREATE OR REPLACE VIEW activity_log_sessions_view AS SELECT
       'id_nacionalidad',
       'descripcion_nacionalidad',
       'doc_identidad',
+      'doc_identidad_complete',
+      'descripcion_genero',
       'alias', 
       'nombres',
       'apellidos',
@@ -93,7 +96,7 @@ CREATE OR REPLACE VIEW activity_log_sessions_view AS SELECT
       'id_bitacora',
       'row_number',
       'descripcion_genero',
-      'doc_identidad',
+      'doc_identidad_complete',
       'alias', 
       'nombres',
       'apellidos',
@@ -128,7 +131,6 @@ CREATE OR REPLACE VIEW activity_log_sessions_view AS SELECT
        echo  $e->getMessage();
       }
 
-
     while($aRow=$rResult->fetch(PDO
       ::FETCH_ASSOC)){ 
 
@@ -158,7 +160,7 @@ CREATE OR REPLACE VIEW activity_log_sessions_view AS SELECT
                  $dataFields['descripcion_genero']= "<span class='d-none'>".$aRow['descripcion_genero']."</span>
                     <img class='img-profile rounded-circle' width='40' src=".SERVERURL."view/img/".$iconGenero.">";
 
-                $dataFields['doc_identidad']= $aRow['descripcion_nacionalidad'].$aRow['doc_identidad'];
+                $dataFields['doc_identidad_complete']= $aRow['doc_identidad_complete'];
 
 
                 $dataFields['alias']=$aRow['alias'];
@@ -180,6 +182,7 @@ CREATE OR REPLACE VIEW activity_log_sessions_view AS SELECT
 
            $dataFields['bitacora_hora_final']=$aRow['bitacora_hora_final'];
         }
+
         $row[] = $dataFields[$columnsPrintDataTable[$i]];
             }
 

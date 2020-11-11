@@ -28,9 +28,8 @@
 
 		<div id="msgBackendProcessAjaxData"></div>
 
-		<div id="btnInsertCancelAjax"></div>
-
 		          </form>
+    <div id="btnInsertCancelAjax"></div>
 
 
               </div>

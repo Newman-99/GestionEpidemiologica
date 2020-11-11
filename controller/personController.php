@@ -13,7 +13,9 @@
 		 
 		$doc_identidad = mainModel::cleanStringSQL($dataPerson['doc_identidad']);
 		
-		 $doc_identidad = self::ClearUserSeparatedCharacters($doc_identidad);
+		 $doc_identidad = self::ClearUserSeparatedCharacters($doc_identidad);		 
+
+		 $doc_identidad = ltrim($doc_identidad, '0');
 
 		 $nombres = mainModel::cleanStringSQL($dataPerson['nombres']);
 		 
@@ -25,6 +27,7 @@
 
 		 $fecha_nacimiento = mainModel::cleanStringSQL($dataPerson['fecha_nacimiento']);		 	
 		 
+
 		 $id_nacionalidad = mainModel::cleanStringSQL($dataPerson['id_nacionalidad']);
 		 
 		 $id_genero = mainModel::cleanStringSQL($dataPerson['id_genero']);
@@ -74,7 +77,7 @@
 			}
 
 
-			if(!self::isValiddoc_identidad($doc_identidad)){
+			if(!self::isValidDocIdentidad($doc_identidad)){
 
 			$alert=[
 				"Alert"=>"simple",
@@ -246,16 +249,13 @@
  
 
 
-			$isExistPerson = mainModel::connectDB()->query("SELECT doc_identidad FROM personas WHERE doc_identidad =
-			'$doc_identidad' AND id_nacionalidad =
-			'$id_nacionalidad'");
-
-			if(!$isExistPerson->rowCount()){
-
+			$queryIsExistPerson = mainModel::connectDB()->query("select doc_identidad from personas where id_nacionalidad = '$id_nacionalidad' and doc_identidad = '$doc_identidad'");
+			
+			if(!$queryIsExistPerson->rowCount()){
 			$alert=[
 				"Alert"=>"simple",
-				"Title"=>"Datos Invalidos",
-				"Text"=>"Ya se encuentra una person con este documento de identidad",
+				"Title"=>"Datos no encontrados",
+				"Text"=>"No se encuentra una person con esta cedula registrada ",
 				"Type"=>"error"
 			];
 
@@ -264,7 +264,7 @@
 				exit();
 			}
 
-			if(!self::isValiddoc_identidad($doc_identidad)){
+			if(!self::isValidDocIdentidad($doc_identidad)){
 
 			$alert=[
 				"Alert"=>"simple",
@@ -366,9 +366,10 @@
 		 $dataPerson['id_genero'] = $id_genero;
 				 	
 
-			// si la datos nuevos son los mismos a los de la BD, obviaremos la consulta en model
+			// si la datos nuevos son los mismos a los de la BD, 
+			// inclueremos un elemento que indique que se proceda actualizar			
 
-		 $dataPerson['ifPersonDataUpdateIsSameDatabase'] = $ifPersonDataUpdateIsSameDatabase;
+		 $dataPerson['ifUpdatePerson'] = $ifPersonDataUpdateIsSameDatabase;
 
 		 return $dataPerson;
 
@@ -507,13 +508,12 @@
 
 // Funciones Para validar DATOS
 
-public static function isValiddoc_identidad($doc_identidad){
+public static function isValidDocIdentidad($doc_identidad){
     if(preg_match_all("/^[0-9]{7,8}$/",$doc_identidad)){
         return TRUE;
     }
         return FALSE;
 	}
-
 
 public static function isValidNombresApellidos(...$NombresApellidos){
 	    foreach ($NombresApellidos as $NombreApellido) {

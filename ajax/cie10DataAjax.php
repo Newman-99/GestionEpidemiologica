@@ -10,7 +10,9 @@
 	
 			$cie10DataController = new cie10DataController();
 
+		ini_set('memory_limit','512M');
 
+	
 	if (isset($_FILES['fileCSVCIE10'])) {
 
 		$cie10DataController->updateCie10DataController($_FILES);			
@@ -21,8 +23,6 @@
 		$cie10DataController->paginatecie10DataController();						
 
 		}elseif(isset($_POST['getCasesCIE10'])) {
-
-		ini_set('memory_limit','512M');
 	
 		$cie10DataController->getCasesCIE10($_POST);		
 
