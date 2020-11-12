@@ -10,6 +10,7 @@
 // Iniamos y revismo el contador en cada pagina para cerrar la sesion
 	function __construct(){
 
+
 		session_start(['name'=>'dptoEpidemi']);	
 
 	if (isset($_SESSION['timeout']) && (time() - $_SESSION['timeout'] > 28800)) {
@@ -50,6 +51,7 @@ public function loginUserController($dataUser){
 
 				];
 			}
+
 				session_unset();
 				session_destroy();
 			// se vuelve a crear para usarla despues
@@ -247,13 +249,11 @@ public function loginUserController($dataUser){
 
 			self::closeControllerSession($dataSession);
 
-			exit();
 	}else{
 
-			session_unset();
-			session_destroy();
 
-				return header("Location: ".SERVERURL);
+		return header("Location: ".SERVERURL);
+
 	}
 
 			}

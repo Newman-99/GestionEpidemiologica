@@ -141,7 +141,15 @@ function getDataCasosEpidemiForDataTables(requestedPersonEpidemi,minDateRange,ma
 
         "aTargets": [23]
       }
-        ],'language': LANGUAGE_SPANISH_DATATABLES,
+        ],
+
+        dom: 'Bfrtip',
+        buttons: [
+            'excelHtml5',
+            'csvHtml5',
+        ],
+        
+        'language': LANGUAGE_SPANISH_DATATABLES,
                 "bDestroy": true,
 
     });

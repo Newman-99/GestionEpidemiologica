@@ -1,5 +1,18 @@
 <?php
 
+  $requestAjax = false;
+
+  require_once "./controller/loginController.php";
+  
+  $loginController = new loginController();
+
+  require_once "./controller/viewsController.php";; 
+  
+  $viewsController =  new viewsController();
+
+  $requestedView= $viewsController->getViewsController(); 
+
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -17,17 +30,6 @@
 	
 
 	<?php 
-
-  $requestAjax = false;
-
-      require_once "./controller/loginController.php";
-      $loginController = new loginController();
-
-	require_once "./controller/viewsController.php";; 
-	
-	$viewsController =  new viewsController();
-
-	$requestedView= $viewsController->getViewsController();	
 
 	if($requestedView == "registerUser" || $requestedView == "login" || $requestedView == "404" || $requestedView == "forgotPassword" || $requestedView == "restartUser"){
 
