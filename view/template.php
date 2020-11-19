@@ -1,4 +1,6 @@
+
 <?php
+ob_start();
 
   $requestAjax = false;
 
@@ -107,4 +109,4 @@
 </body>
 </html>
 
-	
+	<?php ob_end_flush(); ?>

@@ -423,7 +423,7 @@ if (!$dataCasosEpidemi['ifUpdatePerson']) {
 
 		}
 
-function getNroCasesEpidemiForEpiModel($epiOrder, $startRegistrationDate, $endRegistrationDate,$id_genero ='',$startAge = '',$ageEnd = ''){
+protected static function getNroCasesEpidemiForEpiModel($epiOrder, $startRegistrationDate, $endRegistrationDate,$id_genero ='',$startAge = '',$ageEnd = ''){
 
 $queryFunctionGetAge = " AND date_part('year',age(casos.fecha_registro, pers.fecha_nacimiento)) ";
 

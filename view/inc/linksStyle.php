@@ -1,3 +1,6 @@
+
+          <input type="hidden" name="ORGANIZATION" id="ORGANIZATION"  class='form-control' value='<?php echo ORGANIZATION; ?>ajax/casosEpidemiAjax.php'>
+
   <!-- Custom fonts for this template -->
   <link href="<?php echo SERVERURL; ?>vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
   <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
@@ -27,10 +30,12 @@
 <!--<script src="<?php //echo SERVERURL; ?>vendor/datatables/jQuery-3.3.1/jquery-3.3.1.min.js"></script>-->
 
 
-<link rel="stylesheet" type="text/css" href="<?php echo SERVERURL; ?>vendor/datatables/DataTables-1.10.22/css/jquery.dataTables.min.css"/>
-
 
 <link rel="stylesheet" type="text/css" href="<?php echo SERVERURL; ?>vendor/datatables/DataTables-1.10.22/css/dataTables.bootstrap4.min.css"/>
+
+<!--<link rel="stylesheet" type="text/css" href="<?php //echo SERVERURL; ?>vendor/datatables/DataTables-1.10.22/css/jquery.dataTables.min.css"/>
+-->
+
 <link rel="stylesheet" type="text/css" href="<?php echo SERVERURL; ?>vendor/datatables/Editor-1.9.5/css/editor.bootstrap4.min.css"/>
 <link rel="stylesheet" type="text/css" href="<?php echo SERVERURL; ?>vendor/datatables/AutoFill-2.3.5/css/autoFill.bootstrap4.css"/>
 <link rel="stylesheet" type="text/css" href="<?php echo SERVERURL; ?>vendor/datatables/Buttons-1.6.5/css/buttons.bootstrap4.min.css"/>
@@ -53,7 +58,7 @@
 <script> const LANGUAGE_SPANISH_DATATABLES = {
 
             "sProcessing":     "Procesando...",
-            "sLengthMenu":     "Mostrar _MENU_ Registros",
+            "sLengthMenu":     "Mostrar _MENU_",
             "sZeroRecords":    "No se encontraron resultados",
             "sEmptyTable":     "Ningún dato disponible en esta tabla",
             "sInfo":           "Mostrando registros del _START_ al _END_ ( total de _TOTAL_)",

@@ -94,62 +94,75 @@ function getDataActivityLogCasosEpidemiForDataTables(requestedUser,minDateRange,
 function getDataCasosEpidemiForDataTables(requestedPersonEpidemi,minDateRange,maxDateRange,action){
     var table = $('#dataTable').DataTable({
 //       "aaSorting": [[ 0, "asc" ]], // Sort by first column descending
-        "bProcessing": true,
-        "bDeferRender": true, 
-        "bServerSide": true,
-        "sAjaxSource": action+"?viewCasosEpidemi=true&minDateRange="+minDateRange+"&maxDateRange="+maxDateRange+"&requestedPersonEpidemi="+requestedPersonEpidemi+"&nameDateFieldDB="+'fecha_registro',
-    "aoColumnDefs": [
+        bProcessing: true,
+        bDeferRender: true, 
+        bServerSide: true,
+        sAjaxSource: action+'?viewCasosEpidemi=true&minDateRange='+minDateRange+'&maxDateRange='+maxDateRange+'&requestedPersonEpidemi='+requestedPersonEpidemi+'&nameDateFieldDB='+'fecha_registro',
+    aoColumnDefs: [
 
       {
         // id_genero
-      "targets": [ 2 ],
-      "visible": false,
-                "searchable": false                
+      targets: [ 2 ],
+      visible: false,
+                searchable: false                
       },
 
       {
         // id_nacionalidad_caso
-      "targets": [ 4 ],
-      "visible": false,
-                "searchable": false                
+      targets: [ 4 ],
+      visible: false,
+                searchable: false                
       },
 
       {
         // doc_identidad_caso
-      "targets": [ 5 ],
-      "visible": false,
-                "searchable": false                
+      targets: [ 5 ],
+      visible: false,
+                searchable: false                
       },
 
       {
         // comlumn clave_captitulo_cie10
-      "targets": [11],
-      "visible": false,
-                "searchable": false                
+      targets: [11],
+      visible: false,
+                searchable: false                
       },
 
       {
         //id_parroquia
-      "targets": [ 15 ],
-      "visible": false,
-                "searchable": false                
+      targets: [ 15 ],
+      visible: false,
+                searchable: false                
       },
       
       {
-        "mData": null,
-        "sDefaultContent": '<button name= "delete" id= "delete" value="delete" class="btn btn-danger btn-circle btn-sm delete"><i class="fas fa-trash"></i> </button> <button value = "update" name = "update" id = "update" class="btn btn-warning btn-circle btn-sm"><i class="fas fa-redo"></i></button>',
+        mData: null,
+        sDefaultContent: '<button name= "delete" id= "delete" value="delete" class="btn btn-danger btn-circle btn-sm delete"><i class="fas fa-trash"></i> </button> <button value = "update" name = "update" id = "update" class="btn btn-warning btn-circle btn-sm"><i class="fas fa-redo"></i></button>',
 
-        "aTargets": [23]
+        aTargets: [23]
       }
         ],
+        dom: 'lBfrtip',
 
-        dom: 'Bfrtip',
-        buttons: [
-            'excelHtml5',
-            'csvHtml5',
+      lengthMenu: [
+            [ 10, 25, 50,100,200,500, -1 ],
+            [ '10', '25', '50','100','200', '500', 'Todo' ]
         ],
+
+        buttons: [
+        {
+       extend: 'excelHtml5',
+        filename: 'Casos_Epidemiologicos_' + $('#minDateRange').val() + '_' + $('#maxDateRange').val() + '.xlsx'
+        },
+
+        {
+       extend: 'csvHtml5',
+        filename: 'Casos_Epidemiologicos_' + $('#minDateRange').val() + '_' + $('#maxDateRange').val() + '.xlsx'
+        }
+        ]
+        ,
         
-        'language': LANGUAGE_SPANISH_DATATABLES,
+        language: LANGUAGE_SPANISH_DATATABLES,
                 "bDestroy": true,
 
     });

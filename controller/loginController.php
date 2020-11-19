@@ -252,8 +252,7 @@ public function loginUserController($dataUser){
 	}else{
 
 
-		return header("Location: ".SERVERURL);
-
+		 header("Location: ".SERVERURL);
 	}
 
 			}

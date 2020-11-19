@@ -3,6 +3,24 @@ table, th, td {
   
 }
 
+                  <tr>
+
+                          <td></td>
+                          <td></td>
+
+              <?php for ($i=0; $i < 12; $i++) { ?>
+                       
+                          <td>H</td>
+                          <td>M</td>
+              <?php } ?>
+
+                            <td class='column26 style21 s'>Hombres</td>
+                             <td class='column27 style22 s' >Mujeres</td>
+
+                          <td></td>
+
+                          </tr>
+
 </style>
 
 <div class='table-responsive'>

@@ -26,14 +26,20 @@
               <h6 class='m-0 font-weight-bold text-primary'>Lista de Casos Epidemiologicos</h6>
             </div>
 
-            <div class='card-body'>
+            <div class='card-body '>
 
 <!-- Button trigger modal -->
 <button type="button" class="btn btn-primary registerCasosEpidemiModal" data-toggle="modal" data-target="#registerCasosEpidemiModal">
   Registrar Nuevo
 </button>
 
+<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#importCasosEpidemiModal">
+  Importar
+</button>
+
 <?php  require_once "./view/inc/formRegisterCasosEpidemi.php";?>
+
+<?php  require_once "./view/inc/formImportCasosEpidemi.php";?>
 
   <div class='table-responsive'>
 
@@ -66,13 +72,13 @@
            <!-- FINAL Formulario para limitar fecha mediante el Backend -->
 
 
-                <table class='table table-bordered table-striped table-striped' id='dataTable' name = 'dataTable' width='100%' cellspacing='0'>
+                <table class='table display table-striped' id='dataTable' name = 'dataTable' width='100%' cellspacing='0'>
                   <thead>
                     <tr>
                       <th>Nro. </th>
                       <th >Id Caso</th>
                       <th>id_genero</th>
-                      <th></th>
+                      <th>Genero</th>
                       <th>id_nacionalidad_caso</th>
                       <th>doc_identidad_caso</th>
                       <th>Documento de Identidad</th>
@@ -101,7 +107,7 @@
                       <th>Nro. </th>
                       <th >Id Caso</th>
                       <th>id_genero</th>
-                      <th></th>
+                      <th>Genero</th>
                       <th>doc_identidad_caso</th>
                       <th>id_nacionalidad_caso</th>
                       <th>Documento de Identidad</th>
@@ -131,10 +137,6 @@
               </div>
            </div>
       </div>
-
-
-  <script src="<?php echo SERVERURL; ?>view/js/scriptsRequestDataFromBakend.js"></script>
-
 
 <script type="text/javascript">
 
@@ -411,12 +413,3 @@ function updateCasosEpidemi(data){
   });
 
 </script>
-
-
-<script src="https://code.jquery.com/jquery-3.5.1.js"></script>
-<script src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script>
-<script src="https://cdn.datatables.net/buttons/1.6.4/js/dataTables.buttons.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
-<script src="https://cdn.datatables.net/buttons/1.6.4/js/buttons.html5.min.js"></script>

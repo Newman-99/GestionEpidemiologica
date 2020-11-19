@@ -25,9 +25,12 @@ if (isset($_POST['operationType']) && $_POST['operationType'] == "register"){
 }elseif (isset($_GET['viewCasosEpidemi'])) {
 	 	$casosEpidemiController->getDataTablesCasosEpidemiController();
 
-}elseif (isset($_POST['viewReportEpi'])) {
+}elseif (isset($_POST['validDataToReportEpi'])) {
 
-	 	$casosEpidemiController->getDataTablesEPIController($_POST);
+	 	$casosEpidemiController->validDatatoGetDataTablesEPIController($_POST);	
+}elseif (isset($_GET['viewReportEpi'])) {
+
+	 	$casosEpidemiController->getDataTablesEPIController($_GET);
 	
 		} else { 
 		/*

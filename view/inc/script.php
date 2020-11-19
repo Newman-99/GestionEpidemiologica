@@ -19,12 +19,11 @@
 
   <!-- Core plugin JavaScript-->
 
-<script src="<?php echo SERVERURL; ?>vendor/datatables/DataTables-1.10.22/js/dataTables.bootstrap4.min.js"></script>
-
 <script src="<?php echo SERVERURL; ?>vendor/datatables/JSZip-2.5.0/jszip.min.js"></script>
 <script src="<?php echo SERVERURL; ?>vendor/datatables/pdfmake-0.1.36/pdfmake.min.js"></script>
 <script src="<?php echo SERVERURL; ?>vendor/datatables/pdfmake-0.1.36/vfs_fonts.js"></script>
 <script src="<?php echo SERVERURL; ?>vendor/datatables/DataTables-1.10.22/js/jquery.dataTables.min.js"></script>
+<script src="<?php echo SERVERURL; ?>vendor/datatables/DataTables-1.10.22/js/dataTables.bootstrap4.min.js"></script>
 <script src="<?php echo SERVERURL; ?>vendor/datatables/Editor-1.9.5/js/dataTables.editor.min.js"></script>
 <script src="<?php echo SERVERURL; ?>vendor/datatables/Editor-1.9.5/js/editor.bootstrap4.min.js"></script>
 <script src="<?php echo SERVERURL; ?>vendor/datatables/AutoFill-2.3.5/js/dataTables.autoFill.min.js"></script>
