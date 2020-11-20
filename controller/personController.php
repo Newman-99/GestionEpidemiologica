@@ -351,19 +351,16 @@
 
 
 
-		 $dataPerson = array();
-
-		 $dataPerson['doc_identidad'] = $doc_identidad;
-		 
-		 $dataPerson['nombres'] = $nombres;
-		 
-		 $dataPerson['apellidos'] = $apellidos;
-		 
-		 $dataPerson['fecha_nacimiento'] = $fecha_nacimiento;
-		 
-		 $dataPerson['id_nacionalidad'] = $id_nacionalidad;
-		 
-		 $dataPerson['id_genero'] = $id_genero;
+		$dataPerson = 
+		[
+		'doc_identidad'=>$doc_identidad,
+		"nombres"=>$nombres,
+		"apellidos"=>$apellidos,
+		"fecha_nacimiento"=>$fecha_nacimiento,
+		"id_nacionalidad"=>$id_nacionalidad,
+		"direccion"=>$direccion,
+		"id_genero"=>$id_genero,
+		];
 				 	
 
 			// si la datos nuevos son los mismos a los de la BD, 

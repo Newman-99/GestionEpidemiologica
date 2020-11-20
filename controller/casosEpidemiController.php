@@ -179,7 +179,7 @@
 
 		
 
-		$year_registro = date("Y", strtotime($fecha_registro));
+		$bitacora_year = date("Y", strtotime($fecha_registro));
 
 		
 				if (!$siExistPerson) {
@@ -195,7 +195,7 @@
 		"id_parroquia"=>$id_parroquia,
 		"direccion"=>$direccion,
 		"fecha_registro"=>$fecha_registro,
-		"year_registro"=>$year_registro,
+		"bitacora_year"=>$bitacora_year,
 		"telefono"=>$telefono,
 		"siExistPerson"=>$siExistPerson
 		];
@@ -354,7 +354,7 @@
 		$dataPerson = self::$personController->updatePersonaController($dataCasosEpidemi);
 
 			//data completa
-		$year_registro = date("Y", strtotime($fecha_registro));
+		$bitacora_year = date("Y", strtotime($fecha_registro));
 
 		$dataCasosEpidemi = 
 		[
@@ -365,7 +365,7 @@
 		"id_parroquia"=>$id_parroquia,
 		"direccion"=>$direccion,
 		"fecha_registro"=>$fecha_registro,
-		"year_registro"=>$year_registro,
+		"bitacora_year"=>$bitacora_year,
 		"telefono"=>$telefono,
 		];
 			
@@ -380,7 +380,7 @@
 		"id_parroquia",
 		"direccion",
 		"fecha_registro",
-		"year_registro",
+		"bitacora_year",
 		"telefono"];
 
 		 $tableToCompare = 'casos_epidemi';
@@ -547,7 +547,7 @@ if (!isset($dataCasosEpidemi['confirmDelete'])) {
 
 		session_start(['name'=>'dptoEpidemi']);	
 
-		$year_registro = date("Y", strtotime($fecha_registro));
+		$bitacora_year = date("Y", strtotime($fecha_registro));
 		$dataCasosEpidemiBitacora = 
 		["id_nacionalidad_usuario"=>$_SESSION['id_nacionalidad'],
 		"doc_identidad_usuario"=>$_SESSION['doc_identidad'],
@@ -589,7 +589,10 @@ if (!isset($dataCasosEpidemi['confirmDelete'])) {
     'telefono',
     'fecha_registro',
     'usuario_alias',
+    'id_nacionalidad_usuario',
+    'doc_identidad_usuario',
      'doc_identidad_usuario_complete',
+     'bitacora_year',
      'bitacora_fecha',
      'bitacora_hora' );
 
@@ -615,7 +618,10 @@ array(
     'direccion',
     'telefono',
     'usuario_alias',
+    'id_nacionalidad_usuario',
+    'doc_identidad_usuario',
     'doc_identidad_usuario_complete',
+     'bitacora_year',
      'bitacora_fecha',
      'bitacora_hora' );
 
@@ -721,7 +727,13 @@ array(
 
                 $dataFields['usuario_alias']=$aRow['usuario_alias'];
 
+                $dataFields['id_nacionalidad_usuario']= $aRow['id_nacionalidad_usuario'];
+
+                $dataFields['doc_identidad_usuario']= $aRow['doc_identidad_usuario'];
+
                 $dataFields['doc_identidad_usuario_complete']= $aRow['doc_identidad_usuario_complete'];
+
+                $dataFields['bitacora_year']=$aRow['bitacora_year'];
 
                 $dataFields['bitacora_fecha']=$aRow['bitacora_fecha'];
 
@@ -847,11 +859,169 @@ $dataForDataTables = array();
 		));
 	
 		exit();
-
-exit();
-
 		}
 	
+
+public function importCasosEpidemiController($files){
+			
+			ini_set('memory_limit','512M');
+
+if ($files['fileCSVCIE10']['type'] !='text/csv' || mainModel::isDataEmtpy($files['fileCSVCIE10']['size'])){
+				$alert=[
+					"Alert"=>"simple",
+					"Title"=>"Datos Invalidos",
+					"Text"=>"El archivo es invalido o esta vacio <br> debe poseer la extension .CSV",
+					"Type"=>"error"
+				];	
+
+				echo json_encode($alert);
+
+				exit();
+	}
+
+// Se llamara la libreria para procesar e insetrar los valores del .csv
+
+require_once "../view/inc/spout.php";
+
+$filePath = $files['fileCSVCIE10']['tmp_name'];
+
+$reader = $ReaderEntityFactory::createCSVReader();
+
+$reader->open($filePath);
+
+// se recolectan los valores del CSV
+ 
+    $count = 0;
+
+    $dataForQuery = array();
+
+    foreach ($reader->getSheetIterator() as $sheet) {   
+        foreach ($sheet->getRowIterator() as $row) {
+
+			foreach($row->getCells() as $key => $cell){
+			
+			$ceilUTF8=utf8_encode($cell);
+				
+			$dataForQuery[$count][$key]=$ceilUTF8;
+
+			        }
+			  $count++;
+			}   
+    }
+
+
+for ($indiceFila = 1; $indiceFila < count($dataForQuery); $indiceFila++) {
+
+
+    $id_caso_epidemi = $dataForQuery[$indiceFila][1];
+
+    $id_genero = $dataForQuery[$indiceFila][2];
+
+    $id_nacionalidad = $dataForQuery[$indiceFila][4];
+
+    $doc_identidad = $dataForQuery[$indiceFila][5];
+
+    $fecha_nacimiento = $dataForQuery[$indiceFila][7];
+
+    $nombres = $dataForQuery[$indiceFila][9];
+
+    $apellidos = $dataForQuery[$indiceFila][10];
+
+    $clave_capitulo_cie10 = $dataForQuery[$indiceFila][11];
+
+    $catalog_key_cie10 = $dataForQuery[$indiceFila][12];
+
+    $fecha_registro = $dataForQuery[$indiceFila][14];
+
+    $id_parroquia = $dataForQuery[$indiceFila][15];
+
+    $direccion = $dataForQuery[$indiceFila][17];
+    
+    $telefono = $dataForQuery[$indiceFila][18];
+
+    $usuario = $dataForQuery[$indiceFila][18];
+
+    $id_nacionalidad_usuario = $dataForQuery[$indiceFila][20];
+
+    $doc_identidad_usuario = $dataForQuery[$indiceFila][21];
+
+    $bitacora_year = $dataForQuery[$indiceFila][23];
+
+    $bitacora_fecha = $dataForQuery[$indiceFila][24];
+
+    $bitacora_fecha = $dataForQuery[$indiceFila][25];
+
+
+    $id_caso_epidemi 
+
+    $id_genero 
+
+    $id_nacionalidad 
+
+    $doc_identidad 
+
+    $fecha_nacimiento 
+
+    $nombres 
+
+    $apellidos 
+
+    $clave_capitulo_cie10 
+
+    $catalog_key_cie10 
+
+    $fecha_registro 
+
+    $id_parroquia 
+
+    $direccion 
+    
+    $telefono 
+
+    $usuario 
+
+    $id_nacionalidad_usuario 
+
+    $doc_identidad_usuario 
+
+    $bitacora_year 
+
+    $bitacora_fecha 
+
+    $bitacora_fecha 
+	
+
+		$dataPerson = 
+		'doc_identidad'=>$doc_identidad,
+		"nombres"=>$nombres,
+		"apellidos"=>$apellidos,
+		"fecha_nacimiento"=>$fecha_nacimiento,
+		"id_nacionalidad"=>$id_nacionalidad,
+		"direccion"=>$direccion,
+		"id_genero"=>$id_genero,
+		'id_caso_epidemi'=>$id_caso_epidemi,
+		"catalog_key_cie10"=>$catalog_key_cie10,
+		"id_parroquia"=>$id_parroquia,
+		"direccion"=>$direccion,
+		"fecha_registro"=>$fecha_registro,
+		"telefono"=>$telefono,
+		"id_nacionalidad_usuario"=>$_SESSION['id_nacionalidad'],
+		"doc_identidad_usuario"=>$_SESSION['doc_identidad'],
+		"usuario_alias"=>$_SESSION['aliasUser'],
+		"bitacora_fecha"=>$currentDate,
+		"bitacora_year"=>$currentYear,
+		"bitacora_hora"=>$currentHour,
+		"id_tipo_operacion"=>'2', // tipo actualizacion
+		"fecha_registro"=>$fecha_registro,
+		"catalog_key_cie10"=>$catalog_key_cie10;			
+
+
+	}
+
+
+}
+
+
 	public function getFirstDateRecordscasosEpidemiController(){
 
 		$queryFirstDateRecords = mainModel::connectDB()->query('SELECT fecha_registro FROM casos_epidemi ORDER BY fecha_registro ASC  LIMIT 1');

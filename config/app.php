@@ -1,6 +1,9 @@
 <?php 
 
-const SERVERURL="http://localhost/projects/dptoEpidemi/";
+//const SERVERURL="http://localhost/projects/dptoEpidemi/";
+
+const SERVERURL="https://gestion-epidemiologica-paraiso.herokuapp.com/";
+
 const ORGANIZATION = "Clinica Popular el Paraiso: Dpto de Epidemiologia";
 
 date_default_timezone_set("America/Caracas");

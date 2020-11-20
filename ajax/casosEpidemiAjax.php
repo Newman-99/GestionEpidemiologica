@@ -31,7 +31,12 @@ if (isset($_POST['operationType']) && $_POST['operationType'] == "register"){
 }elseif (isset($_GET['viewReportEpi'])) {
 
 	 	$casosEpidemiController->getDataTablesEPIController($_GET);
+
+}elseif (isset($_FILES['fileCSVImportCaseEpidemi'])) {
+
+		ini_set('memory_limit','512M');
 	
+
 		} else { 
 		/*
 		session_start(["name"=> "dptoEpidemi"]);

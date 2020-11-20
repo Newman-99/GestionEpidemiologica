@@ -4,7 +4,7 @@
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+        <h5 class="modal-title" id="exampleModalLabel">Importar Casos Epidemiologicos</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -17,15 +17,12 @@
         <div class="row">
           <div class="col-lg-7">
             <div class="p-5">
-              <div class="text-center">
-                <h1 class="h3 mb-2 text-gray-800">Importar Casos Epidemiologicos</h1>
-              </div>
 
    <form class="formAjax form-update form-group text-center user" action="<?php echo SERVERURL; ?>ajax/casosEpidemiAjax.php" method="POST" data-form="files" autocomplete="off" enctype="multipart/form-data">
 
                 <div class="form-group" id="update-cie-10">
                   <label for="">Elegir Archivo CSV:</label>
-                    <input type="file" class="form-control" id="fileImportCaseEpidemi" name="fileImportCaseEpidemi" accept=".csv">
+                    <input type="file" class="form-control" id="fileCSVImportCaseEpidemi" name="fileCSVImportCaseEpidemi" accept=".csv">
               </div>
 
       

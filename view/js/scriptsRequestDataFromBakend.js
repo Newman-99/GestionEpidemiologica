@@ -110,22 +110,19 @@ function getDataCasosEpidemiForDataTables(requestedPersonEpidemi,minDateRange,ma
       {
         // id_nacionalidad_caso
       targets: [ 4 ],
-      visible: false,
-                searchable: false                
+      visible: false
       },
 
       {
         // doc_identidad_caso
       targets: [ 5 ],
-      visible: false,
-                searchable: false                
+      visible: false
       },
 
       {
         // comlumn clave_captitulo_cie10
       targets: [11],
-      visible: false,
-                searchable: false                
+      visible: false
       },
 
       {
@@ -133,13 +130,31 @@ function getDataCasosEpidemiForDataTables(requestedPersonEpidemi,minDateRange,ma
       targets: [ 15 ],
       visible: false,
                 searchable: false                
+      },     
+  
+      {
+        //id_nacionalidad_usuario
+      targets: [ 20 ],
+      visible: false
       },
-      
+        
+      {
+        //doc_identidad_usuario
+      targets: [ 21 ],
+      visible: false
+      },
+
+      {
+        //year_registro
+      targets: [ 23 ],
+      visible: false
+      },
+
       {
         mData: null,
         sDefaultContent: '<button name= "delete" id= "delete" value="delete" class="btn btn-danger btn-circle btn-sm delete"><i class="fas fa-trash"></i> </button> <button value = "update" name = "update" id = "update" class="btn btn-warning btn-circle btn-sm"><i class="fas fa-redo"></i></button>',
 
-        aTargets: [23]
+        aTargets: [26]
       }
         ],
         dom: 'lBfrtip',

@@ -10,8 +10,6 @@
 	
 			$cie10DataController = new cie10DataController();
 
-		ini_set('memory_limit','512M');
-
 	
 	if (isset($_FILES['fileCSVCIE10'])) {
 

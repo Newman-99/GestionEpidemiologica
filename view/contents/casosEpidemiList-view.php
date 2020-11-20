@@ -16,14 +16,14 @@
 ?>
 
           <!-- Page Heading -->
-          <h1 class="h3 mb-2 text-gray-800">Lista de Casos Epidemiologicos</h1>
+          <h1 class="h3 mb-2 text-gray-800">Casos Epidemiologicos</h1>
           
           <!-- <p class="mb-4">DataTables is a third party plugin that is used to generate the demo table below. For more information about DataTables, pleas>
           -->
 
         <div class='card shadow mb-4'>
             <div class='card-header py-3'>
-              <h6 class='m-0 font-weight-bold text-primary'>Lista de Casos Epidemiologicos</h6>
+              <h6 class='m-0 font-weight-bold text-primary'>Lista de Casos</h6>
             </div>
 
             <div class='card-body '>
@@ -72,7 +72,7 @@
            <!-- FINAL Formulario para limitar fecha mediante el Backend -->
 
 
-                <table class='table display table-striped' id='dataTable' name = 'dataTable' width='100%' cellspacing='0'>
+                <table class='table table-striped display' id='dataTable' name = 'dataTable' width='100%' cellspacing='0'>
                   <thead>
                     <tr>
                       <th>Nro. </th>
@@ -95,9 +95,12 @@
                       <th>Direccion</th>
                       <th>Telefono</th>
                       <th>Usuario</th>
+                      <th>id_nacionalidad_usuario</th>
+                      <th>doc_identidad_usuario</th>
                       <th>Documento de Identidad</th>
-                      <th>Fecha de Bitacora</th>
-                      <th>Hora de Registro</th>
+                       <th>bitacora_year</th>                     
+                      <th>Fecha de Operacion</th>
+                      <th>Hora de Operacion</th>
                       <th></th>
                     </tr>
                   </thead>
@@ -124,9 +127,12 @@
                       <th>Direccion</th>
                       <th>Telefono</th>
                       <th>Usuario</th>
+                      <th>id_nacionalidad_usuario</th>
+                      <th>doc_identidad_usuario</th>
                       <th>Documento de Identidad</th>
-                      <th>Fecha de Bitacora</th>
-                      <th>Hora de Registro</th>
+                      <th>bitacora_year</th>
+                      <th>Fecha de Operacion</th>
+                      <th>Hora de Operacion</th>
                       <th></th>
                     </tr>
                   </tfoot>

@@ -30,8 +30,6 @@
 
 		          </form>
     <div id="btnInsertCancelAjax"></div>
-
-
               </div>
             </div>
           </div>

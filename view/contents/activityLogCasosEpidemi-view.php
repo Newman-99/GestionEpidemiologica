@@ -14,7 +14,7 @@
 ?>
 
           <!-- Page Heading -->
-          <h1 class="h3 mb-2 text-gray-800">Registro de Sesiones</h1>
+          <h1 class="h3 mb-2 text-gray-800">Casos Epidemiologicos</h1>
           
           <!-- <p class="mb-4">DataTables is a third party plugin that is used to generate the demo table below. For more information about DataTables, pleas>
           -->
@@ -38,7 +38,7 @@ $minDateValueAvailable = $activityLogCasosEpidemi-> getFirstDateRecordsActivityL
 
         <div class='card shadow mb-4'>
             <div class='card-header py-3'>
-              <h6 class='m-0 font-weight-bold text-primary'>Lista de Usuarios</h6>
+              <h6 class='m-0 font-weight-bold text-primary'>Registro de Operaciones</h6>
             </div>
             <div class='card-body'>
   
@@ -61,7 +61,7 @@ $minDateValueAvailable = $activityLogCasosEpidemi-> getFirstDateRecordsActivityL
           </div>
            <!-- FINAL Formulario para limitar fecha mediante el Backend -->
 
-                <table class='table table-bordered table-striped' id='dataTable' width='100%' cellspacing='0'>
+                <table class='table table-striped display' id='dataTable' width='100%' cellspacing='0'>
                   <thead>
                     <tr>
 

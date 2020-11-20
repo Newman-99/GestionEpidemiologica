@@ -229,7 +229,7 @@ $queryInsertCie10 = 'INSERT INTO data_cie10(CONSECUTIVO,
 :ASTERISCO)';
 
 $ifExistRecordsInDataCIE10 = $DB_transacc->query('SELECT CONSECUTIVO FROM data_cie10 LIMIT 1;');
-	// si no hay registros insertamos datos
+	// si no hay registros insertamos datos de una vez sin comprobar
 if (!$ifExistRecordsInDataCIE10->rowCount()) {
 $sqlQuery = $DB_transacc->prepare($queryInsertCie10);
 }else{
@@ -292,7 +292,8 @@ ON CONFLICT (CATALOG_KEY) DO UPDATE SET
 	, NUM_CAUSES=:NUM_CAUSES
 	, ES_SUIVE_MORTA=:ES_SUIVE_MORTA
 	, ES_SUIVE_MORB=:ES_SUIVE_MORB
-	, EPI_CLAVE=:EPI_CLAVE
+	, EPI_CLAVE=:EPI_CLAVEif (!$ifExistRecordsInDataCIE10->rowCount()) {
+
 	, EPI_CLAVE_DESC=:EPI_CLAVE_DESC
 	, ES_SUIVE_NOTIN=:ES_SUIVE_NOTIN
 	, ES_SUIVE_EST_EPI=:ES_SUIVE_EST_EPI
