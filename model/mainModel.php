@@ -23,6 +23,22 @@
 
 		public static function connectDB(){
 
+
+		try {			
+
+$db = (function(){
+    $parts = (parse_url(getenv('DATABASE_URL') ?: 'postgres://ilsmpwdzrresby:7879db47bd3be54c574eab3a81a1bc2db477bc890a756eccc406992832a0fd8e@ec2-54-246-87-132.eu-west-1.compute.amazonaws.com:5432/d4hub5gh1m9jjj'));
+    extract($parts);
+    $path = ltrim($path, "/");
+    return new PDO("pgsql:host={$host};port={$port};dbname={$path}", $user, $pass);
+})();
+
+return $db;
+
+		} catch (PDOException $e) {
+		    error_log("Failed to connect to database: ".$e->getMessage());
+		}				
+/*
 		try {			
 	$DB = new PDO("pgsql:host=".SERVER_PATH.";port=".PORT.";dbname=".DB."",USER,PASS, array(
 				PDO::ATTR_PERSISTENT => true, PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8'));
@@ -32,7 +48,7 @@
 		} catch (PDOException $e) {
 		    error_log("Failed to connect to database: ".$e->getMessage());
 		}				
-
+*/
 	}
 
 		protected static function runSimpleQuery($stringQuery){
@@ -128,7 +144,14 @@ protected static function checkPatterns($pattern,$string){
 			// Si hay errors
 		}
 	}
-		
+	
+
+	protected static function dateIsValidAccordingToformat($date, $format = 'Y-m-d')
+{
+    $d = DateTime::createFromFormat($format, $date);
+    return $d && $d->format($format) == $date;
+}
+	
 
 	protected static function paginateTables ($currentPage,$nroMaxPages,$linksForButtons,$nroButtons){
 
@@ -449,13 +472,11 @@ protected static function isFieldsEqualToThoseInTheDatabase($queryToGet,$fieldst
     $sTable = $table;
 
     /* Database connection information */
-    $gaSql['user']       = USER;
+    /*$gaSql['user']       = USER;
     $gaSql['password']   = PASS;
     $gaSql['db']         = DB;
     $gaSql['server']     = SERVER_PATH;
-     
-   
-     
+  
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
      * If you just want to use the basic configuration for DataTables with PHP server-side, there is
      * no need to edit below this line
@@ -464,13 +485,19 @@ protected static function isFieldsEqualToThoseInTheDatabase($queryToGet,$fieldst
     /*
      * DB connection
      */
+    /*
     $gaSql['link'] = pg_connect(
         " host=".$gaSql['server'].
         " dbname=".$gaSql['db'].
         " user=".$gaSql['user'].
         " password=".$gaSql['password']
     ) or die('Could not connect: ' . pg_last_error());
-     
+*/
+
+
+$gaSql['link'] = getenv("DATABASE_URL") ?: "postgres://ilsmpwdzrresby:7879db47bd3be54c574eab3a81a1bc2db477bc890a756eccc406992832a0fd8e@ec2-54-246-87-132.eu-west-1.compute.amazonaws.com:5432/d4hub5gh1m9jjj";
+$db = pg_connect($db_url);
+
      
     /*
      * Paging

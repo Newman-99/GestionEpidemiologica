@@ -235,7 +235,6 @@ if (!$dataCasosEpidemi['ifUpdatePerson']) {
 		 id_parroquia = :id_parroquia,
 		 direccion = :direccion,
 		 telefono = :telefono,
-		 bitacora_year = :bitacora_year,
 		 fecha_registro = :fecha_registro WHERE id_caso_epidemi = :id_caso_epidemi;";
 
 		$sqlQuery = $DB_transacc->prepare($sqlQuery);
@@ -246,7 +245,6 @@ if (!$dataCasosEpidemi['ifUpdatePerson']) {
 		 "id_parroquia" => $dataCasosEpidemi['id_parroquia'],
 		 "direccion" => $dataCasosEpidemi['direccion'],
 		 "telefono" => $dataCasosEpidemi['telefono'],
-		 "bitacora_year" => $dataCasosEpidemi['bitacora_year'],
 		 "fecha_registro" => $dataCasosEpidemi['fecha_registro']));
 
 

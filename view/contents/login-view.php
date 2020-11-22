@@ -40,7 +40,7 @@
                     <a class="small" href="<?php echo SERVERURL; ?>registerUser/">Crear una cuenta</a>
                   </div>
   
-                  <?php require "./view/inc/linkRestartUser.php"; ?>
+                    <?php require "./view/inc/linkRestartUser.php"; ?>
       
                 </div>
               </div>

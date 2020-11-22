@@ -54,7 +54,7 @@ if(textMsjAlert==false){
 			if(type==="files"){
 
 			// parametos especiales para envio de archivos
-			    var file = $('#fileCSVCIE10')[0].files[0];
+			    var file = $('.files')[0].files[0];
 
 			    dataForm.append('file',file);
 				contentTypes = false;

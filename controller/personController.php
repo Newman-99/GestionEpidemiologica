@@ -32,8 +32,6 @@
 		 
 		 $id_genero = mainModel::cleanStringSQL($dataPerson['id_genero']);
 
-		 $id_genero = mainModel::cleanStringSQL($dataPerson['id_genero']);
-
 		 $telefono = mainModel::cleanStringSQL($dataPerson['telefonoPart1'].$dataPerson['telefonoPart2'].$dataPerson['telefonoPart3']);
 
 		 $telefono = self::ClearUserSeparatedCharacters($telefono);
@@ -358,7 +356,6 @@
 		"apellidos"=>$apellidos,
 		"fecha_nacimiento"=>$fecha_nacimiento,
 		"id_nacionalidad"=>$id_nacionalidad,
-		"direccion"=>$direccion,
 		"id_genero"=>$id_genero,
 		];
 				 	

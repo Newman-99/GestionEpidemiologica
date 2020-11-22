@@ -380,7 +380,6 @@
 		"id_parroquia",
 		"direccion",
 		"fecha_registro",
-		"bitacora_year",
 		"telefono"];
 
 		 $tableToCompare = 'casos_epidemi';
@@ -949,49 +948,211 @@ for ($indiceFila = 1; $indiceFila < count($dataForQuery); $indiceFila++) {
 
     $bitacora_fecha = $dataForQuery[$indiceFila][24];
 
-    $bitacora_fecha = $dataForQuery[$indiceFila][25];
+    $bitacora_hora = $dataForQuery[$indiceFila][25];		
+		
+
+		$doc_identidad = mainModel::cleanStringSQL($dataPerson['doc_identidad']);
+		
+		 $doc_identidad = self::ClearUserSeparatedCharacters($doc_identidad);		 
+
+		 $doc_identidad = ltrim($doc_identidad, '0');
+
+		$id_nacionalidad = mainModel::cleanStringSQL($dataCasosEpidemi['id_nacionalidad']);
+
+		 
+		 $id_genero = mainModel::cleanStringSQL($id_genero);
+
+		$catalog_key_cie10 = mainModel::cleanStringSQL($catalogKeyCIE10);
+
+		$id_parroquia = mainModel::cleanStringSQL($id_parroquia);
+		 
+		$direccion = mainModel::cleanStringSQL($direccion);
+
+		 $telefono = mainModel::cleanStringSQL($telefono);
+
+		 $fecha_registro = mainModel::cleanStringSQL($fecha_registro);
+
+		 $fecha_nacimiento = mainModel::cleanStringSQL($fecha_nacimiento);		 	
+
+		 $nombres = mainModel::cleanStringSQL($nombres);
+		 
+		 $apellidos = mainModel::cleanStringSQL($apellidos);
 
 
-    $id_caso_epidemi 
+		$nombres=self::filtterNombresApellidos($nombres);
 
-    $id_genero 
+		$apellidos=self::filtterNombresApellidos($apellidos);
 
-    $id_nacionalidad 
+		$doc_identidad_usuario = mainModel::cleanStringSQL($doc_identidad_usuario);
+		
+		 $doc_identidad_usuario = self::ClearUserSeparatedCharacters($doc_identidad_usuario);		 
 
-    $doc_identidad 
+		 $doc_identidad_usuario = ltrim($doc_identidad_usuario, '0');
+		 
 
-    $fecha_nacimiento 
+		$usuario = mainModel::cleanStringSQL($usuario);
 
-    $nombres 
+		$bitacora_year = mainModel::cleanStringSQL($bitacora_year);
 
-    $apellidos 
+		$bitacora_fecha = mainModel::cleanStringSQL($bitacora_fecha);
 
-    $clave_capitulo_cie10 
+		$bitacora_hora = mainModel::cleanStringSQL($bitacora_hora);
 
-    $catalog_key_cie10 
+		if (mainModel::isDataEmtpy(
+			    $id_caso_epidemi,
+			    $id_genero,
+			    $id_nacionalidad,
+			    $doc_identidad,
+			    $fecha_nacimiento,
+			    $nombres,
+			   	$apellidos,
+				$clave_capitulo_cie10,
+				$catalog_key_cie10,
+				$fecha_registro,
+				$id_parroquia,
+				$direccion,
+			   	$telefono,
+				$usuario,
+				$id_nacionalidad_usuario,
+				$doc_identidad_usuario,
+				$bitacora_year,
+				$bitacora_fecha,
+				$bitacora_hora)){
 
-    $fecha_registro 
+				$alert=[
+					"Alert"=>"simple",
+					"Title"=>"Campos Vacios",
+					"Text"=>"Todos los campos del caso epidemiologico son obligatorios",
+					"Type"=>"error"
+				];
 
-    $id_parroquia 
+				echo json_encode($alert);
 
-    $direccion 
-    
-    $telefono 
+				exit();
 
-    $usuario 
+		}
 
-    $id_nacionalidad_usuario 
+		   if(strlen($direccion)<5){
 
-    $doc_identidad_usuario 
+			$alert=[
+			"Alert"=>"simple",
+			"Title"=>"Datos Invalidos",
+			"Text"=>"La direccion deben poseer mas de 5 caracteres",
+			"Type"=>"error"
+				];	
+		
+				echo json_encode($alert);
 
-    $bitacora_year 
+				exit();
+			}
 
-    $bitacora_fecha 
+		if(!mainModel::isValidNroTlf($telefono)){
+			
+			$alert=[
+				"Alert"=>"simple",
+				"Title"=>"Datos Invalidos",
+				"Text"=>"El Nro de Telefono es invalido",
+				"Type"=>"error"
+			];
 
-    $bitacora_fecha 
-	
+				echo json_encode($alert);
 
-		$dataPerson = 
+				exit();
+			}
+
+
+			if (!mainModel::checkDate($fecha_registro)){
+			$alert=[
+				"Alert"=>"simple",
+				"Title"=>"Datos Invalidos",
+				"Text"=>"La Fecha de Registro es invalida",
+				"Type"=>"error"
+			];
+
+				echo json_encode($alert);
+
+				exit();
+		}
+
+
+			if (!mainModel::checkDate($bitacora_fecha)){
+			$alert=[
+				"Alert"=>"simple",
+				"Title"=>"Datos Invalidos",
+				"Text"=>"La Fecha de Bitacora es invalida",
+				"Type"=>"error"
+			];
+
+				echo json_encode($alert);
+
+				exit();
+		}
+
+
+			if (!mainModel::dateIsValidAccordingToformat($bitacora_hora,'h:i:s a')){
+			$alert=[
+				"Alert"=>"simple",
+				"Title"=>"Datos Invalidos",
+				"Text"=>"La Hora de Bitacora es invalida",
+				"Type"=>"error"
+			];
+
+				echo json_encode($alert);
+
+				exit();
+		}
+
+			if (!self::isValidDateRegistRangeAllowedCaseEpidemi($fecha_registro)){
+			$alert=[
+				"Alert"=>"simple",
+				"Title"=>"Datos Invalidos",
+				"Text"=>"La fecha de registro no esta en el rango aceptado",
+				"Type"=>"error"
+			];
+
+				echo json_encode($alert);
+
+				exit();
+		}
+
+
+
+			if (!self::isValidDateRegistRangeAllowedCaseEpidemi($bitacora_fecha)){
+			$alert=[
+				"Alert"=>"simple",
+				"Title"=>"Datos Invalidos",
+				"Text"=>"La fecha de bitcora no esta en el rango aceptado",
+				"Type"=>"error"
+			];
+
+				echo json_encode($alert);
+
+				exit();
+		}
+
+
+		$queryIsExistUser = mainModel::connectDB()->query("SELECT alias FROM usuarios WHERE alias = '$usuario'");
+
+		$queryIsExistUser->execute();		 
+
+		if(!$queryIsExistUser->rowCount()){
+				
+				$alert=[
+				"Alert"=>"simple",
+				"Title"=>"Datos no encontrados",
+				"Text"=>"El alias de usuario o la contraseña son incorrectos",
+				"Type"=>"error"
+			];
+				echo json_encode($alert);
+
+				exit();
+
+			}
+
+		$fecha_registro_values = explode("-", $fecha_registro);
+
+
+		$dataCasosEpidemi=[
 		'doc_identidad'=>$doc_identidad,
 		"nombres"=>$nombres,
 		"apellidos"=>$apellidos,
@@ -1008,17 +1169,16 @@ for ($indiceFila = 1; $indiceFila < count($dataForQuery); $indiceFila++) {
 		"id_nacionalidad_usuario"=>$_SESSION['id_nacionalidad'],
 		"doc_identidad_usuario"=>$_SESSION['doc_identidad'],
 		"usuario_alias"=>$_SESSION['aliasUser'],
-		"bitacora_fecha"=>$currentDate,
-		"bitacora_year"=>$currentYear,
-		"bitacora_hora"=>$currentHour,
-		"id_tipo_operacion"=>'2', // tipo actualizacion
+		"bitacora_fecha"=>$bitacora_fecha,
+		"bitacora_year"=>$fecha_registro_values[0],
+		"bitacora_hora"=>$bitacora_hora,
 		"fecha_registro"=>$fecha_registro,
-		"catalog_key_cie10"=>$catalog_key_cie10;			
+		"catalog_key_cie10"=>$catalog_key_cie10];			
 
+var_dump($dataCasosEpidemi);
 
+	exit();
 	}
-
-
 }
 
 
@@ -1058,9 +1218,9 @@ for ($indiceFila = 1; $indiceFila < count($dataForQuery); $indiceFila++) {
 
        $maxDateAllowed = date("Y-m-d",strtotime($currentDate."- 1 days"));
 
-       $minDateRange = date("Y-m-d",strtotime($maxDateAllowed."- 7 days"));
+//       $minDateRange = date("Y-m-d",strtotime($maxDateAllowed."- 7 days"));
        
-		if (($fecha_registro < $minDateRange)|| ($fecha_registro > $maxDateAllowed)){
+		if (/*($fecha_registro < $minDateRange)||*/ $fecha_registro > $maxDateAllowed){
 		   return false;
 		   	}
 			return true;
@@ -1078,6 +1238,7 @@ function getInicialGeneroController($id_genero){
 }
 
 }
+
 
 }
 								

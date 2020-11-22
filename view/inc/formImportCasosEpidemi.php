@@ -22,7 +22,7 @@
 
                 <div class="form-group" id="update-cie-10">
                   <label for="">Elegir Archivo CSV:</label>
-                    <input type="file" class="form-control" id="fileCSVImportCaseEpidemi" name="fileCSVImportCaseEpidemi" accept=".csv">
+                    <input type="file" class="form-control files" id="fileCSVImportCaseEpidemi" name="fileCSVImportCaseEpidemi" accept=".csv">
               </div>
 
       
@@ -30,9 +30,7 @@
 
     <div id="msgBackendProcessAjaxData"></div>
 
-              </form>
     <div id="btnInsertCancelAjax"></div>
-
 
               </div>
             </div>
@@ -45,6 +43,8 @@
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
      <button class="btn btn-primary btn-user btn-block" type="submit" value="updateCIE10" name="update">Actualizar</button>
       </div>
+     </form>
+
     </div>
   </div>
 </div>
