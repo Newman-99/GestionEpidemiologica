@@ -495,8 +495,9 @@ protected static function isFieldsEqualToThoseInTheDatabase($queryToGet,$fieldst
 */
 
 
-$gaSql['link'] = getenv("DATABASE_URL") ?: "postgres://ilsmpwdzrresby:7879db47bd3be54c574eab3a81a1bc2db477bc890a756eccc406992832a0fd8e@ec2-54-246-87-132.eu-west-1.compute.amazonaws.com:5432/d4hub5gh1m9jjj";
-$db = pg_connect($db_url);
+ $db_url = getenv("DATABASE_URL") ?: "postgres://ilsmpwdzrresby:7879db47bd3be54c574eab3a81a1bc2db477bc890a756eccc406992832a0fd8e@ec2-54-246-87-132.eu-west-1.compute.amazonaws.com:5432/d4hub5gh1m9jjj";
+
+$gaSql['link'] = pg_connect($db_url);
 
      
     /*
