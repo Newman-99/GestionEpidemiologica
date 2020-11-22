@@ -2,7 +2,7 @@
           <input type="hidden" name="ORGANIZATION" id="ORGANIZATION"  class='form-control' value='<?php echo ORGANIZATION; ?>ajax/casosEpidemiAjax.php'>
 
   <!-- Custom fonts for this template -->
-  <link href="<?php echo SERVERURL; ?>vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+  <link href="<?php echo SERVERURL; ?>archives_vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
   <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
   
   <!-- Custom styles for this template-->
@@ -22,31 +22,31 @@
 
   <!-- Bootstrap core JavaScript-->
   
-  <script src="<?php echo SERVERURL; ?>vendor/jquery/jquery.min.js"></script>
+  <script src="<?php echo SERVERURL; ?>archives_vendor/jquery/jquery.min.js"></script>
 
 
 <!-- Page level plugins -->  
 
-<!--<script src="<?php //echo SERVERURL; ?>vendor/datatables/jQuery-3.3.1/jquery-3.3.1.min.js"></script>-->
+<!--<script src="<?php //echo SERVERURL; ?>archives_vendor/datatables/jQuery-3.3.1/jquery-3.3.1.min.js"></script>-->
 
 
 
-<link rel="stylesheet" type="text/css" href="<?php echo SERVERURL; ?>vendor/datatables/DataTables-1.10.22/css/dataTables.bootstrap4.min.css"/>
+<link rel="stylesheet" type="text/css" href="<?php echo SERVERURL; ?>archives_vendor/datatables/DataTables-1.10.22/css/dataTables.bootstrap4.min.css"/>
 
-<!--<link rel="stylesheet" type="text/css" href="<?php //echo SERVERURL; ?>vendor/datatables/DataTables-1.10.22/css/jquery.dataTables.min.css"/>
+<!--<link rel="stylesheet" type="text/css" href="<?php //echo SERVERURL; ?>archives_vendor/datatables/DataTables-1.10.22/css/jquery.dataTables.min.css"/>
 -->
 
-<link rel="stylesheet" type="text/css" href="<?php echo SERVERURL; ?>vendor/datatables/Editor-1.9.5/css/editor.bootstrap4.min.css"/>
-<link rel="stylesheet" type="text/css" href="<?php echo SERVERURL; ?>vendor/datatables/AutoFill-2.3.5/css/autoFill.bootstrap4.css"/>
-<link rel="stylesheet" type="text/css" href="<?php echo SERVERURL; ?>vendor/datatables/Buttons-1.6.5/css/buttons.bootstrap4.min.css"/>
-<link rel="stylesheet" type="text/css" href="<?php echo SERVERURL; ?>vendor/datatables/KeyTable-2.5.3/css/keyTable.bootstrap4.min.css"/>
-<link rel="stylesheet" type="text/css" href="<?php echo SERVERURL; ?>vendor/datatables/Responsive-2.2.6/css/responsive.bootstrap4.min.css"/>
-<link rel="stylesheet" type="text/css" href="<?php echo SERVERURL; ?>vendor/datatables/RowGroup-1.1.2/css/rowGroup.bootstrap4.min.css"/>
-<link rel="stylesheet" type="text/css" href="<?php echo SERVERURL; ?>vendor/datatables/RowReorder-1.2.7/css/rowReorder.bootstrap4.min.css"/>
-<link rel="stylesheet" type="text/css" href="<?php echo SERVERURL; ?>vendor/datatables/Scroller-2.0.3/css/scroller.bootstrap4.min.css"/>
-<link rel="stylesheet" type="text/css" href="<?php echo SERVERURL; ?>vendor/datatables/SearchBuilder-1.0.0/css/searchBuilder.bootstrap4.min.css"/>
-<link rel="stylesheet" type="text/css" href="<?php echo SERVERURL; ?>vendor/datatables/SearchPanes-1.2.1/css/searchPanes.bootstrap4.min.css"/>
-<link rel="stylesheet" type="text/css" href="<?php echo SERVERURL; ?>vendor/datatables/Select-1.3.1/css/select.bootstrap4.min.css"/>
+<link rel="stylesheet" type="text/css" href="<?php echo SERVERURL; ?>archives_vendor/datatables/Editor-1.9.5/css/editor.bootstrap4.min.css"/>
+<link rel="stylesheet" type="text/css" href="<?php echo SERVERURL; ?>archives_vendor/datatables/AutoFill-2.3.5/css/autoFill.bootstrap4.css"/>
+<link rel="stylesheet" type="text/css" href="<?php echo SERVERURL; ?>archives_vendor/datatables/Buttons-1.6.5/css/buttons.bootstrap4.min.css"/>
+<link rel="stylesheet" type="text/css" href="<?php echo SERVERURL; ?>archives_vendor/datatables/KeyTable-2.5.3/css/keyTable.bootstrap4.min.css"/>
+<link rel="stylesheet" type="text/css" href="<?php echo SERVERURL; ?>archives_vendor/datatables/Responsive-2.2.6/css/responsive.bootstrap4.min.css"/>
+<link rel="stylesheet" type="text/css" href="<?php echo SERVERURL; ?>archives_vendor/datatables/RowGroup-1.1.2/css/rowGroup.bootstrap4.min.css"/>
+<link rel="stylesheet" type="text/css" href="<?php echo SERVERURL; ?>archives_vendor/datatables/RowReorder-1.2.7/css/rowReorder.bootstrap4.min.css"/>
+<link rel="stylesheet" type="text/css" href="<?php echo SERVERURL; ?>archives_vendor/datatables/Scroller-2.0.3/css/scroller.bootstrap4.min.css"/>
+<link rel="stylesheet" type="text/css" href="<?php echo SERVERURL; ?>archives_vendor/datatables/SearchBuilder-1.0.0/css/searchBuilder.bootstrap4.min.css"/>
+<link rel="stylesheet" type="text/css" href="<?php echo SERVERURL; ?>archives_vendor/datatables/SearchPanes-1.2.1/css/searchPanes.bootstrap4.min.css"/>
+<link rel="stylesheet" type="text/css" href="<?php echo SERVERURL; ?>archives_vendor/datatables/Select-1.3.1/css/select.bootstrap4.min.css"/>
 
      
   <!-- Funcionalidades cortas personlizadas para el sistema-->
