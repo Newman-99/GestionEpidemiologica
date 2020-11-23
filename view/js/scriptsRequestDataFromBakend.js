@@ -167,12 +167,12 @@ function getDataCasosEpidemiForDataTables(requestedPersonEpidemi,minDateRange,ma
         buttons: [
         {
        extend: 'excelHtml5',
-        filename: 'Casos_Epidemiologicos_' + $('#minDateRange').val() + '_' + $('#maxDateRange').val() + '.xlsx'
+        filename: 'Casos_Epidemiologicos_' + $('#minDateRange').val() + '_' + $('#maxDateRange').val() + ''
         },
 
         {
        extend: 'csvHtml5',
-        filename: 'Casos_Epidemiologicos_' + $('#minDateRange').val() + '_' + $('#maxDateRange').val() + '.xlsx'
+        filename: 'Casos_Epidemiologicos_' + $('#minDateRange').val() + '_' + $('#maxDateRange').val() + ''
         }
         ]
         ,
