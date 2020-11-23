@@ -7,11 +7,13 @@
               <div class="text-center">
                 <h1 class="h3 mb-2 text-gray-800">Actualizar Catalogo CIE-10</h1>
               </div>
-
                     <p class="mb-4">El catalogo CIE-10 que se subira sobreescribira al actual, por lo se debe verificar los datos correctamente y debe asegurarse si este proceso es necesario.
                     </p>
 
-                    <p class="mb-4">Importante: Asegurese de convertir solo una hoja del archivo de Hojas de Calculo con los casos CIE-10 a un archivo CSV. 
+                    <p class="mb-4">Asegurese de convertir solo una hoja del archivo de Hojas de Calculo con los casos CIE-10 a un archivo CSV. 
+                    </p>
+
+                    <p class="mb-4">La Primera fila del archivo se obviara ya que deberia ser un encabezado. 
                     </p>
 
    <form class="formAjax form-update form-group text-center user" action="<?php echo SERVERURL; ?>ajax/cie10DataAjax.php" method="POST" data-form="files" autocomplete="off" enctype="multipart/form-data">

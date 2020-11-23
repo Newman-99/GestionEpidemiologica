@@ -281,7 +281,9 @@ public function loginUserController($dataUser){
 
 			mainModel::updateUsuarioBitacora($dataSession);
 
-			exit();			
+		$alert=["Alert"=>"simpleReload"];
+			echo json_encode($alert);
+			exit();
 
 		}			
 

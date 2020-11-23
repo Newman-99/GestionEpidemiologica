@@ -329,8 +329,7 @@ $queryGetRecordsCatalogKeyCie10 = $DB_transacc->query("SELECT CATALOG_KEY FROM d
 
 		$catalogKeyCie10ToRegister = array();
 
-
-for ($indiceFila = 1; $indiceFila < count($dataForQuery); $indiceFila++) {
+for ($indiceFila = 1; $indiceFila < 3100/*count($dataForQuery)*/; $indiceFila++) {
 
 // si no existe el caso en la hoja y la tabla esta vacia se elemina
 /*

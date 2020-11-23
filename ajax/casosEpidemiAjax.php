@@ -34,9 +34,7 @@ if (isset($_POST['operationType']) && $_POST['operationType'] == "register"){
 
 }elseif (isset($_FILES['fileCSVImportCaseEpidemi'])) {
 
-		ini_set('memory_limit','512M');
-
-	 	$casosEpidemiController->importCasosEpidemiController($_GET);
+	 	$casosEpidemiController->importCasosEpidemiController($_FILES);
 
 		} else { 
 		/*

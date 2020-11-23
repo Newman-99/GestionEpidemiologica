@@ -865,7 +865,7 @@ public function importCasosEpidemiController($files){
 			
 			ini_set('memory_limit','512M');
 
-if ($files['fileCSVCIE10']['type'] !='text/csv' || mainModel::isDataEmtpy($files['fileCSVCIE10']['size'])){
+if ($files['fileCSVImportCaseEpidemi']['type'] !='text/csv' || mainModel::isDataEmtpy($files['fileCSVImportCaseEpidemi']['size'])){
 				$alert=[
 					"Alert"=>"simple",
 					"Title"=>"Datos Invalidos",
@@ -882,7 +882,7 @@ if ($files['fileCSVCIE10']['type'] !='text/csv' || mainModel::isDataEmtpy($files
 
 require_once "../view/inc/spout.php";
 
-$filePath = $files['fileCSVCIE10']['tmp_name'];
+$filePath = $files['fileCSVImportCaseEpidemi']['tmp_name'];
 
 $reader = $ReaderEntityFactory::createCSVReader();
 
@@ -909,95 +909,63 @@ $reader->open($filePath);
     }
 
 
+		session_start(['name'=>'dptoEpidemi']);	
+
 for ($indiceFila = 1; $indiceFila < count($dataForQuery); $indiceFila++) {
 
 
-    $id_caso_epidemi = $dataForQuery[$indiceFila][1];
+$id_caso_epidemi = mainModel::cleanStringSQL($dataForQuery[$indiceFila][1]);
 
-    $id_genero = $dataForQuery[$indiceFila][2];
+$id_genero = mainModel::cleanStringSQL($dataForQuery[$indiceFila][2]);
 
-    $id_nacionalidad = $dataForQuery[$indiceFila][4];
+$id_nacionalidad = mainModel::cleanStringSQL($dataForQuery[$indiceFila][4]);
 
-    $doc_identidad = $dataForQuery[$indiceFila][5];
 
-    $fecha_nacimiento = $dataForQuery[$indiceFila][7];
+$doc_identidad = mainModel::cleanStringSQL($dataForQuery[$indiceFila][5]);
 
-    $nombres = $dataForQuery[$indiceFila][9];
+$fecha_nacimiento = mainModel::cleanStringSQL($dataForQuery[$indiceFila][7]);
 
-    $apellidos = $dataForQuery[$indiceFila][10];
+$nombres = mainModel::cleanStringSQL($dataForQuery[$indiceFila][9]);
 
-    $clave_capitulo_cie10 = $dataForQuery[$indiceFila][11];
+$apellidos = mainModel::cleanStringSQL($dataForQuery[$indiceFila][10]);
 
-    $catalog_key_cie10 = $dataForQuery[$indiceFila][12];
+$catalog_key_cie10 = mainModel::cleanStringSQL($dataForQuery[$indiceFila][12]);
 
-    $fecha_registro = $dataForQuery[$indiceFila][14];
+$fecha_registro = mainModel::cleanStringSQL($dataForQuery[$indiceFila][14]);
 
-    $id_parroquia = $dataForQuery[$indiceFila][15];
+$id_parroquia = mainModel::cleanStringSQL($dataForQuery[$indiceFila][15]);
 
-    $direccion = $dataForQuery[$indiceFila][17];
-    
-    $telefono = $dataForQuery[$indiceFila][18];
+$direccion = mainModel::cleanStringSQL($dataForQuery[$indiceFila][17]);
 
-    $usuario = $dataForQuery[$indiceFila][18];
 
-    $id_nacionalidad_usuario = $dataForQuery[$indiceFila][20];
+$telefono = mainModel::cleanStringSQL($dataForQuery[$indiceFila][18]);
 
-    $doc_identidad_usuario = $dataForQuery[$indiceFila][21];
 
-    $bitacora_year = $dataForQuery[$indiceFila][23];
+$usuario = mainModel::cleanStringSQL($dataForQuery[$indiceFila][19]);
 
-    $bitacora_fecha = $dataForQuery[$indiceFila][24];
+$id_nacionalidad_usuario = mainModel::cleanStringSQL($dataForQuery[$indiceFila][20]);
 
-    $bitacora_hora = $dataForQuery[$indiceFila][25];		
+$doc_identidad_usuario = mainModel::cleanStringSQL($dataForQuery[$indiceFila][21]);
+
+$bitacora_year = mainModel::cleanStringSQL($dataForQuery[$indiceFila][23]);
+
+$bitacora_fecha = mainModel::cleanStringSQL($dataForQuery[$indiceFila][24]);
+
+$bitacora_hora = mainModel::cleanStringSQL($dataForQuery[$indiceFila][25]);		
+
 		
+		$doc_identidad = self::$personController->ClearUserSeparatedCharacters($doc_identidad);		 
 
-		$doc_identidad = mainModel::cleanStringSQL($dataPerson['doc_identidad']);
+		$doc_identidad = ltrim($doc_identidad, '0');
+
+		$nombres=self::$personController->filtterNombresApellidos($nombres);
+
+		$apellidos=self::$personController->filtterNombresApellidos($apellidos);
 		
-		 $doc_identidad = self::ClearUserSeparatedCharacters($doc_identidad);		 
-
-		 $doc_identidad = ltrim($doc_identidad, '0');
-
-		$id_nacionalidad = mainModel::cleanStringSQL($dataCasosEpidemi['id_nacionalidad']);
-
-		 
-		 $id_genero = mainModel::cleanStringSQL($id_genero);
-
-		$catalog_key_cie10 = mainModel::cleanStringSQL($catalogKeyCIE10);
-
-		$id_parroquia = mainModel::cleanStringSQL($id_parroquia);
-		 
-		$direccion = mainModel::cleanStringSQL($direccion);
-
-		 $telefono = mainModel::cleanStringSQL($telefono);
-
-		 $fecha_registro = mainModel::cleanStringSQL($fecha_registro);
-
-		 $fecha_nacimiento = mainModel::cleanStringSQL($fecha_nacimiento);		 	
-
-		 $nombres = mainModel::cleanStringSQL($nombres);
-		 
-		 $apellidos = mainModel::cleanStringSQL($apellidos);
-
-
-		$nombres=self::filtterNombresApellidos($nombres);
-
-		$apellidos=self::filtterNombresApellidos($apellidos);
-
-		$doc_identidad_usuario = mainModel::cleanStringSQL($doc_identidad_usuario);
-		
-		 $doc_identidad_usuario = self::ClearUserSeparatedCharacters($doc_identidad_usuario);		 
+		$doc_identidad_usuario = self::$personController->ClearUserSeparatedCharacters($doc_identidad_usuario);		 
 
 		 $doc_identidad_usuario = ltrim($doc_identidad_usuario, '0');
 		 
-
-		$usuario = mainModel::cleanStringSQL($usuario);
-
-		$bitacora_year = mainModel::cleanStringSQL($bitacora_year);
-
-		$bitacora_fecha = mainModel::cleanStringSQL($bitacora_fecha);
-
-		$bitacora_hora = mainModel::cleanStringSQL($bitacora_hora);
-
 		if (mainModel::isDataEmtpy(
 			    $id_caso_epidemi,
 			    $id_genero,
@@ -1006,18 +974,17 @@ for ($indiceFila = 1; $indiceFila < count($dataForQuery); $indiceFila++) {
 			    $fecha_nacimiento,
 			    $nombres,
 			   	$apellidos,
-				$clave_capitulo_cie10,
 				$catalog_key_cie10,
 				$fecha_registro,
 				$id_parroquia,
 				$direccion,
-			   	$telefono,
+			   	$telefono/*,
 				$usuario,
 				$id_nacionalidad_usuario,
 				$doc_identidad_usuario,
 				$bitacora_year,
 				$bitacora_fecha,
-				$bitacora_hora)){
+				$bitacora_hora*/)){
 
 				$alert=[
 					"Alert"=>"simple",
@@ -1074,7 +1041,7 @@ for ($indiceFila = 1; $indiceFila < count($dataForQuery); $indiceFila++) {
 				exit();
 		}
 
-
+/*
 			if (!mainModel::checkDate($bitacora_fecha)){
 			$alert=[
 				"Alert"=>"simple",
@@ -1102,18 +1069,6 @@ for ($indiceFila = 1; $indiceFila < count($dataForQuery); $indiceFila++) {
 				exit();
 		}
 
-			if (!self::isValidDateRegistRangeAllowedCaseEpidemi($fecha_registro)){
-			$alert=[
-				"Alert"=>"simple",
-				"Title"=>"Datos Invalidos",
-				"Text"=>"La fecha de registro no esta en el rango aceptado",
-				"Type"=>"error"
-			];
-
-				echo json_encode($alert);
-
-				exit();
-		}
 
 
 
@@ -1130,6 +1085,22 @@ for ($indiceFila = 1; $indiceFila < count($dataForQuery); $indiceFila++) {
 				exit();
 		}
 
+		*/
+
+			if (!self::isValidDateRegistRangeAllowedCaseEpidemi($fecha_registro)){
+			$alert=[
+				"Alert"=>"simple",
+				"Title"=>"Datos Invalidos",
+				"Text"=>"La fecha de registro no esta en el rango aceptado",
+				"Type"=>"error"
+			];
+
+				echo json_encode($alert);
+
+				exit();
+		}
+
+
 
 		$queryIsExistUser = mainModel::connectDB()->query("SELECT alias FROM usuarios WHERE alias = '$usuario'");
 
@@ -1140,7 +1111,7 @@ for ($indiceFila = 1; $indiceFila < count($dataForQuery); $indiceFila++) {
 				$alert=[
 				"Alert"=>"simple",
 				"Title"=>"Datos no encontrados",
-				"Text"=>"El alias de usuario o la contraseña son incorrectos",
+				"Text"=>"El alias de usuario ($usuario) no existe",
 				"Type"=>"error"
 			];
 				echo json_encode($alert);
@@ -1149,9 +1120,37 @@ for ($indiceFila = 1; $indiceFila < count($dataForQuery); $indiceFila++) {
 
 			}
 
+		$currentDate =  mainModel::getDateCurrentSystem();
+
+		$currentYear = date("Y", $currentDate);
+
+		$currentHour = date("h:i:s a", $currentDate);
+
+		$currentDate = date("Y-m-d", $currentDate);
+
 		$fecha_registro_values = explode("-", $fecha_registro);
 
-
+		$dataCasosEpidemi=[
+		'doc_identidad'=>$doc_identidad,
+		"nombres"=>$nombres,
+		"apellidos"=>$apellidos,
+		"fecha_nacimiento"=>$fecha_nacimiento,
+		"id_nacionalidad"=>$id_nacionalidad,
+		"id_genero"=>$id_genero,
+		"catalog_key_cie10"=>$catalog_key_cie10,
+		"id_parroquia"=>$id_parroquia,
+		"direccion"=>$direccion,
+		"fecha_registro"=>$fecha_registro,
+		"year_registro"=>$fecha_registro_values[0],
+		"telefono"=>$telefono,
+		"id_nacionalidad_usuario"=>$_SESSION['id_nacionalidad'],
+		"doc_identidad_usuario"=>$_SESSION['doc_identidad'],
+		"usuario_alias"=>$_SESSION['aliasUser'],
+		"bitacora_fecha"=>$currentDate,
+		"bitacora_year"=>$currentYear,
+		"bitacora_hora"=>$currentHour,
+];
+/*
 		$dataCasosEpidemi=[
 		'doc_identidad'=>$doc_identidad,
 		"nombres"=>$nombres,
@@ -1174,7 +1173,7 @@ for ($indiceFila = 1; $indiceFila < count($dataForQuery); $indiceFila++) {
 		"bitacora_hora"=>$bitacora_hora,
 		"fecha_registro"=>$fecha_registro,
 		"catalog_key_cie10"=>$catalog_key_cie10];			
-
+*/
 var_dump($dataCasosEpidemi);
 
 	exit();
