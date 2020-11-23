@@ -152,7 +152,7 @@ function getDataCasosEpidemiForDataTables(requestedPersonEpidemi,minDateRange,ma
 
       {
         mData: null,
-        sDefaultContent: '<button name= "delete" id= "delete" value="delete" class="btn btn-danger btn-circle btn-sm delete"><i class="fas fa-trash"></i> </button> <button value = "update" name = "update" id = "update" class="btn btn-warning btn-circle btn-sm"><i class="fas fa-redo"></i></button>',
+        sDefaultContent: '<button name= "delete" id= "delete" value="delete" class="btn btn-danger btn-circle btn-sm delete"><i class="fas fa-trash"></i> </button> <button value = "update" name = "update" id = "update" class="btn btn-info btn-circle btn-sm"><i class="fas fa-plus"></i></i></button>',
 
         aTargets: [26]
       }

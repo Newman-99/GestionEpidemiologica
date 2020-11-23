@@ -18,7 +18,7 @@
 
                 <div class="form-group" id="update-cie-10">
                 	<label for="">Elegir Archivo CSV:</label>
-                    <input type="file" class="form-control" id="fileCSVCIE10" name="fileCSVCIE10" accept=".csv">
+                    <input type="file" class="form-control files" id="fileCSVCIE10" name="fileCSVCIE10" accept=".csv">
               </div>
 
 		  

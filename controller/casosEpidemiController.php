@@ -179,7 +179,7 @@
 
 		
 
-		$bitacora_year = date("Y", strtotime($fecha_registro));
+		$year_registro = date("Y", strtotime($fecha_registro));
 
 		
 				if (!$siExistPerson) {
@@ -195,7 +195,7 @@
 		"id_parroquia"=>$id_parroquia,
 		"direccion"=>$direccion,
 		"fecha_registro"=>$fecha_registro,
-		"bitacora_year"=>$bitacora_year,
+		"year_registro"=>$year_registro,
 		"telefono"=>$telefono,
 		"siExistPerson"=>$siExistPerson
 		];
@@ -354,7 +354,7 @@
 		$dataPerson = self::$personController->updatePersonaController($dataCasosEpidemi);
 
 			//data completa
-		$bitacora_year = date("Y", strtotime($fecha_registro));
+		$year_registro = date("Y", strtotime($fecha_registro));
 
 		$dataCasosEpidemi = 
 		[
@@ -365,7 +365,7 @@
 		"id_parroquia"=>$id_parroquia,
 		"direccion"=>$direccion,
 		"fecha_registro"=>$fecha_registro,
-		"bitacora_year"=>$bitacora_year,
+		"year_registro"=>$year_registro,
 		"telefono"=>$telefono,
 		];
 			

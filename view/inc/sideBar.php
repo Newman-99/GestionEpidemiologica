@@ -29,7 +29,6 @@
         </a>
         <div id="collapsecasosEpidemi" class="collapse" aria-labelledby="headingUsers" data-parent="#accordionSidebar">
           <div class="bg-white py-2 collapse-inner rounded">
-            <h6 class="collapse-header">Gestion de Casos:</h6>
             <a class="collapse-item" href="<?php echo SERVERURL; ?>casosEpidemiList/">Lista de Casos</a>
 
             <a class="collapse-item" href="<?php echo SERVERURL; ?>reportEPI/">Reportes EPI</a>
@@ -49,7 +48,6 @@
         </a>
         <div id="collapse-cie10" class="collapse" aria-labelledby="headingUsers" data-parent="#accordionSidebar">
           <div class="bg-white py-2 collapse-inner rounded">
-            <h6 class="collapse-header">Gestion de Catalogo CIE-10:</h6>
             <a class="collapse-item" href="<?php echo SERVERURL; ?>cie10Catalog/">Ver Catalogo</a>
             <?php if ($_SESSION['id_nivel_permiso'] == "1"): ?>
             <a class="collapse-item" href="<?php echo SERVERURL; ?>cie10DataUpdate/">Actualizacion</a>
@@ -70,7 +68,6 @@
         </a>
         <div id="collapseUsers" class="collapse" aria-labelledby="headingUsers" data-parent="#accordionSidebar">
           <div class="bg-white py-2 collapse-inner rounded">
-            <h6 class="collapse-header">Gestion de Usuarios:</h6>
             <a class="collapse-item" href="<?php echo SERVERURL; ?>userList/">Lista de Usuarios</a>
             <a class="collapse-item" href="<?php echo SERVERURL; ?>activityLogSessions/">Registro de Sesiones</a>
           </div>

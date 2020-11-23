@@ -118,7 +118,7 @@
 	}	
 
 
-	public static function updateUserModel($userValuesUpdate,$userAttributesUpdate,$dataPerson){
+	public static function updateUserModel($userValuesUpdate,$userAttributesUpdate,$dataPerson = ''){
 		
 		$DB_transacc = mainModel::connectDB();
 
@@ -127,7 +127,7 @@
 	try {
 
 // si no son los mismos datos personales acualizamos
-if (!$dataPerson['ifUpdatePerson']) {
+if (isset($dataPerson['ifUpdatePerson']) && $dataPerson['ifUpdatePerson'] == true ) {
 		$sqlQuery  = personModel::stringQueryUpdatePersonModel();
 
 		$sqlQuery = $DB_transacc->prepare($sqlQuery);

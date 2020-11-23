@@ -363,7 +363,12 @@
 			// si la datos nuevos son los mismos a los de la BD, 
 			// inclueremos un elemento que indique que se proceda actualizar			
 
-		 $dataPerson['ifUpdatePerson'] = $ifPersonDataUpdateIsSameDatabase;
+		 $dataPerson['ifUpdatePerson']  = true;
+
+		 // si los datos son lo mismos no actualice
+		if ($ifPersonDataUpdateIsSameDatabase){
+		 $dataPerson['ifUpdatePerson']  = false;
+		}
 
 		 return $dataPerson;
 

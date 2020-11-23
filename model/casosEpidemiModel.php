@@ -123,7 +123,7 @@ caso.catalog_key_cie10,caso.fecha_registro,caso.direccion,
 		 direccion,
 		 telefono,
 		 fecha_registro,
-		 bitacora_year) VALUES (		
+		 year_registro) VALUES (		
 		 :doc_identidad,
 		 :id_nacionalidad,
 		 :catalog_key_cie10,
@@ -131,7 +131,7 @@ caso.catalog_key_cie10,caso.fecha_registro,caso.direccion,
 		 :direccion,
 		 :telefono,
 		 :fecha_registro,
-		 :bitacora_year);");
+		 :year_registro);");
 
 			$sqlQuery->execute(array(
 		 "doc_identidad"=>$dataCasosEpidemi['doc_identidad'],
@@ -141,7 +141,7 @@ caso.catalog_key_cie10,caso.fecha_registro,caso.direccion,
 		 "direccion"=>$dataCasosEpidemi['direccion'],
 		 "telefono"=>$dataCasosEpidemi['telefono'],
 		 "fecha_registro"=>$dataCasosEpidemi['fecha_registro'],
-		 "bitacora_year"=>$dataCasosEpidemi['bitacora_year']));
+		 "year_registro"=>$dataCasosEpidemi['year_registro']));
 
 		$sqlQuery->closeCursor();
 
@@ -235,7 +235,9 @@ if (!$dataCasosEpidemi['ifUpdatePerson']) {
 		 id_parroquia = :id_parroquia,
 		 direccion = :direccion,
 		 telefono = :telefono,
-		 fecha_registro = :fecha_registro WHERE id_caso_epidemi = :id_caso_epidemi;";
+		 fecha_registro = :fecha_registro,
+		 year_registro = :year_registro 
+		 WHERE id_caso_epidemi = :id_caso_epidemi;";
 
 		$sqlQuery = $DB_transacc->prepare($sqlQuery);
 
@@ -245,6 +247,7 @@ if (!$dataCasosEpidemi['ifUpdatePerson']) {
 		 "id_parroquia" => $dataCasosEpidemi['id_parroquia'],
 		 "direccion" => $dataCasosEpidemi['direccion'],
 		 "telefono" => $dataCasosEpidemi['telefono'],
+		 "year_registro" => $dataCasosEpidemi['year_registro'],
 		 "fecha_registro" => $dataCasosEpidemi['fecha_registro']));
 
 

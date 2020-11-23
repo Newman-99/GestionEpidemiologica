@@ -125,7 +125,7 @@
 
 	Fecha de Registro
   	<br>
-    <input type="date" name="fecha_registro" id="fecha_registro" class="form-control" placeholder="Fecha de Registro" max="" min="">
+    <input type="date" name="fecha_registro" id="fecha_registro" class="form-control" placeholder="Fecha de Registro" max="<?php echo $maxDateAllowed; ?>" min="">
 
   	<br>
     <input type="text" name="nombres" id="nombres" class="form-control form-control-person" placeholder="Nombres" value="">

@@ -38,6 +38,8 @@ return $db;
 		} catch (PDOException $e) {
 		    error_log("Failed to connect to database: ".$e->getMessage());
 		}				
+
+
 /*
 		try {			
 	$DB = new PDO("pgsql:host=".SERVER_PATH.";port=".PORT.";dbname=".DB."",USER,PASS, array(
@@ -47,8 +49,10 @@ return $db;
 
 		} catch (PDOException $e) {
 		    error_log("Failed to connect to database: ".$e->getMessage());
-		}				
-*/
+		}
+
+		/*
+		 */				
 	}
 
 		protected static function runSimpleQuery($stringQuery){
@@ -471,8 +475,8 @@ protected static function isFieldsEqualToThoseInTheDatabase($queryToGet,$fieldst
     /* DB table to use */
     $sTable = $table;
 
-    /* Database connection information */
-    /*$gaSql['user']       = USER;
+    /* Database connection information *//*
+    $gaSql['user']       = USER;
     $gaSql['password']   = PASS;
     $gaSql['db']         = DB;
     $gaSql['server']     = SERVER_PATH;
@@ -485,20 +489,19 @@ protected static function isFieldsEqualToThoseInTheDatabase($queryToGet,$fieldst
     /*
      * DB connection
      */
-    /*
+/*
     $gaSql['link'] = pg_connect(
         " host=".$gaSql['server'].
         " dbname=".$gaSql['db'].
         " user=".$gaSql['user'].
         " password=".$gaSql['password']
     ) or die('Could not connect: ' . pg_last_error());
-*/
 
+/**/
 
  $db_url = getenv("DATABASE_URL") ?: "postgres://ilsmpwdzrresby:7879db47bd3be54c574eab3a81a1bc2db477bc890a756eccc406992832a0fd8e@ec2-54-246-87-132.eu-west-1.compute.amazonaws.com:5432/d4hub5gh1m9jjj";
 
 $gaSql['link'] = pg_connect($db_url);
-
      
     /*
      * Paging

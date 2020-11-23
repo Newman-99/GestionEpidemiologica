@@ -1207,7 +1207,7 @@ $table.="<div class='table-responsive'>
 		 			<td>'.$rows['descripcion_estado'].'</td>
 		 			<td>
 	                  <a href="'.SERVERURL.'dataAccount/'.mainModel::encryption($rows['usuario_alias']).'" class="btn btn-info btn-circle btn-sm">
-	                    <i class="fas  fa-plus"></i>
+	                    <i class="fas fa-plus"></i>
 	                  </a>
 		 			</td>
 
