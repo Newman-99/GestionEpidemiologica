@@ -38,7 +38,7 @@ return $db;
 		} catch (PDOException $e) {
 		    error_log("Failed to connect to database: ".$e->getMessage());
 		}				
-
+/**/
 
 /*
 		try {			
@@ -49,10 +49,8 @@ return $db;
 
 		} catch (PDOException $e) {
 		    error_log("Failed to connect to database: ".$e->getMessage());
-		}
-
-		/*
-		 */				
+		}				
+/**/
 	}
 
 		protected static function runSimpleQuery($stringQuery){
@@ -475,7 +473,7 @@ protected static function isFieldsEqualToThoseInTheDatabase($queryToGet,$fieldst
     /* DB table to use */
     $sTable = $table;
 
-    /* Database connection information *//*
+    /* Database connection information */
     $gaSql['user']       = USER;
     $gaSql['password']   = PASS;
     $gaSql['db']         = DB;
@@ -496,6 +494,7 @@ protected static function isFieldsEqualToThoseInTheDatabase($queryToGet,$fieldst
         " user=".$gaSql['user'].
         " password=".$gaSql['password']
     ) or die('Could not connect: ' . pg_last_error());
+
 
 /**/
 
