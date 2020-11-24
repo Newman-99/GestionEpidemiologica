@@ -241,13 +241,13 @@ public function loginUserController($dataUser){
  
 		public function forceClosureController(){
 
-			// si hay una sesion iniciada, se usa closeControllerSession para que registre la bitacora
+			// si hay una sesion iniciada, se usa closeSessionController para que registre la bitacora
 			if (isset($_SESSION['aliasUser'])) {
 
 					$dataSession=[
 			"tokenCurrentUser"=>mainModel::encryption($_SESSION["token_dptoEpidemi"])];
 
-			self::closeControllerSession($dataSession);
+			self::closeSessionController($dataSession);
 
 	}else{
 
@@ -258,7 +258,7 @@ public function loginUserController($dataUser){
 			}
 
 
-		public function closeControllerSession($dataSession){
+		public function closeSessionController($dataSession){
 
 			$tokenCurrentUser=mainModel::decryption($dataSession['tokenCurrentUser']);
 
@@ -281,7 +281,8 @@ public function loginUserController($dataUser){
 
 			mainModel::updateUsuarioBitacora($dataSession);
 
-		$alert=["Alert"=>"simpleReload"];
+		$alert=["Alert"=>"redirecting",
+				"URL"=>SERVERURL];
 			echo json_encode($alert);
 			exit();
 
