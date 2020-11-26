@@ -58,7 +58,7 @@ if(textMsjAlert==false){
 
 			    dataForm.append('file',file);
 				contentTypes = false;
-				  return sendFormDataAjax(action,dataForm,method,responseProcess,contentTypes);
+				  return sendFormDataAjax(action,dataForm,method,responseProcess,contentTypes,true);
 
 					}else{
 
@@ -74,7 +74,7 @@ if(textMsjAlert==false){
 
 
 
-function sendFormDataAjax(action,ValuesAndFields,method,showResponseProcess='',contentTypes = 'application/x-www-form-urlencoded'){
+function sendFormDataAjax(action,ValuesAndFields,method,showResponseProcess='',contentTypes = 'application/x-www-form-urlencoded',ifFile = false){
 
 var msgBackendProcessAjaxData = $("#msgBackendProcessAjaxData");
 var ajax = null;
@@ -89,12 +89,17 @@ var ajax = null;
  		cache: true,
 		xhr: function(){
         	var xhr = new window.XMLHttpRequest();
+
+
+//botones del modal ajax para form con input files solo se activaran cuando el parametro ifFile is true para evitar errores
+
+if (ifFile) {
              
 		var buttonCancelAjax = document.getElementsByClassName("buttonCancelAjax")[0];
 
 		buttonCancelAjax.classList.remove('btn-secondary');
 		buttonCancelAjax.classList.add('btn-danger');
-
+}
 
                 xhr.upload.addEventListener("progress", function(evt) {
                    if (evt.lengthComputable) {
@@ -124,12 +129,14 @@ var ajax = null;
 
         },success: function (response) {
 
+if (ifFile) {
+
 		var buttonCancelAjax = document.getElementsByClassName("buttonCancelAjax")[0];
 
 		buttonCancelAjax.classList.remove('btn-danger');
 
 		buttonCancelAjax.classList.add('btn-secondary');
-
+}
         	console.log(response);
         	
 		  let operationResult = JSON.parse(response);
