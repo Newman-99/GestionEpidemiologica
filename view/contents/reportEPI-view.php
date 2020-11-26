@@ -7,9 +7,13 @@ function exportFile(){
 
         var endDateRange = $('#endDateRange').val();
 
+        var  today = new Date();
+
+        var hour = 'H'+today.getHours() + '-' + today.getMinutes();
+
 
   var wb = XLSX.utils.table_to_book(document.getElementById('dataTable'));
-  XLSX.writeFile(wb, 'reporte_EPI_'+startDateRange+'/'+endDateRange+'.xlsx');
+  XLSX.writeFile(wb, 'reporte_EPI_'+startDateRange+'_'+endDateRange+'_'+hour+'.xlsx');
   return false;
 }
 </script>

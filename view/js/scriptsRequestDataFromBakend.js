@@ -92,6 +92,11 @@ function getDataActivityLogCasosEpidemiForDataTables(requestedUser,minDateRange,
 }
 
 function getDataCasosEpidemiForDataTables(requestedPersonEpidemi,minDateRange,maxDateRange,action){
+
+  var  today = new Date();
+
+var hour = 'H'+today.getHours() + '-' + today.getMinutes();
+
     var table = $('#dataTable').DataTable({
 //       "aaSorting": [[ 0, "asc" ]], // Sort by first column descending
         bProcessing: true,
@@ -167,12 +172,12 @@ function getDataCasosEpidemiForDataTables(requestedPersonEpidemi,minDateRange,ma
         buttons: [
         {
        extend: 'excelHtml5',
-        filename: 'Casos_Epidemiologicos_' + $('#minDateRange').val() + '_' + $('#maxDateRange').val() + ''
+        filename: 'Casos_Epidemiologicos_' + minDateRange + '_' + maxDateRange + '_' + hour
         },
 
         {
        extend: 'csvHtml5',
-        filename: 'Casos_Epidemiologicos_' + $('#minDateRange').val() + '_' + $('#maxDateRange').val() + ''
+        filename: 'Casos_Epidemiologicos_' + minDateRange + '_' + maxDateRange + '_' + hour
         }
         ]
         ,

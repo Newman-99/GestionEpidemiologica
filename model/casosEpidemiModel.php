@@ -30,6 +30,36 @@
 		:id_nacionalidad_usuario, 
 		:doc_identidad_usuario)";
 
+
+		protected static $queryUpdateCasoEpidemi = "UPDATE casos_epidemi  SET 
+		 catalog_key_cie10 = :catalog_key_cie10,
+		 id_parroquia = :id_parroquia,
+		 direccion = :direccion,
+		 telefono = :telefono,
+		 fecha_registro = :fecha_registro,
+		 year_registro = :year_registro 
+		 WHERE id_caso_epidemi = :id_caso_epidemi;";
+
+
+		protected static $queryAddCasosEpidemi = "INSERT INTO casos_epidemi(
+		 doc_identidad,
+		 id_nacionalidad,
+		 catalog_key_cie10,
+		 id_parroquia,
+		 direccion,
+		 telefono,
+		 fecha_registro,
+		 year_registro) VALUES (		
+		 :doc_identidad,
+		 :id_nacionalidad,
+		 :catalog_key_cie10,
+		 :id_parroquia,
+		 :direccion,
+		 :telefono,
+		 :fecha_registro,
+		 :year_registro)";
+
+
 protected static $queryGetAgrupacionEPI =	"SELECT  orden, enfermedad_evento, key_cie10_Inicio, key_cie10_final 
 			FROM agrupacion_epi12";
 
@@ -115,23 +145,7 @@ caso.catalog_key_cie10,caso.fecha_registro,caso.direccion,
 
 		//registrar caso epidemiologico
 		
-		$sqlQuery = $DB_transacc->prepare("INSERT INTO casos_epidemi(
-		 doc_identidad,
-		 id_nacionalidad,
-		 catalog_key_cie10,
-		 id_parroquia,
-		 direccion,
-		 telefono,
-		 fecha_registro,
-		 year_registro) VALUES (		
-		 :doc_identidad,
-		 :id_nacionalidad,
-		 :catalog_key_cie10,
-		 :id_parroquia,
-		 :direccion,
-		 :telefono,
-		 :fecha_registro,
-		 :year_registro);");
+		$sqlQuery = $DB_transacc->prepare(self::$queryAddCasosEpidemi);
 
 			$sqlQuery->execute(array(
 		 "doc_identidad"=>$dataCasosEpidemi['doc_identidad'],
@@ -230,14 +244,7 @@ if (!$dataCasosEpidemi['ifUpdatePerson']) {
 		}		
 
 		// actualizar como caso epidemiologivo
-		$sqlQuery = "UPDATE casos_epidemi  SET 
-		 catalog_key_cie10 = :catalog_key_cie10,
-		 id_parroquia = :id_parroquia,
-		 direccion = :direccion,
-		 telefono = :telefono,
-		 fecha_registro = :fecha_registro,
-		 year_registro = :year_registro 
-		 WHERE id_caso_epidemi = :id_caso_epidemi;";
+		$sqlQuery = self::$queryUpdateCasoEpidemi;
 
 		$sqlQuery = $DB_transacc->prepare($sqlQuery);
 
@@ -425,6 +432,11 @@ if (!$dataCasosEpidemi['ifUpdatePerson']) {
 
 		}
 
+
+			protected static function importCasosEpidemiModel($dataCasosEpidemi){
+
+			}
+
 protected static function getNroCasesEpidemiForEpiModel($epiOrder, $startRegistrationDate, $endRegistrationDate,$id_genero ='',$startAge = '',$ageEnd = ''){
 
 $queryFunctionGetAge = " AND date_part('year',age(casos.fecha_registro, pers.fecha_nacimiento)) ";
@@ -484,5 +496,8 @@ $epiOrderSelededForQuery." AND casos.fecha_registro BETWEEN '$startRegistrationD
 
 		return $nroCasesEpidemi;
 }
+	
+
 	}
+
 

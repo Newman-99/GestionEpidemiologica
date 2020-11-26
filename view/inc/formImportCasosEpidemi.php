@@ -1,10 +1,10 @@
 
 <!-- Modal -->
-<div class="modal fade" id="importCasosEpidemiModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal modalAjax fade" id="importCasosEpidemiModal" tabindex="-1" role="dialog" aria-labelledby="importCasosEpidemiModal" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Importar Casos Epidemiologicos</h5>
+        <h5 class="modal-title" id="importCasosEpidemiModal">Importar Casos Epidemiologicos</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -18,7 +18,7 @@
           <div class="col-lg-7">
             <div class="p-5">
 
-   <form class="formAjax form-update form-group text-center user" action="<?php echo SERVERURL; ?>ajax/casosEpidemiAjax.php" method="POST" data-form="files" autocomplete="off" enctype="multipart/form-data">
+   <form class="formAjax fileCSVImportCaseEpidemi form-group text-center user" action="<?php echo SERVERURL; ?>ajax/casosEpidemiAjax.php" method="POST" data-form="files" autocomplete="off" enctype="multipart/form-data">
 
                 <div class="form-group" id="update-cie-10">
                   <label for="">Elegir Archivo CSV:</label>
@@ -40,8 +40,8 @@
 
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-     <button class="btn btn-primary btn-user btn-block" type="submit" value="updateCIE10" name="update">Actualizar</button>
+        <button type="button" id="importCasosEpidemiCancel" class="btn btn-secondary buttonCancelAjax" data-dismiss="modal">Cancelar</button>
+     <button class="btn btn-primary btn-user btn-block" type="submit" value="ImportCasosEpidemi" name="import">Actualizar</button>
       </div>
      </form>
 

@@ -33,7 +33,7 @@
   Registrar Nuevo
 </button>
 
-<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#importCasosEpidemiModal">
+<button type="button" class="btn btn-primary importCasosEpidemiModal" data-toggle="modal" data-target="#importCasosEpidemiModal">
   Importar
 </button>
 
@@ -76,29 +76,29 @@
                   <thead>
                     <tr>
                       <th>Nro. </th>
-                      <th >Id Caso</th>
-                      <th>id_genero</th>
+                      <th >id Caso</th>
+                      <th>id Genero</th>
                       <th>Genero</th>
-                      <th>id_nacionalidad_caso</th>
-                      <th>doc_identidad_caso</th>
+                      <th>id Nacionalidad (Caso)</th>
+                      <th>Nro. Documento de Identidad (Caso)</th>
                       <th>Documento de Identidad</th>
                       <th>Fecha de Nacimiento</th>
                       <th>Edad</th>
                       <th>Nombres</th>
                       <th>Apellidos</th>
-                      <th>clave_capitulo_cie10</th>
+                      <th>Clave Capitulo CIE-10</th>
                       <th>Codigo CIE-10</th>
                       <th>Nombre CIE-10</th>
                       <th>Fecha de Registro</th>
-                      <th>id_parroquia</th>
+                      <th>id Parroquia</th>
                       <th>Parroquia</th>
                       <th>Direccion</th>
                       <th>Telefono</th>
                       <th>Usuario</th>
-                      <th>id_nacionalidad_usuario</th>
-                      <th>doc_identidad_usuario</th>
+                      <th>id Nacionalidad (usuario)</th>
+                      <th>Nro. Documento Identidad (usuario)</th>
                       <th>Documento de Identidad</th>
-                       <th>bitacora_year</th>                     
+                       <th>Anio de Operacion</th>                     
                       <th>Fecha de Operacion</th>
                       <th>Hora de Operacion</th>
                       <th></th>
@@ -108,29 +108,29 @@
                   <tfoot>
                     <tr>
                       <th>Nro. </th>
-                      <th >Id Caso</th>
-                      <th>id_genero</th>
+                      <th >id Caso</th>
+                      <th>id Genero</th>
                       <th>Genero</th>
-                      <th>doc_identidad_caso</th>
-                      <th>id_nacionalidad_caso</th>
+                      <th>Nro. Documento de Identidad (Caso)</th>
+                      <th>id Nacionalidad (Caso)</th>
                       <th>Documento de Identidad</th>
                       <th>Fecha de Nacimiento</th>
                       <th>Edad</th>
                       <th>Nombres</th>
                       <th>Apellidos</th>
-                      <th>clave_capitulo_cie10</th>
+                      <th>Clave Capitulo CIE-10</th>
                       <th>Codigo CIE-10</th>
                       <th>Nombre CIE-10</th>
                       <th>Fecha de Registro</th>
-                      <th>id_parroquia</th>
+                      <th>id Parroquia</th>
                       <th>Parroquia</th>
                       <th>Direccion</th>
                       <th>Telefono</th>
                       <th>Usuario</th>
-                      <th>id_nacionalidad_usuario</th>
-                      <th>doc_identidad_usuario</th>
+                      <th>id Nacionalidad (usuario)</th>
+                      <th>Nro. Documento Identidad (usuario)</th>
                       <th>Documento de Identidad</th>
-                      <th>bitacora_year</th>
+                      <th>Anio de Operacion</th>
                       <th>Fecha de Operacion</th>
                       <th>Hora de Operacion</th>
                       <th></th>
@@ -226,8 +226,6 @@ var minDateRangeDefault = addOrRemoveDaysToDate(maxDateAllowed,7,false);
 var minDateRangeDefaulPHP = minDateRangeDefault.toISOString().split('T')[0];
 
          document.getElementById("fecha_registro").setAttribute("min",minDateRangeDefaulPHP );
-
-         document.getElementById("fecha_registro").setAttribute("max", maxDateAllowedPHP);
 
          document.getElementById("fecha_registro").setAttribute("max", maxDateAllowedPHP);
 
@@ -396,13 +394,14 @@ function updateCasosEpidemi(data){
 
 
     var textMsjAlert = 'Los datos del Caso Epidemiologico seran Modificados';
-
     
     $(".modal-title").text("Editar Caso Epidemiologico");
 
     $(".btn-caso-epidemi").text("Editar");   
 
     $('#registerCasosEpidemiModal').modal('show');       
+
+    $(".form-control-person").prop('disabled', false);
 
     $("#si-exist-person").css("display", "none");
 

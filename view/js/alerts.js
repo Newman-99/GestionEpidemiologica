@@ -77,8 +77,9 @@ if(textMsjAlert==false){
 function sendFormDataAjax(action,ValuesAndFields,method,showResponseProcess='',contentTypes = 'application/x-www-form-urlencoded'){
 
 var msgBackendProcessAjaxData = $("#msgBackendProcessAjaxData");
+var ajax = null;
 
-	$.ajax({
+ ajax = $.ajax({
 		url : action,
 		type: method,
  		data: ValuesAndFields,
@@ -88,8 +89,14 @@ var msgBackendProcessAjaxData = $("#msgBackendProcessAjaxData");
  		cache: true,
 		xhr: function(){
         	var xhr = new window.XMLHttpRequest();
+             
+		var buttonCancelAjax = document.getElementsByClassName("buttonCancelAjax")[0];
+
+		buttonCancelAjax.classList.remove('btn-secondary');
+		buttonCancelAjax.classList.add('btn-danger');
+
+
                 xhr.upload.addEventListener("progress", function(evt) {
-               
                    if (evt.lengthComputable) {
                      var percentComplete = evt.loaded / evt.total;
                      percentComplete = parseInt(percentComplete * 100);
@@ -97,13 +104,11 @@ var msgBackendProcessAjaxData = $("#msgBackendProcessAjaxData");
                         	showResponseProcess.html('<p class="text-center">Enviando... ('+percentComplete+'%)</p><div class="progress progress-striped active"><div class="progress-bar progress-bar-info" style="width: '+percentComplete+'%;"></div></div>');
                       	}else{
                       		showResponseProcess.html('<p class="text-center"></p>');
-
 						    //mensaje cuando el bakend este procesando datos de ajax
-
-						//    msgBackendProcessAjaxData.show();
 
 						 msgBackendProcessAjaxData.html("</p>Procesando...<p>");
 
+						 // termine el proceso esconde el button de cancelar
 						  $(document).ajaxStop(function() {
 
 						 msgBackendProcessAjaxData.html("");
@@ -118,6 +123,12 @@ var msgBackendProcessAjaxData = $("#msgBackendProcessAjaxData");
                     return xhr;
 
         },success: function (response) {
+
+		var buttonCancelAjax = document.getElementsByClassName("buttonCancelAjax")[0];
+
+		buttonCancelAjax.classList.remove('btn-danger');
+
+		buttonCancelAjax.classList.add('btn-secondary');
 
         	console.log(response);
         	
@@ -134,14 +145,44 @@ var msgBackendProcessAjaxData = $("#msgBackendProcessAjaxData");
 
 			//return operationResult;
 		},error: function (e) {
-  			alert("Error: " + e);
+			// cuando no se hizo un ajax.abort
+					if(ajax == null){
+
+  					alert("Error: " + e);
+
+  				}
 
 		//var alert = {"Alert":"simple","Title":"Ocurrió un error inesperado","Text":"Por favor recargue la página","Type":"error"};
 
 		//return ajaxSweetAlerts(alert);
 
 		}
-	});
+	}); 
+
+	                	// para cancelar el ajax su un modal con formulario
+                	// al cerrar tambien lo hara la operacion ajax
+					if(ajax != null){
+
+			         	modalAjax=$(".modalAjax");
+
+			          $(modalAjax).on('hide.bs.modal', function(){
+			            ajax.abort();
+
+		var buttonCancelAjax = document.getElementsByClassName("buttonCancelAjax")[0];
+
+						buttonCancelAjax.classList.remove('btn-danger');
+
+						buttonCancelAjax.classList.add('btn-secondary');
+
+							showResponseProcess.html('');
+
+			            	msgBackendProcessAjaxData.html("");
+
+							$(':file').val('');
+
+
+			        });
+			      }                
 }
 
 

@@ -11,10 +11,14 @@
 	// Funciones para manejar datos (CRUD)
 		public function addPersonControllerr($dataPerson){
 		 
+		 $indicatorPersonError = '';
+		 if (isset($dataPerson['indicatorPersonError'])) {
+		 	$indicatorPersonError = $dataPerson['indicatorPersonError'];
+		 }
+
 		$doc_identidad = mainModel::cleanStringSQL($dataPerson['doc_identidad']);
 		
-		 $doc_identidad = self::ClearUserSeparatedCharacters($doc_identidad);		 
-
+		 $doc_identidad = self::ClearUserSeparatedCharacters($doc_identidad);		
 		 $doc_identidad = ltrim($doc_identidad, '0');
 
 		 $nombres = mainModel::cleanStringSQL($dataPerson['nombres']);
@@ -32,7 +36,12 @@
 		 
 		 $id_genero = mainModel::cleanStringSQL($dataPerson['id_genero']);
 
+		 // en las importaciones de datos no tendran los nros separados
+if (!isset($dataPerson['operationImportCaseEpidemi'])) {
 		 $telefono = mainModel::cleanStringSQL($dataPerson['telefonoPart1'].$dataPerson['telefonoPart2'].$dataPerson['telefonoPart3']);
+		}else{
+		 $telefono = mainModel::cleanStringSQL($dataPerson['telefono']);
+		}
 
 		 $telefono = self::ClearUserSeparatedCharacters($telefono);
 
@@ -65,7 +74,7 @@
 			$alert=[
 				"Alert"=>"simple",
 				"Title"=>"Datos Invalidos",
-				"Text"=>"Ya se encuentra una person con este documento de identidad",
+				"Text"=>"Ya se encuentra una person con este documento de identidad".$indicatorPersonError,
 				"Type"=>"error"
 			];
 
@@ -80,7 +89,7 @@
 			$alert=[
 				"Alert"=>"simple",
 				"Title"=>"Datos Invalidos",
-				"Text"=>"El documento de identidad es invalido",
+				"Text"=>"El documento de identidad es invalido".$indicatorPersonError,
 				"Type"=>"error"
 			];
 
@@ -94,7 +103,7 @@
 			$alert=[
 				"Alert"=>"simple",
 				"Title"=>"Datos Invalidos",
-				"Text"=>"El campo de Nacionalidad es invalido",
+				"Text"=>"El campo de Nacionalidad es invalido".$indicatorPersonError,
 				"Type"=>"error"
 			];
 
@@ -109,7 +118,7 @@
 			$alert=[
 				"Alert"=>"simple",
 				"Title"=>"Datos Invalidos",
-				"Text"=>"El campo de Genero es invalido",
+				"Text"=>"El campo de Genero es invalido".$indicatorPersonError,
 				"Type"=>"error"
 			];
 
@@ -123,7 +132,7 @@
 			$alert=[
 				"Alert"=>"simple",
 				"Title"=>"Datos Invalidos",
-				"Text"=>"El Nombre o Apellido ingresado es invalido",
+				"Text"=>"El Nombre o Apellido ingresado es invalido".$indicatorPersonError,
 				"Type"=>"error"
 			];
 
@@ -137,7 +146,7 @@
 			$alert=[
 				"Alert"=>"simple",
 				"Title"=>"Datos Invalidos",
-				"Text"=>"El campo fecha de  nacimiento es invalido",
+				"Text"=>"El campo fecha de  nacimiento es invalido".$indicatorPersonError,
 				"Type"=>"error"
 			];
 
@@ -151,7 +160,7 @@
 				$alert=[
 					"Alert"=>"simple",
 					"Title"=>"Datos Invalidos",
-					"Text"=>"La Fecha de Nacimiento es mayor a la del sistema",
+					"Text"=>"La Fecha de Nacimiento es mayor a la del sistema".$indicatorPersonError,
 					"Type"=>"error"
 				];
 
@@ -165,7 +174,7 @@
 			$alert=[
 				"Alert"=>"simple",
 				"Title"=>"Datos Invalidos",
-				"Text"=>"El Nro de Telefono es invalido",
+				"Text"=>"El Nro de Telefono es invalido".$indicatorPersonError,
 				"Type"=>"error"
 			];
 
@@ -195,6 +204,11 @@
 
 		public static function updatePersonaController($dataPerson){
 
+		 $indicatorPersonError = '';
+		 if (isset($dataPerson['indicatorPersonError'])) {
+		 	$indicatorPersonError = $dataPerson['indicatorPersonError'];
+		 }
+
 		 $doc_identidad = mainModel::cleanStringSQL($dataPerson['doc_identidad']);
 		 
 		 $nombres = mainModel::cleanStringSQL($dataPerson['nombres']);
@@ -207,9 +221,14 @@
 		 
 		 $id_genero = mainModel::cleanStringSQL($dataPerson['id_genero']);
 		
-		 $telefono = $dataPerson['telefonoPart1'].$dataPerson['telefonoPart2'].$dataPerson['telefonoPart3'];
+if (!isset($dataPerson['operationImportCaseEpidemi'])) {
+		 $telefono = mainModel::cleanStringSQL($dataPerson['telefonoPart1'].$dataPerson['telefonoPart2'].$dataPerson['telefonoPart3']);
+		}else{
+		 $telefono = mainModel::cleanStringSQL($dataPerson['telefono']);
+		}
 
-		 $telefono = mainModel::cleanStringSQL($telefono);
+		 $telefono = self::ClearUserSeparatedCharacters($telefono);
+
 
 		 			if (!isset(
 						 $doc_identidad,
@@ -241,11 +260,6 @@
 	 		];
 
 
-	 	$queryToGetPerson = self::getpersonController(array("doc_identidad"=>$doc_identidad,"id_nacionalidad"=>$id_nacionalidad));
-
-		$ifPersonDataUpdateIsSameDatabase = mainModel::isFieldsEqualToThoseInTheDatabase($queryToGetPerson,$personDataTocomparedWithDatabase);
- 
-
 
 			$queryIsExistPerson = mainModel::connectDB()->query("select doc_identidad from personas where id_nacionalidad = '$id_nacionalidad' and doc_identidad = '$doc_identidad'");
 			
@@ -253,7 +267,7 @@
 			$alert=[
 				"Alert"=>"simple",
 				"Title"=>"Datos no encontrados",
-				"Text"=>"No se encuentra una person con esta cedula registrada ",
+				"Text"=>"No se encuentra una person con esta cedula registrada ".$indicatorPersonError,
 				"Type"=>"error"
 			];
 
@@ -267,7 +281,7 @@
 			$alert=[
 				"Alert"=>"simple",
 				"Title"=>"Datos Invalidos",
-				"Text"=>"El documento de identidad es invalido",
+				"Text"=>"El documento de identidad es invalido".$indicatorPersonError,
 				"Type"=>"error"
 			];
 
@@ -282,7 +296,7 @@
 			$alert=[
 				"Alert"=>"simple",
 				"Title"=>"Datos Invalidos",
-				"Text"=>"El campo de Genero es invalido",
+				"Text"=>"El campo de Genero es invalido".$indicatorPersonError,
 				"Type"=>"error"
 			];
 
@@ -296,7 +310,7 @@
 			$alert=[
 				"Alert"=>"simple",
 				"Title"=>"Datos Invalidos",
-				"Text"=>"El Nombre o Apellido ingresado es invalido",
+				"Text"=>"El Nombre o Apellido ingresado es invalido".$indicatorPersonError,
 				"Type"=>"error"
 			];
 
@@ -310,7 +324,7 @@
 			$alert=[
 				"Alert"=>"simple",
 				"Title"=>"Datos Invalidos",
-				"Text"=>"El campo fecha de  nacimiento es invalido",
+				"Text"=>"El campo fecha de  nacimiento es invalido".$indicatorPersonError,
 				"Type"=>"error"
 			];
 
@@ -324,7 +338,7 @@
 				$alert=[
 					"Alert"=>"simple",
 					"Title"=>"Datos Invalidos",
-					"Text"=>"La Fecha de Nacimiento es mayor a la del sistema",
+					"Text"=>"La Fecha de Nacimiento es mayor a la del sistema".$indicatorPersonError,
 					"Type"=>"error"
 				];
 
@@ -338,7 +352,7 @@
 			$alert=[
 				"Alert"=>"simple",
 				"Title"=>"Datos Invalidos",
-				"Text"=>"El Nro de Telefono es invalido",
+				"Text"=>"El Nro de Telefono es invalido".$indicatorPersonError,
 				"Type"=>"error"
 			];
 
@@ -360,15 +374,20 @@
 		];
 				 	
 
+if (isset($dataPerson['operationImportCaseEpidemi'])) {
+	 	$queryToGetPerson = self::getpersonController(array("doc_identidad"=>$doc_identidad,"id_nacionalidad"=>$id_nacionalidad));
+
+		$ifPersonDataUpdateIsSameDatabase = mainModel::isFieldsEqualToThoseInTheDatabase($queryToGetPerson,$personDataTocomparedWithDatabase);
+ 
 			// si la datos nuevos son los mismos a los de la BD, 
 			// inclueremos un elemento que indique que se proceda actualizar			
-
 		 $dataPerson['ifUpdatePerson']  = true;
 
 		 // si los datos son lo mismos no actualice
 		if ($ifPersonDataUpdateIsSameDatabase){
 		 $dataPerson['ifUpdatePerson']  = false;
 		}
+}
 
 		 return $dataPerson;
 
