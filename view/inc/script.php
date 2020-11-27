@@ -24,8 +24,6 @@
 <script src="<?php echo SERVERURL; ?>archives_vendor/datatables/pdfmake-0.1.36/vfs_fonts.js"></script>
 <script src="<?php echo SERVERURL; ?>archives_vendor/datatables/DataTables-1.10.22/js/jquery.dataTables.min.js"></script>
 <script src="<?php echo SERVERURL; ?>archives_vendor/datatables/DataTables-1.10.22/js/dataTables.bootstrap4.min.js"></script>
-<script src="<?php echo SERVERURL; ?>archives_vendor/datatables/Editor-1.9.5/js/dataTables.editor.min.js"></script>
-<script src="<?php echo SERVERURL; ?>archives_vendor/datatables/Editor-1.9.5/js/editor.bootstrap4.min.js"></script>
 <script src="<?php echo SERVERURL; ?>archives_vendor/datatables/AutoFill-2.3.5/js/dataTables.autoFill.min.js"></script>
 <script src="<?php echo SERVERURL; ?>archives_vendor/datatables/AutoFill-2.3.5/js/autoFill.bootstrap4.min.js"></script>
 <script src="<?php echo SERVERURL; ?>archives_vendor/datatables/Buttons-1.6.5/js/dataTables.buttons.min.js"></script>
