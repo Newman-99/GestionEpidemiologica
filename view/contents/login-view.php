@@ -31,6 +31,9 @@
                   <button class="btn btn-primary btn-user btn-block" type="submit" value="loginSession" name="login">Ingresar</button>
                     
                     <div class="responseProcessAjax"></div>
+
+                    <div class="msgBackendProcess"></div>
+
                   </form>
                   <hr>
                   <div class="text-center">

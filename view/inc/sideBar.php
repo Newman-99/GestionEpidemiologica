@@ -1,3 +1,9 @@
+           <?php  require_once "./view/inc/formRestoreSystem.php";?>
+
+           <?php  require_once "./view/inc/backupSystem.php";?>
+
+           <?php  require_once "./view/inc/formImportCIE10.php";?>
+
     <!-- Sidebar -->
     <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
 
@@ -29,11 +35,19 @@
         </a>
         <div id="collapsecasosEpidemi" class="collapse" aria-labelledby="headingUsers" data-parent="#accordionSidebar">
           <div class="bg-white py-2 collapse-inner rounded">
+
+            <?php if ($_SESSION['id_nivel_permiso'] < 2): ?>
+
             <a class="collapse-item" href="<?php echo SERVERURL; ?>casosEpidemiList/">Lista de Casos</a>
+          <?php endif; ?>
 
             <a class="collapse-item" href="<?php echo SERVERURL; ?>reportEPI/">Reportes EPI</a>
 
+            <?php if ($_SESSION['id_nivel_permiso'] == 1): ?>
+
             <a class="collapse-item" href="<?php echo SERVERURL; ?>activityLogCasosEpidemi/">Registro de Operaciones</a>
+          <?php endif; ?>
+
           </div>
         </div>
       </li>
@@ -50,7 +64,15 @@
           <div class="bg-white py-2 collapse-inner rounded">
             <a class="collapse-item" href="<?php echo SERVERURL; ?>cie10Catalog/">Ver Catalogo</a>
             <?php if ($_SESSION['id_nivel_permiso'] == "1"): ?>
-            <a class="collapse-item" href="<?php echo SERVERURL; ?>cie10DataUpdate/">Actualizacion</a>
+
+            <span class="collapse-item">
+              <button type="button" class="importCIE10Modal" data-toggle="modal" data-target="#importCIE10Modal" style="
+              padding: 0;
+              border: none;
+              background: none;">
+                Importar
+              </button>
+          </span>
 
           <?php endif ?>
 
@@ -75,6 +97,40 @@
       </li>
 <?php endif; ?>
 
+
+      <?php if ($_SESSION['id_nivel_permiso'] == "1"): ?>
+      <!-- Nav Item - Users Collapse Menu -->
+      <li class="nav-item">
+        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseSystem" aria-expanded="true" aria-controls="collapseSystem">
+          <i class="fas fa-fw fa-cog"></i>
+          <span>Sistema</span>
+        </a>
+        <div id="collapseSystem" class="collapse" aria-labelledby="headingSystem" data-parent="#accordionSidebar">
+          <div class="bg-white py-2 collapse-inner rounded">
+      
+      <span class="collapse-item">
+          <button type="button" class="backupModal" data-toggle="modal" data-target="#backupModal" style="
+          padding: 0;
+          border: none;
+          background: none;">
+            Respaldo
+          </button>
+      </span>
+
+
+      <span class="collapse-item">
+          <button type="button" class="restoreModal" data-toggle="modal" data-target="#restoreModal" style="
+          padding: 0;
+          border: none;
+          background: none;">
+            Restauracion
+          </button>
+      </span>
+
+          </div>
+        </div>
+      </li>
+<?php endif; ?>
 
       <!-- Divider -->
       <hr class="sidebar-divider d-none d-md-block">

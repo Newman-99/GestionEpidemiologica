@@ -23,7 +23,7 @@ $(document).ready(function() {
         success:function(data) {
     console.log(data);
     let alert = JSON.parse(data);
-    ajaxSweetAlerts(alert);
+    return ajaxSweetAlerts(alert);
 
 /*
     var alert = {"Alert":"simple","Title":"Ocurrió un error inesperado","Text":"No se pudo salir de la Sesion","Type":"error"};

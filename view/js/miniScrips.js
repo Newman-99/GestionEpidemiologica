@@ -38,9 +38,9 @@ $('#siExistPerson').change(function() {
 
 function cancelRequestAjax(){        
 
-          var msgBackendProcessAjaxData = $("#msgBackendProcessAjaxData");
+          var msgBackendProcess = $("#msgBackendProcess");
 
-            msgBackendProcessAjaxData.html("Abortando Proceso...");
+            msgBackendProcess.html("Abortando Proceso...");
              
             ajax.abort();
             ajax = null;    

@@ -54,8 +54,8 @@
                   Perfil
                 </a>
                 <a class="dropdown-item" href="<?php echo SERVERURL; ?>userSettings/<?php echo $loginController->encryption($_SESSION['aliasUser']);?>/">
-                  <i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>
-                  Configuraciones
+                  <i class="fas fa-lock fa-sm fa-fw mr-2 text-gray-400"></i>
+                  Seguridad
                 </a>
                 <a class="dropdown-item" href="<?php echo SERVERURL; ?>activityLogSessions/<?php echo $loginController->encryption($_SESSION['aliasUser']);?>/">
                   <i class="fas fa-list fa-sm fa-fw mr-2 text-gray-400"></i>

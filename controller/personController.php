@@ -251,14 +251,6 @@ if (!isset($dataPerson['operationImportCaseEpidemi'])) {
 
 			}
 
-	 		// Campos del usuario como person a comparar con la BD
-	 		$personDataTocomparedWithDatabase = [
-			 "fecha_nacimiento"=>$fecha_nacimiento,
-			 "nombres"=>$nombres,
-			 "apellidos"=>$apellidos,
-			 "id_genero"=>$id_genero 			
-	 		];
-
 
 
 			$queryIsExistPerson = mainModel::connectDB()->query("select doc_identidad from personas where id_nacionalidad = '$id_nacionalidad' and doc_identidad = '$doc_identidad'");
@@ -362,6 +354,13 @@ if (!isset($dataPerson['operationImportCaseEpidemi'])) {
 			}
 
 
+	 		// Campos del usuario como person a comparar con la BD
+	 		$personDataTocomparedWithDatabase = [
+			 "fecha_nacimiento"=>$fecha_nacimiento,
+			 "nombres"=>$nombres,
+			 "apellidos"=>$apellidos,
+			 "id_genero"=>$id_genero 			
+	 		];
 
 		$dataPerson = 
 		[
@@ -374,7 +373,7 @@ if (!isset($dataPerson['operationImportCaseEpidemi'])) {
 		];
 				 	
 
-if (isset($dataPerson['operationImportCaseEpidemi'])) {
+if (!isset($dataPerson['operationImportCaseEpidemi'])) {
 	 	$queryToGetPerson = self::getpersonController(array("doc_identidad"=>$doc_identidad,"id_nacionalidad"=>$id_nacionalidad));
 
 		$ifPersonDataUpdateIsSameDatabase = mainModel::isFieldsEqualToThoseInTheDatabase($queryToGetPerson,$personDataTocomparedWithDatabase);

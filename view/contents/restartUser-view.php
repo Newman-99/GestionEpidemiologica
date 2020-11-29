@@ -61,10 +61,14 @@
                   </div>
                 </div>
 		  
+
 		 <button class="btn btn-primary btn-user btn-block" type="submit" value="updateDataReloadUser" name="updateDataReloadUser">Reiniciar</button>
 
 		 <div class="responseProcessAjax"></div>
-		          </form>
+		  
+      <div class="msgBackendProcess"></div>
+
+              </form>
 
                 </div>
               </div>

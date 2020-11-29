@@ -52,6 +52,8 @@
 
                   <button class="btn btn-primary btn-user btn-block" type="submit" value="forgotPassUser" name="forgotPassUser">Recuperar</button>
 
+    <div class="msgBackendProcess"></div>
+
                   </form>
                   <hr>
                   <div class="text-center">

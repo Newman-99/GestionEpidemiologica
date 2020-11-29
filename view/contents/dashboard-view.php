@@ -24,7 +24,7 @@
            require_once "./controller/userController.php";
           $userController= new userController(); 
 
-          echo $userController->printUserTypeCountController();
+          echo $userController->printUserCountByTypeController();
 
           ?>
                         </div>
@@ -49,12 +49,11 @@
                       <div class="row no-gutters align-items-center">
                         <div class="small col-auto">
                     
-                    Anual: 1002 
-                    <br>
-                    Mensual: 69
-                    <br>
-                    Semanal: 34
-                    
+          <?php $requestAjax = FALSE;
+           require_once "./controller/casosEpidemiController.php";
+          $casosEpidemiController= new casosEpidemiController(); 
+          echo $casosEpidemiController->printEpidemiCaseCountController();
+          ?>
                         </div>
                       </div>
                     </div>

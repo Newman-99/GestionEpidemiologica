@@ -1,3 +1,4 @@
+
 const FORM_AJAX = document.querySelectorAll(".formAjax");
 
 function captureDataForm (e){
@@ -13,6 +14,7 @@ function captureDataForm (e){
 	let action = this.getAttribute("action");
 	let type = this.getAttribute("data-form");
     let responseProcess=form.children('.responseProcessAjax');
+    let msgBackendProcess=form.children('.msgBackendProcess');
 
 	let encabezados = new Headers();
 
@@ -31,12 +33,10 @@ function captureDataForm (e){
 
      formFields+='&operationType='+type;
 
-     console.log(formFields);
-
 // Operaciones que no necesitan confirmacion
 if(textMsjAlert==false){
 
-			return sendFormDataAjax(action,formFields,method,responseProcess);
+			return sendFormDataAjax(action,formFields,method,responseProcess,msgBackendProcess);
 }
 
 	Swal.fire({
@@ -54,15 +54,19 @@ if(textMsjAlert==false){
 			if(type==="files"){
 
 			// parametos especiales para envio de archivos
-			    var file = $('.files')[0].files[0];
+			
+			let modal = form.parents('.modal');
+			let buttonCancelAjax = modal.find('.buttonCancelAjax');
 
-			    dataForm.append('file',file);
+			  let inputFile =form.find('input:file');
 				contentTypes = false;
-				  return sendFormDataAjax(action,dataForm,method,responseProcess,contentTypes,true);
+
+				  return sendFormDataAjax(action,dataForm,method,responseProcess,msgBackendProcess,buttonCancelAjax,contentTypes,inputFile);
 
 					}else{
 
-						return sendFormDataAjax(action,formFields,method,responseProcess);
+
+						return sendFormDataAjax(action,formFields,method,responseProcess,msgBackendProcess);
 
 					}
 
@@ -74,9 +78,10 @@ if(textMsjAlert==false){
 
 
 
-function sendFormDataAjax(action,ValuesAndFields,method,showResponseProcess='',contentTypes = 'application/x-www-form-urlencoded',ifFile = false){
+function sendFormDataAjax(action,ValuesAndFields,method,elementForShowProccesAjax='',elementMsgBackendProcess = '', buttonCancelAjax = '', contentTypes = 'application/x-www-form-urlencoded',inputFile = false){
 
-var msgBackendProcessAjaxData = $("#msgBackendProcessAjaxData");
+//console.log(action,ValuesAndFields,method,elementForShowProccesAjax,elementMsgBackendProcess, buttonCancelAjax, contentTypes,inputFile,inputFile );
+
 var ajax = null;
 
  ajax = $.ajax({
@@ -91,14 +96,12 @@ var ajax = null;
         	var xhr = new window.XMLHttpRequest();
 
 
-//botones del modal ajax para form con input files solo se activaran cuando el parametro ifFile is true para evitar errores
+//botones del modal ajax para form con input files solo se activaran cuando el parametro inputFile is true para evitar errores
 
-if (ifFile) {
-             
-		var buttonCancelAjax = document.getElementsByClassName("buttonCancelAjax")[0];
+if (inputFile) {
 
-		buttonCancelAjax.classList.remove('btn-secondary');
-		buttonCancelAjax.classList.add('btn-danger');
+		buttonCancelAjax.removeClass('btn-secondary');
+		buttonCancelAjax.addClass('btn-danger');
 }
 
                 xhr.upload.addEventListener("progress", function(evt) {
@@ -106,36 +109,31 @@ if (ifFile) {
                      var percentComplete = evt.loaded / evt.total;
                      percentComplete = parseInt(percentComplete * 100);
                        if(percentComplete<100){
-                        	showResponseProcess.html('<p class="text-center">Enviando... ('+percentComplete+'%)</p><div class="progress progress-striped active"><div class="progress-bar progress-bar-info" style="width: '+percentComplete+'%;"></div></div>');
+                        	elementForShowProccesAjax.html('<p class="text-center">Enviando... ('+percentComplete+'%)</p><div class="progress progress-striped active"><div class="progress-bar progress-bar-info" style="width: '+percentComplete+'%;"></div></div>');
                       	}else{
-                      		showResponseProcess.html('<p class="text-center"></p>');
+                      		elementForShowProccesAjax.html('<p class="text-center"></p>');
 						    //mensaje cuando el bakend este procesando datos de ajax
 
-						 msgBackendProcessAjaxData.html("</p>Procesando...<p>");
+						 elementMsgBackendProcess.html("</p>Procesando...<p>");
 
 						 // termine el proceso esconde el button de cancelar
 						  $(document).ajaxStop(function() {
 
-						 msgBackendProcessAjaxData.html("");
+						 elementMsgBackendProcess.html("");
 
-							$("#btnInsertCancelAjax").html("");
-
-						   // msgBackendProcessAjaxData.hide();
 						  });
-						                      	}
+						 }
                       }
                     }, false);
                     return xhr;
 
         },success: function (response) {
 
-if (ifFile) {
+if (inputFile) {
 
-		var buttonCancelAjax = document.getElementsByClassName("buttonCancelAjax")[0];
+		buttonCancelAjax.removeClass('btn-danger');
 
-		buttonCancelAjax.classList.remove('btn-danger');
-
-		buttonCancelAjax.classList.add('btn-secondary');
+		buttonCancelAjax.addClass('btn-secondary');
 }
         	console.log(response);
         	
@@ -152,6 +150,8 @@ if (ifFile) {
 
 			//return operationResult;
 		},error: function (e) {
+
+console.log('Error:', e);
 			// cuando no se hizo un ajax.abort
 					if(ajax == null){
 
@@ -167,26 +167,22 @@ if (ifFile) {
 	}); 
 
 	                	// para cancelar el ajax su un modal con formulario
+	                	
                 	// al cerrar tambien lo hara la operacion ajax
 					if(ajax != null){
 
-			         	modalAjax=$(".modalAjax");
-
-			          $(modalAjax).on('hide.bs.modal', function(){
+    			buttonCancelAjax.click(function(){
 			            ajax.abort();
 
-		var buttonCancelAjax = document.getElementsByClassName("buttonCancelAjax")[0];
+						buttonCancelAjax.removeClass('btn-danger');
 
-						buttonCancelAjax.classList.remove('btn-danger');
+						buttonCancelAjax.addClass('btn-secondary');
 
-						buttonCancelAjax.classList.add('btn-secondary');
+							elementForShowProccesAjax.html('');
 
-							showResponseProcess.html('');
-
-			            	msgBackendProcessAjaxData.html("");
-
-							$(':file').val('');
-
+			            	elementMsgBackendProcess.html("");
+			            	inputFile.val('');
+			            	
 
 			        });
 			      }                

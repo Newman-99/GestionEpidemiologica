@@ -167,7 +167,7 @@
 
                         <option <?php if($fieldsUserRequested['id_nivel_permiso'] == 2) echo 'selected'; ?> value="2">Nivel: Operador</option>
 
-                        <option <?php if($fieldsUserRequested['id_nivel_permiso'] == 3) echo 'selected'; ?> value="2">Nivel: Invitado</option>
+                        <option <?php if($fieldsUserRequested['id_nivel_permiso'] == 3) echo 'selected'; ?> value="3">Nivel: Invitado</option>
 
                     </select>
     

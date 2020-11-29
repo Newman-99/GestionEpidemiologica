@@ -85,7 +85,7 @@
                 </div>
 
             <hr>
-              <h5 class="h5 mb-2 text-gray-800">Nuevas Configuraciones</h5>
+              <h5 class="h5 mb-2 text-gray-800">Nuevos Datos</h5>
 
                 <div class="form-group row">
                   <div class="col-sm-6 mb-3 mb-sm-0">

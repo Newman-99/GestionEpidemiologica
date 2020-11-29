@@ -62,6 +62,8 @@
 
 <script src="<?php echo SERVERURL; ?>view/js/alerts.js" ></script>
 
+  <script src="<?php echo SERVERURL; ?>view/js/scriptsRequestDataFromBakend.js"></script>
+
 <script src="<?php echo SERVERURL; ?>view/js/logOut.js" ></script>
 
 

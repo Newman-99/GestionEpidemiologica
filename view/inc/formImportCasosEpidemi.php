@@ -18,17 +18,17 @@
           <div class="col-lg-7">
             <div class="p-5">
 
-   <form class="formAjax fileCSVImportCaseEpidemi form-group text-center user" action="<?php echo SERVERURL; ?>ajax/casosEpidemiAjax.php" method="POST" data-form="files" autocomplete="off" enctype="multipart/form-data">
+   <form class="formAjax formFileCSVImportCaseEpidemi form-group text-center user" action="<?php echo SERVERURL; ?>ajax/casosEpidemiAjax.php" method="POST" data-form="files" autocomplete="off" enctype="multipart/form-data">
 
-                <div class="form-group" id="update-cie-10">
+                <div class="form-group" id="importCasosEpidemiModal">
                   <label for="">Elegir Archivo CSV:</label>
-                    <input type="file" class="form-control files" id="fileCSVImportCaseEpidemi" name="fileCSVImportCaseEpidemi" accept=".csv">
+                    <input type="file" class="form-control input-files" id="fileCSVImportCaseEpidemi" name="fileCSVImportCaseEpidemi" accept=".csv">
               </div>
 
       
      <div class="responseProcessAjax"></div>
 
-    <div id="msgBackendProcessAjaxData"></div>
+    <div class="msgBackendProcess"></div>
 
     <div id="btnInsertCancelAjax"></div>
 
@@ -40,8 +40,8 @@
 
       </div>
       <div class="modal-footer">
-        <button type="button" id="importCasosEpidemiCancel" class="btn btn-secondary buttonCancelAjax" data-dismiss="modal">Cancelar</button>
-     <button class="btn btn-primary btn-user btn-block" type="submit" value="ImportCasosEpidemi" name="import">Actualizar</button>
+        <button type="button" id="importCasosEpidemiCancel" class=" buttonCancelAjax btn btn-secondary" data-dismiss="modal">Cancelar</button>
+     <button class="btn btn-primary btn-user btn-block" type="submit" value="import" name="import">Importar</button>
       </div>
      </form>
 

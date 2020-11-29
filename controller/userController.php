@@ -462,6 +462,7 @@ if (mainModel::isDataEmtpy($id_nacionalidad,$doc_identidad,$aliasUser,$telefono,
 				];
 
 		 	$userDataTocomparedWithDatabase["id_nivel_permiso"] = $id_nivel_permiso;
+			
 		}
 
 		// isset cuando el id_estado no se muestra en form por seguridad
@@ -1284,7 +1285,8 @@ $table.="</tbody>
 
 	}
 
-	 public static function printUserTypeCountController(){
+
+	 public static function printUserCountByTypeController(){
 		
 		$userAdmins = userModel::userTypeCounterModel('id_nivel_permiso',1);
 		

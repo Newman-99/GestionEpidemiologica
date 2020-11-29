@@ -535,7 +535,7 @@ if (!isset($dataCasosEpidemi['confirmDelete'])) {
 						"Alert"=>"confirmation",
 						"Text"=>"Esta persona no presenta otro  caso epidemiologico ni posee algun usuario  por lo que se eliminara del sistema completamente",
 						"Url"=>"".SERVERURL."ajax/casosEpidemiAjax.php",
-						"Data"=>"doc_identidad=$doc_identidad&id_caso_epidemi=$id_caso_epidemi&id_nacionalidad=$id_nacionalidad&fecha_registro=$fecha_registro&operationType=delete&confirmDelete=true",
+						"Data"=>"doc_identidad=$doc_identidad&id_caso_epidemi=$id_caso_epidemi&id_nacionalidad=$id_nacionalidad&fecha_registro=$fecha_registro&catalog_key_cie10=$catalog_key_cie10&operationType=delete&confirmDelete=true",
 						"Method"=>"POST"];
 					
 					echo json_encode($alert);
@@ -906,7 +906,6 @@ if ($files['fileCSVImportCaseEpidemi']['type'] !='text/csv' || mainModel::isData
 
 				exit();
 	}
-
 // Se llamara la libreria para procesar e insetrar los valores del .csv
 
 require_once "../view/inc/spout.php";
@@ -1406,6 +1405,57 @@ $bitacora_hora = mainModel::cleanStringSQL($dataForQuery[$indiceFila][25]);
 */
 var_dump($dataCasosEpidemi);
 
+}
+
+
+	 public static function printEpidemiCaseCountController(){
+		
+				$currentDate =  mainModel::getDateCurrentSystem();
+
+       			$dateYesterday = date("Y-m-d",strtotime($currentDate."- 1 days"));
+
+       			$dateDay = date("d",strtotime($currentDate."- 1 days"));
+
+				$currentMounth = date("m", $currentDate);
+
+				$currentYear = date("Y", $currentDate);
+
+				$currentDate = date("y-m-d", $currentDate);
+				    
+		$queryCountCasosEpidemiCurrentYear = mainModel::connectDB()->query("SELECT count(id_caso_epidemi) FROM casos_epidemi where year_registro = '$currentYear'");
+
+		$queryCountCasosEpidemiMounth = mainModel::connectDB()->query("SELECT count(id_caso_epidemi) FROM casos_epidemi where DATE_PART('month',fecha_registro) = '$currentMounth';");
+
+		$queryCountCasosEpidemiWeek = mainModel::connectDB()->query("SELECT count(id_caso_epidemi)
+        FROM casos_epidemi where DATE_PART('week',fecha_registro) = DATE_PART('week','$dateYesterday'::date);");
+
+		$queryCountCasosEpidemiYesterday = mainModel::connectDB()->query("SELECT count(id_caso_epidemi)
+        FROM casos_epidemi where fecha_registro = '$dateYesterday'");
+
+		$queryCountCasosEpidemiTotal = mainModel::connectDB()->query("SELECT count(id_caso_epidemi) FROM casos_epidemi");
+
+		$countCasosEpidemiCurrentYear = $queryCountCasosEpidemiCurrentYear->fetchColumn();
+
+		$countCasosEpidemiMounth = $queryCountCasosEpidemiMounth->fetchColumn();
+
+		$countCasosEpidemiWeek = $queryCountCasosEpidemiWeek->fetchColumn();
+
+		$countCasosEpidemiYesterday = $queryCountCasosEpidemiYesterday->fetchColumn();
+
+		$countCasosEpidemiTotal = $queryCountCasosEpidemiTotal->fetchColumn();
+        
+        return "
+  		Año ($currentYear) : ".$countCasosEpidemiCurrentYear." 
+  		<br>
+        Mes ($currentMounth) : ".$countCasosEpidemiMounth."
+  		<br>
+        Semana: ".$countCasosEpidemiWeek."
+  		<br>
+        Hoy : ".$countCasosEpidemiYesterday."
+  		<br>
+        Total: ".$countCasosEpidemiTotal."
+		<br>";
+		
 }
 
 
