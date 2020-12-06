@@ -136,23 +136,26 @@ public function loginUserController($dataUser){
 
 		// Obtener datos de person
 
-    	$primaryKeyPerson = array("doc_identidad"=>$doc_identidad,'id_nacionalidad'=>$id_nacionalidad);
+ 		  $columnsTablePersona = [
+		'id_genero',
+		"nombres",
+		"apellidos"];
 
+    	$fieldsForFilter = array("doc_identidad"=>$doc_identidad,'id_nacionalidad'=>$id_nacionalidad);
 
     		// para instaciar el object person
 			 parent::__construct();
 
-			$recordspersonasQL = parent::$personController->getpersonController($primaryKeyPerson);
+		$queryToGetDataPerson = parent::$personController->getpersonController($columnsTablePersona,$fieldsForFilter);
 
-			$recordspersonasQL->execute();
+			$queryToGetDataPerson->execute();
 	
-			while($valuesdataPerson=$recordspersonasQL->fetch(PDO
+			while($recordsDataPerson=$queryToGetDataPerson->fetch(PDO
 			::FETCH_ASSOC)){ 
 
-			$nameUser = $valuesdataPerson["id_genero"]; 
-			$nameUser = $valuesdataPerson["nombres"]; 
-			$lastNamesUser = $valuesdataPerson["apellidos"]; 
-			$id_generoUser = $valuesdataPerson["id_genero"]; 
+			$nameUser = $recordsDataPerson["nombres"]; 
+			$lastNamesUser = $recordsDataPerson["apellidos"]; 
+			$id_generoUser = $recordsDataPerson["id_genero"]; 
 
 		}
 

@@ -18,11 +18,11 @@
           <div class="col-lg-7">
             <div class="p-5">
 
-   <form class="formAjax restore form-group text-center user" action="<?php echo SERVERURL; ?>ajax/casosEpidemiAjax.php" method="POST" data-form="files" autocomplete="off" enctype="multipart/form-data">
+   <form class="formAjax restore form-group text-center user" action="<?php echo SERVERURL; ?>ajax/mainAjax.php" method="POST" data-form="files" autocomplete="off" enctype="multipart/form-data">
 
-                <div class="form-group" id="restore">
-                  <label for="">Elegir Archivo de Respaldo SQL:</label>
-                    <input type="file" class="form-control files" id="restore" name="restore" accept=".sql">
+                <div class="form-group">
+                  <label for="">Elegir Archivo de Respaldo .GZ:</label>
+                    <input type="file" class="form-control files" id="restore" name="restore" accept=".gz">
               </div>
 
      <div class="responseProcessAjax"></div>
@@ -38,7 +38,7 @@
       </div>
       <div class="modal-footer">
         <button type="button" id="restoreCancel" class="btn btn-secondary buttonCancelAjax" data-dismiss="modal">Cancelar</button>
-     <button class="btn btn-primary btn-user btn-block" type="submit" value="restore" name="restore">Restaurar</button>
+     <button class="btn btn-primary btn-user btn-block" type="submit" value="restoreDB" name="restoreDB">Restaurar</button>
       </div>
      </form>
 

@@ -34,7 +34,7 @@ if (isset($_POST['operationType']) && $_POST['operationType'] == "register"){
 
 }elseif (isset($_FILES['fileCSVImportCaseEpidemi'])) {
 
-	 	$casosEpidemiController->importCasosEpidemiController($_FILES);
+	 	echo $casosEpidemiController->importCasosEpidemiController($_FILES);
 
 		} else { 
 		/*

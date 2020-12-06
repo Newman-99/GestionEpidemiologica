@@ -18,7 +18,7 @@
           <div class="col-lg-7">
             <div class="p-5">
 
-                  <a href="./model/dptoEmidemi.sql" class="btn btn-success btn-icon-split">
+                  <a href="#" target="_blank" class="btn btn-secondary btn-icon-split" id="backup" name="backup">
                     <span class="icon text-white-50">
                       <i class="fas fa-download"></i>
                     </span>
@@ -40,7 +40,49 @@
         <button type="button" id="importBackup" class="btn btn-secondary buttonCancelAjax" data-dismiss="modal">Cancelar</button>
       </div>
      </form>
-
     </div>
   </div>
 </div>
+
+<script type="text/javascript">
+    $( document ).ready(function() {
+
+$('#backupModal').on('show.bs.modal', function () {
+
+ server_url = $('#server_url').val();
+
+  var modal = $(this);
+  let method = "POST";
+  let action = server_url+'ajax/mainAjax.php';
+  let responseProcess=modal.find('.responseProcessAjax');
+  let msgBackendProcess=modal.find('.msgBackendProcess');
+
+  console.log(msgBackendProcess);
+
+var data = 
+  'operationType=backup';
+
+ sendDataAjax(action,data,method,responseProcess,msgBackendProcess);
+
+      });
+
+
+    $("#backupModal").on('hidden.bs.modal', function () {
+
+
+      $('#backup').removeClass('btn-success');
+
+      $('#backup').addClass('btn-secondary');
+
+    var elementAtribute = document.getElementById('backup');
+    
+    elementAtribute.setAttribute('href',''); 
+
+      });
+
+
+
+
+    });
+
+</script>

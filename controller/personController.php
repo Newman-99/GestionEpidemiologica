@@ -64,26 +64,7 @@ if (!isset($dataPerson['operationImportCaseEpidemi'])) {
 
 				exit();
 			}
-
-			$queryIsExistPerson = mainModel::connectDB()->query("SELECT doc_identidad FROM personas WHERE doc_identidad =
-			'$doc_identidad' AND id_nacionalidad =
-			'$id_nacionalidad'");
-
-			if($queryIsExistPerson->rowCount()){
-
-			$alert=[
-				"Alert"=>"simple",
-				"Title"=>"Datos Invalidos",
-				"Text"=>"Ya se encuentra una person con este documento de identidad".$indicatorPersonError,
-				"Type"=>"error"
-			];
-
-				echo json_encode($alert);
-
-				exit();
-			}
-
-
+			
 			if(!self::isValidDocIdentidad($doc_identidad)){
 
 			$alert=[
@@ -355,29 +336,29 @@ if (!isset($dataPerson['operationImportCaseEpidemi'])) {
 
 
 	 		// Campos del usuario como person a comparar con la BD
-	 		$personDataTocomparedWithDatabase = [
-			 "fecha_nacimiento"=>$fecha_nacimiento,
-			 "nombres"=>$nombres,
-			 "apellidos"=>$apellidos,
-			 "id_genero"=>$id_genero 			
-	 		];
 
 		$dataPerson = 
 		[
-		'doc_identidad'=>$doc_identidad,
 		"nombres"=>$nombres,
 		"apellidos"=>$apellidos,
 		"fecha_nacimiento"=>$fecha_nacimiento,
-		"id_nacionalidad"=>$id_nacionalidad,
 		"id_genero"=>$id_genero,
+		];
+
+		$columnsTableToCompare = 
+		[
+		"nombres",
+		"apellidos",
+		"fecha_nacimiento",
+		"id_genero",
 		];
 				 	
 
-if (!isset($dataPerson['operationImportCaseEpidemi'])) {
-	 	$queryToGetPerson = self::getpersonController(array("doc_identidad"=>$doc_identidad,"id_nacionalidad"=>$id_nacionalidad));
+	 	$queryToGetPerson = self::getpersonController($columnsTableToCompare,array("doc_identidad"=>$doc_identidad,"id_nacionalidad"=>$id_nacionalidad),);
 
-		$ifPersonDataUpdateIsSameDatabase = mainModel::isFieldsEqualToThoseInTheDatabase($queryToGetPerson,$personDataTocomparedWithDatabase);
- 
+
+		$ifPersonDataUpdateIsSameDatabase = mainModel::isFieldsEqualToThoseInTheDatabase($queryToGetPerson,$dataPerson);
+
 			// si la datos nuevos son los mismos a los de la BD, 
 			// inclueremos un elemento que indique que se proceda actualizar			
 		 $dataPerson['ifUpdatePerson']  = true;
@@ -386,10 +367,9 @@ if (!isset($dataPerson['operationImportCaseEpidemi'])) {
 		if ($ifPersonDataUpdateIsSameDatabase){
 		 $dataPerson['ifUpdatePerson']  = false;
 		}
-}
 
 		 return $dataPerson;
-
+	
 				 }
 
 
@@ -438,17 +418,17 @@ if (!isset($dataPerson['operationImportCaseEpidemi'])) {
 
 
 
-		public static function getpersonController($dataPerson){
+		public static function getpersonController($columnsTable,$fieldsForFilter){
 
-		$personttributesFilter = [];
+		$personAttributesFilter = [];
 
  		$filterValues = [];
 
-		if (isset($dataPerson["id_nacionalidad"]) && !mainModel::isDataEmtpy($dataPerson["id_nacionalidad"])) {
+		if (isset($fieldsForFilter["id_nacionalidad"]) && !mainModel::isDataEmtpy($fieldsForFilter["id_nacionalidad"])) {
 
-		 $id_nacionalidad = mainModel::cleanStringSQL($dataPerson['id_nacionalidad']);
+		 $id_nacionalidad = mainModel::cleanStringSQL($fieldsForFilter['id_nacionalidad']);
 
-		 array_push($personttributesFilter, 'id_nacionalidad = :id_nacionalidad');
+		 array_push($personAttributesFilter, 'id_nacionalidad = :id_nacionalidad');
 		$filterValues[':id_nacionalidad'] = [
 		'value' => $id_nacionalidad,
 		'type' => \PDO::PARAM_STR,
@@ -456,11 +436,11 @@ if (!isset($dataPerson['operationImportCaseEpidemi'])) {
 
 		}
 	
-	if (isset($dataPerson["doc_identidad"]) && !mainModel::isDataEmtpy($dataPerson["doc_identidad"])) {
+	if (isset($fieldsForFilter["doc_identidad"]) && !mainModel::isDataEmtpy($fieldsForFilter["doc_identidad"])) {
 
-		 $doc_identidad = mainModel::cleanStringSQL($dataPerson['doc_identidad']);
+		 $doc_identidad = mainModel::cleanStringSQL($fieldsForFilter['doc_identidad']);
 		
-		array_push($personttributesFilter, 'doc_identidad = :doc_identidad');
+		array_push($personAttributesFilter, 'doc_identidad = :doc_identidad');
 		$filterValues[':doc_identidad'] = [
 		'value' => $doc_identidad,
 		'type' => \PDO::PARAM_STR,
@@ -468,11 +448,11 @@ if (!isset($dataPerson['operationImportCaseEpidemi'])) {
 
 	}		
 
-		if (isset($dataPerson["nombres"]) && !mainModel::isDataEmtpy($dataPerson["nombres"])) {
+		if (isset($fieldsForFilter["nombres"]) && !mainModel::isDataEmtpy($fieldsForFilter["nombres"])) {
 
-		 $nombres = mainModel::cleanStringSQL($dataPerson['nombres']);
+		 $nombres = mainModel::cleanStringSQL($fieldsForFilter['nombres']);
 
-		array_push($personttributesFilter, 'nombres = :nombres');
+		array_push($personAttributesFilter, 'nombres = :nombres');
 		$filterValues[':nombres'] = [
 		'value' => $nombres,
 		'type' => \PDO::PARAM_STR,
@@ -480,11 +460,11 @@ if (!isset($dataPerson['operationImportCaseEpidemi'])) {
 
 		}
 		 
-		if (isset($dataPerson["apellidos"]) && !mainModel::isDataEmtpy($dataPerson["apellidos"])) {
+		if (isset($fieldsForFilter["apellidos"]) && !mainModel::isDataEmtpy($fieldsForFilter["apellidos"])) {
 
-		 $apellidos = mainModel::cleanStringSQL($dataPerson['apellidos']);
+		 $apellidos = mainModel::cleanStringSQL($fieldsForFilter['apellidos']);
 			
-		array_push($personttributesFilter, 'apellidos = :apellidos');
+		array_push($personAttributesFilter, 'apellidos = :apellidos');
 		$filterValues[':apellidos'] = [
 		'value' => $apellidos,
 		'type' => \PDO::PARAM_STR,
@@ -493,23 +473,23 @@ if (!isset($dataPerson['operationImportCaseEpidemi'])) {
 		}
 
 
-		if (isset($dataPerson["fecha_nacimiento"]) && !mainModel::isDataEmtpy($dataPerson["fecha_nacimiento"])) {
+		if (isset($fieldsForFilter["fecha_nacimiento"]) && !mainModel::isDataEmtpy($fieldsForFilter["fecha_nacimiento"])) {
 
-		array_push($personttributesFilter, 'fecha_nacimiento = :fecha_nacimiento');
+		array_push($personAttributesFilter, 'fecha_nacimiento = :fecha_nacimiento');
 		$filterValues[':fecha_nacimiento'] = [
 		'value' => $fecha_nacimiento,
 		'type' => \PDO::PARAM_STR,
 		];
 
-		 $fecha_nacimiento = mainModel::cleanStringSQL($dataPerson['fecha_nacimiento']);
+		 $fecha_nacimiento = mainModel::cleanStringSQL($fieldsForFilter['fecha_nacimiento']);
 		 
 		 }
 
-		if (isset($dataPerson["id_genero"]) && !mainModel::isDataEmtpy($dataPerson["id_genero"])) {
+		if (isset($fieldsForFilter["id_genero"]) && !mainModel::isDataEmtpy($fieldsForFilter["id_genero"])) {
 		 
-		 $id_genero = mainModel::cleanStringSQL($dataPerson['id_genero']);
+		 $id_genero = mainModel::cleanStringSQL($fieldsForFilter['id_genero']);
 
-		array_push($personttributesFilter, 'id_genero = :id_genero');
+		array_push($personAttributesFilter, 'id_genero = :id_genero');
 		$filterValues[':id_genero'] = [
 		'value' => $id_genero,
 		'type' => \PDO::PARAM_STR,
@@ -517,7 +497,7 @@ if (!isset($dataPerson['operationImportCaseEpidemi'])) {
 	}
 
 
-			return personModel::getPersonModel($personttributesFilter,$filterValues);
+			return mainModel::querySelectsCreator('personas',$columnsTable,$personAttributesFilter,$filterValues);
 
 		}
 

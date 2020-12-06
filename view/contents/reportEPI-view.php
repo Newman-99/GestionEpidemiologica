@@ -1,5 +1,5 @@
 
-<script src="<?php echo SERVERURL; ?>archives_vendor/sheetjs-master/dist/xlsx.full.min.js" type="text/javascript"></script>
+<script src="<?php echo SERVERURL; ?>libraries/sheetjs-master/dist/xlsx.full.min.js" type="text/javascript"></script>
 <script>
 function exportFile(){
 

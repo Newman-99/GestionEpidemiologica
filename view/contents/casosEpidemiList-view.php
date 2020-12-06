@@ -135,10 +135,16 @@
                       <th>Hora de Operacion</th>
                       <th></th>
                     </tr>
+
+                    <div class="responseProcessAjax"></div>
+
+                    <div class="msgBackendProcess"></div>
+
                   </tfoot>
                   <tbody>
                     
                     </tbody>
+            
                 </table>
               </div>
            </div>
@@ -314,9 +320,12 @@ var dataCasoEpidemi =
           }).then((result) => {
             if(result.value){
 
-                    return sendFormDataAjax(actionForAjax,dataCasoEpidemi,'POST');
+  let responseProcess=table.find('.responseProcessAjax');
+  let msgBackendProcess=table.find('.msgBackendProcess');
 
-                    table.ajax.reload()
+      sendDataAjax(actionForAjax,dataCasoEpidemi,'POST',responseProcess,msgBackendProcess);
+
+//      $('#dataTable').DataTable().ajax.reload( null, false );
 
               }
         });

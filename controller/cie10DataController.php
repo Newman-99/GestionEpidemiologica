@@ -512,7 +512,7 @@ $sqlQuery->closeCursor();
     $DB_transacc->commit();
 
 
-}catch (Exception $e) {
+		} catch (PDOException $e) {
 
 			$alert=[
 				"Alert"=>"simple",

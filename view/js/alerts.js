@@ -36,7 +36,7 @@ function captureDataForm (e){
 // Operaciones que no necesitan confirmacion
 if(textMsjAlert==false){
 
-			return sendFormDataAjax(action,formFields,method,responseProcess,msgBackendProcess);
+			return sendDataAjax(action,formFields,method,responseProcess,msgBackendProcess);
 }
 
 	Swal.fire({
@@ -61,12 +61,12 @@ if(textMsjAlert==false){
 			  let inputFile =form.find('input:file');
 				contentTypes = false;
 
-				  return sendFormDataAjax(action,dataForm,method,responseProcess,msgBackendProcess,buttonCancelAjax,contentTypes,inputFile);
+				  return sendDataAjax(action,dataForm,method,responseProcess,msgBackendProcess,buttonCancelAjax,contentTypes,inputFile);
 
 					}else{
 
 
-						return sendFormDataAjax(action,formFields,method,responseProcess,msgBackendProcess);
+						return sendDataAjax(action,formFields,method,responseProcess,msgBackendProcess);
 
 					}
 
@@ -78,7 +78,7 @@ if(textMsjAlert==false){
 
 
 
-function sendFormDataAjax(action,ValuesAndFields,method,elementForShowProccesAjax='',elementMsgBackendProcess = '', buttonCancelAjax = '', contentTypes = 'application/x-www-form-urlencoded',inputFile = false){
+function sendDataAjax(action,ValuesAndFields,method,elementForShowProccesAjax='',elementMsgBackendProcess = '', buttonCancelAjax = false, contentTypes = 'application/x-www-form-urlencoded',inputFile = false){
 
 //console.log(action,ValuesAndFields,method,elementForShowProccesAjax,elementMsgBackendProcess, buttonCancelAjax, contentTypes,inputFile,inputFile );
 
@@ -98,7 +98,7 @@ var ajax = null;
 
 //botones del modal ajax para form con input files solo se activaran cuando el parametro inputFile is true para evitar errores
 
-if (inputFile) {
+if (buttonCancelAjax) {
 
 		buttonCancelAjax.removeClass('btn-secondary');
 		buttonCancelAjax.addClass('btn-danger');
@@ -129,24 +129,48 @@ if (inputFile) {
 
         },success: function (response) {
 
-if (inputFile) {
+        	console.log(response);
+        	
+
+		  let operationResult = JSON.parse(response);
+
+		  console.log(operationResult);
+
+
+		if (typeof operationResult.cleanInput != 'undefined') {	
+			alert('cleanInput');
+			$('.formAjax').trigger("reset");
+			}
+
+		  if (typeof operationResult.Alert != 'undefined') {		
+			ajaxSweetAlerts(operationResult);
+
+			}
+
+		 if (typeof operationResult.idRemoveClass != 'undefined') {	
+		 	$(operationResult.idRemoveClass).removeClass(operationResult.valueRemoveClass);
+			}			
+
+		 if (typeof operationResult.idAddClass != 'undefined') {
+		 	$(operationResult.idAddClass).addClass(operationResult.valueAddClass);
+			}
+
+
+		 if (typeof operationResult.idSetAtribute != 'undefined') {
+
+		var elementAtribute = document.getElementById(operationResult.idSetAtribute);
+
+		elementAtribute.setAttribute(operationResult.typeSetAtribute,
+		 operationResult.valueSetAtribute); 
+		}
+
+
+if (buttonCancelAjax) {
 
 		buttonCancelAjax.removeClass('btn-danger');
 
 		buttonCancelAjax.addClass('btn-secondary');
 }
-        	console.log(response);
-        	
-		  let operationResult = JSON.parse(response);
-		 
-		  if (typeof operationResult.Alert != 'undefined') {		
-			ajaxSweetAlerts(operationResult);
-			}
-
-		 if (typeof operationResult.reloadDataTable != 'undefined') {					
-			$('#dataTable').DataTable().ajax.reload( null, false );
-			}
-
 
 			//return operationResult;
 		},error: function (e) {
@@ -169,7 +193,7 @@ console.log('Error:', e);
 	                	// para cancelar el ajax su un modal con formulario
 	                	
                 	// al cerrar tambien lo hara la operacion ajax
-					if(ajax != null){
+					if(ajax != null && buttonCancelAjax != false){
 
     			buttonCancelAjax.click(function(){
 			            ajax.abort();
@@ -181,8 +205,12 @@ console.log('Error:', e);
 							elementForShowProccesAjax.html('');
 
 			            	elementMsgBackendProcess.html("");
+						
+						if(inputFile){
+
 			            	inputFile.val('');
-			            	
+
+			            	}
 
 			        });
 			      }                
@@ -204,6 +232,9 @@ function ajaxSweetAlerts(alert){
 			confirmButtonText: 'Aceptar'
 		});
 
+		if (typeof alert.reloadDataTable != 'undefined') {	
+			$('#dataTable').DataTable().ajax.reload();
+			}
 
 	}else if(alert.Alert==="reload"){
 		Swal.fire({

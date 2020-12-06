@@ -225,8 +225,8 @@ caso.catalog_key_cie10,caso.fecha_registro,caso.direccion,
 		$DB_transacc->beginTransaction();
 
 	try {
-// si no son los mismos datos personales acualizamos
-if (!$dataCasosEpidemi['ifUpdatePerson']) {
+
+if ($dataCasosEpidemi['ifUpdatePerson']) {
 		$sqlQuery  = personModel::stringQueryUpdatePersonModel();
 
 		$sqlQuery = $DB_transacc->prepare($sqlQuery);
@@ -376,12 +376,11 @@ if (!$dataCasosEpidemi['ifUpdatePerson']) {
 		$DB_transacc->query("ALTER TABLE casos_epidemi_bitacora ENABLE TRIGGER ALL");
 
 		  	$alert=[
+				"reloadDataTable"=>"true",
 				"Alert"=>"simple",
 				"Title"=>"Operacion Exitosa",
 				"Text"=>"El Caso Epidemiologico ha sido eliminado",
-				"Type"=>"success",
-				"reloadDataTable"=>"true"
-
+				"Type"=>"success"
 			];
 
 			// en variable para eviatr error de doble cierre de transacc
@@ -389,7 +388,7 @@ if (!$dataCasosEpidemi['ifUpdatePerson']) {
 			
 			}catch (Exception $e) {
 
-			//$DB_transacc->rollBack();
+			$DB_transacc->rollBack();
 
 
 			$alert=[

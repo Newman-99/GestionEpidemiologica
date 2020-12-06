@@ -1,0 +1,49 @@
+{
+    "name": "davmixcool/php-dbcloud",
+    "type": "library",
+    "description": "Easily backup PostgreSql or MySql database to the cloud",
+    "keywords": ["db","Database","MySql","PostgreSql","Sql"],
+    "homepage": "https://github.com/davmixcool/php-dbcloud",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "David Oti",
+            "email": "davmixcool@gmail.com",
+            "role": "Senior Developer"
+        }
+    ],
+    "require": {
+        "php": "^5.5.9 || ^7.0",
+        "symfony/process": "^2.1 || ^3.0 || ^4.0",
+        "league/flysystem": "^1.0"
+    },
+    "require-dev": {
+        "league/flysystem-aws-s3-v3": "~1.0",
+        "league/flysystem-dropbox": "~1.0",
+        "srmklive/flysystem-dropbox-v2": "~1.0",
+        "league/flysystem-sftp": "~1.0",
+        "dropbox/dropbox-sdk": "~1.1",
+        "aws/aws-sdk-php": "~3.0",
+        "phpspec/phpspec": "~2.1"
+    },
+	"suggest": {
+    	"league/flysystem-aws-s3-v3": "AwsS3 adapter support.",
+    	"league/flysystem-aws-s3-v2": "GoogleCS adapter support.",
+        "league/flysystem-dropbox": "Dropbox API adapter support.",
+    	"srmklive/flysystem-dropbox-v2": "Dropbox API v2 adapter support.",
+    	"league/flysystem-sftp": "Sftp adapter support."
+ 	 },
+     "config": {
+       "bin-dir": "bin"
+     },
+    "autoload": {
+        "psr-4": {
+            "PhpDbCloud\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "PhpDbCloud\\Tests\\": "tests/"
+        }
+    }
+}

@@ -4,6 +4,7 @@
 
 	} else {
 		require_once "./config/server.php";
+
 	}
 	
 
@@ -23,7 +24,7 @@
 
 		public static function connectDB(){
 
-
+/*
 		try {			
 
 $db = (function(){
@@ -38,20 +39,124 @@ return $db;
 		} catch (PDOException $e) {
 		    error_log("Failed to connect to database: ".$e->getMessage());
 		}				
-/*
+/**/
 
 
 		try {			
 	$DB = new PDO("pgsql:host=".SERVER_PATH.";port=".PORT.";dbname=".DB."",USER,PASS, array(
 				PDO::ATTR_PERSISTENT => true, PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8'));
     $DB->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    
 		return $DB;
+
 
 		} catch (PDOException $e) {
 		    error_log("Failed to connect to database: ".$e->getMessage());
 		}				
 /**/
 	}
+
+
+
+
+public static function backupDatabase(){
+
+		try {			
+
+$filesBackupsTemp = glob(BASE_DIRECTORY.'backups_temp/*');
+
+foreach($filesBackupsTemp as $file){ // iterate files
+
+    $resultDeleteBackups = unlink($file);
+    
+    if (!$resultDeleteBackups) {
+				$alert=[
+					"Alert"=>"simple",
+					"Title"=>"Ha ocurrido un error inesperado",
+					"Text"=>"Los archivos de respaldo de datos no han podido ser borrados en la carpeta (backups_temp)",
+					"Type"=>"error"
+				];	
+
+				echo json_encode($alert);
+    }
+}
+
+		require_once '../config/backup-phpcloud.php';
+
+
+				$operationElementHtml=[
+					"idSetAtribute"=>"backup",
+					"valueSetAtribute"=>SERVERURL."backups_temp/".$nameBackup.'.gz',
+					"typeSetAtribute"=>"href",
+
+					"idAddClass"=>"#backup",
+					"valueAddClass"=>"btn-success",
+
+					"idRemoveClass"=>"#backup",
+					"valueRemoveClass"=>"btn-secondary"
+				];	
+
+		    echo json_encode($operationElementHtml);
+
+	}catch (Exception $e) {
+
+				$alert=[
+					"Alert"=>"simple",
+					"Title"=>"Ocurrio un error inesperado",
+					"Text"=>"Error en el Respalado de la base de datos <br> Error: ". $e->getMessage()."",
+					"Type"=>"error"
+				];
+
+
+				echo json_encode($alert);
+	}
+
+
+}
+
+public static function restoreDatabase($files){
+
+		try {			
+
+			ini_set('memory_limit','512M');
+if ($files['restore']['type'] !='application/gzip' || mainModel::isDataEmtpy($files['restore']['size'])){
+				$alert=[
+					"Alert"=>"simple",
+					"Title"=>"Datos Invalidos",
+					"Text"=>"El archivo de Respaldo es invalido o esta vacio <br> debe poseer la extension .gz",
+					"Type"=>"error"
+				];	
+
+				echo json_encode($alert);
+
+				exit();
+	}
+
+		require_once '../config/restore-phpcloud.php';
+
+			$alert=[
+				"Alert"=>"simple",
+				"Title"=>"Operacion Exitosa",
+				"Text"=>"Base de datos restaurada",
+				"Type"=>"success"
+			];
+
+}catch (Exception $e) {
+
+			$alert=[
+				"Alert"=>"simple",
+				"Title"=>"Ocurrio un error inesperado",
+				"Text"=>"Error en la restauracion de la base de datos <br> Error: ". $e->getMessage()."",
+				"Type"=>"error"
+			];
+
+}
+
+
+				echo json_encode($alert);
+				exit();
+
+}
 
 		protected static function runSimpleQuery($stringQuery){
 
@@ -410,31 +515,51 @@ protected static function deleteBitacora($usuario_alias){
 
 	return $resultQuery;
 }
+
+
+	protected static function querySelectsCreator($table,$columnsTable,$attributesFilter,$filterValues){
+			
+
+	   $where = '';
+		if (!empty($attributesFilter)) {
+		$where .= ' WHERE ' . implode(' AND ', $attributesFilter);
+		}
+
+		$sqlQuery = "
+        SELECT ".str_replace(" , ", " ", implode(", ", $columnsTable))."
+        FROM  $table
+        $where
+	    ";
+
+		$sqlQuery = mainModel::connectDB()->prepare($sqlQuery);
+		foreach($filterValues as $key => $values) {
+			$sqlQuery->bindParam($key, $values['value'], $values['type']); 
+		}
+
+		return $sqlQuery;
+
+		}
+
 	
 // Comrpueba que un conjuntos de campos enviados tienen los mismo valores a los registrados en la base de datos
 
 protected static function isFieldsEqualToThoseInTheDatabase($queryToGet,$fieldstoCompare){
 
-		$matchCounterFieldsToCompare = count($fieldstoCompare);
-
  		$queryToGet->execute();
 
-		$records = $queryToGet->fetch(PDO::FETCH_BOTH);
+		$records = $queryToGet->fetch(PDO::FETCH_ASSOC);
 
  		$matchCounterDatabaseFields = 0;
 		 
-		foreach ($fieldstoCompare as $keyToCompare => $valueToCompare) {
+		 $matchCounterFieldsToCompare = 0;
 
  		foreach ($records as $databaseKey => $databaseValue) {
-			if (strcmp($databaseKey,$keyToCompare)==0) {
-				if (strcmp($databaseValue,$valueToCompare)==0) {
+ 			$matchCounterFieldsToCompare++;
+				if (strcmp($databaseValue,$fieldstoCompare[$databaseKey])==0) {
 				$matchCounterDatabaseFields++;
-				}
 			
+				}
 			}
-
-			}
-		}
 
 		if ($matchCounterFieldsToCompare == $matchCounterDatabaseFields) {
 			return true;
@@ -484,8 +609,8 @@ protected static function isFieldsEqualToThoseInTheDatabase($queryToGet,$fieldst
      * no need to edit below this line
      */
      
-    /*
-     * DB connection
+    
+    //* DB connection
      
 
     $gaSql['link'] = pg_connect(
@@ -497,7 +622,7 @@ protected static function isFieldsEqualToThoseInTheDatabase($queryToGet,$fieldst
 
 
 /**/
-
+/*
  $db_url = getenv("DATABASE_URL") ?: "postgres://ilsmpwdzrresby:7879db47bd3be54c574eab3a81a1bc2db477bc890a756eccc406992832a0fd8e@ec2-54-246-87-132.eu-west-1.compute.amazonaws.com:5432/d4hub5gh1m9jjj";
 
 $gaSql['link'] = pg_connect($db_url);

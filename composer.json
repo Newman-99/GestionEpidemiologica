@@ -1,0 +1,14 @@
+{
+    "name": "paraiso/epidemi",
+    "description": "Gestion epidemiologica - clinica el paraiso",
+    "type": "project",
+    "authors": [
+        {
+            "name": "Newman Rodriguez",
+            "email": "newmanrodriguez1999@gmail.com"
+        }
+    ],
+    "require": {
+        "davmixcool/php-dbcloud": "^0.8.2"
+    }
+}

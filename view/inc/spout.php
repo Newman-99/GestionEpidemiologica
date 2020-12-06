@@ -2,7 +2,7 @@
 <?php 
 // Se llamara la libreria para procesar e insetrar los valores del .csv
 
-  require_once '../archives_vendor/spout/src/Spout/Autoloader/autoload.php';
+  require_once '../libraries/spout/src/Spout/Autoloader/autoload.php';
 
 use Box\Spout\Reader\ReaderFactory;
 use Box\Spout\Writer\WriterFactory;

@@ -17,7 +17,7 @@
 		 :apellidos,
 		 :fecha_nacimiento,
 		 :id_nacionalidad,
-		 :id_genero);";
+		 :id_genero)";
 		}
 
 			protected static function stringQueryUpdatePersonModel(){
