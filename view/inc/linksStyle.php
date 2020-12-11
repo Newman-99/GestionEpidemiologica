@@ -52,7 +52,7 @@
      
   <!-- Funcionalidades cortas personlizadas para el sistema-->
 
-<script src="<?php echo SERVERURL; ?>view/js/miniScrips.js" ></script>
+<script src="<?php echo SERVERURL; ?>view/js/miniScripts.js" ></script>
 
 <!-- congiguracion json de lenguaje para Datatables -->  
 

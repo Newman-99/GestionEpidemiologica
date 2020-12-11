@@ -25,7 +25,6 @@
 		$doc_identidad = mainModel::cleanStringSQL($dataCasosEpidemi['doc_identidad']);
 
 		 $doc_identidad = self::ClearUserSeparatedCharacters($doc_identidad);		 
-
 		 $doc_identidad = ltrim($doc_identidad, '0');
 
 		$id_nacionalidad = mainModel::cleanStringSQL($dataCasosEpidemi['id_nacionalidad']);
@@ -135,6 +134,41 @@
 				echo json_encode($alert);
 
 				exit();
+			}
+
+		// para comprobar el  caso cei-10 no tenga un sexo asignado
+		
+		$queryGetLsexCIE10 = mainModel::connectDB()->query("SELECT lsex FROM data_cie10 where catalog_key = '$catalog_key_cie10' LIMIT 1");
+
+		// si no existe id_genero en el form por que la persona ya esta registrada
+		$sexAssignedToCIE10 = $queryGetLsexCIE10->fetchColumn();
+		
+		if (!isset($dataCasosEpidemi['id_genero'])) {
+
+		$queryGetIdGeneroPerson = mainModel::connectDB()->query("SELECT id_genero FROM personas WHERE id_nacionalidad = '$id_nacionalidad' AND doc_identidad = '$doc_identidad'");
+
+		$id_genero = $queryGetIdGeneroPerson->fetchColumn();
+
+		}else{
+			$id_genero = mainModel::cleanStringSQL($dataCasosEpidemi['id_genero']);
+		}
+
+		// quiere decir que no tiene un sexo asginado, asi que lo ignoramos
+		if ($sexAssignedToCIE10 != "NO") {
+			if ($sexAssignedToCIE10 != $id_genero) {
+
+			$alert=[
+			"Alert"=>"simple",
+			"Title"=>"Datos Invalidos",
+			"Text"=>"El caso CIE 10 no se puede ser asignado a este Genero",
+			"Type"=>"error"
+				];	
+		
+				echo json_encode($alert);
+
+				exit();
+			}
+
 			}
 
 		   if(strlen($direccion)<5){
@@ -261,6 +295,8 @@
 
 		 $doc_identidad = mainModel::cleanStringSQL($dataCasosEpidemi['doc_identidad_update']);
 
+		$id_genero = mainModel::cleanStringSQL($dataCasosEpidemi['id_genero']);
+
 		 $id_nacionalidad = mainModel::cleanStringSQL($dataCasosEpidemi['id_nacionalidad_update']);
 
 		 $catalog_key_cie10 = mainModel::cleanStringSQL($dataCasosEpidemi['catalogKeyCIE10']);
@@ -299,10 +335,32 @@
 
 		}
 
-
-
-//  comprobar que no se repita el caso epidemiologico
 		
+		// para comprobar el  caso cei-10 no tenga un sexo asignado
+		
+		$queryGetLsexCIE10 = mainModel::connectDB()->query("SELECT lsex FROM data_cie10 where catalog_key = '$catalog_key_cie10' LIMIT 1");
+
+
+		$sexAssignedToCIE10 = $queryGetLsexCIE10->fetchColumn();
+		
+		// quiere decir que no tiene un sexo asginado, asi que lo ignoramos
+		if (!$sexAssignedToCIE10 == "NO") {
+			if ($sexAssignedToCIE10 =! $id_genero) {
+
+			$alert=[
+			"Alert"=>"simple",
+			"Title"=>"Datos Invalidos",
+			"Text"=>"El caso CIE 10 no se puede ser asignado a este Genero",
+			"Type"=>"error"
+				];	
+		
+				echo json_encode($alert);
+
+				exit();
+			}
+
+			}
+
 
 		   if(strlen($direccion)<5){
 
@@ -373,6 +431,42 @@
 				echo json_encode($alert);
 
 				exit();
+			}
+
+
+		// para comprobar el  caso cei-10 no tenga un sexo asignado
+		
+		$queryGetLsexCIE10 = mainModel::connectDB()->query("SELECT lsex FROM data_cie10 where catalog_key = '$catalog_key_cie10' LIMIT 1");
+
+		// si no existe id_genero en el form por que la persona ya esta registrada
+		$sexAssignedToCIE10 = $queryGetLsexCIE10->fetchColumn();
+		
+		if (!isset($dataCasosEpidemi['id_genero'])) {
+
+		$queryGetIdGeneroPerson = mainModel::connectDB()->query("SELECT id_genero FROM personas WHERE id_nacionalidad = '$id_nacionalidad' AND doc_identidad = '$doc_identidad'");
+
+		$id_genero = $queryGetIdGeneroPerson->fetchColumn();
+
+		}else{
+			$id_genero = mainModel::cleanStringSQL($dataCasosEpidemi['id_genero']);
+		}
+
+		// quiere decir que no tiene un sexo asginado, asi que lo ignoramos
+		if ($sexAssignedToCIE10 != "NO") {
+			if ($sexAssignedToCIE10 != $id_genero) {
+
+			$alert=[
+			"Alert"=>"simple",
+			"Title"=>"Datos Invalidos",
+			"Text"=>"El caso CIE 10 no se puede ser asignado a este Genero",
+			"Type"=>"error"
+				];	
+		
+				echo json_encode($alert);
+
+				exit();
+			}
+
 			}
 
 		// elminaremos los sufijos _update para evitar confllictos
@@ -1143,6 +1237,42 @@ $bitacora_hora = mainModel::cleanStringSQL($dataForQuery[$indiceFila][25]);
 				echo json_encode($alert);
 
 				exit();
+			}
+
+
+		// para comprobar el  caso cei-10 no tenga un sexo asignado
+		
+		$queryGetLsexCIE10 = mainModel::connectDB()->query("SELECT lsex FROM data_cie10 where catalog_key = '$catalog_key_cie10' LIMIT 1");
+
+		// si no existe id_genero en el form por que la persona ya esta registrada
+		$sexAssignedToCIE10 = $queryGetLsexCIE10->fetchColumn();
+		
+		if (!isset($dataCasosEpidemi['id_genero'])) {
+
+		$queryGetIdGeneroPerson = mainModel::connectDB()->query("SELECT id_genero FROM personas WHERE id_nacionalidad = '$id_nacionalidad' AND doc_identidad = '$doc_identidad'");
+
+		$id_genero = $queryGetIdGeneroPerson->fetchColumn();
+
+		}else{
+			$id_genero = mainModel::cleanStringSQL($dataCasosEpidemi['id_genero']);
+		}
+
+		// quiere decir que no tiene un sexo asginado, asi que lo ignoramos
+		if ($sexAssignedToCIE10 != "NO") {
+			if ($sexAssignedToCIE10 != $id_genero) {
+
+			$alert=[
+			"Alert"=>"simple",
+			"Title"=>"Datos Invalidos",
+			"Text"=>"El caso CIE 10 no se puede ser asignado a este Genero".$indicatorEpidemiCaseError,
+			"Type"=>"error"
+				];	
+		
+				echo json_encode($alert);
+
+				exit();
+			}
+
 			}
 
 

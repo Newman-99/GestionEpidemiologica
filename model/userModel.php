@@ -275,10 +275,10 @@ if (isset($dataPerson['ifUpdatePerson']) && $dataPerson['ifUpdatePerson'] == tru
 
 		}
 
-			public static function getUserModel($userAttributesFilter,$filterValues){
+			public static function getQueryInnerJoimForUserModel($userAttributesFilter,$filterValues){
 
   
-		    $sqlQuery=self::stringQueryForGetUser();                  
+		    $sqlQuery=self::stringQueryInnerJoinForGetUser();                  
 		 
 		 // Recoger y anadir campos para filtracion de resultado
 		  if (!empty($userAttributesFilter)) {
@@ -296,8 +296,8 @@ if (isset($dataPerson['ifUpdatePerson']) && $dataPerson['ifUpdatePerson'] == tru
 		   
 			}
 
-			public static function stringQueryForGetUser(){
-				$stringQueryForGetUser = " SELECT  DISTINCT ON (usr.alias) usr.alias usuario_alias,usr.id_nacionalidad,usr.doc_identidad, usr.id_nivel_permiso, usr.id_estado, usr.pass_encrypt, usr.email, usr.telefono, pers.nombres, pers.apellidos, pers.fecha_nacimiento, pers.id_genero,
+			public static function stringQueryInnerJoinForGetUser(){
+				$stringQueryInnerJoinForGetUser = " SELECT  DISTINCT ON (usr.alias) usr.alias usuario_alias,usr.id_nacionalidad,usr.doc_identidad, usr.id_nivel_permiso, usr.id_estado, usr.pass_encrypt, usr.email, usr.telefono, pers.nombres, pers.apellidos, pers.fecha_nacimiento, pers.id_genero,
 				nacion.descripcion_nacionalidad,
 				gnro.descripcion_genero,
 				usrEtdo.descripcion_estado,
@@ -311,7 +311,7 @@ if (isset($dataPerson['ifUpdatePerson']) && $dataPerson['ifUpdatePerson'] == tru
 				INNER JOIN usuarios_niveles usrNivl ON usr.id_nivel_permiso =  usrNivl.id_nivel_permiso
 				INNER JOIN usuarios_preguntas usrQuest ON usr.alias =  usrQuest.usuario_alias ";
 
-				return $stringQueryForGetUser;
+				return $stringQueryInnerJoinForGetUser;
 			}
 		
 	 public static function userTypeCounterModel($userAttribute,$userType){

@@ -4,8 +4,6 @@ const FORM_AJAX = document.querySelectorAll(".formAjax");
 function captureDataForm (e){
 	e.preventDefault();
 
-
-
     var form=$(this);
 
 	let dataForm = new FormData(this);
@@ -63,12 +61,10 @@ if(textMsjAlert==false){
 
 				  return sendDataAjax(action,dataForm,method,responseProcess,msgBackendProcess,buttonCancelAjax,contentTypes,inputFile);
 
-					}else{
-
-
-						return sendDataAjax(action,formFields,method,responseProcess,msgBackendProcess);
-
 					}
+
+				alert(formFields);
+				return sendDataAjax(action,formFields,method,responseProcess,msgBackendProcess);
 
 			}
 	});
@@ -138,7 +134,6 @@ if (buttonCancelAjax) {
 
 
 		if (typeof operationResult.cleanInput != 'undefined') {	
-			alert('cleanInput');
 			$('.formAjax').trigger("reset");
 			}
 

@@ -482,12 +482,20 @@ if (mainModel::isDataEmtpy($id_nacionalidad,$doc_identidad,$aliasUser,$telefono,
 
 		 // comprobamos si los campos enviados son iguales a los de la BD
 
- 		$queryToGetUser = self::getUserController(array("aliasUser"=>$aliasUser));
+ 		  $columnsTableToCompare = [
+		"telefono",
+		"email",
+		"id_nivel_permiso",
+		"id_estado"];
+
+ 		$queryToGetUser = self::getUserController($columnsTableToCompare,array("aliasUser"=>$aliasUser));
+
+
 
 		$ifUserDataUpdateIsSameDatabase = mainModel::isFieldsEqualToThoseInTheDatabase($queryToGetUser,$userDataTocomparedWithDatabase);
 
 
-			if ($ifUserDataUpdateIsSameDatabase && $dataPerson['ifUpdatePerson']) {
+			if ($ifUserDataUpdateIsSameDatabase && !$dataPerson['ifUpdatePerson']) {
 
 			$alert=[
 				"Alert"=>"simple",
@@ -709,10 +717,8 @@ protected static function passwordCorrespondDatabase($dataUser){
 
 		$password = mainModel::cleanStringSQL($dataUser["password"]);
 
-		$queryGetpass_encrypt = mainModel::runSimpleQuery("SELECT pass_encrypt FROM usuarios WHERE alias =
+		$queryGetpass_encrypt = mainModel::connectDB()->query("SELECT pass_encrypt FROM usuarios WHERE alias =
 			'$aliasUser'");
-
-		$queryGetpass_encrypt->execute();
 
 		$pass_encryptDB = mainModel::decryption($queryGetpass_encrypt->fetchColumn());
 				
@@ -795,8 +801,19 @@ protected static function passwordCorrespondDatabase($dataUser){
 		protected static function securityQuestionsCorrespondDatabase($dataUser){
 		$aliasUser = mainModel::cleanStringSQL($dataUser["aliasUser"]);
 		// Verificamos que la pregunta no este repetida
-		$recordsUserSQL = userController::getUserController(array("aliasUser"=>$aliasUser));
-					
+	
+    $userAttributesFilter =  [];
+
+    $userFilterValues = [];
+
+		array_push($userAttributesFilter, 'usuario_alias = :aliasUser');
+		$userFilterValues[':aliasUser'] = [
+		'value' => $aliasUser,
+		'type' => \PDO::PARAM_STR,
+		];
+
+		$recordsUserSQL = parent::querySelectsCreator('usuarios_preguntas',['id_pregunta','respuesta'],$userAttributesFilter,$userFilterValues);
+
 		$recordsUserSQL->execute();
 
 		// Obtener preguntas del usuario
@@ -806,11 +823,11 @@ protected static function passwordCorrespondDatabase($dataUser){
 			if ($valuesDataUser["id_pregunta"] == 1) {
 
 				$registeredQuestion1 = mainModel::decryption($valuesDataUser['respuesta']);
-
 				}else{
 
 					// id pregunta == 2
 				$registeredQuestion2 = mainModel::decryption($valuesDataUser['respuesta']);
+
 				}
 
 		}
@@ -841,9 +858,19 @@ protected static function passwordCorrespondDatabase($dataUser){
 
 		$id_pregunta = mainModel::cleanStringSQL($dataUser["id_pregunta"]);
 
+    $userAttributesFilter =  [];
+
+    $userFilterValues = [];
+
 		// Verificamos que la pregunta no este repetida
-		$recordsUserSQL = userController::getUserController(array("aliasUser"=>$aliasUser));
-					
+		array_push($userAttributesFilter, 'usuario_alias = :aliasUser');
+		$userFilterValues[':aliasUser'] = [
+		'value' => $aliasUser,
+		'type' => \PDO::PARAM_STR,
+		];
+
+		$recordsUserSQL = parent::querySelectsCreator('usuarios_preguntas',['id_pregunta','respuesta'],$userAttributesFilter,$userFilterValues);
+
 		$recordsUserSQL->execute();
 
 		// Obtener preguntas del usuario
@@ -1000,7 +1027,7 @@ if (!isset($dataUser['confirmDelete'])) {
 
 				 }
 
-			public static function getUserController($dataUser){
+			public static function getUserController($columnsTable,$dataUser){
  		 			 
 		$userAttributesFilter = [];
 
@@ -1010,7 +1037,7 @@ if (!isset($dataUser['confirmDelete'])) {
 
 		$id_nacionalidad = mainModel::cleanStringSQL($dataUser["id_nacionalidad"]);
 
-		array_push($userAttributesFilter, 'usr.id_nacionalidad = :id_nacionalidad');
+		array_push($userAttributesFilter, 'id_nacionalidad = :id_nacionalidad');
 		$filterValues[':id_nacionalidad'] = [
 		'value' => $id_nacionalidad,
 		'type' => \PDO::PARAM_STR,
@@ -1020,7 +1047,7 @@ if (!isset($dataUser['confirmDelete'])) {
 
 		$doc_identidad = mainModel::cleanStringSQL($dataUser["doc_identidad"]);
 
-		array_push($userAttributesFilter, 'usr.doc_identidad = :doc_identidad');
+		array_push($userAttributesFilter, 'doc_identidad = :doc_identidad');
 		$filterValues[':doc_identidad'] = [
 		'value' => $doc_identidad,
 		'type' => \PDO::PARAM_STR,
@@ -1030,7 +1057,7 @@ if (!isset($dataUser['confirmDelete'])) {
 		
 		$aliasUser = mainModel::cleanStringSQL($dataUser["aliasUser"]);
 
-		array_push($userAttributesFilter, 'usr.alias = :aliasUser');
+		array_push($userAttributesFilter, 'alias = :aliasUser');
 		$filterValues[':aliasUser'] = [
 		'value' => $aliasUser,
 		'type' => \PDO::PARAM_STR,
@@ -1051,7 +1078,7 @@ if (!isset($dataUser['confirmDelete'])) {
 
 		$id_estado = mainModel::cleanStringSQL($dataUser["id_estado"]);
 
-		array_push($userAttributesFilter, 'usr.id_estado = :id_estado');
+		array_push($userAttributesFilter, 'id_estado = :id_estado');
 		$filterValues[':id_estado'] = [
 		'value' => $id_estado,
 		'type' => \PDO::PARAM_STR,
@@ -1068,7 +1095,7 @@ if (!isset($dataUser['confirmDelete'])) {
 		'type' => \PDO::PARAM_STR,
 		];}
 
-	 return userModel::getUserModel($userAttributesFilter,$filterValues);
+			return mainModel::querySelectsCreator('usuarios',$columnsTable,$userAttributesFilter,$filterValues);
 
 	}
 
@@ -1145,9 +1172,9 @@ public static function paginateUserController($currentAliasUser){
 	$currentAliasUser= mainModel::cleanStringSQL($currentAliasUser);
 
 
-	$stringQueryForGetUsers = userModel::stringQueryForGetUser();
+	$stringQueryInnerJoinForGetUsers = userModel::stringQueryInnerJoinForGetUser();
 
-	$queryForGetUsers = mainModel::connectDB()->query($stringQueryForGetUsers." WHERE usr.alias != '$currentAliasUser' AND usr.alias != 'Master' 
+	$queryForGetUsers = mainModel::connectDB()->query($stringQueryInnerJoinForGetUsers." WHERE usr.alias != '$currentAliasUser' AND usr.alias != 'Master' 
 		");
 
 $table = "";

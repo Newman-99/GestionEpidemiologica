@@ -50,8 +50,19 @@
               
                 $userController = new userController();
 
-               $queryUserRequested=$userController->getUserController(array("aliasUser"=>$requestedAliasUser));
+  
 
+    $userAttributesFilter =  [];
+
+    $userFilterValues = [];
+
+    array_push($userAttributesFilter, 'alias = :aliasUser');
+    $userFilterValues[':aliasUser'] = [
+    'value' => $requestedAliasUser,
+    'type' => \PDO::PARAM_STR,
+    ];
+               $queryUserRequested=$userController->getQueryInnerJoimForUserModel($userAttributesFilter,$userFilterValues);
+              
                 $queryUserRequested->execute();     
                 
                 if(!$queryUserRequested->rowCount()){

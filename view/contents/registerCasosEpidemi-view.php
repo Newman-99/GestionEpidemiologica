@@ -176,7 +176,7 @@ Fecha de Nacimiento
       </div>
 
 
-  <script src="<?php echo SERVERURL; ?>view/js/scriptsRequestDataFromBakend.js"></script>
+  <script src="<?php echo SERVERURL; ?>view/js/scriptsSendAndRequestDataFromBakend.js"></script>
 
       <script type="text/javascript">
 

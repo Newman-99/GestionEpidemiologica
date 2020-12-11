@@ -20,6 +20,9 @@
 
    <form class="formAjax formFileCSVImportCaseEpidemi form-group text-center user" action="<?php echo SERVERURL; ?>ajax/casosEpidemiAjax.php" method="POST" data-form="files" autocomplete="off" enctype="multipart/form-data">
 
+                    <p class="mb-4">No se tomara en cuenta el id caso, por lo que si se cambian los parametros (Fecha Registro,Id Nacionalidad Documento de Identidad,Codigo CIE-10) se creara uno nuevo caso epidemiologico.
+                    </p>
+
                 <div class="form-group" id="importCasosEpidemiModal">
                   <label for="">Elegir Archivo CSV:</label>
                     <input type="file" class="form-control input-files" id="fileCSVImportCaseEpidemi" name="fileCSVImportCaseEpidemi" accept=".csv">

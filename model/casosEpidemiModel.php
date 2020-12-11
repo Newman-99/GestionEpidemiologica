@@ -484,6 +484,8 @@ WHERE casos.catalog_key_cie10 BETWEEN epi12.key_cie10_Inicio AND epi12.key_cie10
 AND pers.doc_identidad = casos.doc_identidad AND pers.id_nacionalidad = casos.id_nacionalidad ".
 $epiOrderSelededForQuery." AND casos.fecha_registro BETWEEN '$startRegistrationDate' AND '$endRegistrationDate' LIMIT 1";
 
+var_dump($queryGetDataCIE10ForEPI);
+
 
 		$queryGetDataCIE10ForEPI = mainModel::connectDB()->query($queryGetDataCIE10ForEPI);
 

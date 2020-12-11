@@ -24,7 +24,7 @@
 
 		public static function connectDB(){
 
-
+/*
 		try {			
 
 $db = (function(){
@@ -40,7 +40,7 @@ return $db;
 		    error_log("Failed to connect to database: ".$e->getMessage());
 		}				
 /**/
-/*
+
 
 		try {			
 	$DB = new PDO("pgsql:host=".SERVER_PATH.";port=".PORT.";dbname=".DB."",USER,PASS, array(
@@ -63,26 +63,10 @@ public static function backupDatabase(){
 
 		try {			
 
-$filesBackupsTemp = glob(BASE_DIRECTORY.'backups_temp/*');
 
-foreach($filesBackupsTemp as $file){ // iterate files
-
-    $resultDeleteBackups = unlink($file);
-    
-    if (!$resultDeleteBackups) {
-				$alert=[
-					"Alert"=>"simple",
-					"Title"=>"Ha ocurrido un error inesperado",
-					"Text"=>"Los archivos de respaldo de datos no han podido ser borrados en la carpeta (backups_temp)",
-					"Type"=>"error"
-				];	
-
-				echo json_encode($alert);
-    }
-}
+		self::cleanBackupsTempDirectory();
 
 		require_once '../config/backup-phpcloud.php';
-
 
 				$operationElementHtml=[
 					"idSetAtribute"=>"backup",
@@ -132,10 +116,22 @@ if ($files['restore']['type'] !='application/gzip' || mainModel::isDataEmtpy($fi
 				exit();
 	}
 
-		require_once '../config/restore-phpcloud.php';
+	self::cleanBackupsTempDirectory();
+
+	$uploadDirectory = $files['restore']['tmp_name'];
+
+	$nameFileRestore = $files['restore']['name'];
+
+$mewUploaddDirectory = BASE_DIRECTORY.'backups_temp/';
+
+$uploadFile = $mewUploaddDirectory . basename($files['restore']['name']);
+
+move_uploaded_file($uploadDirectory, $uploadFile);
+
+	require_once '../config/restore-phpcloud.php';
 
 			$alert=[
-				"Alert"=>"simple",
+				"Alert"=>"reload",
 				"Title"=>"Operacion Exitosa",
 				"Text"=>"Base de datos restaurada",
 				"Type"=>"success"
@@ -157,6 +153,31 @@ if ($files['restore']['type'] !='application/gzip' || mainModel::isDataEmtpy($fi
 				exit();
 
 }
+
+
+
+		protected static function cleanBackupsTempDirectory(){
+		
+
+$filesBackupsTemp = glob(BASE_DIRECTORY.'backups_temp/*');
+
+foreach($filesBackupsTemp as $file){ // iterate files
+
+    $resultDeleteBackups = unlink($file);
+    
+    if (!$resultDeleteBackups) {
+				$alert=[
+					"Alert"=>"simple",
+					"Title"=>"Ha ocurrido un error inesperado",
+					"Text"=>"Los archivos de respaldo de datos no han podido ser borrados en la carpeta (backups_temp)",
+					"Type"=>"error"
+				];	
+
+				echo json_encode($alert);
+    }
+}
+
+		}
 
 		protected static function runSimpleQuery($stringQuery){
 
@@ -611,7 +632,7 @@ protected static function isFieldsEqualToThoseInTheDatabase($queryToGet,$fieldst
      
     
     //* DB connection
-/*     
+     
 
     $gaSql['link'] = pg_connect(
         " host=".$gaSql['server'].
@@ -622,7 +643,7 @@ protected static function isFieldsEqualToThoseInTheDatabase($queryToGet,$fieldst
 
 
 /**/
-
+/*
  $db_url = getenv("DATABASE_URL") ?: "postgres://ilsmpwdzrresby:7879db47bd3be54c574eab3a81a1bc2db477bc890a756eccc406992832a0fd8e@ec2-54-246-87-132.eu-west-1.compute.amazonaws.com:5432/d4hub5gh1m9jjj";
 
 $gaSql['link'] = pg_connect($db_url);

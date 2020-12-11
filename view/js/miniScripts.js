@@ -18,6 +18,19 @@ if (typeOperation) {
 
 function isBlank(str) {
     return (str.length === 0 || !str.trim());
+
+}
+
+function isBlanks(data) {
+data.forEach(function(str) {
+
+   if (isBlank(str)){
+    return true;
+   }else{
+    return false;    
+   }
+
+});
 }
 
 

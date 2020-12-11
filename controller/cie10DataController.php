@@ -605,13 +605,15 @@ mainModel::getDataTableServerSideModel('data_cie10', 'consecutivo',
 
 	// funcion para mostrar datos en el select dinamico y buscador del cie-10
 	public static function getCasesCIE10($dataGetCIE10){
-	$queryGetCasesCie10 = "SELECT catalog_key,nombre FROM data_cie10";
-
-	$idCapituloCIE10 = mainModel::cleanStringSQL($dataGetCIE10['idCapituloCIE10']);
+	
 
 	if(isset($dataGetCIE10['searchByChapter'])) {
 
-		// todos los captulos
+	$idCapituloCIE10 = mainModel::cleanStringSQL($dataGetCIE10['idCapituloCIE10']);
+
+	$queryGetCasesCie10 = "SELECT catalog_key,nombre FROM data_cie10";
+
+		// obtnener data por captulos
 
 
 		$queryGetCasesCie10 = mainModel::connectDB()->prepare($queryGetCasesCie10." WHERE clave_capitulo = '$idCapituloCIE10'");
@@ -639,7 +641,10 @@ mainModel::getDataTableServerSideModel('data_cie10', 'consecutivo',
 	}
 
 
+	// buscar pot patron
 	if(isset($dataGetCIE10['valueSearch'])) {
+
+	$idCapituloCIE10 = mainModel::cleanStringSQL($dataGetCIE10['idCapituloCIE10']);
 
 	$columnsSearch = array('catalog_key','nombre');
 
@@ -694,6 +699,110 @@ mainModel::getDataTableServerSideModel('data_cie10', 'consecutivo',
 		echo json_encode($dataJsonCasesCIE10);
 		exit();
 	}
+
+
+	if(isset($dataGetCIE10['getFullDataCie10'])) {
+
+	$catalog_key = mainModel::cleanStringSQL($dataGetCIE10['catalog_key']);
+                
+                $attributesFilter =  [];
+
+                $filterValues = [];
+
+                array_push($attributesFilter, 'catalog_key = :catalog_key');
+                $filterValues[':catalog_key'] = [
+                'value' => $catalog_key,
+                'type' => \PDO::PARAM_STR,
+                ];
+
+
+$queryFullDataCaseCie10 = mainModel::querySelectsCreator('data_cie10',
+	array('consecutivo',
+'letra',
+'catalog_key',
+'nombre',
+'codigox',
+'lsex',
+'linf',
+'lsup',
+'trivial',
+'erradicado',
+'n_inter', 
+'nin', 
+'ninmtobs', 
+'cod_sit_lesion', 
+'no_cbd', 
+'cbd', 
+'no_aph', 
+'af_prin', 
+'dia_sis', 
+'clave_programa_sis', 
+'cod_complemen_morbi', 
+'def_fetal_cm', 
+'def_fetal_cbd', 
+'clave_capitulo', 
+'capitulo', 
+'lista1', 
+'grupo1', 
+'lista5', 
+'rubrica_type', 
+'year_modifi', 
+'year_aplicacion', 
+'valid', 
+'prinmorta', 
+'prinmorbi', 
+'lm_morbi', 
+'lm_morta', 
+'lgbd165', 
+'lomsbeck', 
+'lgbd190', 
+'notdiaria', 
+'notsemanal', 
+'sistema_especial', 
+'birmm', 
+'cve_causa_type', 
+'causa_type', 
+'epi_morta', 
+'edas_e_iras_en_m5', 
+'csve_maternas_seed_epid', 
+'epi_morta_m5', 
+'epi_morbi', 
+'def_maternas', 
+'es_causes', 
+'num_causes', 
+'es_suive_morta', 
+'es_suive_morb', 
+'epi_clave', 
+'epi_clave_desc', 
+'es_suive_notin', 
+'es_suive_est_epi', 
+'es_suive_est_brote', 
+'sinac', 
+'prin_sinac', 
+'prin_sinac_grupo', 
+'descripcion_sinac_grupo', 
+'prin_sinac_subgrupo', 
+'descripcion_sinac_subgrupo', 
+'daga', 
+'asterisco'),
+$attributesFilter,
+$filterValues);
+		
+		 $queryFullDataCaseCie10->execute();
+
+			$dataJsonCaseCIE10=[];
+
+		while($recordsCasesCie10=$queryFullDataCaseCie10->fetch(PDO
+			::FETCH_ASSOC)){ 
+
+			$dataJsonCaseCIE10[] = $recordsCasesCie10;
+		}
+				
+		echo json_encode($dataJsonCaseCIE10);
+		exit();
+
+	}
+
 
 	}
 }

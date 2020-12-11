@@ -12,7 +12,7 @@
       </div>
       <div class="modal-body">
 
-   <form class="formAjax form-group text-center user" action="<?php echo SERVERURL; ?>ajax/casosEpidemiAjax.php" method="POST" data-form="register" autocomplete="off" name="formAjax" id="formAjax">
+   <form class="formAja form-group text-center user" action="<?php echo SERVERURL; ?>ajax/casosEpidemiAjax.php" method="POST" data-form="register" autocomplete="off" name="form_caso_epidemi" id="form_caso_epidemi">
             
     <input type="hidden" name="actionAjaxForCie10" id="actionAjaxForCie10"  class='form-control' value='<?php echo SERVERURL; ?>ajax/cie10DataAjax.php'>
 
@@ -178,7 +178,7 @@ Fecha de Nacimiento
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
 
-     <button class="btn btn-primary btn-user btn-caso-epidemi btn-block" type="submit" value="btn-caso-epidemi" name="btn-caso-epidemi">Registrar</button>
+     <button class="btn btn-primary btn-user btn-caso-epidemi btn-block" type="submit" value="btn-register-caso-epidemi" name="btn-register-caso-epidemi">Registrar</button>
 
      <div class="responseProcessAjax"></div>
              
@@ -192,14 +192,15 @@ Fecha de Nacimiento
 
 
 
-  <script src="<?php echo SERVERURL; ?>view/js/scriptsRequestDataFromBakend.js"></script>
+
+  <script src="<?php echo SERVERURL; ?>view/js/scriptsSendAndRequestDataFromBakend.js"></script>
 
       <script type="text/javascript">
 
-          $( document ).ready(function() {
+  document.getElementById("form_caso_epidemi").addEventListener("submit", sendFormToRegisterOrUpdateCasesEpidemi );
 
-  
-//      var actionAjaxForCie10 = $('#formAjax').getAttribute("action");
+
+          $( document ).ready(function() {
 
       $('#idCapituloCIE10').on('change',function(){
 
@@ -259,7 +260,7 @@ var timeForRequestSearch = "";
         // llenar select parroquia
   
         var selectParroquia = document.getElementById("id_parroquia");
-        var form = document.getElementById('formAjax');
+        var form = document.getElementById('form_caso_epidemi');
         var actionAjaxForCie10 = form.getAttribute("action");
         selectParroquia.addEventListener("focus",getParroquias(actionAjaxForCie10), true);
 

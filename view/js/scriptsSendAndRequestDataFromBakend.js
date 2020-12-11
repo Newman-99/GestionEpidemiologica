@@ -1,4 +1,7 @@
 
+    
+       server_url = $('#server_url').val();
+
       function getDataActivityLogSessionsForDataTables(requestedAliasUser,minDateRange,maxDateRange,action){
     var table = $('#dataTable').DataTable({
        "aaSorting": [[ 1, "asc" ]], // Sort by first column descending
@@ -134,25 +137,54 @@ var hour = 'H'+today.getHours() + '-' + today.getMinutes();
         //id_parroquia
       targets: [ 15 ],
       visible: false,
-                searchable: false                
+      searchable: false                
       },     
   
       {
         //id_nacionalidad_usuario
       targets: [ 20 ],
-      visible: false
+      visible: false,
+      searchable: false                
+
       },
         
       {
         //doc_identidad_usuario
       targets: [ 21 ],
-      visible: false
+      visible: false,
+      searchable: false                
+
+      },
+
+      {
+        // Documento de Identidad (usuario-comoleto)
+      targets: [ 22 ],
+      visible: false,
+      searchable: false                
+
       },
 
       {
         //year_registro
       targets: [ 23 ],
-      visible: false
+      visible: false,
+      searchable: false                
+
+      },
+
+      //Fecha de Operacion
+      {
+      targets: [ 24 ],
+      visible: false,
+      searchable: false                
+
+      },
+      // Hora de Operacion
+      {
+      targets: [ 25 ],
+      visible: false,
+      searchable: false                
+
       },
 
       {
@@ -204,3 +236,147 @@ function getParroquias(actionForAjax){
 }
 
 
+//const FORM_CASOS_EPIDEMI = document.querySelectorAll("#form_caso_epidemi");
+
+function sendFormToRegisterOrUpdateCasesEpidemi(e){
+
+  e.preventDefault();
+
+  var form=$(this);
+
+  let method = this.getAttribute("method");
+  let action = this.getAttribute("action");
+  let type = this.getAttribute("data-form");
+  let responseProcess=form.children('.responseProcessAjax');
+  let msgBackendProcess=form.children('.msgBackendProcess');
+  
+  let formFields = form.serialize();
+  formFields+='&operationType='+type;
+
+
+
+
+
+var fieldsFormForValidate = [];
+
+if (type =='update') {
+
+    var id_nacionalidad = document.getElementById('id_nacionalidad_update').value;
+
+    var doc_identidad = document.getElementById('doc_identidad_update').value;
+
+fieldsFormForValidate.push(doc_identidad,id_nacionalidad);
+
+}else{
+  // osea es es el form register
+    var id_nacionalidad = document.getElementById('id_nacionalidad').value;
+
+    var doc_identidad = document.getElementById('doc_identidad').value;
+}
+
+
+  fieldsFormForValidate.push(doc_identidad,id_nacionalidad);
+
+var siExistPerson = document. getElementById('siExistPerson'). checked;
+
+if(!siExistPerson){
+     var fecha_nacimiento = document. getElementById('fecha_nacimiento').value;
+
+     var nombres = document. getElementById('nombres').value;
+
+     var apellidos = document. getElementById('apellidos').value;
+
+     var id_genero = document. getElementById('id_genero').value;
+
+  fieldsFormForValidate.push(fecha_nacimiento,nombres,apellidos,id_genero);
+
+}
+
+    var codigo_cie10 = document.getElementById("catalogKeyCIE10").value;
+
+     var fecha_registro = document. getElementById('fecha_registro').value;
+
+     var id_parroquia = document. getElementById('id_parroquia').value;
+
+     var direccion = document. getElementById('direccion').value;
+        
+     var telefonoPart1 = document. getElementById('telefonoPart1').value;
+
+     var telefonoPart2 = document. getElementById('telefonoPart1').value;
+
+     var telefonoPart3 = document. getElementById('telefonoPart3').value;
+
+  fieldsFormForValidate.push(codigo_cie10,fecha_registro,id_parroquia,direccion,telefonoPart1,telefonoPart2,telefonoPart3);
+
+         if (isBlank(codigo_cie10) || isBlank(fecha_registro) || isBlank(id_parroquia) || isBlank(direccion) || isBlank(telefonoPart1) || isBlank(telefonoPart2) || isBlank(telefonoPart3) || isBlank(doc_identidad) || isBlank(id_nacionalidad)) {
+
+        var alert = {'Alert': 'simple','Title':'Campos Vacios', 'Text':'Todos los campos del caso epidemiologico son obligatorios','Type':'error'};
+
+        return ajaxSweetAlerts(alert);
+
+         }
+
+     // verificamos los datps del evento cie10 para asi enviar el form 
+     // para un register or update
+
+   server_url = $('#server_url').val();
+
+  $.ajax({
+      type:'POST',
+      url: server_url+'ajax/cie10DataAjax.php',
+      data:{'getCasesCIE10':true,'getFullDataCie10':true,'catalog_key':codigo_cie10},
+      success:function(dataJsonCaseCIE10){
+
+      let dataCaseCIE10 = JSON.parse(dataJsonCaseCIE10);
+       
+      var data = dataCaseCIE10[0];
+
+      var confirmEventCIE10 = false;
+
+        var warningAttributesEventCIE10 = '';
+
+          if (data.erradicado == 'SI') {
+            warningAttributesEventCIE10+=" <br>Erradicado";
+
+                    
+          }
+
+          if (data.n_inter == 'SI') {
+            warningAttributesEventCIE10+= "<br>De notificacion internacional";
+
+          }
+
+      var alertMessageText =  'Los datos quedaran guardados en el sistema <br>';
+
+          var typeAlert = 'question';
+
+          if (!isBlank(warningAttributesEventCIE10)) {
+
+         var warningTextEventCIE10 = '<span style="color: red"> Este evento CIE 10 se considera '+warningAttributesEventCIE10 + "<br>¿desea continuar?</span>";
+          
+          alertMessageText = warningTextEventCIE10;
+          
+          typeAlert = 'warning';
+         
+         }
+
+
+  Swal.fire({
+    title: '¿Estás seguro?',
+    html:  alertMessageText,
+    type: typeAlert,
+    showCancelButton: true,
+    confirmButtonColor: '#3085d6',
+    cancelButtonColor: '#d33',
+    confirmButtonText: 'Aceptar',
+    cancelButtonText: 'Cancelar'
+  }).then((result) => {
+    if(result.value){
+        
+       sendDataAjax(action,formFields,method,responseProcess,msgBackendProcess);
+
+            }
+    });
+  }
+ })
+}

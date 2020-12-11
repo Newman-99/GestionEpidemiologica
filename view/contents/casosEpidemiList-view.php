@@ -214,7 +214,7 @@ return getDataCasosEpidemiForDataTables(requestedPersonEpidemi,minDateRangeDefau
   $(".form-control-person").prop('disabled', false);
 
 
-      $('.formAjax').trigger("reset");
+      $('#form_caso_epidemi').trigger("reset");
 
       
       // Establecer parametros de fecha de registro del caso epidmi
@@ -248,11 +248,12 @@ var minDateRangeDefaulPHP = minDateRangeDefault.toISOString().split('T')[0];
 
     document.getElementById("id_caso_epidemi").setAttribute("value",'');
 
-    document.getElementById("formAjax").setAttribute("data-form", 'register');
+    document.getElementById("form_caso_epidemi").setAttribute("data-form", 'register');
 
   });
 
-
+  //para enviar los datos a registrar como los otros forms pero primero pasando por una validacion de ajax
+  //
 
   $(table).on('click','button#delete',function(){
 
@@ -264,7 +265,11 @@ var minDateRangeDefaulPHP = minDateRangeDefault.toISOString().split('T')[0];
   
   });
 
-  $(table).on('click','button#update',function(){
+  $(table).on('click','button#update',function(e){
+    
+
+  e.preventDefault();
+
     var tr = $(this).parents('tr');
    
     var data = $(table).DataTable().row(tr).data();
@@ -421,7 +426,7 @@ function updateCasosEpidemi(data){
 
     document.getElementById("id_caso_epidemi").setAttribute("value", id_caso_epidemi);
   
-    document.getElementById("formAjax").setAttribute("data-form", 'update');
+    document.getElementById("form_caso_epidemi").setAttribute("data-form", 'update');
 }
   
   });

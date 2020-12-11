@@ -80,7 +80,16 @@ public function loginUserController($dataUser){
 
 			// para usar los metodos de user como si heredaramos
 
-			$recordsUserSQL = userController::getUserController(array("aliasUser"=>$aliasUser));
+    $userAttributesFilter =  [];
+
+    $userFilterValues = [];
+
+    array_push($userAttributesFilter, 'alias = :aliasUser');
+    $userFilterValues[':aliasUser'] = [
+    'value' => $aliasUser,
+    'type' => \PDO::PARAM_STR,
+    ];
+               $recordsUserSQL=parent::getQueryInnerJoimForUserModel($userAttributesFilter,$userFilterValues);
 					
 			$recordsUserSQL->execute();
 
