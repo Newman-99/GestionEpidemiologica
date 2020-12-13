@@ -11001,3 +11001,26 @@ footer.sticky-footer .copyright {
 body.sidebar-toggled footer.sticky-footer {
   width: 100%;
 }
+
+/*Para icono de losader en input de busqueda*/
+
+.inner-addon {
+  position: relative;
+}
+.inner-addon .fa-spin {
+  position: absolute;
+  padding: 10px;
+  pointer-events: none;
+}
+.left-addon .fa-spin {
+  left: 0px;
+}
+.right-addon .fa-spin {
+  right: 0px;
+}
+.left-addon input {
+  padding-left: 30px;
+}
+.right-addon input {
+  padding-right: 30px;
+}

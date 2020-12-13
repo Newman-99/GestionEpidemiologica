@@ -107,7 +107,14 @@ CREATE OR REPLACE VIEW activity_log_sessions_view AS SELECT
 
   try {
 
+
+$queryifExistView = mainModel::connectDB()->query("SELECT where EXISTS  ( SELECT FROM information_schema.tables WHERE table_name = 'activity_log_sessions_view' ) = true");
+
+      if(!$queryifExistView->rowCount()){
+    
     mainModel::connectDB()->query(self::$queryCreateViewGetActivityLogSessions);
+      
+      }
 
     $dataToCreateDataTable = mainModel::getDataTableServerSideModel('activity_log_sessions_view', 'id_bitacora',
       $columnsTable,$columnsPrintDataTable,TRUE);
@@ -192,7 +199,7 @@ CREATE OR REPLACE VIEW activity_log_sessions_view AS SELECT
     }
 
 
-    mainModel::connectDB()->query('drop view activity_log_sessions_view');
+//    mainModel::connectDB()->query('drop view activity_log_sessions_view');
 
     echo json_encode( $dataToCreateDataTable );
 }

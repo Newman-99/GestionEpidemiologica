@@ -65,12 +65,18 @@ CREATE OR REPLACE VIEW casos_epidemi_bitacora_view  AS SELECT DISTINCT ON (id_bi
       'bitacora_fecha',
       'bitacora_hora');
 
+$queryifExistView = mainModel::connectDB()->query("SELECT where EXISTS  ( SELECT FROM information_schema.tables WHERE table_name = 'casos_epidemi_bitacora_view' ) = true");
+
+      if(!$queryifExistView->rowCount()){
+    
     mainModel::connectDB()->query(self::$queryCreateViewGetCasosEpidemiBitacora);
+      
+      }
 
     mainModel::getDataTableServerSideModel('casos_epidemi_bitacora_view', 'row_number',
       $columnsTable,$columnsTable);
    
-    mainModel::connectDB()->query('drop view casos_epidemi_bitacora_view');
+    //mainModel::connectDB()->query('drop view casos_epidemi_bitacora_view');
 
 }
 }

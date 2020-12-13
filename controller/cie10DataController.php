@@ -329,89 +329,102 @@ $queryGetRecordsCatalogKeyCie10 = $DB_transacc->query("SELECT CATALOG_KEY FROM d
 
 		$catalogKeyCie10ToRegister = array();
 
-for ($indiceFila = 1; $indiceFila < 3100/*count($dataForQuery)*/; $indiceFila++) {
+for ($indiceFila = 1; $indiceFila < count($dataForQuery); $indiceFila++) {
+
+$CATALOG_KEY = mainModel::cleanStringSQL($dataForQuery[$indiceFila][2]); 
 
 // si no existe el caso en la hoja y la tabla esta vacia se elemina
-/*
 $ifExistCaseCIE10 = $DB_transacc->query("SELECT CATALOG_KEY FROM data_cie10 WHERE CATALOG_KEY ='$CATALOG_KEY'");
+
 
 if (!$ifExistCaseCIE10->rowCount() && $ifExistRecordsInDataCIE10->rowCount()) {
 
 $DB_transacc->query("DELETE FROM data_cie10 WHERE  CATALOG_KEY ='$CATALOG_KEY'");
 }
-*/
 
-
-$CONSECUTIVO = $dataForQuery[$indiceFila][0]; 
-$LETRA = $dataForQuery[$indiceFila][1]; 
-$CATALOG_KEY = $dataForQuery[$indiceFila][2]; 
+$CONSECUTIVO = mainModel::cleanStringSQL($dataForQuery[$indiceFila][0]); 
+$LETRA = mainModel::cleanStringSQL($dataForQuery[$indiceFila][1]); 
 $catalogKeyCie10ToRegister[] = $CATALOG_KEY;
+$NOMBRE = mainModel::cleanStringSQL($dataForQuery[$indiceFila][3]); 
+$CODIGOX = mainModel::cleanStringSQL($dataForQuery[$indiceFila][4]); 
+$LSEX = mainModel::cleanStringSQL($dataForQuery[$indiceFila][5]); 
+$LINF = mainModel::cleanStringSQL($dataForQuery[$indiceFila][6]); 
+$LSUP = mainModel::cleanStringSQL($dataForQuery[$indiceFila][7]); 
+$TRIVIAL = mainModel::cleanStringSQL($dataForQuery[$indiceFila][8]); 
+$ERRADICADO = mainModel::cleanStringSQL($dataForQuery[$indiceFila][9]); 
+$N_INTER = mainModel::cleanStringSQL($dataForQuery[$indiceFila][10]); 
+$NIN = mainModel::cleanStringSQL($dataForQuery[$indiceFila][11]); 
+$NINMTOBS = mainModel::cleanStringSQL($dataForQuery[$indiceFila][12]); 
+$COD_SIT_LESION = mainModel::cleanStringSQL($dataForQuery[$indiceFila][13]); 
+$NO_CBD = mainModel::cleanStringSQL($dataForQuery[$indiceFila][14]); 
+$CBD = mainModel::cleanStringSQL($dataForQuery[$indiceFila][15]); 
+$NO_APH = mainModel::cleanStringSQL($dataForQuery[$indiceFila][16]); 
+$AF_PRIN = mainModel::cleanStringSQL($dataForQuery[$indiceFila][17]); 
+$DIA_SIS = mainModel::cleanStringSQL($dataForQuery[$indiceFila][18]); 
+$CLAVE_PROGRAMA_SIS = mainModel::cleanStringSQL($dataForQuery[$indiceFila][19]); 
+$COD_COMPLEMEN_MORBI = mainModel::cleanStringSQL($dataForQuery[$indiceFila][20]); 
+$DEF_FETAL_CM = mainModel::cleanStringSQL($dataForQuery[$indiceFila][21]); 
+$DEF_FETAL_CBD = mainModel::cleanStringSQL($dataForQuery[$indiceFila][22]); 
+$CLAVE_CAPITULO = mainModel::cleanStringSQL($dataForQuery[$indiceFila][23]); 
+$CAPITULO = mainModel::cleanStringSQL($dataForQuery[$indiceFila][24]); 
+$LISTA1 = mainModel::cleanStringSQL($dataForQuery[$indiceFila][25]); 
+$GRUPO1 = mainModel::cleanStringSQL($dataForQuery[$indiceFila][26]); 
+$LISTA5 = mainModel::cleanStringSQL($dataForQuery[$indiceFila][27]); 
+$RUBRICA_TYPE = mainModel::cleanStringSQL($dataForQuery[$indiceFila][28]); 
+$YEAR_MODIFI = mainModel::cleanStringSQL($dataForQuery[$indiceFila][29]); 
+$YEAR_APLICACION = mainModel::cleanStringSQL($dataForQuery[$indiceFila][30]); 
+$VALID = mainModel::cleanStringSQL($dataForQuery[$indiceFila][31]); 
+$PRINMORTA = mainModel::cleanStringSQL($dataForQuery[$indiceFila][32]); 
+$PRINMORBI = mainModel::cleanStringSQL($dataForQuery[$indiceFila][33]); 
+$LM_MORBI = mainModel::cleanStringSQL($dataForQuery[$indiceFila][34]); 
+$LM_MORTA = mainModel::cleanStringSQL($dataForQuery[$indiceFila][35]); 
+$LGBD165 = mainModel::cleanStringSQL($dataForQuery[$indiceFila][36]); 
+$LOMSBECK = mainModel::cleanStringSQL($dataForQuery[$indiceFila][37]); 
+$LGBD190 = mainModel::cleanStringSQL($dataForQuery[$indiceFila][38]); 
+$NOTDIARIA = mainModel::cleanStringSQL($dataForQuery[$indiceFila][39]); 
+$NOTSEMANAL = mainModel::cleanStringSQL($dataForQuery[$indiceFila][40]); 
+$SISTEMA_ESPECIAL = mainModel::cleanStringSQL($dataForQuery[$indiceFila][41]); 
+$BIRMM = mainModel::cleanStringSQL($dataForQuery[$indiceFila][42]); 
+$CVE_CAUSA_TYPE = mainModel::cleanStringSQL($dataForQuery[$indiceFila][43]); 
+$CAUSA_TYPE = mainModel::cleanStringSQL($dataForQuery[$indiceFila][44]); 
+$EPI_MORTA = mainModel::cleanStringSQL($dataForQuery[$indiceFila][45]); 
+$EDAS_E_IRAS_EN_M5 = mainModel::cleanStringSQL($dataForQuery[$indiceFila][46]); 
+$CSVE_MATERNAS_SEED_EPID = mainModel::cleanStringSQL($dataForQuery[$indiceFila][47]); 
+$EPI_MORTA_M5 = mainModel::cleanStringSQL($dataForQuery[$indiceFila][48]); 
+$EPI_MORBI = mainModel::cleanStringSQL($dataForQuery[$indiceFila][49]); 
+$DEF_MATERNAS = mainModel::cleanStringSQL($dataForQuery[$indiceFila][50]); 
+$ES_CAUSES = mainModel::cleanStringSQL($dataForQuery[$indiceFila][51]); 
+$NUM_CAUSES = mainModel::cleanStringSQL($dataForQuery[$indiceFila][52]); 
+$ES_SUIVE_MORTA = mainModel::cleanStringSQL($dataForQuery[$indiceFila][53]); 
+$ES_SUIVE_MORB = mainModel::cleanStringSQL($dataForQuery[$indiceFila][54]); 
+$EPI_CLAVE = mainModel::cleanStringSQL($dataForQuery[$indiceFila][55]); 
+$EPI_CLAVE_DESC = mainModel::cleanStringSQL($dataForQuery[$indiceFila][56]); 
+$ES_SUIVE_NOTIN = mainModel::cleanStringSQL($dataForQuery[$indiceFila][57]); 
+$ES_SUIVE_EST_EPI = mainModel::cleanStringSQL($dataForQuery[$indiceFila][58]); 
+$ES_SUIVE_EST_BROTE = mainModel::cleanStringSQL($dataForQuery[$indiceFila][59]); 
+$SINAC = mainModel::cleanStringSQL($dataForQuery[$indiceFila][60]); 
+$PRIN_SINAC = mainModel::cleanStringSQL($dataForQuery[$indiceFila][61]); 
+$PRIN_SINAC_GRUPO = mainModel::cleanStringSQL($dataForQuery[$indiceFila][62]); 
+$DESCRIPCION_SINAC_GRUPO = mainModel::cleanStringSQL($dataForQuery[$indiceFila][63]); 
+$PRIN_SINAC_SUBGRUPO = mainModel::cleanStringSQL($dataForQuery[$indiceFila][64]); 
+$DESCRIPCION_SINAC_SUBGRUPO = mainModel::cleanStringSQL($dataForQuery[$indiceFila][65]); 
+$DAGA = mainModel::cleanStringSQL($dataForQuery[$indiceFila][66]); 
+$ASTERISCO = mainModel::cleanStringSQL($dataForQuery[$indiceFila][67]);
 
-$NOMBRE = $dataForQuery[$indiceFila][3]; 
-$CODIGOX = $dataForQuery[$indiceFila][4]; 
-$LSEX = $dataForQuery[$indiceFila][5]; 
-$LINF = $dataForQuery[$indiceFila][6]; 
-$LSUP = $dataForQuery[$indiceFila][7]; 
-$TRIVIAL = $dataForQuery[$indiceFila][8]; 
-$ERRADICADO = $dataForQuery[$indiceFila][9]; 
-$N_INTER = $dataForQuery[$indiceFila][10]; 
-$NIN = $dataForQuery[$indiceFila][11]; 
-$NINMTOBS = $dataForQuery[$indiceFila][12]; 
-$COD_SIT_LESION = $dataForQuery[$indiceFila][13]; 
-$NO_CBD = $dataForQuery[$indiceFila][14]; 
-$CBD = $dataForQuery[$indiceFila][15]; 
-$NO_APH = $dataForQuery[$indiceFila][16]; 
-$AF_PRIN = $dataForQuery[$indiceFila][17]; 
-$DIA_SIS = $dataForQuery[$indiceFila][18]; 
-$CLAVE_PROGRAMA_SIS = $dataForQuery[$indiceFila][19]; 
-$COD_COMPLEMEN_MORBI = $dataForQuery[$indiceFila][20]; 
-$DEF_FETAL_CM = $dataForQuery[$indiceFila][21]; 
-$DEF_FETAL_CBD = $dataForQuery[$indiceFila][22]; 
-$CLAVE_CAPITULO = $dataForQuery[$indiceFila][23]; 
-$CAPITULO = $dataForQuery[$indiceFila][24]; 
-$LISTA1 = $dataForQuery[$indiceFila][25]; 
-$GRUPO1 = $dataForQuery[$indiceFila][26]; 
-$LISTA5 = $dataForQuery[$indiceFila][27]; 
-$RUBRICA_TYPE = $dataForQuery[$indiceFila][28]; 
-$YEAR_MODIFI = $dataForQuery[$indiceFila][29]; 
-$YEAR_APLICACION = $dataForQuery[$indiceFila][30]; 
-$VALID = $dataForQuery[$indiceFila][31]; 
-$PRINMORTA = $dataForQuery[$indiceFila][32]; 
-$PRINMORBI = $dataForQuery[$indiceFila][33]; 
-$LM_MORBI = $dataForQuery[$indiceFila][34]; 
-$LM_MORTA = $dataForQuery[$indiceFila][35]; 
-$LGBD165 = $dataForQuery[$indiceFila][36]; 
-$LOMSBECK = $dataForQuery[$indiceFila][37]; 
-$LGBD190 = $dataForQuery[$indiceFila][38]; 
-$NOTDIARIA = $dataForQuery[$indiceFila][39]; 
-$NOTSEMANAL = $dataForQuery[$indiceFila][40]; 
-$SISTEMA_ESPECIAL = $dataForQuery[$indiceFila][41]; 
-$BIRMM = $dataForQuery[$indiceFila][42]; 
-$CVE_CAUSA_TYPE = $dataForQuery[$indiceFila][43]; 
-$CAUSA_TYPE = $dataForQuery[$indiceFila][44]; 
-$EPI_MORTA = $dataForQuery[$indiceFila][45]; 
-$EDAS_E_IRAS_EN_M5 = $dataForQuery[$indiceFila][46]; 
-$CSVE_MATERNAS_SEED_EPID = $dataForQuery[$indiceFila][47]; 
-$EPI_MORTA_M5 = $dataForQuery[$indiceFila][48]; 
-$EPI_MORBI = $dataForQuery[$indiceFila][49]; 
-$DEF_MATERNAS = $dataForQuery[$indiceFila][50]; 
-$ES_CAUSES = $dataForQuery[$indiceFila][51]; 
-$NUM_CAUSES = $dataForQuery[$indiceFila][52]; 
-$ES_SUIVE_MORTA = $dataForQuery[$indiceFila][53]; 
-$ES_SUIVE_MORB = $dataForQuery[$indiceFila][54]; 
-$EPI_CLAVE = $dataForQuery[$indiceFila][55]; 
-$EPI_CLAVE_DESC = $dataForQuery[$indiceFila][56]; 
-$ES_SUIVE_NOTIN = $dataForQuery[$indiceFila][57]; 
-$ES_SUIVE_EST_EPI = $dataForQuery[$indiceFila][58]; 
-$ES_SUIVE_EST_BROTE = $dataForQuery[$indiceFila][59]; 
-$SINAC = $dataForQuery[$indiceFila][60]; 
-$PRIN_SINAC = $dataForQuery[$indiceFila][61]; 
-$PRIN_SINAC_GRUPO = $dataForQuery[$indiceFila][62]; 
-$DESCRIPCION_SINAC_GRUPO = $dataForQuery[$indiceFila][63]; 
-$PRIN_SINAC_SUBGRUPO = $dataForQuery[$indiceFila][64]; 
-$DESCRIPCION_SINAC_SUBGRUPO = $dataForQuery[$indiceFila][65]; 
-$DAGA = $dataForQuery[$indiceFila][66]; 
-$ASTERISCO = $dataForQuery[$indiceFila][67];
+if (mainModel::isDataEmtpyPermitedZero($CONSECUTIVO,$LETRA,$CATALOG_KEY,$NOMBRE,$CODIGOX,$LSEX,$LINF,$LSUP,$TRIVIAL,$ERRADICADO,$N_INTER,$NIN,$NINMTOBS,$COD_SIT_LESION,$NO_CBD,$CBD,$NO_APH,$AF_PRIN,$DIA_SIS,$CLAVE_PROGRAMA_SIS,$COD_COMPLEMEN_MORBI,$DEF_FETAL_CM,$DEF_FETAL_CBD,$CLAVE_CAPITULO,$CAPITULO,$LISTA1,$GRUPO1,$LISTA5,$RUBRICA_TYPE,$YEAR_MODIFI,$YEAR_APLICACION,$VALID,$PRINMORTA,$PRINMORBI,$LM_MORBI,$LM_MORTA,$LGBD165,$LOMSBECK,$LGBD190,$NOTDIARIA,$NOTSEMANAL,$SISTEMA_ESPECIAL,$BIRMM,$CVE_CAUSA_TYPE,$CAUSA_TYPE,$EPI_MORTA,$EDAS_E_IRAS_EN_M5,$CSVE_MATERNAS_SEED_EPID,$EPI_MORTA_M5,$EPI_MORBI,$DEF_MATERNAS,$ES_CAUSES,$NUM_CAUSES,$ES_SUIVE_MORTA,$ES_SUIVE_MORB,$EPI_CLAVE,$EPI_CLAVE_DESC,$ES_SUIVE_NOTIN,$ES_SUIVE_EST_EPI,$ES_SUIVE_EST_BROTE,$SINAC,$PRIN_SINAC,$PRIN_SINAC_GRUPO,$DESCRIPCION_SINAC_GRUPO,$PRIN_SINAC_SUBGRUPO,$DESCRIPCION_SINAC_SUBGRUPO,$DAGA,$ASTERISCO)){
+
+			$alert=[
+				"Alert"=>"simple",
+				"Title"=>"Campos Vacios",
+				"Text"=>"Todos los datos de los eventos CIE-10 son obligatorios 
+				<br><br> Error en la Fila CONSECUTIVO: (".$CONSECUTIVO.")",
+				"Type"=>"error"
+			];
+
+				echo json_encode($alert);
+
+				exit();
+}
 
 
 $sqlQuery->execute(array("CONSECUTIVO"=>$CONSECUTIVO,
@@ -514,17 +527,25 @@ $sqlQuery->closeCursor();
 
 		} catch (PDOException $e) {
 
+    $DB_transacc->rollBack();
+
+    	$codeError = $e->getCode();
+
+    	$textDetailsTecnics =  "<br><br> Detalles Tecnicos: ". $e->getMessage();
+		
+		$textError = mainModel:: getMsgErrorSQL($codeError);
+
+if ($codeError = '23503') {
+	$textError.= '.<br> Posiblemente el Evento CIE-10 es requerido por un caso Epidemiologigo';
+}
 			$alert=[
 				"Alert"=>"simple",
 				"Title"=>"Ocurrio un error inesperado",
-				"Text"=>"Error en la Actualizacion del Catalogo CIE-10 <br> Error: ". $e->getMessage()."",
+				"Text"=>$textError.$textDetailsTecnics,
 				"Type"=>"error"
 			];
-
-    $DB_transacc->rollBack();
-
 }
-
+				
 				echo json_encode($alert);
 
 }
@@ -641,10 +662,14 @@ mainModel::getDataTableServerSideModel('data_cie10', 'consecutivo',
 	}
 
 
-	// buscar pot patron
+	// buscar por patron
 	if(isset($dataGetCIE10['valueSearch'])) {
 
 	$idCapituloCIE10 = mainModel::cleanStringSQL($dataGetCIE10['idCapituloCIE10']);
+
+	$valueSearch = mainModel::cleanStringSQL($dataGetCIE10['valueSearch']);
+
+	$valueSearch = pg_escape_string($valueSearch);
 
 	$columnsSearch = array('catalog_key','nombre');
 
@@ -653,7 +678,7 @@ mainModel::getDataTableServerSideModel('data_cie10', 'consecutivo',
         $where = "WHERE (";
         for ( $i=0 ; $i<count($columnsSearch) ; $i++ )
         {
-                $where .= 'UNACCENT('.$columnsSearch[$i]."::text) ILIKE '%".mainModel::cleanStringSQL($dataGetCIE10['valueSearch'])."%' OR ";
+                $where .= 'UNACCENT('.$columnsSearch[$i]."::text) ILIKE UNACCENT('%".$valueSearch."%') OR ";
         }
         $where = substr_replace( $where, "", -3 );
         $where .= ")";

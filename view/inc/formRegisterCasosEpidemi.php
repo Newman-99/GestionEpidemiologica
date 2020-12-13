@@ -1,11 +1,11 @@
  
  <!-- Modal For New Refister -->
 
-<div class="modal fade" id="registerCasosEpidemiModal" tabindex="-1" role="dialog" aria-labelledby="registerCasosEpidemiModalLabel" aria-hidden="true">
+<div class="modal fade" id="formCasosEpidemiModal" tabindex="-1" role="dialog" aria-labelledby="formCasosEpidemiModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="registerCasosEpidemiModalLabel">Registrar Caso epidemiologico</h5>
+        <h5 class="modal-title" id="formCasosEpidemiModalLabel">Registrar Caso epidemiologico</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -100,7 +100,19 @@
 
     <br>
 
-    <input type="text" name="searchCIE10" id="searchCIE10" class="form-control" placeholder="Buscar Nombre del Caso CIE-10">
+
+<div class="input-group">
+
+
+
+        <input type="text" name="searchCIE10" id="searchCIE10" class="form-control" placeholder="Buscar (Nombre/Clave) Evento CIE-10">
+
+<span id="icon-load" class="input-group-addon">
+<i class="fas fa-circle-notch fa-spin"></i>
+</span>
+
+</div>
+
 
     <br>
   
@@ -197,12 +209,22 @@ Fecha de Nacimiento
 
       <script type="text/javascript">
 
+
+
   document.getElementById("form_caso_epidemi").addEventListener("submit", sendFormToRegisterOrUpdateCasesEpidemi );
 
+  // Al seleccionar un capitulo CIE10  los casos correspondientes en el select
 
           $( document ).ready(function() {
 
+
+var load  = document.getElementById("icon-load");
+
+load.style.display = "none";
+
       $('#idCapituloCIE10').on('change',function(){
+
+load.style.display = "block";
 
           var actionAjaxForCie10 = $('#actionAjaxForCie10').val();
 
@@ -215,26 +237,14 @@ Fecha de Nacimiento
   });
 
 
-  // Al seleccionar un capitulo CIE10  los casos correspondientes en el select
-
-      $('#idCapituloCIE10').on('change',function(){
-
-          var actionAjaxForCie10 = $('#actionAjaxForCie10').val();
-
-          var idCapituloCIE10 = $(this).val();
-
-          if(idCapituloCIE10 != ''){
-          getCasesCIE10ByidCapitulo(idCapituloCIE10,actionAjaxForCie10);
-          }
-      });
-
-
 
   // Al escribir en el input buscador se mostraran los casos CIE10 correspondientes en el select
   
 var timeForRequestSearch = "";
 
   $(document).on('keyup', '#searchCIE10', function(){
+
+  	load.style.display = "block";
 
     clearTimeout(timeForRequestSearch);   
 
@@ -250,6 +260,7 @@ var timeForRequestSearch = "";
     }
     else
     {
+     
       // si esta vacio llenamos con el cap seleccionado
              getCasesCIE10ByidCapitulo();
     }

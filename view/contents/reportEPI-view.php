@@ -48,7 +48,7 @@ function exportFile(){
           
           <!-- <p class="mb-4">DataTables is a third party plugin that is used to generate the demo table below. For more information about DataTables, pleas>
           -->
-
+General
           <div class="card shadow mb-4">
             <div class="card-header py-3">
               <h6 class="m-0 font-weight-bold text-primary">Reportes EPI</h6>

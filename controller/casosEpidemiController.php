@@ -160,7 +160,7 @@
 			$alert=[
 			"Alert"=>"simple",
 			"Title"=>"Datos Invalidos",
-			"Text"=>"El caso CIE 10 no se puede ser asignado a este Genero",
+			"Text"=>"El Evento CIE 10 no se puede ser asignado a este Genero",
 			"Type"=>"error"
 				];	
 		
@@ -350,7 +350,7 @@
 			$alert=[
 			"Alert"=>"simple",
 			"Title"=>"Datos Invalidos",
-			"Text"=>"El caso CIE 10 no se puede ser asignado a este Genero",
+			"Text"=>"El Evento CIE 10 no se puede ser asignado a este Genero",
 			"Type"=>"error"
 				];	
 		
@@ -458,7 +458,7 @@
 			$alert=[
 			"Alert"=>"simple",
 			"Title"=>"Datos Invalidos",
-			"Text"=>"El caso CIE 10 no se puede ser asignado a este Genero",
+			"Text"=>"El Evento CIE 10 no se puede ser asignado a este Genero",
 			"Type"=>"error"
 				];	
 		
@@ -804,7 +804,14 @@ array(
 
   try {
 
-    mainModel::connectDB()->query(parent::$queryCreateViewCasosEpidemi);
+$queryifExistView = mainModel::connectDB()->query("SELECT where EXISTS  ( SELECT FROM information_schema.tables WHERE table_name = 'caso_epidemi_view' ) = true");
+
+			if(!$queryifExistView->rowCount()){
+    
+    		mainModel::connectDB()->query(parent::$queryCreateViewCasosEpidemi);
+			
+			}
+
 
     $dataToCreateDataTable = mainModel::getDataTableServerSideModel('caso_epidemi_view', 'row_number',
       $columnsTable,$columnsPrintDataTable,TRUE);
@@ -924,7 +931,7 @@ array(
     }
 
 
-    mainModel::connectDB()->query('drop view caso_epidemi_view');
+   // mainModel::connectDB()->query('drop view caso_epidemi_view');
 /*
 header("Content-type: application/json; charset=utf-8");
 echo json_encode($dataToCreateDataTable,JSON_UNESCAPED_UNICODE);
@@ -1264,7 +1271,7 @@ $bitacora_hora = mainModel::cleanStringSQL($dataForQuery[$indiceFila][25]);
 			$alert=[
 			"Alert"=>"simple",
 			"Title"=>"Datos Invalidos",
-			"Text"=>"El caso CIE 10 no se puede ser asignado a este Genero".$indicatorEpidemiCaseError,
+			"Text"=>"El Evento CIE 10 no se puede ser asignado a este Genero".$indicatorEpidemiCaseError,
 			"Type"=>"error"
 				];	
 		
@@ -1446,17 +1453,21 @@ if ($countOperations != 0) {
 
 if ($countOperations == 0) {
 
-			$DB_transacc->rollBack();
+		$DB_transacc->rollBack();
 
-			$error = $e->getMessage();
+    	$codeError = $e->getCode();
+
+    	$textDetailsTecnics =  "<br><br> Detalles Tecnicos: ". $e->getMessage();
+		
+		$textError = mainModel:: getMsgErrorSQL($codeError);
 
 			$alert=[
 				"Alert"=>"simple",
-				"Title"=>"Ha ocurrido un error inesperado",
-				"Text"=>"No se ha podido importar los Casos Epidemiologicos en el sistema<br>
-					Error".$error."",
+				"Title"=>"Ocurrio un error inesperado",
+				"Text"=>$textError.$textDetailsTecnics,
 				"Type"=>"error"
 			];
+
 	}else{
 					$alert=[
 				"cleanInput"=>"true",		

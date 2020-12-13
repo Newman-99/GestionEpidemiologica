@@ -29,7 +29,7 @@
             <div class='card-body '>
 
 <!-- Button trigger modal -->
-<button type="button" class="btn btn-primary registerCasosEpidemiModal" data-toggle="modal" data-target="#registerCasosEpidemiModal">
+<button type="button" class="btn btn-primary formCasosEpidemiModal" data-toggle="modal" data-target="#formCasosEpidemiModal">
   Registrar Nuevo
 </button>
 
@@ -203,20 +203,12 @@ return getDataCasosEpidemiForDataTables(requestedPersonEpidemi,minDateRangeDefau
 
   var table = $('#dataTable');
 
-  $('button.registerCasosEpidemiModal').on('click',function(){
+  $('button.formCasosEpidemiModal').on('click',function(){
 
     $(".modal-title").text("Registrar Caso Epidemiologico");
 
     $(".btn-caso-epidemi").text("Registrar");   
-
-     $('#catalogKeyCIE10').empty().append('<option value="">Selecionar Capitulo  o CIE-10 Buscar Nombre </option>');
-
-  $(".form-control-person").prop('disabled', false);
-
-
-      $('#form_caso_epidemi').trigger("reset");
-
-      
+     
       // Establecer parametros de fecha de registro del caso epidmi
       
       // la fecha recomendada de registro de casos, es del dia de ayer, pero e ocaciones puede ser cambiada  
@@ -337,6 +329,24 @@ var dataCasoEpidemi =
 
 }
 
+  // al salir del modal update limpiara los input para el modo register
+    $("#formCasosEpidemiModal").on('hidden.bs.modal', function () {
+
+    var data_form = document.getElementById("form_caso_epidemi").getAttribute("data-form");
+    
+    if (data_form == 'update') {
+  
+  $('#catalogKeyCIE10').empty().append('<option value="">Selecionar Capitulo  o CIE-10 Buscar Nombre </option>');
+
+  $(".form-control-person").prop('disabled', false);
+
+
+  $('#form_caso_epidemi').trigger("reset");
+
+
+    }
+      });
+
 function updateCasosEpidemi(data){
 
     var id_caso_epidemi = data[1];
@@ -413,7 +423,7 @@ function updateCasosEpidemi(data){
 
     $(".btn-caso-epidemi").text("Editar");   
 
-    $('#registerCasosEpidemiModal').modal('show');       
+    $('#formCasosEpidemiModal').modal('show');       
 
     $(".form-control-person").prop('disabled', false);
 

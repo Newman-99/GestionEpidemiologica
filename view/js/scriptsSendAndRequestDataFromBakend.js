@@ -42,25 +42,30 @@
 // devolvera datos para el select dinamico
 function getCasesCIE10BySearchPattern(valueSearch,idCapituloCIE10,actionForAjax){
 
+
+var load  = document.getElementById("icon-load");
+  
   $.ajax({
       type:'POST',
       url: actionForAjax,
       data:{'valueSearch': valueSearch,
           'idCapituloCIE10':idCapituloCIE10,'getCasesCIE10':true},
      success:function(casesCIE10){
-      console.log(casesCIE10); 
+      //console.log(casesCIE10); 
       casesCIE10 = JSON.parse(casesCIE10);
       $('#catalogKeyCIE10').empty();
       casesCIE10.forEach(function(casesCIE10){
         $('#catalogKeyCIE10').append('<option value='+casesCIE10.catalog_key+'>'+casesCIE10.catalog_key + ' - ' + casesCIE10.nombre + '</option>')
-        })                   
+        })                         
+                  load.style.display = "none";
       }
     }); 
   }
 
 // devolvera datos para el select dinamico
 function getCasesCIE10ByidCapitulo(idCapituloCIE10,actionForAjax){
-  $.ajax({
+var load  = document.getElementById("icon-load");
+    $.ajax({
       type:'POST',
       url: actionForAjax,
       data:{'idCapituloCIE10':
@@ -72,7 +77,8 @@ function getCasesCIE10ByidCapitulo(idCapituloCIE10,actionForAjax){
       casesCIE10.forEach(function(casesCIE10){
      $('#catalogKeyCIE10').append('<option value='+casesCIE10.catalog_key+'>'+casesCIE10.catalog_key + ' - ' + casesCIE10.nombre + '</option>')
         })
-       }
+        load.style.display = "none";
+    }
      }); 
 }
 

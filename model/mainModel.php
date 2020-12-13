@@ -39,8 +39,8 @@ return $db;
 		} catch (PDOException $e) {
 		    error_log("Failed to connect to database: ".$e->getMessage());
 		}				
+/**/
 /*
-
 
 		try {			
 	$DB = new PDO("pgsql:host=".SERVER_PATH.";port=".PORT.";dbname=".DB."",USER,PASS, array(
@@ -218,6 +218,8 @@ public static function cleanStringSQL($string){
 	$string = trim($string);
 	$string = stripcslashes($string);
 	$string = str_ireplace("<script>","",$string);
+	$string = str_ireplace("null","",$string);
+	$string = str_ireplace("NULL","",$string);
 	$string = str_ireplace("</script>","",$string);
 	$string = str_ireplace("<script src","",$string);
 	$string = str_ireplace("<script type =","",$string);
@@ -347,6 +349,22 @@ protected static function checkPatterns($pattern,$string){
 
 		return false;
 		}
+
+		public static function isDataEmtpyPermitedZero(...$data){
+
+		foreach ($data as $value) {
+		    
+		    if(empty($value) || is_null($value) || self::isStringOnlyHasSpaces($value)){  
+		    	
+		    	if (!is_numeric($value)) {
+		        return true;
+		    	      }  
+		    }
+		}
+
+		return false;
+		}
+
 
 		public static function isStringOnlyHasSpaces($str){
 		        $count_arr=0;
@@ -884,5 +902,50 @@ $gaSql['link'] = pg_connect($db_url);
             return $arrayResult;
 		}
 
+
+	protected static function getMsgErrorSQL($codeError) {
+	
+
+		switch ($codeError) {
+			case '23503':
+
+			return 'El Registro a actualizar o eliminar  ya esta siendo usado en otra parte del sistema';
+
+				break;
+
+			case '22P02':
+			return 'Se ha encontrado un valor invalido en una fila';
+				break;
+
+			case '23001':
+			return 'Un campo que funciona como identificador es invalido o no puede estar repetido';
+				break;
+
+			case '23502':
+			return 'Un campo que funciona como identificador puede estar invalido o no puede estar repetido';
+				break;
+
+			case '23505':
+			return 'Un campo que funciona como identificador puede estar invalido o no puede estar repetido';
+				break;
+
+			case '42830':
+			return 'Un campo que funciona como identificador es invalido o no puede estar repetido';
+				break;
+
+			case '22001':
+			return 'Se ha encontrado un valor demasiado largo en un campo';
+				break;
+
+			default:
+
+			return "Error Desconocido en la Operacion";
+
+				break;
+		}
+
+
+
+	}
 
 }

@@ -43,7 +43,7 @@
 
 		protected static $queryAddCasosEpidemi = "INSERT INTO casos_epidemi(
 		 doc_identidad,
-		 id_nacionalidad,
+		 id_nacionalidad,dark
 		 catalog_key_cie10,
 		 id_parroquia,
 		 direccion,
