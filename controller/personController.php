@@ -10,8 +10,9 @@
 
 	// Funciones para manejar datos (CRUD)
 		public function addPersonControllerr($dataPerson){
+
+		 	$indicatorPersonError='';
 		 
-		 $indicatorPersonError = '';
 		 if (isset($dataPerson['indicatorPersonError'])) {
 		 	$indicatorPersonError = $dataPerson['indicatorPersonError'];
 		 }
@@ -65,108 +66,6 @@ if (!isset($dataPerson['operationImportCaseEpidemi'])) {
 				exit();
 			}
 			
-			if(!self::isValidDocIdentidad($doc_identidad)){
-
-			$alert=[
-				"Alert"=>"simple",
-				"Title"=>"Datos Invalidos",
-				"Text"=>"El documento de identidad es invalido".$indicatorPersonError,
-				"Type"=>"error"
-			];
-
-				echo json_encode($alert);
-
-				exit();
-			}
-
-			if(!mainModel::isValidSelectionTwoOptions($id_nacionalidad)){
-
-			$alert=[
-				"Alert"=>"simple",
-				"Title"=>"Datos Invalidos",
-				"Text"=>"El campo de Nacionalidad es invalido".$indicatorPersonError,
-				"Type"=>"error"
-			];
-
-				echo json_encode($alert);
-
-				exit();
-			}
-
-
-			if(!mainModel::isValidSelectionTwoOptions($id_genero)){
-
-			$alert=[
-				"Alert"=>"simple",
-				"Title"=>"Datos Invalidos",
-				"Text"=>"El campo de Genero es invalido".$indicatorPersonError,
-				"Type"=>"error"
-			];
-
-				echo json_encode($alert);
-
-				exit();
-			}
-
-			if(!self::isValidNombresApellidos($nombres,$apellidos)){
-
-			$alert=[
-				"Alert"=>"simple",
-				"Title"=>"Datos Invalidos",
-				"Text"=>"El Nombre o Apellido ingresado es invalido".$indicatorPersonError,
-				"Type"=>"error"
-			];
-
-				echo json_encode($alert);
-
-				exit();
-			}
-
-
-			if (!mainModel::checkDate($fecha_nacimiento)){
-			$alert=[
-				"Alert"=>"simple",
-				"Title"=>"Datos Invalidos",
-				"Text"=>"El campo fecha de  nacimiento es invalido".$indicatorPersonError,
-				"Type"=>"error"
-			];
-
-				echo json_encode($alert);
-
-				exit();
-		}
-
-
-		if (mainModel::isDateGreaterCurrentDate($fecha_nacimiento)) {
-				$alert=[
-					"Alert"=>"simple",
-					"Title"=>"Datos Invalidos",
-					"Text"=>"La Fecha de Nacimiento es mayor a la del sistema".$indicatorPersonError,
-					"Type"=>"error"
-				];
-
-					echo json_encode($alert);
-
-					exit();
-		}
-
-		if(!mainModel::isValidNroTlf($telefono)){
-			
-			$alert=[
-				"Alert"=>"simple",
-				"Title"=>"Datos Invalidos",
-				"Text"=>"El Nro de Telefono es invalido".$indicatorPersonError,
-				"Type"=>"error"
-			];
-
-				echo json_encode($alert);
-
-				exit();
-			}
-
-
-
-		 $dataPerson = array();
 
 				$dataPerson = 
 		["id_nacionalidad"=>$id_nacionalidad,
@@ -176,7 +75,11 @@ if (!isset($dataPerson['operationImportCaseEpidemi'])) {
 		"fecha_nacimiento"=>$fecha_nacimiento,
 		"id_genero"=>$id_genero,
 		"telefono"=>$telefono,
+		"indicatorPersonError"=>$indicatorPersonError,
 		];
+
+
+		self::msgValidiFieldsBasicPersona($dataPerson);
 
 		return $dataPerson;
 		
@@ -185,16 +88,26 @@ if (!isset($dataPerson['operationImportCaseEpidemi'])) {
 
 		public static function updatePersonaController($dataPerson){
 
-		 $indicatorPersonError = '';
+		 	$indicatorPersonError='';
+		 
 		 if (isset($dataPerson['indicatorPersonError'])) {
 		 	$indicatorPersonError = $dataPerson['indicatorPersonError'];
 		 }
 
 		 $doc_identidad = mainModel::cleanStringSQL($dataPerson['doc_identidad']);
 		 
+		 $doc_identidad = self::ClearUserSeparatedCharacters($doc_identidad);
+
+		 $doc_identidad = ltrim($doc_identidad, '0');
+
 		 $nombres = mainModel::cleanStringSQL($dataPerson['nombres']);
 		 
 		 $apellidos = mainModel::cleanStringSQL($dataPerson['apellidos']);
+
+		$nombres=self::filtterNombresApellidos($nombres);
+
+		$apellidos=self::filtterNombresApellidos($apellidos);
+
 		 
 		 $fecha_nacimiento = mainModel::cleanStringSQL($dataPerson['fecha_nacimiento']);
 		 
@@ -210,14 +123,14 @@ if (!isset($dataPerson['operationImportCaseEpidemi'])) {
 
 		 $telefono = self::ClearUserSeparatedCharacters($telefono);
 
-
-		 			if (!isset(
+		 			if (mainModel::isDataEmtpy(
 						 $doc_identidad,
 						 $nombres,
 						 $apellidos,
 						 $fecha_nacimiento,
 						 $id_nacionalidad,
-						 $id_genero)) {
+						 $id_genero,
+						 $telefono)) {
 
 			$alert=[
 				"Alert"=>"simple",
@@ -233,117 +146,22 @@ if (!isset($dataPerson['operationImportCaseEpidemi'])) {
 			}
 
 
-
-			$queryIsExistPerson = mainModel::connectDB()->query("select doc_identidad from personas where id_nacionalidad = '$id_nacionalidad' and doc_identidad = '$doc_identidad'");
-			
-			if(!$queryIsExistPerson->rowCount()){
-			$alert=[
-				"Alert"=>"simple",
-				"Title"=>"Datos no encontrados",
-				"Text"=>"No se encuentra una person con esta cedula registrada ".$indicatorPersonError,
-				"Type"=>"error"
-			];
-
-				echo json_encode($alert);
-
-				exit();
-			}
-
-			if(!self::isValidDocIdentidad($doc_identidad)){
-
-			$alert=[
-				"Alert"=>"simple",
-				"Title"=>"Datos Invalidos",
-				"Text"=>"El documento de identidad es invalido".$indicatorPersonError,
-				"Type"=>"error"
-			];
-
-				echo json_encode($alert);
-
-				exit();
-			}
-
-
-			if(!mainModel::isValidSelectionTwoOptions($id_genero)){
-
-			$alert=[
-				"Alert"=>"simple",
-				"Title"=>"Datos Invalidos",
-				"Text"=>"El campo de Genero es invalido".$indicatorPersonError,
-				"Type"=>"error"
-			];
-
-				echo json_encode($alert);
-
-				exit();
-			}
-
-			if(!self::isValidNombresApellidos($nombres,$apellidos)){
-
-			$alert=[
-				"Alert"=>"simple",
-				"Title"=>"Datos Invalidos",
-				"Text"=>"El Nombre o Apellido ingresado es invalido".$indicatorPersonError,
-				"Type"=>"error"
-			];
-
-				echo json_encode($alert);
-
-				exit();
-			}
-
-
-			if (!mainModel::checkDate($fecha_nacimiento)){
-			$alert=[
-				"Alert"=>"simple",
-				"Title"=>"Datos Invalidos",
-				"Text"=>"El campo fecha de  nacimiento es invalido".$indicatorPersonError,
-				"Type"=>"error"
-			];
-
-				echo json_encode($alert);
-
-				exit();
-		}
-
-
-		if (mainModel::isDateGreaterCurrentDate($fecha_nacimiento)) {
-				$alert=[
-					"Alert"=>"simple",
-					"Title"=>"Datos Invalidos",
-					"Text"=>"La Fecha de Nacimiento es mayor a la del sistema".$indicatorPersonError,
-					"Type"=>"error"
-				];
-
-					echo json_encode($alert);
-
-					exit();
-		}
-
-		if(!mainModel::isValidNroTlf($telefono)){
-			
-			$alert=[
-				"Alert"=>"simple",
-				"Title"=>"Datos Invalidos",
-				"Text"=>"El Nro de Telefono es invalido".$indicatorPersonError,
-				"Type"=>"error"
-			];
-
-				echo json_encode($alert);
-
-				exit();
-			}
-
-
-	 		// Campos del usuario como person a comparar con la BD
-
-		$dataPerson = 
-		[
+				$dataPerson = 
+		["id_nacionalidad"=>$id_nacionalidad,
+		"doc_identidad"=>$doc_identidad,		
 		"nombres"=>$nombres,
 		"apellidos"=>$apellidos,
 		"fecha_nacimiento"=>$fecha_nacimiento,
 		"id_genero"=>$id_genero,
+		"telefono"=>$telefono,
+		"indicatorPersonError"=>$indicatorPersonError,
 		];
+
+		self::msgValidiFieldsBasicPersona($dataPerson);
+
+		self::msgValidisExistPersona($dataPerson);
+
+	 		// Campos del usuario como person a comparar con la BD
 
 		$columnsTableToCompare = 
 		[
@@ -392,26 +210,8 @@ if (!isset($dataPerson['operationImportCaseEpidemi'])) {
 
 				 	}
 
-			$primaryKeyperson = [
 
-				"id_nacionalidad"=>$id_nacionalidad,
-				"doc_identidad"=>$doc_identidad
-			];
-
-			$queryIsExistPerson = mainModel::connectDB()->query("select doc_identidad from personas where id_nacionalidad = '$id_nacionalidad' and doc_identidad = '$doc_identidad'");
-			
-			if(!$queryIsExistPerson->rowCount()){
-			$alert=[
-				"Alert"=>"simple",
-				"Title"=>"Datos no encontrados",
-				"Text"=>"No se encuentra una person con esta cedula registrada ",
-				"Type"=>"error"
-			];
-
-				echo json_encode($alert);
-
-				exit();
-			}
+		self::msgValidisExistPersona($dataPerson);
 							 
 
 				 }
@@ -503,7 +303,186 @@ if (!isset($dataPerson['operationImportCaseEpidemi'])) {
 
 
 
+
 // Funciones Para validar DATOS
+
+	protected static function msgValidisExistPersona($dataPerson){
+
+			extract($dataPerson);
+
+			$queryIsExistPerson = mainModel::connectDB()->query("select doc_identidad from personas where id_nacionalidad = '$id_nacionalidad' and doc_identidad = '$doc_identidad'");
+			
+			if(!$queryIsExistPerson->rowCount()){
+			$alert=[
+				"Alert"=>"simple",
+				"Title"=>"Datos no encontrados",
+				"Text"=>"No se encuentra una person con esta cedula registrada ".$indicatorPersonError,
+				"Type"=>"error"
+			];
+
+				echo json_encode($alert);
+
+				exit();
+			}
+
+	}
+
+	protected static function msgValidiFieldsBasicPersona($dataPerson){
+
+extract($dataPerson);
+
+			if(!self::isValidDocIdentidad($doc_identidad)){
+
+			$alert=[
+				"Alert"=>"simple",
+				"Title"=>"Datos Invalidos",
+				"Text"=>"El documento de identidad es invalido".$indicatorPersonError,
+				"Type"=>"error"
+			];
+
+				echo json_encode($alert);
+
+				exit();
+			}
+
+			if(!mainModel::isValidSelectionTwoOptions($id_nacionalidad)){
+
+			$alert=[
+				"Alert"=>"simple",
+				"Title"=>"Datos Invalidos",
+				"Text"=>"El campo de Nacionalidad es invalido".$indicatorPersonError,
+				"Type"=>"error"
+			];
+
+				echo json_encode($alert);
+
+				exit();
+			}
+
+
+			if(!mainModel::isValidSelectionTwoOptions($id_genero)){
+
+			$alert=[
+				"Alert"=>"simple",
+				"Title"=>"Datos Invalidos",
+				"Text"=>"El campo de Genero es invalido".$indicatorPersonError,
+				"Type"=>"error"
+			];
+
+				echo json_encode($alert);
+
+				exit();
+			}
+
+			if(!self::isValidNombresApellidos($nombres,$apellidos)){
+
+			$alert=[
+				"Alert"=>"simple",
+				"Title"=>"Datos Invalidos",
+				"Text"=>"El Nombre o Apellido ingresado es invalido".$indicatorPersonError,
+				"Type"=>"error"
+			];
+
+				echo json_encode($alert);
+
+				exit();
+			}
+
+
+			if (!mainModel::checkDate($fecha_nacimiento)){
+			$alert=[
+				"Alert"=>"simple",
+				"Title"=>"Datos Invalidos",
+				"Text"=>"El campo fecha de  nacimiento es invalido".$indicatorPersonError,
+				"Type"=>"error"
+			];
+
+				echo json_encode($alert);
+
+				exit();
+		}
+
+
+		if (mainModel::isDateGreaterCurrentDate($fecha_nacimiento)) {
+				$alert=[
+					"Alert"=>"simple",
+					"Title"=>"Datos Invalidos",
+					"Text"=>"La Fecha de Nacimiento es mayor a la del sistema".$indicatorPersonError,
+					"Type"=>"error"
+				];
+
+					echo json_encode($alert);
+
+					exit();
+		}
+
+
+		self::msgValidNroTlf($dataPerson);
+
+
+			}
+
+	public static function msgValidNroTlf($dataPerson){
+	
+		if(!mainModel::isValidNroTlf($dataPerson['telefono'])){
+			
+			$alert=[
+				"Alert"=>"simple",
+				"Title"=>"Datos Invalidos",
+				"Text"=>"El Nro de Telefono es invalido".$dataPerson['indicatorPersonError'],
+				"Type"=>"error"
+			];
+
+				echo json_encode($alert);
+
+				exit();
+			}
+	
+	}
+	
+
+	public static function msgValidExistPersonForRegister($dataPerson){
+
+	extract($dataPerson);
+		// Comprobar si existe o no la person en la BD
+
+		$queryIsExistPerson = mainModel::connectDB()->query("SELECT id_nacionalidad,doc_identidad FROM personas WHERE id_nacionalidad = '$id_nacionalidad' AND doc_identidad = '$doc_identidad'");
+
+			if($siExistPerson){
+
+			$siExistPerson = 1;
+
+			if(!$queryIsExistPerson->rowCount()){
+			$alert=[
+				"Alert"=>"simple",
+				"Title"=>"Datos no encontrados",
+				"Text"=>"No se encuentra una person con esta cedula registrada ",
+				"Type"=>"error"
+			];
+
+				echo json_encode($alert);
+
+				exit();
+			}
+
+			}else{
+				// Si no existe y es una person nueva comprobar que no este repetido en la BD
+			if($queryIsExistPerson->rowCount()){
+			$alert=[
+				"Alert"=>"simple",
+				"Title"=>"Datos Duplicados",
+				"Text"=>"Ya se encuentra una persona con esta cedula registrada ",
+				"Type"=>"error"
+			];
+
+				echo json_encode($alert);
+
+				exit();
+			}
+
+		}
+	}
+
 
 public static function isValidDocIdentidad($doc_identidad){
     if(preg_match_all("/^[0-9]{7,8}$/",$doc_identidad)){

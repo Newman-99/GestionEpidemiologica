@@ -32,12 +32,18 @@ CREATE OR REPLACE VIEW casos_epidemi_bitacora_view  AS SELECT DISTINCT ON (id_bi
 
   tpo.descripcion_tipo_operacion,
 
-  bitacora_fecha, bitacora_hora
+  bitacora_fecha, bitacora_hora,
 
-  FROM casos_epidemi_bitacora casos_bit ,tipos_operaciones tpo
+  strFromBool(casos_bit.is_hospital) as hospitalizado,
+
+  atr_esp.descripcion atributo_especial
+
+  FROM casos_epidemi_bitacora casos_bit ,tipos_operaciones tpo, atribs_especiales_cie10 atr_esp
   
   WHERE tpo.id_tipo_operacion = casos_bit.id_tipo_operacion 
 
+  AND casos_bit.id_atrib_especial = atr_esp.id_atrib_especial
+        
   ORDER BY id_bitacora DESC";
 
 
@@ -58,6 +64,8 @@ CREATE OR REPLACE VIEW casos_epidemi_bitacora_view  AS SELECT DISTINCT ON (id_bi
       'id_caso_epidemi',
       'doc_identidad_caso_complete',
       'catalog_key_cie10',
+      'atributo_especial',
+      'hospitalizado',
       'fecha_caso_epidemi',
       'usuario_alias',
       'doc_identidad_usuario_complete',

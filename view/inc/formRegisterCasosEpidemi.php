@@ -44,7 +44,7 @@
   	<br>
           <select name='idCapituloCIE10' id='idCapituloCIE10' class="form-control" autocomplete='on' class="form-control" >
 
-            <option value="">Seleccionar Capitulos CIE-10</option>
+            <option value="">SELECCIONAR CAPITULOS CIE-10</option>
 
             <option  value='01'>I CIERTAS ENFERMEDADES INFECCIOSAS Y PARASITARIAS</option>
 
@@ -90,9 +90,9 @@
 
             <option  value='21'>XXI FACTORES QUE INFLUYEN EN EL ESTADO DE SALUD Y CONTACTO CON LOS SERVICIOS DE SALUD</option>
 
-            <option  value='N/A'>N/A</option>
+            <option  value='NO'>OTRAS CAUSAS DE CONSULTA</option>
 
-            <option  value='NO'>NO</option>
+            <option value="">TODOS</option>
 
             <!--<option  value='00'>Todos</option>-->
 
@@ -101,11 +101,19 @@
     <br>
 
 
-<div class="input-group">
-
 
 
         <input type="text" name="searchCIE10" id="searchCIE10" class="form-control" placeholder="Buscar (Nombre/Clave) Evento CIE-10">
+
+    <br>
+
+<div class="input-group">
+  
+    <select name='catalogKeyCIE10' id='catalogKeyCIE10' class="form-control" autocomplete='on' class="form-control" >
+
+            <option value="0">Selecionar Capitulo o CIE-10 Buscar Nombre </option>
+
+        </select>
 
 <span id="icon-load" class="input-group-addon">
 <i class="fas fa-circle-notch fa-spin"></i>
@@ -115,12 +123,27 @@
 
 
     <br>
-  
-    <select name='catalogKeyCIE10' id='catalogKeyCIE10' class="form-control" autocomplete='on' class="form-control" >
 
-            <option value="">Selecionar Capitulo  o CIE-10 Buscar Nombre </option>
+<div class="input-group">
+
+    <select name='id_atrib_especial' id='id_atrib_especial' class="form-control" autocomplete='on' class="form-control" >
+
+            <option value="0">Seleccionar Atributo Especial </option>
 
         </select>
+
+<span id="icon-load-atrib-especial" class="input-group-addon">
+<i class="fas fa-circle-notch fa-spin"></i>
+</span>
+
+</div>
+
+<br>
+       <span>Hospitalizada o Referida<input type="checkbox" name="is_hospital" id="is_hospital" class="form-control" value="1">  
+        </span>
+
+<br>
+
 
 <?php 
    // los casos no pueden se registrados con fecha dia de manana
@@ -213,14 +236,14 @@ Fecha de Nacimiento
 
   document.getElementById("form_caso_epidemi").addEventListener("submit", sendFormToRegisterOrUpdateCasesEpidemi );
 
-  // Al seleccionar un capitulo CIE10  los casos correspondientes en el select
-
           $( document ).ready(function() {
 
+var load_atrib_especial  = document.getElementById("icon-load-atrib-especial");
+load_atrib_especial.style.display = "none";
 
 var load  = document.getElementById("icon-load");
-
 load.style.display = "none";
+
 
       $('#idCapituloCIE10').on('change',function(){
 
@@ -231,8 +254,10 @@ load.style.display = "block";
           var idCapituloCIE10 = $(this).val();
 
           if(idCapituloCIE10 != ''){
-          getCasesCIE10ByidCapitulo(idCapituloCIE10,actionAjaxForCie10);
-          }
+          setCIE10ToFormRegisterCaseEpidemByidCapituloAsync(idCapituloCIE10,actionAjaxForCie10);
+          }else{
+       load.style.display = "none";
+}
 
   });
 
@@ -256,17 +281,25 @@ var timeForRequestSearch = "";
 
     if (valueSearch!="")
     {
-        timeForRequestSearch = setTimeout(function(){ getCasesCIE10BySearchPattern(valueSearch,idCapituloCIE10,actionAjaxForCie10); }, 2000);
+      setCIE10ToFormRegisterCaseEpidemBySearchPatternAsync(valueSearch,idCapituloCIE10,actionAjaxForCie10);
     }
-    else
-    {
-     
+    else{
+     load.style.display = "none";
+
       // si esta vacio llenamos con el cap seleccionado
-             getCasesCIE10ByidCapitulo();
+             setCIE10ToFormRegisterCaseEpidemByidCapituloAsync();
     }
 
 
 });
+
+
+
+      $('#catalogKeyCIE10').on('change',function(){
+
+      getEspecialAttributesCIE10();
+
+      });
 
         // llenar select parroquia
   

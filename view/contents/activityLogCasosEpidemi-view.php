@@ -70,6 +70,8 @@ $minDateValueAvailable = $activityLogCasosEpidemi-> getFirstDateRecordsActivityL
                       <th>ID Caso Epimiologico</th>
                       <th>Documento de Identidad</th>
                       <th>Codigo CIE-10</th>
+                      <th>Atributo Especial</th>
+                      <th>Hospitalizado o Referido</th>                      
                       <th>Fecha de Registro</th>
                       <th>Alias de Usuario</th>
                       <th>Documento de Identidad</th>
@@ -85,6 +87,8 @@ $minDateValueAvailable = $activityLogCasosEpidemi-> getFirstDateRecordsActivityL
                       <th>ID Caso Epimiologico</th>
                       <th>Documento de Identidad</th>
                       <th>Codigo CIE-10</th>
+                      <th>Atributo Especial</th>
+                      <th>Hospitalizado o Referido</th>                      
                       <th>Fecha de Registro</th>
                       <th>Alias de Usuario</th>
                       <th>Documento de Identidad</th>

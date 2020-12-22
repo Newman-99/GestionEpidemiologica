@@ -1,5 +1,6 @@
 <?php 
 
+
 		// para simular la herencia mediante colaboracion de objetos
 		require_once "personController.php";
 
@@ -24,7 +25,8 @@
 
 		$doc_identidad = mainModel::cleanStringSQL($dataCasosEpidemi['doc_identidad']);
 
-		 $doc_identidad = self::ClearUserSeparatedCharacters($doc_identidad);		 
+		 $doc_identidad = self::ClearUserSeparatedCharacters($doc_identidad);		
+
 		 $doc_identidad = ltrim($doc_identidad, '0');
 
 		$id_nacionalidad = mainModel::cleanStringSQL($dataCasosEpidemi['id_nacionalidad']);
@@ -41,7 +43,19 @@
 
 		 $fecha_registro = mainModel::cleanStringSQL($dataCasosEpidemi['fecha_registro']);
 
+
+		 $id_atrib_especial = mainModel::cleanStringSQL($dataCasosEpidemi['id_atrib_especial']);
+
 		$siExistPerson = 0;
+
+	if(isset($dataCasosEpidemi['siExistPerson'])){
+		$siExistPerson = 1;
+		}
+
+		$is_hospital = 0;
+	if(isset($dataCasosEpidemi['is_hospital'])){
+		$is_hospital = 1;
+		}
 
 
 		if (mainModel::isDataEmtpy(
@@ -65,193 +79,44 @@
 				exit();
 
 		}
-		// Comprobar si existe o no la person en la BD
 
-		$queryIsExistPerson = mainModel::connectDB()->query("SELECT id_nacionalidad,doc_identidad FROM personas WHERE id_nacionalidad = '$id_nacionalidad' AND doc_identidad = '$doc_identidad'");
-
-			if(isset($dataCasosEpidemi['siExistPerson']) && $dataCasosEpidemi['siExistPerson'] == "1" ){
-
-			$siExistPerson = 1;
-
-			if(!$queryIsExistPerson->rowCount()){
-			$alert=[
-				"Alert"=>"simple",
-				"Title"=>"Datos no encontrados",
-				"Text"=>"No se encuentra una person con esta cedula registrada ",
-				"Type"=>"error"
-			];
-
-				echo json_encode($alert);
-
-				exit();
-			}
-
-			}else{
-				// Si no existe y es una person nueva comprobar que no este repetido en la BD
-			if($queryIsExistPerson->rowCount()){
-			$alert=[
-				"Alert"=>"simple",
-				"Title"=>"Datos Duplicados",
-				"Text"=>"Ya se encuentra una persona con esta cedula registrada ",
-				"Type"=>"error"
-			];
-
-				echo json_encode($alert);
-
-				exit();
-			}
-
-		}
-
-//  comprobar que no se repita el caso epidemiologico
-		
-		$queryIsExistcasosEpidemi = mainModel::connectDB()->query("SELECT id_caso_epidemi FROM casos_epidemi WHERE id_nacionalidad = '$id_nacionalidad' AND doc_identidad = '$doc_identidad' AND catalog_key_cie10 = '$catalog_key_cie10' AND fecha_registro = '$fecha_registro'");
-
-			if($queryIsExistcasosEpidemi->rowCount()){
-			$alert=[
-				"Alert"=>"simple",
-				"Title"=>"Datos Duplicados",
-				"Text"=>"Ya esta registrado un Caso Epidemiologico con estos parametros, (Documento de identidad, Fecha de registro y Caso CIE-10)",
-				"Type"=>"error"
-			];
-
-				echo json_encode($alert);
-
-				exit();
-			}
-
-
-		$queryIsExistCasesCIE10 = mainModel::connectDB()->query("SELECT catalog_key FROM data_cie10 WHERE catalog_key = '$catalog_key_cie10' LIMIT 1");
-
-			if(!$queryIsExistCasesCIE10->rowCount()){
-			$alert=[
-				"Alert"=>"simple",
-				"Title"=>"Datos Invalidos",
-				"Text"=>"La clave del catalogo CIE-10 no existe",
-				"Type"=>"error"
-			];
-
-				echo json_encode($alert);
-
-				exit();
-			}
-
-		// para comprobar el  caso cei-10 no tenga un sexo asignado
-		
-		$queryGetLsexCIE10 = mainModel::connectDB()->query("SELECT lsex FROM data_cie10 where catalog_key = '$catalog_key_cie10' LIMIT 1");
-
-		// si no existe id_genero en el form por que la persona ya esta registrada
-		$sexAssignedToCIE10 = $queryGetLsexCIE10->fetchColumn();
-		
-		if (!isset($dataCasosEpidemi['id_genero'])) {
-
-		$queryGetIdGeneroPerson = mainModel::connectDB()->query("SELECT id_genero FROM personas WHERE id_nacionalidad = '$id_nacionalidad' AND doc_identidad = '$doc_identidad'");
-
-		$id_genero = $queryGetIdGeneroPerson->fetchColumn();
-
-		}else{
-			$id_genero = mainModel::cleanStringSQL($dataCasosEpidemi['id_genero']);
-		}
-
-		// quiere decir que no tiene un sexo asginado, asi que lo ignoramos
-		if ($sexAssignedToCIE10 != "NO") {
-			if ($sexAssignedToCIE10 != $id_genero) {
-
-			$alert=[
-			"Alert"=>"simple",
-			"Title"=>"Datos Invalidos",
-			"Text"=>"El Evento CIE 10 no se puede ser asignado a este Genero",
-			"Type"=>"error"
-				];	
-		
-				echo json_encode($alert);
-
-				exit();
-			}
-
-			}
-
-		   if(strlen($direccion)<5){
-
-			$alert=[
-			"Alert"=>"simple",
-			"Title"=>"Datos Invalidos",
-			"Text"=>"La direccion deben poseer mas de 5 caracteres",
-			"Type"=>"error"
-				];	
-		
-				echo json_encode($alert);
-
-				exit();
-			}
-
-		if(!mainModel::isValidNroTlf($telefono)){
-			
-			$alert=[
-				"Alert"=>"simple",
-				"Title"=>"Datos Invalidos",
-				"Text"=>"El Nro de Telefono es invalido",
-				"Type"=>"error"
-			];
-
-				echo json_encode($alert);
-
-				exit();
-			}
-
-
-			if (!mainModel::checkDate($fecha_registro)){
-			$alert=[
-				"Alert"=>"simple",
-				"Title"=>"Datos Invalidos",
-				"Text"=>"La Fecha de Registro es invalido",
-				"Type"=>"error"
-			];
-
-				echo json_encode($alert);
-
-				exit();
-		}
-
-			if (!self::isValidDateRegistRangeAllowedCaseEpidemi($fecha_registro)){
-			$alert=[
-				"Alert"=>"simple",
-				"Title"=>"Datos Invalidos",
-				"Text"=>"La fecha de registro no esta en el rango aceptado",
-				"Type"=>"error"
-			];
-
-				echo json_encode($alert);
-
-				exit();
-		}
-
-		
-
-		$year_registro = date("Y", strtotime($fecha_registro));
-
-		
-				if (!$siExistPerson) {
-				$dataPerson = self::$personController->addPersonControllerr($dataCasosEpidemi);
-				}
-
-					//data completa
-		$dataCasosEpidemi = 
+				$dataCasosEpidemiClean = 
 		["id_nacionalidad"=>$id_nacionalidad,
 		"doc_identidad"=>$doc_identidad,
 		"catalog_key_cie10"=>$catalog_key_cie10,
 		"id_parroquia"=>$id_parroquia,
 		"direccion"=>$direccion,
-		"fecha_registro"=>$fecha_registro,
-		"year_registro"=>$year_registro,
 		"telefono"=>$telefono,
-		"siExistPerson"=>$siExistPerson
+		"fecha_registro"=>$fecha_registro,
+		"siExistPerson"=>$siExistPerson,
+		"is_hospital"=>$is_hospital,
+		"id_atrib_especial"=>$id_atrib_especial,
+		"indicatorEpidemiCaseError"=>'',
+		"indicatorPersonError"=>''
 		];
 
-				if (isset($dataPerson)) {
+		if (isset($dataCasosEpidemi['fecha_nacimiento'])) {
 
-				$dataCasosEpidemi = array_merge($dataCasosEpidemi,$dataPerson);
-			}
+		$dataCasosEpidemiClean["fecha_nacimiento"]= mainModel::cleanStringSQL($dataCasosEpidemi['fecha_nacimiento']);
+				}
+
+	self::$personController->msgValidExistPersonForRegister($dataCasosEpidemiClean);
+
+	self::msgsValidDataBasicCaseEpidemi($dataCasosEpidemiClean);
+
+	self::msgValidNotRepeatCasoEpidemi($dataCasosEpidemiClean);
+
+				if (!$siExistPerson) {
+				$dataPerson = self::$personController->addPersonControllerr($dataCasosEpidemi);
+
+				$dataCasosEpidemi = array_merge($dataCasosEpidemi,$dataCasosEpidemiClean);
+
+				}
+
+		$year_registro = date("Y", strtotime($fecha_registro));
+
+
+		$dataCasosEpidemi["year_registro"] = $year_registro;
 	
 
 			// data para registro de bitcora
@@ -295,6 +160,10 @@
 
 		 $doc_identidad = mainModel::cleanStringSQL($dataCasosEpidemi['doc_identidad_update']);
 
+		 $doc_identidad = self::ClearUserSeparatedCharacters($doc_identidad);		
+
+		 $doc_identidad = ltrim($doc_identidad, '0');
+
 		$id_genero = mainModel::cleanStringSQL($dataCasosEpidemi['id_genero']);
 
 		 $id_nacionalidad = mainModel::cleanStringSQL($dataCasosEpidemi['id_nacionalidad_update']);
@@ -310,6 +179,26 @@
 
 		 $fecha_registro = mainModel::cleanStringSQL($dataCasosEpidemi['fecha_registro']);
 
+		 // renombramos la el nombre de la posicion para eviatr conflictos con updatePersonaController
+		 // 
+
+		 $indicatorEpidemiCaseError = " <br> En id Caso Epidemiologico (".$id_caso_epidemi.")";
+
+		 $dataCasosEpidemi['indicatorPersonError'] = $indicatorEpidemiCaseError;
+
+		 $dataCasosEpidemi['id_nacionalidad'] = $id_nacionalidad;
+
+		 $dataCasosEpidemi['doc_identidad'] = $doc_identidad;
+
+		 $fecha_registro = mainModel::cleanStringSQL($dataCasosEpidemi['fecha_registro']);
+
+		$is_hospital = false;
+	if(isset($dataCasosEpidemi['is_hospital'])){
+		$is_hospital = true;
+
+		}
+
+		 $id_atrib_especial = mainModel::cleanStringSQL($dataCasosEpidemi['id_atrib_especial']);
 
 		if (mainModel::isDataEmtpy(
 		 $id_nacionalidad,
@@ -335,155 +224,10 @@
 
 		}
 
-		
-		// para comprobar el  caso cei-10 no tenga un sexo asignado
-		
-		$queryGetLsexCIE10 = mainModel::connectDB()->query("SELECT lsex FROM data_cie10 where catalog_key = '$catalog_key_cie10' LIMIT 1");
 
-
-		$sexAssignedToCIE10 = $queryGetLsexCIE10->fetchColumn();
-		
-		// quiere decir que no tiene un sexo asginado, asi que lo ignoramos
-		if (!$sexAssignedToCIE10 == "NO") {
-			if ($sexAssignedToCIE10 =! $id_genero) {
-
-			$alert=[
-			"Alert"=>"simple",
-			"Title"=>"Datos Invalidos",
-			"Text"=>"El Evento CIE 10 no se puede ser asignado a este Genero",
-			"Type"=>"error"
-				];	
-		
-				echo json_encode($alert);
-
-				exit();
-			}
-
-			}
-
-
-		   if(strlen($direccion)<5){
-
-			$alert=[
-			"Alert"=>"simple",
-			"Title"=>"Datos Invalidos",
-			"Text"=>"La direccion deben poseer mas de 5 caracteres",
-			"Type"=>"error"
-				];	
-		
-				echo json_encode($alert);
-
-				exit();
-			}
-
-		if(!mainModel::isValidNroTlf($telefono)){
-			
-			$alert=[
-				"Alert"=>"simple",
-				"Title"=>"Datos Invalidos",
-				"Text"=>"El Nro de Telefono es invalido",
-				"Type"=>"error"
-			];
-
-				echo json_encode($alert);
-
-				exit();
-			}
-
-
-			if (!mainModel::checkDate($fecha_registro)){
-			$alert=[
-				"Alert"=>"simple",
-				"Title"=>"Datos Invalidos",
-				"Text"=>"La Fecha de Registro es invalido",
-				"Type"=>"error"
-			];
-
-				echo json_encode($alert);
-
-				exit();
-		}
-
-			if (!self::isValidDateRegistRangeAllowedCaseEpidemi($fecha_registro)){
-			$alert=[
-				"Alert"=>"simple",
-				"Title"=>"Datos Invalidos",
-				"Text"=>"La fecha de registro no esta en el rango aceptado",
-				"Type"=>"error"
-			];
-
-				echo json_encode($alert);
-
-				exit();
-		}
-
-	
-			$queryIsExistCaseCIE10 = mainModel::connectDB()->query("SELECT catalog_key FROM data_cie10 WHERE catalog_key = '$catalog_key_cie10' LIMIT 1");
-
-			if(!$queryIsExistCaseCIE10->rowCount()){
-			$alert=[
-				"Alert"=>"simple",
-				"Title"=>"Datos Invalidos",
-				"Text"=>"La clave del catalogo CIE-10 no existe",
-				"Type"=>"error"
-			];
-
-				echo json_encode($alert);
-
-				exit();
-			}
-
-
-		// para comprobar el  caso cei-10 no tenga un sexo asignado
-		
-		$queryGetLsexCIE10 = mainModel::connectDB()->query("SELECT lsex FROM data_cie10 where catalog_key = '$catalog_key_cie10' LIMIT 1");
-
-		// si no existe id_genero en el form por que la persona ya esta registrada
-		$sexAssignedToCIE10 = $queryGetLsexCIE10->fetchColumn();
-		
-		if (!isset($dataCasosEpidemi['id_genero'])) {
-
-		$queryGetIdGeneroPerson = mainModel::connectDB()->query("SELECT id_genero FROM personas WHERE id_nacionalidad = '$id_nacionalidad' AND doc_identidad = '$doc_identidad'");
-
-		$id_genero = $queryGetIdGeneroPerson->fetchColumn();
-
-		}else{
-			$id_genero = mainModel::cleanStringSQL($dataCasosEpidemi['id_genero']);
-		}
-
-		// quiere decir que no tiene un sexo asginado, asi que lo ignoramos
-		if ($sexAssignedToCIE10 != "NO") {
-			if ($sexAssignedToCIE10 != $id_genero) {
-
-			$alert=[
-			"Alert"=>"simple",
-			"Title"=>"Datos Invalidos",
-			"Text"=>"El Evento CIE 10 no se puede ser asignado a este Genero",
-			"Type"=>"error"
-				];	
-		
-				echo json_encode($alert);
-
-				exit();
-			}
-
-			}
-
-		// elminaremos los sufijos _update para evitar confllictos
-		$dataCasosEpidemi['doc_identidad'] =  $dataCasosEpidemi['doc_identidad_update'];
-
-		$dataCasosEpidemi['id_nacionalidad'] =  $dataCasosEpidemi['id_nacionalidad_update'];
-
-
-			//data completa
-		$year_registro = date("Y", strtotime($fecha_registro));
-
-
-		$dataPerson = self::$personController->updatePersonaController($dataCasosEpidemi);
-
-
-		$dataCasosEpidemi = 
+		$dataCasosEpidemiClean = 
 		[
+		'indicatorEpidemiCaseError'=>'',
 		'id_caso_epidemi'=>$id_caso_epidemi,
 		"id_nacionalidad"=>$id_nacionalidad,
 		"doc_identidad"=>$doc_identidad,
@@ -491,32 +235,52 @@
 		"id_parroquia"=>$id_parroquia,
 		"direccion"=>$direccion,
 		"fecha_registro"=>$fecha_registro,
-		"year_registro"=>$year_registro,
 		"telefono"=>$telefono,
+		"is_hospital"=>$is_hospital,
+		"id_atrib_especial"=>$id_atrib_especial
+		
 		];
-			
 
 
-		$dataCasosEpidemi = array_merge($dataCasosEpidemi,$dataPerson);
+		if (isset($dataCasosEpidemi['fecha_nacimiento'])) {
+
+		$dataCasosEpidemiClean["fecha_nacimiento"]= mainModel::cleanStringSQL($dataCasosEpidemi['fecha_nacimiento']);
+				}
+
+
+	self::msgsValidDataBasicCaseEpidemi($dataCasosEpidemiClean);
+	self::msgValidNotRepeatCasoEpidemi($dataCasosEpidemiClean);
+
+
+		$dataPerson = self::$personController->updatePersonaController($dataCasosEpidemi);
+
+		$dataCasosEpidemi = array_merge($dataCasosEpidemiClean,$dataPerson);
+
+
+		$year_registro = date("Y", strtotime($fecha_registro));
+
+		$dataCasosEpidemi["year_registro"] = $year_registro;
+
 
 		// compararemos los datos del formulario con la base de datos
 		
  		  $columnsTableToCompare = [
-		'id_caso_epidemi',
-		"id_nacionalidad",
-		"doc_identidad",
 		"catalog_key_cie10",
 		"id_parroquia",
 		"direccion",
 		"fecha_registro",
-		"year_registro",
-		"telefono"];
+		"telefono",
+		"is_hospital",
+		"id_atrib_especial"];
 
  		 $fieldsForFilter = array('id_caso_epidemi' => $id_caso_epidemi);
 
 		$queryToGetDataCasoEpidemi = self::getCasosEpidemiController($columnsTableToCompare,$fieldsForFilter);
 
 		$ifCasosEpidemiDataUpdateIsSameDatabase = mainModel::isFieldsEqualToThoseInTheDatabase($queryToGetDataCasoEpidemi,$dataCasosEpidemi);
+
+		//var_dump($ifCasosEpidemiDataUpdateIsSameDatabase,
+		//	$dataPerson['ifUpdatePerson']);
 
 			if ($ifCasosEpidemiDataUpdateIsSameDatabase && !$dataPerson['ifUpdatePerson']) {
 
@@ -532,8 +296,6 @@
 				exit();
 
 			}
-
-
 
 			// data para registro de bitcora
 
@@ -557,7 +319,9 @@
 		"bitacora_hora"=>$currentHour,
 		"id_tipo_operacion"=>'2', // tipo actualizacion
 		"fecha_registro"=>$fecha_registro,
-		"catalog_key_cie10"=>$catalog_key_cie10];			
+		"catalog_key_cie10"=>$catalog_key_cie10,
+		"is_hospital"=>$is_hospital,
+		"id_atrib_especial"=>$id_atrib_especial];			
 
 		$dataCasosEpidemi = array_merge($dataCasosEpidemi,$dataCasosEpidemiBitacora);
 
@@ -647,8 +411,12 @@
 
 		$fecha_registro = mainModel::cleanStringSQL($dataCasosEpidemi['fecha_registro']);
 
+		$id_atrib_especial = mainModel::cleanStringSQL($dataCasosEpidemi['id_atrib_especial']);
+
+		$is_hospital = mainModel::cleanStringSQL($dataCasosEpidemi['is_hospital']);
+
 		 			if (mainModel::isDataEmtpy(
-						 $id_caso_epidemi,$doc_identidad,$id_nacionalidad,$catalog_key_cie10,$fecha_registro)) {
+						 $id_caso_epidemi,$doc_identidad,$id_nacionalidad,$catalog_key_cie10,$fecha_registro,$is_hospital) || mainModel::isDataEmtpyPermitedZero($id_atrib_especial)) {
 			$alert=[
 				"Alert"=>"simple",
 				"Title"=>"Datos Vacios",
@@ -683,7 +451,7 @@ if (!isset($dataCasosEpidemi['confirmDelete'])) {
 						"Alert"=>"confirmation",
 						"Text"=>"Esta persona no presenta otro  caso epidemiologico ni posee algun usuario  por lo que se eliminara del sistema completamente",
 						"Url"=>"".SERVERURL."ajax/casosEpidemiAjax.php",
-						"Data"=>"doc_identidad=$doc_identidad&id_caso_epidemi=$id_caso_epidemi&id_nacionalidad=$id_nacionalidad&fecha_registro=$fecha_registro&catalog_key_cie10=$catalog_key_cie10&operationType=delete&confirmDelete=true",
+						"Data"=>"doc_identidad=$doc_identidad&id_caso_epidemi=$id_caso_epidemi&id_nacionalidad=$id_nacionalidad&fecha_registro=$fecha_registro&catalog_key_cie10=$catalog_key_cie10&is_hospital=$is_hospital&id_atrib_especial=$id_atrib_especial&operationType=delete&confirmDelete=true",
 						"Method"=>"POST"];
 					
 					echo json_encode($alert);
@@ -694,9 +462,10 @@ if (!isset($dataCasosEpidemi['confirmDelete'])) {
 
 		$dataCasosEpidemi = ['id_caso_epidemi'=>$id_caso_epidemi,
 		'doc_identidad' => $doc_identidad,
-
 		'id_nacionalidad' => $id_nacionalidad,
-		'fecha_registro' => $fecha_registro];
+		'fecha_registro' => $fecha_registro,
+		'id_atrib_especial' => $id_atrib_especial,
+		'is_hospital' => $is_hospital];
 
 		if (isset($dataCasosEpidemi['confirmDelete'])) {
 		
@@ -746,28 +515,34 @@ if (!isset($dataCasosEpidemi['confirmDelete'])) {
   public static function getDataTablesCasosEpidemiController() {
   $columnsTable = array(
      'row_number',
-    'id_caso_epidemi',
-      'id_genero',
-      'descripcion_genero_caso',
-           'id_nacionalidad_caso',
+      'id_caso_epidemi',
+      	'id_genero',
+      	'descripcion_genero_caso',
+      'id_nacionalidad_caso',
       'doc_identidad_caso',
       'doc_identidad_caso_complete',
-          'fecha_nacimiento',
-          'edad',          
-    'clave_capitulo_cie10',
-    'catalog_key_cie10',
-    'nombre_cie10',
+    'fecha_nacimiento',
+      'edad',          
     'nombres',
     'apellidos',
+     'clave_capitulo_cie10',
+     'capitulo_cie10',
+    'catalog_key_cie10',
+    'nombre_cie10',
+    'id_atrib_especial',  
+    'atributo_especial',
+    'notific_inmediata',  
+    'is_hospital',
+    'hospitalizado',
+    'fecha_registro',
     'id_parroquia',
     'parroquia',
     'direccion',
     'telefono',
-    'fecha_registro',
     'usuario_alias',
     'id_nacionalidad_usuario',
     'doc_identidad_usuario',
-     'doc_identidad_usuario_complete',
+    'doc_identidad_usuario_complete',
      'bitacora_year',
      'bitacora_fecha',
      'bitacora_hora' );
@@ -786,8 +561,14 @@ array(
     'nombres',
     'apellidos',
      'clave_capitulo_cie10',
+     'capitulo_cie10',
     'catalog_key_cie10',
     'nombre_cie10',
+    'id_atrib_especial',  
+    'atributo_especial',  
+    'notific_inmediata',  
+    'is_hospital',
+    'hospitalizado',
     'fecha_registro',
     'id_parroquia',
     'parroquia',
@@ -801,6 +582,7 @@ array(
      'bitacora_fecha',
      'bitacora_hora' );
 
+// is_hospital se mostrara como id_hospital en el fronted para menos confusion del usuario
 
   try {
 
@@ -828,7 +610,7 @@ $queryifExistView = mainModel::connectDB()->query("SELECT where EXISTS  ( SELECT
         $sOrder
         $sLimit
     ";
-
+//var_dump($sQueryForPersonalizedPrint);
 
     $rResult = mainModel::connectDB()->query($sQueryForPersonalizedPrint);
 
@@ -894,7 +676,19 @@ $queryifExistView = mainModel::connectDB()->query("SELECT where EXISTS  ( SELECT
 
                 $dataFields['catalog_key_cie10']=$aRow['catalog_key_cie10'];
 
+                $dataFields['id_atrib_especial']=$aRow['id_atrib_especial'];
+
+                $dataFields['atributo_especial']=$aRow['atributo_especial'];
+
+                $dataFields['notific_inmediata']=$aRow['notific_inmediata'];
+
+                $dataFields['is_hospital']=$aRow['is_hospital'];
+
+                $dataFields['hospitalizado']=$aRow['hospitalizado'];
+
                 $dataFields['clave_capitulo_cie10']=$aRow['clave_capitulo_cie10'];
+
+                $dataFields['capitulo_cie10']=$aRow['capitulo_cie10'];
 
                 $dataFields['nombre_cie10']=$aRow['nombre_cie10'];
 
@@ -1018,17 +812,22 @@ $dataForDataTables = array();
 
 			}
 
+				// el total de todos los sexos por edad
+			    $dataRow[] = array(parent::getNroCasesEpidemiForEpiModel($agrupacion_epi["orden"], $startDateRange, $endDateRange,'',$rangeAgesStart[$idAgeRange],$rangeAgesEnd[$idAgeRange]));
+
 
 		}
 
 		// rango total de edades y genero
 
-         $dataRow[] = parent::getNroCasesEpidemiForEpiModel($agrupacion_epi["orden"], $startDateRange, $endDateRange,'','','');	
+         $dataRow[] = parent::getNroCasesEpidemiForEpiModel($agrupacion_epi["orden"], $startDateRange, $endDateRange,'','','','');	
 	
+
 		$dataForDataTables[] = $dataRow;
 
-
 	}	
+
+
 		$iFilteredTotal = count($dataForDataTables);
 
 		$iTotal = $iFilteredTotal;
@@ -1120,32 +919,42 @@ $nombres = mainModel::cleanStringSQL($dataForQuery[$indiceFila][9]);
 
 $apellidos = mainModel::cleanStringSQL($dataForQuery[$indiceFila][10]);
 
-$catalog_key_cie10 = mainModel::cleanStringSQL($dataForQuery[$indiceFila][12]);
 
-$fecha_registro = mainModel::cleanStringSQL($dataForQuery[$indiceFila][14]);
+$catalog_key_cie10 = mainModel::cleanStringSQL($dataForQuery[$indiceFila][13]);
 
-$id_parroquia = mainModel::cleanStringSQL($dataForQuery[$indiceFila][15]);
+$id_atrib_especial = mainModel::cleanStringSQL($dataForQuery[$indiceFila][15]);
 
-$direccion = mainModel::cleanStringSQL($dataForQuery[$indiceFila][17]);
+$is_hospital = mainModel::cleanStringSQL($dataForQuery[$indiceFila][18]);
+
+$fecha_registro = mainModel::cleanStringSQL($dataForQuery[$indiceFila][20]);
+
+$id_parroquia = mainModel::cleanStringSQL($dataForQuery[$indiceFila][21]);
+
+$direccion = mainModel::cleanStringSQL($dataForQuery[$indiceFila][23]);
 
 
-$telefono = mainModel::cleanStringSQL($dataForQuery[$indiceFila][18]);
-
-
-$usuario = mainModel::cleanStringSQL($dataForQuery[$indiceFila][19]);
-
-$id_nacionalidad_usuario = mainModel::cleanStringSQL($dataForQuery[$indiceFila][20]);
-
-$doc_identidad_usuario = mainModel::cleanStringSQL($dataForQuery[$indiceFila][21]);
-
-$bitacora_year = mainModel::cleanStringSQL($dataForQuery[$indiceFila][23]);
-
-$bitacora_fecha = mainModel::cleanStringSQL($dataForQuery[$indiceFila][24]);
-
-$bitacora_hora = mainModel::cleanStringSQL($dataForQuery[$indiceFila][25]);		
+$telefono = mainModel::cleanStringSQL($dataForQuery[$indiceFila][24]);
 
 		
 		 $indicatorEpidemiCaseError = " <br> En id Caso Epidemiologico (".$id_caso_epidemi.")";
+
+
+		$dataCasosEpidemi=[
+		'indicatorPersonError'=>$indicatorEpidemiCaseError,
+		'indicatorEpidemiCaseError'=>$indicatorEpidemiCaseError,
+		'doc_identidad'=>$doc_identidad,
+		"nombres"=>$nombres,
+		"apellidos"=>$apellidos,
+		"fecha_nacimiento"=>$fecha_nacimiento,
+		"id_nacionalidad"=>$id_nacionalidad,
+		"id_genero"=>$id_genero,
+		"catalog_key_cie10"=>$catalog_key_cie10,
+		"is_hospital"=>$is_hospital,
+		"id_atrib_especial"=>$id_atrib_especial,
+		"id_parroquia"=>$id_parroquia,
+		"direccion"=>$direccion,
+		"fecha_registro"=>$fecha_registro,
+		"telefono"=>$telefono];
 
 		if (mainModel::isDataEmtpy(
 			    $id_caso_epidemi,
@@ -1156,10 +965,11 @@ $bitacora_hora = mainModel::cleanStringSQL($dataForQuery[$indiceFila][25]);
 			    $nombres,
 			   	$apellidos,
 				$catalog_key_cie10,
+				$is_hospital,
 				$fecha_registro,
 				$id_parroquia,
 				$direccion,
-			   	$telefono)){
+			   	$telefono) || mainModel::isDataEmtpyPermitedZero($id_atrib_especial)){
 
 				$alert=[
 					"Alert"=>"simple",
@@ -1174,112 +984,21 @@ $bitacora_hora = mainModel::cleanStringSQL($dataForQuery[$indiceFila][25]);
 
 		}
 
-		   if(strlen($direccion)<5){
+
+	self::msgsValidDataBasicCaseEpidemi($dataCasosEpidemi);
+
+		   if($is_hospital !== "false" && $is_hospital !== "true"){
 
 			$alert=[
 			"Alert"=>"simple",
 			"Title"=>"Datos Invalidos",
-			"Text"=>"La direccion deben poseer mas de 5 caracteres".$indicatorEpidemiCaseError,
+			"Text"=>"El atribtuto is hospital solo debe ser un true o un false ".$indicatorEpidemiCaseError,
 			"Type"=>"error"
 				];	
 		
 				echo json_encode($alert);
 
 				exit();
-			}
-
-		if(!mainModel::isValidNroTlf($telefono)){
-			
-			$alert=[
-				"Alert"=>"simple",
-				"Title"=>"Datos Invalidos",
-				"Text"=>"El Nro de Telefono es invalido".$indicatorEpidemiCaseError,
-				"Type"=>"error"
-			];
-
-				echo json_encode($alert);
-
-				exit();
-			}
-
-
-			if (!mainModel::checkDate($fecha_registro)){
-			$alert=[
-				"Alert"=>"simple",
-				"Title"=>"Datos Invalidos",
-				"Text"=>"La Fecha de Registro es invalida".$indicatorEpidemiCaseError,
-				"Type"=>"error"
-			];
-
-				echo json_encode($alert);
-
-				exit();
-		}
-
-			if (!self::isValidDateRegistRangeAllowedCaseEpidemi($fecha_registro)){
-			$alert=[
-				"Alert"=>"simple",
-				"Title"=>"Datos Invalidos",
-				"Text"=>"La fecha de registro no esta en el rango aceptado".$indicatorEpidemiCaseError,
-				"Type"=>"error"
-			];
-
-				echo json_encode($alert);
-
-				exit();
-		}
-
-
-		$queryIsExistCaseCIE10 = $DB_transacc->query("SELECT catalog_key FROM data_cie10 WHERE catalog_key = 
-			'$catalog_key_cie10' LIMIT 1");
-
-			if(!$queryIsExistCaseCIE10->rowCount()){
-			$alert=[
-				"Alert"=>"simple",
-				"Title"=>"Datos Invalidos",
-				"Text"=>"La clave del catalogo CIE-10 no existe".$indicatorEpidemiCaseError,
-				"Type"=>"error"
-			];
-
-				echo json_encode($alert);
-
-				exit();
-			}
-
-
-		// para comprobar el  caso cei-10 no tenga un sexo asignado
-		
-		$queryGetLsexCIE10 = mainModel::connectDB()->query("SELECT lsex FROM data_cie10 where catalog_key = '$catalog_key_cie10' LIMIT 1");
-
-		// si no existe id_genero en el form por que la persona ya esta registrada
-		$sexAssignedToCIE10 = $queryGetLsexCIE10->fetchColumn();
-		
-		if (!isset($dataCasosEpidemi['id_genero'])) {
-
-		$queryGetIdGeneroPerson = mainModel::connectDB()->query("SELECT id_genero FROM personas WHERE id_nacionalidad = '$id_nacionalidad' AND doc_identidad = '$doc_identidad'");
-
-		$id_genero = $queryGetIdGeneroPerson->fetchColumn();
-
-		}else{
-			$id_genero = mainModel::cleanStringSQL($dataCasosEpidemi['id_genero']);
-		}
-
-		// quiere decir que no tiene un sexo asginado, asi que lo ignoramos
-		if ($sexAssignedToCIE10 != "NO") {
-			if ($sexAssignedToCIE10 != $id_genero) {
-
-			$alert=[
-			"Alert"=>"simple",
-			"Title"=>"Datos Invalidos",
-			"Text"=>"El Evento CIE 10 no se puede ser asignado a este Genero".$indicatorEpidemiCaseError,
-			"Type"=>"error"
-				];	
-		
-				echo json_encode($alert);
-
-				exit();
-			}
-
 			}
 
 
@@ -1293,29 +1012,19 @@ $bitacora_hora = mainModel::cleanStringSQL($dataForQuery[$indiceFila][25]);
 
 		$fecha_registro_values = explode("-", $fecha_registro);
 
-		$dataCasosEpidemi=[
+		$dataCasosEpidemiBitacora=[
 		'indicatorPersonError'=>$indicatorEpidemiCaseError,
 		'operationImportCaseEpidemi'=>true,
-		'doc_identidad'=>$doc_identidad,
-		"nombres"=>$nombres,
-		"apellidos"=>$apellidos,
-		"fecha_nacimiento"=>$fecha_nacimiento,
-		"id_nacionalidad"=>$id_nacionalidad,
-		"id_genero"=>$id_genero,
-		"catalog_key_cie10"=>$catalog_key_cie10,
-		"id_parroquia"=>$id_parroquia,
-		"direccion"=>$direccion,
-		"fecha_registro"=>$fecha_registro,
 		"year_registro"=>$fecha_registro_values[0],
-		"telefono"=>$telefono,
 		"id_nacionalidad_usuario"=>$_SESSION['id_nacionalidad'],
 		"doc_identidad_usuario"=>$_SESSION['doc_identidad'],
 		"usuario_alias"=>$_SESSION['aliasUser'],
 		"bitacora_fecha"=>$currentDate,
 		"bitacora_year"=>$currentYear,
-		"bitacora_hora"=>$currentHour,
-];
+		"bitacora_hora"=>$currentHour
+	];
 
+		$dataCasosEpidemi = array_merge($dataCasosEpidemi,$dataCasosEpidemiBitacora);
 
 		$queryIsExistcasosEpidemi = $DB_transacc->query("SELECT id_caso_epidemi FROM casos_epidemi WHERE id_nacionalidad = '$id_nacionalidad' AND doc_identidad = '$doc_identidad' AND catalog_key_cie10 = '$catalog_key_cie10' AND fecha_registro = '$fecha_registro'");
 
@@ -1397,6 +1106,8 @@ ON CONFLICT ON CONSTRAINT casos_epidemi_bitacora_unq_1 DO UPDATE SET
 		 "doc_identidad" => $dataCasosEpidemi['doc_identidad'],
 		 "id_nacionalidad" => $dataCasosEpidemi['id_nacionalidad'],
 		 "catalog_key_cie10" => $dataCasosEpidemi['catalog_key_cie10'],
+		 "id_atrib_especial" => $dataCasosEpidemi['id_atrib_especial'],
+		 "is_hospital" => $dataCasosEpidemi['is_hospital'],		 
 		 "id_parroquia" => $dataCasosEpidemi['id_parroquia'],
 		 "direccion" => $dataCasosEpidemi['direccion'],
 		 "telefono" => $dataCasosEpidemi['telefono'],
@@ -1421,6 +1132,8 @@ ON CONFLICT ON CONSTRAINT casos_epidemi_bitacora_unq_1 DO UPDATE SET
 		 "id_caso_epidemi"=>$dataCasosEpidemi['id_caso_epidemi'],
 		 "fecha_caso_epidemi"=>$dataCasosEpidemi['fecha_registro'],
 		 "catalog_key_cie10"=>$dataCasosEpidemi['catalog_key_cie10'],
+		 "id_atrib_especial" => $dataCasosEpidemi['id_atrib_especial'],
+		 "is_hospital" => $dataCasosEpidemi['is_hospital'],
 		 "id_nacionalidad_caso"=>$dataCasosEpidemi['id_nacionalidad'],
 		 "doc_identidad_caso"=>$dataCasosEpidemi['doc_identidad'],
 		 "id_nacionalidad_usuario"=>$dataCasosEpidemi['id_nacionalidad_usuario'],
@@ -1472,7 +1185,7 @@ if ($countOperations == 0) {
 					$alert=[
 				"cleanInput"=>"true",		
 				"reloadDataTable"=>"true",
-				"Alert"=>"simple",
+				"Alert"=>"clean",
 				"Title"=>"Operacion Exitosa",
 				"Text"=>"Casos Epidemiologicos Importados",
 				"Type"=>"success"
@@ -1487,34 +1200,38 @@ if ($countOperations == 0) {
 	exit();
 
 
-
-/*
-		$dataCasosEpidemi=[
-		'doc_identidad'=>$doc_identidad,
-		"nombres"=>$nombres,
-		"apellidos"=>$apellidos,
-		"fecha_nacimiento"=>$fecha_nacimiento,
-		"id_nacionalidad"=>$id_nacionalidad,
-		"direccion"=>$direccion,
-		"id_genero"=>$id_genero,
-		'id_caso_epidemi'=>$id_caso_epidemi,
-		"catalog_key_cie10"=>$catalog_key_cie10,
-		"id_parroquia"=>$id_parroquia,
-		"direccion"=>$direccion,
-		"fecha_registro"=>$fecha_registro,
-		"telefono"=>$telefono,
-		"id_nacionalidad_usuario"=>$_SESSION['id_nacionalidad'],
-		"doc_identidad_usuario"=>$_SESSION['doc_identidad'],
-		"usuario_alias"=>$_SESSION['aliasUser'],
-		"bitacora_fecha"=>$bitacora_fecha,
-		"bitacora_year"=>$fecha_registro_values[0],
-		"bitacora_hora"=>$bitacora_hora,
-		"fecha_registro"=>$fecha_registro,
-		"catalog_key_cie10"=>$catalog_key_cie10];			
-*/
-var_dump($dataCasosEpidemi);
-
 }
+
+	public static function getEspecialAttributesCIE10($dataCasosEpidemi){
+
+	$catalog_key = mainModel::cleanStringSQL($dataCasosEpidemi['catalog_key']);
+
+
+		$queryGetAttribEspecial = mainModel::connectDB()->prepare(parent::$queryGetAttribEspecial);
+
+		$queryGetAttribEspecial->execute(array(
+		 "catalog_key"=>$dataCasosEpidemi['catalog_key']));		
+		
+		$dataJsonAtribEspecial=[];
+
+		 if (!$queryGetAttribEspecial->rowCount()) {
+			$dataJsonAtribEspecial[] = array('descripcion' =>'Seleccionar Atributo Especial','id_atrib_especial'=>'0');
+
+		echo json_encode($dataJsonAtribEspecial);
+		exit();
+
+		 }
+
+		while($recordsAtribEspecial=$queryGetAttribEspecial->fetch(PDO
+			::FETCH_ASSOC)){ 
+
+			$dataJsonAtribEspecial[] = $recordsAtribEspecial;
+		}
+				
+		echo json_encode($dataJsonAtribEspecial);
+		exit();
+	}
+
 
 
 	 public static function printEpidemiCaseCountController(){
@@ -1567,6 +1284,277 @@ var_dump($dataCasosEpidemi);
 		
 }
 
+//  comprobar que no se repita el caso epidemiologico
+		protected static function msgsValidDataBasicCaseEpidemi($dataCasosEpidemi){
+
+	self::msgValidExistCatalogKeyCIE10($dataCasosEpidemi);
+
+	self::msgValididGenreAssingnEventCIE10($dataCasosEpidemi);
+
+	self::msgValididAgeAssingnEventCIE10($dataCasosEpidemi);
+
+	self::msgValidIdAtribEspecialCIE10($dataCasosEpidemi);
+
+	self::msgValididDateRegisterCaseEpidemi($dataCasosEpidemi);
+
+	self::$personController->msgValidNroTlf($dataCasosEpidemi);
+
+	self::msgValididAdress($dataCasosEpidemi);
+
+		}
+
+	protected static function msgValidNotRepeatCasoEpidemi($dataCasosEpidemi){
+
+	extract($dataCasosEpidemi);
+
+	$sqlForOperationsUpdateCaseEpidemi = '';
+	if (isset($id_caso_epidemi)) {
+		$sqlForOperationsUpdateCaseEpidemi = ' AND id_caso_epidemi != '.$id_caso_epidemi;
+	}
+		
+		$queryIsExistcasosEpidemi = mainModel::connectDB()->query("SELECT id_caso_epidemi FROM casos_epidemi WHERE id_nacionalidad = '$id_nacionalidad' AND doc_identidad = '$doc_identidad' AND catalog_key_cie10 = '$catalog_key_cie10' AND fecha_registro = '$fecha_registro' ".$sqlForOperationsUpdateCaseEpidemi);
+
+			if($queryIsExistcasosEpidemi->rowCount()){
+			$alert=[
+				"Alert"=>"simple",
+				"Title"=>"Datos Duplicados",
+				"Text"=>"Ya esta registrado otro Caso Epidemiologico con estos parametros, (Documento de identidad, Fecha de registro y Caso CIE-10)".$indicatorEpidemiCaseError,
+				"Type"=>"error"
+			];
+
+				echo json_encode($alert);
+
+				exit();
+			}
+
+		}
+
+
+	protected static function msgValidExistCatalogKeyCIE10($dataCasosEpidemi){
+			
+			extract($dataCasosEpidemi);
+
+		$queryIsExistCasesCIE10 = mainModel::connectDB()->query("SELECT catalog_key FROM data_cie10 WHERE catalog_key = '$catalog_key_cie10' LIMIT 1");
+
+			if(!$queryIsExistCasesCIE10->rowCount()){
+			$alert=[
+				"Alert"=>"simple",
+				"Title"=>"Datos Invalidos",
+				"Text"=>"La clave del catalogo CIE-10 no existe".$indicatorEpidemiCaseError,
+				"Type"=>"error"
+			];
+
+				echo json_encode($alert);
+
+				exit();
+			}
+
+			}
+
+		// para comprobar el  caso cei-10 no tenga un sexo asignado obligatorio
+
+
+	protected static function msgValididGenreAssingnEventCIE10($dataCasosEpidemi){
+
+					extract($dataCasosEpidemi);
+
+		$queryGetLsexCIE10 = mainModel::connectDB()->query("SELECT lsex FROM data_cie10 where catalog_key = '$catalog_key_cie10' LIMIT 1");
+
+		// si no existe id_genero en el form por que la persona ya esta registrada
+		$sexAssignedToCIE10 = $queryGetLsexCIE10->fetchColumn();
+		
+		if (!isset($id_genero)) {
+
+		$queryGetIdGeneroPerson = mainModel::connectDB()->query("SELECT id_genero FROM personas WHERE id_nacionalidad = '$id_nacionalidad' AND doc_identidad = '$doc_identidad'");
+
+		$id_genero = $queryGetIdGeneroPerson->fetchColumn();
+
+		}else{
+			$id_genero = mainModel::cleanStringSQL($id_genero);
+		}
+
+		// quiere decir que no tiene un sexo asginado, si es asi lo ignoramos
+		if ($sexAssignedToCIE10 != "NO") {
+			if ($sexAssignedToCIE10 != $id_genero) {
+
+			$alert=[
+			"Alert"=>"simple",
+			"Title"=>"Datos Invalidos",
+			"Text"=>"Este Evento CIE 10 no permite este Genero".$indicatorEpidemiCaseError,
+			"Type"=>"error"
+				];	
+		
+				echo json_encode($alert);
+
+				exit();
+			}
+
+			}
+
+			}
+
+
+	protected static function msgValididAgeAssingnEventCIE10($dataCasosEpidemi){
+
+					extract($dataCasosEpidemi);
+
+		$queryGetAgeCIE10 = mainModel::connectDB()->query("SELECT linf, lsup FROM data_cie10 where catalog_key = '$catalog_key_cie10' LIMIT 1");
+		
+		    $row = $queryGetAgeCIE10->fetch(PDO::FETCH_ASSOC);
+
+		    $infAge=intval(preg_replace('/[^0-9]+/', '', $row["linf"]), 10);;
+		    $supAge=intval(preg_replace('/[^0-9]+/', '', $row["lsup"]), 10);;
+
+		if ($infAge != "NO" || $supAge != "NO") {
+
+		if (!isset($fecha_nacimiento)) {
+
+		$queryGetIdGeneroPerson = mainModel::connectDB()->query("SELECT date_part('year',age('$fecha_registro', fecha_nacimiento))::int as edad FROM personas WHERE id_nacionalidad = '$id_nacionalidad' AND doc_identidad = '$doc_identidad'");
+
+		$ageCaseEpidemi = $queryGetIdGeneroPerson->fetchColumn();
+
+		}else{
+			$fecha_nacimiento = mainModel::cleanStringSQL($fecha_nacimiento);
+
+		$queryGetIdGeneroPerson = mainModel::connectDB()->query("SELECT date_part('year',age('$fecha_registro', '$fecha_nacimiento'))::int as edad");
+
+		$ageCaseEpidemi = $queryGetIdGeneroPerson->fetchColumn();
+
+		}
+
+			if ($ageCaseEpidemi < $infAge  || $ageCaseEpidemi > $supAge) {
+
+			$alert=[
+			"Alert"=>"simple",
+			"Title"=>"Datos Invalidos",
+			"Text"=>"Este Evento CIE 10 no permite esta edad, Revise su rango de edad".$indicatorEpidemiCaseError,
+			"Type"=>"error"
+				];	
+		
+				echo json_encode($alert);
+
+				exit();
+			}
+
+			}
+		}
+
+
+
+	protected static function msgValididAdress($dataCasosEpidemi){
+
+
+		   if(strlen($dataCasosEpidemi['direccion'])<5){
+
+			$alert=[
+			"Alert"=>"simple",
+			"Title"=>"Datos Invalidos",
+			"Text"=>"La direccion deben poseer mas de 5 caracteres".$dataCasosEpidemi['indicatorEpidemiCaseError'],
+			"Type"=>"error"
+				];	
+		
+				echo json_encode($alert);
+
+				exit();
+			}
+
+			}
+
+	protected static function msgValidIdAtribEspecialCIE10($dataCasosEpidemi){
+
+		$id_atrib_especial = intval($dataCasosEpidemi['id_atrib_especial']);
+
+		if (!is_int($id_atrib_especial) || $id_atrib_especial < 0){
+
+			$alert=[
+			"Alert"=>"simple",
+			"Title"=>"Datos Invalidos",
+			"Text"=>"El id Atributo Especial es Invalido".$dataCasosEpidemi['indicatorEpidemiCaseError'],
+			"Type"=>"error"
+				];	
+		
+				echo json_encode($alert);
+
+				exit();
+			}
+
+
+		$queryIdAtribEspecialCIE10 = mainModel::connectDB()->query("SELECT id_atrib_especial FROM atribs_especiales_cie10 WHERE  id_atrib_especial =
+			".$id_atrib_especial);
+
+		if (!$queryIdAtribEspecialCIE10->rowCount()){
+
+			$alert=[
+			"Alert"=>"simple",
+			"Title"=>"Datos Invalidos",
+			"Text"=>"El id Atributo Especial no existe".$dataCasosEpidemi['indicatorEpidemiCaseError'],
+			"Type"=>"error"
+				];	
+		
+				echo json_encode($alert);
+
+				exit();
+			}
+
+			// el atribtuto especial 0 (es ninguno) asi que  no  es necesario verificar que si es valido para el evento CIE 10
+			
+
+			if($id_atrib_especial ==! 0) {
+
+//				var_dump($dataCasosEpidemi['catalog_key_cie10']);
+		$queryGetAttribEspecial = mainModel::connectDB()->prepare(parent::$queryGetAttribEspecial);
+
+		$queryGetAttribEspecial->execute(array(
+		 "catalog_key"=>$dataCasosEpidemi['catalog_key_cie10']));
+
+
+		if (!$queryGetAttribEspecial->rowCount()){
+
+			$alert=[
+			"Alert"=>"simple",
+			"Title"=>"Datos Invalidos",
+			"Text"=>"El id Atributo Especial No esta Disponible para este Evento CIE 10 ".$dataCasosEpidemi['indicatorEpidemiCaseError'],
+			"Type"=>"error"
+				];	
+		
+				echo json_encode($alert);
+
+				exit();
+			}
+
+			}
+
+			}
+
+	protected static function msgValididDateRegisterCaseEpidemi($dataCasosEpidemi){
+
+			if (!mainModel::checkDate($dataCasosEpidemi['fecha_registro'])){
+			$alert=[
+				"Alert"=>"simple",
+				"Title"=>"Datos Invalidos",
+				"Text"=>"La Fecha de Registro es invalido",
+				"Type"=>"error"
+			];
+
+				echo json_encode($alert);
+
+				exit();
+		}
+
+			if (!self::isValidDateRegistRangeAllowedCaseEpidemi($dataCasosEpidemi['fecha_registro'])){
+			$alert=[
+				"Alert"=>"simple",
+				"Title"=>"Datos Invalidos",
+				"Text"=>"La fecha de registro no esta en el rango aceptado",
+				"Type"=>"error"
+			];
+
+				echo json_encode($alert);
+
+				exit();
+		}
+
+}
 
 	public function getFirstDateRecordscasosEpidemiController(){
 
@@ -1597,7 +1585,7 @@ var_dump($dataCasosEpidemi);
 
 		}
 
-	public function isValidDateRegistRangeAllowedCaseEpidemi($fecha_registro){
+	public static function isValidDateRegistRangeAllowedCaseEpidemi($fecha_registro){
 
 
         $currentDate = date("d-m-Y");
