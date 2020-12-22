@@ -1,16 +1,8 @@
 
 <?php 
 
+$resultado = intval(preg_replace('/[^0-9]+/', '', '000D'), 10); 
 
-if ($loginController->isDataEmtpyPermitedZero('    ','0','colera')) {
-			$alert=[
-				"Alert"=>"simple",
-				"Title"=>"Campos Vacios",
-				"Text"=>"Todos los datos de los eventos CIE-10 son obligatorios ",
-				"Type"=>"error"
-			];
+echo $resultado;
 
-				echo json_encode($alert);
-}
-//var_dump($loginController->isDataEmtpyPermitedZero(0));
  ?>

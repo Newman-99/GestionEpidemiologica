@@ -67,11 +67,10 @@
             <option  value='20'>XX CAUSAS EXTERNAS DE MORBILIDAD Y MORTALIDAD</option>
 
             <option  value='21'>XXI FACTORES QUE INFLUYEN EN EL ESTADO DE SALUD Y CONTACTO CON LOS SERVICIOS DE SALUD</option>
-            <option  value='N/A'>N/A</option>
 
-            <option  value='NO'>NO</option>
+            <option  value='NO'>OTRAS CAUSAS DE CONSULTA</option>
 
-            <option value="">Todos</option>
+            <option value="">TODOS</option>
         </select>
             <!-- Final form to limit query-->
 <br>

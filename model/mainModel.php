@@ -580,7 +580,7 @@ protected static function deleteBitacora($usuario_alias){
 		}
 
 	
-// Comrpueba que un conjuntos de campos enviados tienen los mismo valores a los registrados en la base de datos
+// Comrpueba que un conjuntos de campos enviados comparar tienen los mismo valores a los registrados en la base de datos
 
 protected static function isFieldsEqualToThoseInTheDatabase($queryToGet,$fieldstoCompare){
 
@@ -590,21 +590,22 @@ protected static function isFieldsEqualToThoseInTheDatabase($queryToGet,$fieldst
 
  		$matchCounterDatabaseFields = 0;
 		 
-		 $matchCounterFieldsToCompare = 0;
+		 $counterFieldsToCompare = 0;
 
  		foreach ($records as $databaseKey => $databaseValue) {
- 			$matchCounterFieldsToCompare++;
-				if (strcmp($databaseValue,$fieldstoCompare[$databaseKey])==0) {
+ 			$counterFieldsToCompare++;
+ 				// si encuentra uno diferente los datos no son iguales
+ 				
+				if (strcmp($databaseValue,$fieldstoCompare[$databaseKey])!=0) {
+
 				$matchCounterDatabaseFields++;
-			
+
+				return false;				
+
 				}
 			}
 
-		if ($matchCounterFieldsToCompare == $matchCounterDatabaseFields) {
 			return true;
-			}
-			
-			return false;
 		}
 
 	protected static function getDataTableServerSideModel($table, $index_column, $columnsTable,$columnsPrintDataTable='',$ifPersonalizedPrint=false) {
@@ -650,8 +651,8 @@ protected static function isFieldsEqualToThoseInTheDatabase($queryToGet,$fieldst
      
     
     //* DB connection
-     
-/*
+     /*
+
     $gaSql['link'] = pg_connect(
         " host=".$gaSql['server'].
         " dbname=".$gaSql['db'].

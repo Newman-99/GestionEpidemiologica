@@ -167,10 +167,14 @@ if (buttonCancelAjax) {
 		buttonCancelAjax.addClass('btn-secondary');
 }
 
+						 elementMsgBackendProcess.html("");
+
 			//return operationResult;
 		},error: function (e) {
 
-console.log('Error:', e);
+			console.log('Error:', e);
+						 elementMsgBackendProcess.html("");
+
 			// cuando no se hizo un ajax.abort
 					if(ajax == null){
 
@@ -217,22 +221,19 @@ FORM_AJAX.forEach(form => {
 	form.addEventListener("submit", captureDataForm );
  });
 
-function ajaxSweetAlerts(alert){
+async function ajaxSweetAlerts(alert){
 	if(alert.Alert==="simple"){
 
-		Swal.fire({
+		await Swal.fire({
 			title: alert.Title,
 			html: alert.Text,
 			type: alert.Type,
 			confirmButtonText: 'Aceptar'
 		});
 
-		if (typeof alert.reloadDataTable != 'undefined') {	
-			$('#dataTable').DataTable().ajax.reload();
-			}
 
 	}else if(alert.Alert==="reload"){
-		Swal.fire({
+		await Swal.fire({
 			title: alert.Title,
 			html: alert.Text,
 			type: alert.Type,
@@ -245,7 +246,7 @@ function ajaxSweetAlerts(alert){
 	}else if(alert.Alert==="simpleReload"){
 			location.reload();	
 	}else if(alert.Alert==="clean"){
-		Swal.fire({
+		await Swal.fire({
 			title: alert.Title,
 			html: alert.Text,
 			type: alert.Type,
@@ -262,7 +263,7 @@ function ajaxSweetAlerts(alert){
 		});
 	}else if(alert.Alert==="confirmation"){
 
-			Swal.fire({
+			await Swal.fire({
 				title: '¿Estás seguro?',
 				html: alert.Text,
 				type: 'question',
@@ -290,6 +291,10 @@ function ajaxSweetAlerts(alert){
 	}else if(alert.Alert==="redirecting"){
 			window.location.href=alert.URL;
 		}
+	
+		if (typeof alert.reloadDataTable != 'undefined') {	
+			$('#dataTable').DataTable().ajax.reload();
+			}
 	}
 
 function msjForAlertForm(typeMsj){

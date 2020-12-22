@@ -25,6 +25,8 @@
 
       function getDataCIE10CatalogForDataTables(url,idCapitulo){
     
+    var hour = getHourForFileExport();
+
     var table = $('#dataTable').DataTable({
 
         "bProcessing": true,
@@ -32,7 +34,28 @@
         "bServerSide": true,
         "sAjaxSource": url+"?cie10listCatalog=view&idCapitulo="+idCapitulo, 
         "columnDefs": [
-            ],'language': LANGUAGE_SPANISH_DATATABLES,
+            ],
+
+          dom: 'Bfrtip',
+
+      lengthMenu: [
+            [ 10, 25, 50,100,200,500, -1 ],
+            [ '10', '25', '50','100','200', '500', 'Todo' ]
+        ],
+        
+        buttons: [
+        {
+       extend: 'excelHtml5',
+        filename: 'catalago_cie10_' + hour
+        },
+
+        {
+       extend: 'csvHtml5',
+
+        filename: 'catalago_cie10_' + hour
+      }
+        ]
+            ,'language': LANGUAGE_SPANISH_DATATABLES,
                 "bDestroy": true,
 
     });
@@ -40,7 +63,7 @@
 };
 
 // devolvera datos para el select dinamico
-function getCasesCIE10BySearchPattern(valueSearch,idCapituloCIE10,actionForAjax){
+function setEventCIE10BySearchPatternToFormCaseEpidemi(valueSearch,idCapituloCIE10,actionForAjax){
 
 
 var load  = document.getElementById("icon-load");
@@ -62,25 +85,72 @@ var load  = document.getElementById("icon-load");
     }); 
   }
 
+
 // devolvera datos para el select dinamico
-function getCasesCIE10ByidCapitulo(idCapituloCIE10,actionForAjax){
+function setEventCIE10ByidCapituloToFormCaseEpidemi(idCapituloCIE10,actionForAjax){
+
+
 var load  = document.getElementById("icon-load");
     $.ajax({
       type:'POST',
       url: actionForAjax,
       data:{'idCapituloCIE10':
       idCapituloCIE10,'getCasesCIE10':true,'searchByChapter':true},
-      success:function(casesCIE10){
-      casesCIE10 = JSON.parse(casesCIE10);
+      success:function(jsonCasesCIE10){
+      casesCIE10 = JSON.parse(jsonCasesCIE10);
+
       $('#catalogKeyCIE10').empty();
-      console.log(casesCIE10);
       casesCIE10.forEach(function(casesCIE10){
      $('#catalogKeyCIE10').append('<option value='+casesCIE10.catalog_key+'>'+casesCIE10.catalog_key + ' - ' + casesCIE10.nombre + '</option>')
         })
+
         load.style.display = "none";
+
     }
      }); 
+
 }
+
+// para ciertos eventos cie-10 con caractaeristicas especiales
+
+function getEspecialAttributesCIE10(){
+
+  
+  var catalog_key = $('#catalogKeyCIE10').val();
+
+
+if (catalog_key != 0 && !isBlank(catalog_key)) {
+
+var load_atrib_especial  = document.getElementById("icon-load-atrib-especial");
+
+load_atrib_especial.style.display = "block";
+  
+   var server_url = $('#server_url').val();
+
+
+  $.ajax({
+      type:'POST',
+      url: server_url+'ajax/casosEpidemiAjax.php',
+      data:{'catalog_key': catalog_key,'getEspecialAttributes':true},
+     success:function(JsonEspecialAttributes){
+      console.log(JsonEspecialAttributes); 
+
+      especialAttributes = JSON.parse(JsonEspecialAttributes);      
+            especialAttributes.forEach(function(attributes){
+      if (attributes.id_atrib_especial == 0) {
+      $('#id_atrib_especial').empty();
+     }
+
+     $('#id_atrib_especial').append('<option value='+attributes.id_atrib_especial+'>'+attributes.descripcion + '</option>')
+
+        });      
+        load_atrib_especial.style.display = "none";
+    
+      }
+    }); 
+  }
+
+  }
 
 function getDataActivityLogCasosEpidemiForDataTables(requestedUser,minDateRange,maxDateRange,action){
     var table = $('#dataTable').DataTable({
@@ -100,12 +170,12 @@ function getDataActivityLogCasosEpidemiForDataTables(requestedUser,minDateRange,
     });
 }
 
+
+
 function getDataCasosEpidemiForDataTables(requestedPersonEpidemi,minDateRange,maxDateRange,action){
 
-  var  today = new Date();
-
-var hour = 'H'+today.getHours() + '-' + today.getMinutes();
-
+var hour = getHourForFileExport();
+ 
     var table = $('#dataTable').DataTable({
 //       "aaSorting": [[ 0, "asc" ]], // Sort by first column descending
         bProcessing: true,
@@ -118,37 +188,63 @@ var hour = 'H'+today.getHours() + '-' + today.getMinutes();
         // id_genero
       targets: [ 2 ],
       visible: false,
-                searchable: false                
+       searchable: false                
       },
 
       {
         // id_nacionalidad_caso
       targets: [ 4 ],
-      visible: false
+      visible: false,
+      searchable: false                
+
       },
 
       {
         // doc_identidad_caso
       targets: [ 5 ],
-      visible: false
+      visible: false,
+       searchable: false                
+    
       },
 
       {
-        // comlumn clave_captitulo_cie10
+        // comlumn clave_capitulo_cie10
       targets: [11],
-      visible: false
+      visible: false,
+      searchable: false                
+
       },
 
+      {
+
+        // comlumn id_atrib_especial
+      targets: [15],
+      visible: false,
+      searchable: false                
+
+      },
+
+
+      {
+        // comlumn is_hospital
+      
+      targets: [18],
+      visible: false,
+      searchable: false                
+
+      },
+
+      
       {
         //id_parroquia
-      targets: [ 15 ],
+      targets: [ 21 ],
       visible: false,
       searchable: false                
       },     
   
       {
         //id_nacionalidad_usuario
-      targets: [ 20 ],
+      targets: [ 26 ],
       visible: false,
       searchable: false                
 
@@ -156,7 +252,7 @@ var hour = 'H'+today.getHours() + '-' + today.getMinutes();
         
       {
         //doc_identidad_usuario
-      targets: [ 21 ],
+      targets: [ 27 ],
       visible: false,
       searchable: false                
 
@@ -164,7 +260,7 @@ var hour = 'H'+today.getHours() + '-' + today.getMinutes();
 
       {
         // Documento de Identidad (usuario-comoleto)
-      targets: [ 22 ],
+      targets: [ 28 ],
       visible: false,
       searchable: false                
 
@@ -172,7 +268,7 @@ var hour = 'H'+today.getHours() + '-' + today.getMinutes();
 
       {
         //year_registro
-      targets: [ 23 ],
+      targets: [ 29 ],
       visible: false,
       searchable: false                
 
@@ -180,24 +276,33 @@ var hour = 'H'+today.getHours() + '-' + today.getMinutes();
 
       //Fecha de Operacion
       {
-      targets: [ 24 ],
+      targets: [ 30 ],
       visible: false,
       searchable: false                
 
       },
       // Hora de Operacion
       {
-      targets: [ 25 ],
+      targets: [ 31 ],
       visible: false,
       searchable: false                
 
       },
 
       {
+        // para los botnes var to y ver menos
+      targets: [ 7, 12, 16, 19 ,20, 22, 23, 24, 25],
+      visible: false
+      },
+    
+
+      {
         mData: null,
         sDefaultContent: '<button name= "delete" id= "delete" value="delete" class="btn btn-danger btn-circle btn-sm delete"><i class="fas fa-trash"></i> </button> <button value = "update" name = "update" id = "update" class="btn btn-info btn-circle btn-sm"><i class="fas fa-plus"></i></i></button>',
 
-        aTargets: [26]
+        aTargets: [32],
+        searchable: false ,
+        orderable: false              
       }
         ],
         dom: 'lBfrtip',
@@ -210,13 +315,46 @@ var hour = 'H'+today.getHours() + '-' + today.getMinutes();
         buttons: [
         {
        extend: 'excelHtml5',
-        filename: 'Casos_Epidemiologicos_' + minDateRange + '_' + maxDateRange + '_' + hour
+        filename: 'Casos_Epidemiologicos_' + minDateRange + '_' + maxDateRange + '_' + hour,
+        exportOptions: {
+          // exportacion simple, no inculye lo inicializados como visible:false
+          // pero si las columnas de ver mas y menos
+        columns:[0,1,3,6,7,8,9,10,12,13,14,16,17,19,20,22,23,24,25]
+        }
+
+        },
+
+        {
+       extend: 'excelHtml5',
+        filename: 'Casos_Epidemiologicos_' + minDateRange + '_' + maxDateRange + '_' + hour+'_full',
+        text: 'Excel Full',
         },
 
         {
        extend: 'csvHtml5',
         filename: 'Casos_Epidemiologicos_' + minDateRange + '_' + maxDateRange + '_' + hour
-        }
+        },
+
+        {
+          extend: 'colvisGroup',
+          text: 'Ver Todo',
+          show : [ 7, 12, 16, 19 ,20, 22, 23, 24, 25],
+                
+                attr:  {
+                id: 'btn-ver-todo'
+            }
+
+        },
+
+        {
+          extend: 'colvisGroup',
+          text: 'Ver Menos',
+          hide : [ 7, 12, 16, 19 ,20, 22, 23, 24, 25],
+                attr:  {
+                id: 'btn-ver-menos'
+            }
+        },
+
         ]
         ,
         
@@ -244,8 +382,10 @@ function getParroquias(actionForAjax){
 
 //const FORM_CASOS_EPIDEMI = document.querySelectorAll("#form_caso_epidemi");
 
-function sendFormToRegisterOrUpdateCasesEpidemi(e){
+async function sendFormToRegisterOrUpdateCasesEpidemi(e){
 
+try{
+//try{
   e.preventDefault();
 
   var form=$(this);
@@ -255,50 +395,15 @@ function sendFormToRegisterOrUpdateCasesEpidemi(e){
   let type = this.getAttribute("data-form");
   let responseProcess=form.children('.responseProcessAjax');
   let msgBackendProcess=form.children('.msgBackendProcess');
-  
+
+
+
   let formFields = form.serialize();
   formFields+='&operationType='+type;
 
 
 
-
-
 var fieldsFormForValidate = [];
-
-if (type =='update') {
-
-    var id_nacionalidad = document.getElementById('id_nacionalidad_update').value;
-
-    var doc_identidad = document.getElementById('doc_identidad_update').value;
-
-fieldsFormForValidate.push(doc_identidad,id_nacionalidad);
-
-}else{
-  // osea es es el form register
-    var id_nacionalidad = document.getElementById('id_nacionalidad').value;
-
-    var doc_identidad = document.getElementById('doc_identidad').value;
-}
-
-
-  fieldsFormForValidate.push(doc_identidad,id_nacionalidad);
-
-var siExistPerson = document. getElementById('siExistPerson'). checked;
-
-if(!siExistPerson){
-     var fecha_nacimiento = document. getElementById('fecha_nacimiento').value;
-
-     var nombres = document. getElementById('nombres').value;
-
-     var apellidos = document. getElementById('apellidos').value;
-
-     var id_genero = document. getElementById('id_genero').value;
-
-  fieldsFormForValidate.push(fecha_nacimiento,nombres,apellidos,id_genero);
-
-}
-
-    var codigo_cie10 = document.getElementById("catalogKeyCIE10").value;
 
      var fecha_registro = document. getElementById('fecha_registro').value;
 
@@ -312,65 +417,47 @@ if(!siExistPerson){
 
      var telefonoPart3 = document. getElementById('telefonoPart3').value;
 
-  fieldsFormForValidate.push(codigo_cie10,fecha_registro,id_parroquia,direccion,telefonoPart1,telefonoPart2,telefonoPart3);
-
-         if (isBlank(codigo_cie10) || isBlank(fecha_registro) || isBlank(id_parroquia) || isBlank(direccion) || isBlank(telefonoPart1) || isBlank(telefonoPart2) || isBlank(telefonoPart3) || isBlank(doc_identidad) || isBlank(id_nacionalidad)) {
-
-        var alert = {'Alert': 'simple','Title':'Campos Vacios', 'Text':'Todos los campos del caso epidemiologico son obligatorios','Type':'error'};
-
-        return ajaxSweetAlerts(alert);
-
-         }
-
-     // verificamos los datps del evento cie10 para asi enviar el form 
-     // para un register or update
-
-   server_url = $('#server_url').val();
-
-  $.ajax({
-      type:'POST',
-      url: server_url+'ajax/cie10DataAjax.php',
-      data:{'getCasesCIE10':true,'getFullDataCie10':true,'catalog_key':codigo_cie10},
-      success:function(dataJsonCaseCIE10){
-
-      let dataCaseCIE10 = JSON.parse(dataJsonCaseCIE10);
-       
-      var data = dataCaseCIE10[0];
-
-      var confirmEventCIE10 = false;
-
-        var warningAttributesEventCIE10 = '';
-
-          if (data.erradicado == 'SI') {
-            warningAttributesEventCIE10+=" <br>Erradicado";
-
-                    
-          }
-
-          if (data.n_inter == 'SI') {
-            warningAttributesEventCIE10+= "<br>De notificacion internacional";
-
-          }
-
-      var alertMessageText =  'Los datos quedaran guardados en el sistema <br>';
-
-          var typeAlert = 'question';
-
-          if (!isBlank(warningAttributesEventCIE10)) {
-
-         var warningTextEventCIE10 = '<span style="color: red"> Este evento CIE 10 se considera '+warningAttributesEventCIE10 + "<br>¿desea continuar?</span>";
-          
-          alertMessageText = warningTextEventCIE10;
-          
-          typeAlert = 'warning';
-         
-         }
+    var catalog_key = document.getElementById("catalogKeyCIE10").value;
 
 
-  Swal.fire({
+
+var isBlankDocIdentidad = false;
+
+if (type =='register') {
+
+  // osea es es el form register
+    var id_nacionalidad = document.getElementById('id_nacionalidad').value;
+
+    var doc_identidad = document.getElementById('doc_identidad').value;
+
+      isBlankDocIdentidad = (isBlank(id_nacionalidad) || isBlank(doc_identidad));
+}
+
+
+var isBlankBasicPerson = false;
+
+if (!$('#siExistPerson').prop('checked')) {
+
+    var nombre = document.getElementById('nombres').value;
+
+    var apellidos = document.getElementById('apellidos').value;
+
+    var id_genero = document.getElementById("id_genero").value;
+
+    var fecha_nacimiento = document.getElementById("fecha_nacimiento").value;
+
+      isBlankBasicPerson = (isBlank(nombre) || isBlank(apellidos) || isBlank(id_genero) || isBlank(fecha_nacimiento));
+}
+
+         var isBlankDataCaseEpidemi = (isBlank(catalog_key) || isBlank(fecha_registro) || isBlank(id_parroquia) || isBlank(direccion) || isBlank(telefonoPart1) || isBlank(telefonoPart2) || isBlank(telefonoPart3));
+
+
+var confirmSendAjax = false;
+
+await   Swal.fire({
     title: '¿Estás seguro?',
-    html:  alertMessageText,
-    type: typeAlert,
+    html: 'Los datos quedaran guardados en el sistema <br>',
+    type: 'question',
     showCancelButton: true,
     confirmButtonColor: '#3085d6',
     cancelButtonColor: '#d33',
@@ -378,11 +465,76 @@ if(!siExistPerson){
     cancelButtonText: 'Cancelar'
   }).then((result) => {
     if(result.value){
-        
-       sendDataAjax(action,formFields,method,responseProcess,msgBackendProcess);
+                          
+              confirmSendAjax = true;
+              return confirmSendAjax
 
+            }else{
+              confirmSendAjax = false;
+              return confirmSendAjax
             }
+
     });
+
+
+
+if(confirmSendAjax) {
+
+console.log(isBlankBasicPerson,isBlankDataCaseEpidemi,isBlankDocIdentidad);
+
+if (isBlankBasicPerson || isBlankDataCaseEpidemi || isBlankDocIdentidad) {
+
+        var alert = {'Alert': 'simple','Title':'Campos Vacios', 'Text':'Todos los campos del caso epidemiologico son obligatorios','Type':'error'};
+
+        await ajaxSweetAlerts(alert);
+
+              confirmSendAjax = false;
+              return confirmSendAjax
+
+}
+
+
+var dataEventCIE10 = await getAttributesEventCIE10(catalog_key);
+
+var msgWarningAttributesEventCIE10 = await getMsgWarningAttributesEventCIE10(dataEventCIE10);
+
+console.log(msgWarningAttributesEventCIE10);
+
+if (msgWarningAttributesEventCIE10 != 0) {
+
+  await Swal.fire({
+    title: '¿Estás seguro?',
+    html: '<span style="color: red;"><b>Este evento CIE 10 de notificacion inmediata, se considera:</b><br>'+msgWarningAttributesEventCIE10 + '<br><br><b>¿Desea continuar?</b></span>',
+    type: 'warning',
+    showCancelButton: true,
+    confirmButtonColor: '#3085d6',
+    cancelButtonColor: '#d33',
+    confirmButtonText: 'Aceptar',
+    cancelButtonText: 'Cancelar'
+  }).then((result) => {
+    if(result.value){
+              confirmSendAjax = true;
+              return confirmSendAjax
+            }else{
+
+              confirmSendAjax = false;
+              return confirmSendAjax              
+            }
+
+
+    });
+
+}
+
+if(confirmSendAjax){
+       sendDataAjax(action,formFields,method,responseProcess,msgBackendProcess);
+}
+
+}
+
+}catch (e) {
+    alert(e);
   }
- })
+
+
 }

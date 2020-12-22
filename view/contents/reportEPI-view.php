@@ -7,10 +7,7 @@ function exportFile(){
 
         var endDateRange = $('#endDateRange').val();
 
-        var  today = new Date();
-
-        var hour = 'H'+today.getHours() + '-' + today.getMinutes();
-
+var hour = getHourForFileExport();
 
   var wb = XLSX.utils.table_to_book(document.getElementById('dataTable'));
   XLSX.writeFile(wb, 'reporte_EPI_'+startDateRange+'_'+endDateRange+'_'+hour+'.xlsx');
@@ -87,37 +84,35 @@ General
             </button>
                   <thead>
                   <tr>
-                          <th class='' rowspan="2" >Orden</th>
-                          <th class='' rowspan="2">Enfermedad / Evento</th>
+                          <th class='' rowspan="2" >NRO.</th>
+                          <th class='' rowspan="2">ENFERMEDADES</th>
 
-                          <th class='' colspan='2'>&lt; 1 año</th>
-                          <th class='' colspan='2'>1 a 4 años</th>
-                          <th class='' colspan='2'>5 a 6 años</th>
-                          <th class='' colspan='2'>7 a 9 años</th>
-                          <th class='' colspan='2'>10 a 11 años</th>
-                          <th class='' colspan='2'>12 a 14 años</th>
-                          <th class='' colspan='2'>15 a 19 años</th>
-                          <th class='' colspan='2'>20 a 24 años</th>
-                          <th class='' colspan='2'>25 a 44 años</th>
-                          <th class='' colspan='2'>45 a 59 años</th>
-                          <th class='' colspan='2'>60 a 64 años</th>
-                          <th class='' colspan='2'>65 años y más</th>
-                          <th class='' colspan='2'>Total</th>
-
-                          <th class='' rowspan="2">Total General</th>
+                          <th class='' colspan='3'>MENOR DE 1 AÑO</th>
+                          <th class='' colspan='3'>1 - 4 AÑOS</th>
+                          <th class='' colspan='3'>5 - 6 AÑOS</th>
+                          <th class='' colspan='3'>7 - 9 AÑOS</th>
+                          <th class='' colspan='3'>10 - 11 AÑOS</th>
+                          <th class='' colspan='3'>12 - 14 AÑOS</th>
+                          <th class='' colspan='3'>15 - 19 AÑOS</th>
+                          <th class='' colspan='3'>20 - 24 AÑOS</th>
+                          <th class='' colspan='3'>25 - 44 AÑOS</th>
+                          <th class='' colspan='3'>45 - 59 AÑOS</th>
+                          <th class='' colspan='3'>60 - 64 AÑOS</th>
+                          <th class='' colspan='3'>65 AÑOS Y MAS</th>
+                          <th class='' colspan='3'>TOTAL</th>
                   </tr>
                   
 
                   <tr>
 
-              <?php for ($i=0; $i < 12; $i++) { ?>
+              <?php for ($i=0; $i < 13; $i++) { ?>
                        
-                          <th>H</th>
-                          <th>M</th>
-              <?php } ?>
+                          <th>FEM.</th>
+                          <th>MASC.</th>
 
-                            <th class='column26 style21 s'>Hombres</th>
-                             <th class='column27 style22 s' >Mujeres</th>
+                          <th>TOTAL</th>
+
+              <?php } ?>
 
                   </tr>
 
@@ -125,38 +120,6 @@ General
                           </thead>
 
               <tbody id="tbody">
-
-          <tr>
-            <td >00</td>
-            <td>00</td>
-            <td>00</td>
-            <td>00</td>
-            <td>00</td>
-            <td>00</td>
-            <td>00</td>
-            <td>00</td>
-            <td>00</td>
-            <td>00</td>
-            <td>00</td>
-            <td>00</td>
-            <td>00</td>
-            <td>00</td>
-            <td>00</td>
-            <td>00</td>
-            <td>00</td>
-            <td>00</td>
-            <td>00</td>
-            <td>00</td>
-            <td>00</td>
-            <td>00</td>
-            <td>00</td>
-            <td>00</td>
-            <td>00</td>
-            <td>00</td>
-            <td>00</td>
-            <td>00</td>
-            <td>00</td>
-          </tr>
 
                 </tbody>
 

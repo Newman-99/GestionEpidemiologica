@@ -87,9 +87,15 @@
                       <th>Nombres</th>
                       <th>Apellidos</th>
                       <th>Clave Capitulo CIE-10</th>
+                      <th>Capitulo</th>
                       <th>Codigo CIE-10</th>
                       <th>Nombre CIE-10</th>
-                      <th>Fecha de Registro</th>
+                      <th>id atributo especial</th>
+                      <th>Atributo Especial</th>
+                       <th>Notificacion Inmediata</th>            
+                       <th>is hospital</th>        
+                      <th>Hospitalizado o Referido</th>
+                      <th>Fecha</th>
                       <th>id Parroquia</th>
                       <th>Parroquia</th>
                       <th>Direccion</th>
@@ -107,33 +113,39 @@
 
                   <tfoot>
                     <tr>
-                      <th>Nro. </th>
-                      <th >id Caso</th>
-                      <th>id Genero</th>
-                      <th>Genero</th>
-                      <th>Nro. Documento de Identidad (Caso)</th>
-                      <th>id Nacionalidad (Caso)</th>
-                      <th>Documento de Identidad</th>
-                      <th>Fecha de Nacimiento</th>
-                      <th>Edad</th>
-                      <th>Nombres</th>
-                      <th>Apellidos</th>
-                      <th>Clave Capitulo CIE-10</th>
-                      <th>Codigo CIE-10</th>
-                      <th>Nombre CIE-10</th>
-                      <th>Fecha de Registro</th>
-                      <th>id Parroquia</th>
-                      <th>Parroquia</th>
-                      <th>Direccion</th>
-                      <th>Telefono</th>
-                      <th>Usuario</th>
-                      <th>id Nacionalidad (usuario)</th>
-                      <th>Nro. Documento Identidad (usuario)</th>
-                      <th>Documento de Identidad</th>
-                      <th>Anio de Operacion</th>
-                      <th>Fecha de Operacion</th>
-                      <th>Hora de Operacion</th>
-                      <th></th>
+           <!--  0 --> <th>Nro. </th>
+           <!--  1 --> <th >id Caso</th>
+           <!--  2 --> <th>id Genero</th>
+           <!--  3 --> <th>Genero</th>
+           <!--  4 --> <th>id Nacionalidad (Caso)</th>
+           <!--  5 --> <th>Nro. Documento de Identidad (Caso)</th>
+           <!--  6 --> <th>Documento de Identidad</th>
+           <!--  7 --> <th>Fecha de Nacimiento</th>
+           <!--  8 --> <th>Edad</th>
+           <!--  9 --> <th>Nombres</th>
+           <!-- 10 --> <th>Apellidos</th>
+           <!-- 11 --> <th>Clave Capitulo CIE-10</th>
+           <!-- 12 --> <th>Capitulo</th>
+           <!-- 13 --> <th>Codigo CIE-10</th>
+           <!-- 14 --> <th>Nombre CIE-10</th>
+           <!-- 15 --> <th>id atributo especial</th>5 
+           <!-- 16 --> <th>Atributo Especial</th>
+           <!-- 17 --> <th>Notificacion Inmediata</th>             
+           <!-- 18 --> <th>is hospital</th>                
+           <!-- 19 --> <th>Hospitalizado o Referido</th>
+           <!-- 20 --> <th>Fecha</th>
+           <!-- 21 --> <th>id Parroquia</th>
+           <!-- 22 --> <th>Parroquia</th>
+           <!-- 23 --> <th>Direccion</th>
+           <!-- 24 --> <th>Telefono</th>
+           <!-- 25 --> <th>Usuario</th>
+           <!-- 26 --> <th>id Nacionalidad (usuario)</th>
+           <!-- 27 --> <th>Nro. Documento Identidad (usuario)</th>
+           <!-- 28 --> <th>Documento de Identidad</th>
+           <!-- 29 --> <th>Anio de Operacion</th>                    
+           <!-- 30 --> <th>Fecha de Operacion</th>
+           <!-- 31 --> <th>Hora de Operacion</th>
+           <!-- 32 --> <th></th>
                     </tr>
 
                     <div class="responseProcessAjax"></div>
@@ -159,11 +171,12 @@
 // para que solo se llame la funcion una vez
 
   $( document ).ready(function() {
- 
+
 
 requestQueryByActionToAction();
 
 function requestQueryByActionToAction(){
+
 
     var url = $('#actionForAjax').val();
     var requestedPersonEpidemi = $('#requestedPersonEpidemi').val();
@@ -173,8 +186,11 @@ $('#minDateRange,#maxDateRange').change(function() {
     var maxDateRange = $('#maxDateRange').val();
 // ambos rangos de fecha deben poseer valores
 
+
 if (!isBlank(minDateRange) && !isBlank(maxDateRange)) {
-return getDataCasosEpidemiForDataTables(requestedPersonEpidemi,minDateRange,maxDateRange,url);  
+
+
+return getDataCasosEpidemiForDataTablesAsync(requestedPersonEpidemi,minDateRange,maxDateRange,url);  
 }
 
 })
@@ -196,7 +212,8 @@ var minDateRangeDefaulPHP = minDateRangeDefault.toISOString().split('T')[0];
 $('#minDateRange').val(minDateRangeDefaulPHP)
 $('#maxDateRange').val(maxDateAllowedPHP)
 
-return getDataCasosEpidemiForDataTables(requestedPersonEpidemi,minDateRangeDefaulPHP,maxDateAllowedPHP,url);    
+
+return getDataCasosEpidemiForDataTablesAsync(requestedPersonEpidemi,minDateRangeDefaulPHP,maxDateAllowedPHP,url);    
 
 }
 
@@ -237,6 +254,10 @@ var minDateRangeDefaulPHP = minDateRangeDefault.toISOString().split('T')[0];
     $("#id_nacionalidad").prop('disabled', false);
 
     $("#doc_identidad").prop('disabled', false);
+
+      $('#id_atrib_especial').empty();
+
+     $('#id_atrib_especial').append('<option value=0>Seleccionar Atributo Especial</option>')
 
     document.getElementById("id_caso_epidemi").setAttribute("value",'');
 
@@ -280,7 +301,11 @@ function deleteCasosEpidemi(data){
 
     var catalog_key_cie10 = data[12];
 
-    var fecha_registro = data[14];
+    var id_atrib_especial = data[15];
+
+    var is_hospital = data[18];
+
+    var fecha_registro = data[20];
 
     var textMsjAlert = 'Los datos del Caso Epidemiologico seran elimnados del sistema';
 
@@ -300,6 +325,8 @@ var dataCasoEpidemi =
   '&doc_identidad='+doc_identidad+
   '&id_caso_epidemi='+id_caso_epidemi+
   '&catalog_key_cie10='+catalog_key_cie10+
+  '&id_atrib_especial='+id_atrib_especial+
+  '&is_hospital='+is_hospital+
   '&fecha_registro='+fecha_registro+
   '&operationType='+'delete';
 
@@ -365,15 +392,19 @@ function updateCasosEpidemi(data){
 
     var clave_capitulo_cie10 = data[11];
 
-    var catalog_key_cie10 = data[12];
+    var catalog_key_cie10 = data[13];
 
-    var fecha_registro = data[14];
+    var id_atrib_especial = data[15];  
 
-    var id_parroquia = data[15];
+    var is_hospital = data[18];  
+  
+    var fecha_registro = data[20];
 
-    var direccion = data[17];
+    var id_parroquia = data[21];
+
+    var direccion = data[23];
     
-    var telefono = data[18];
+    var telefono = data[24];
 
     $("#id_nacionalidad").val(id_nacionalidad);
 
@@ -393,10 +424,15 @@ function updateCasosEpidemi(data){
 
           var actionAjaxForCie10 = $('#actionAjaxForCie10').val();
 
-    getCasesCIE10ByidCapitulo(clave_capitulo_cie10,actionAjaxForCie10);
 
-    $("#catalogKeyCIE10").val(catalog_key_cie10);
+setCIE10ToFormUpdateCaseEpidemiAsync(clave_capitulo_cie10,catalog_key_cie10,actionAjaxForCie10,id_atrib_especial);
 
+
+    
+      $('#is_hospital').prop('checked', is_hospital);
+
+
+    $("#idCapituloCIE10").val(clave_capitulo_cie10);
 
     $("#fecha_registro").val(fecha_registro);
 

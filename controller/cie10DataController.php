@@ -1,5 +1,8 @@
 
 <?php 
+
+			ini_set('memory_limit','1024M');
+
 		$requestAjax =  TRUE;
 
 	if($requestAjax){
@@ -16,7 +19,6 @@ class cie10DataController extends mainModel
 
 	public function updateCie10DataController($files){
 			
-			ini_set('memory_limit','512M');
 
 if ($files['fileCSVCIE10']['type'] !='text/csv' || mainModel::isDataEmtpy($files['fileCSVCIE10']['size'])){
 				$alert=[
@@ -621,7 +623,6 @@ mainModel::getDataTableServerSideModel('data_cie10', 'consecutivo',
 'descripcion_sinac_subgrupo', 
 'daga', 
 'asterisco'));
-
 	}
 
 	// funcion para mostrar datos en el select dinamico y buscador del cie-10
@@ -637,7 +638,7 @@ mainModel::getDataTableServerSideModel('data_cie10', 'consecutivo',
 		// obtnener data por captulos
 
 
-		$queryGetCasesCie10 = mainModel::connectDB()->prepare($queryGetCasesCie10." WHERE clave_capitulo = '$idCapituloCIE10'");
+		$queryGetCasesCie10 = mainModel::connectDB()->prepare($queryGetCasesCie10." WHERE clave_capitulo = '$idCapituloCIE10' order by catalog_key");
 		
 		 $queryGetCasesCie10->execute();
 
@@ -728,6 +729,7 @@ mainModel::getDataTableServerSideModel('data_cie10', 'consecutivo',
 
 	if(isset($dataGetCIE10['getFullDataCie10'])) {
 
+		//var_dump($dataGetCIE10);
 	$catalog_key = mainModel::cleanStringSQL($dataGetCIE10['catalog_key']);
                 
                 $attributesFilter =  [];
@@ -827,8 +829,8 @@ $filterValues);
 		exit();
 
 	}
-
-
-	}
 }
+	
+}
+
  ?>

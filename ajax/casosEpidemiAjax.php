@@ -2,6 +2,7 @@
 
 	$requestAjax = TRUE;
 
+
 	require_once "../config/app.php";
 
 		require_once "../controller/casosEpidemiController.php";
@@ -35,6 +36,10 @@ if (isset($_POST['operationType']) && $_POST['operationType'] == "register"){
 }elseif (isset($_FILES['fileCSVImportCaseEpidemi'])) {
 
 	 	echo $casosEpidemiController->importCasosEpidemiController($_FILES);
+
+		}elseif(isset($_POST['getEspecialAttributes'])) {
+	
+		$casosEpidemiController->getEspecialAttributesCIE10($_POST);		
 
 		} else { 
 		/*

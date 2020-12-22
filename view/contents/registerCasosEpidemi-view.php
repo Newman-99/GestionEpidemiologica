@@ -212,7 +212,7 @@ Fecha de Nacimiento
           var idCapituloCIE10 = $(this).val();
 
           if(idCapituloCIE10 != ''){
-          getCasesCIE10ByidCapitulo(idCapituloCIE10,actionForAjax);
+          setEventCIE10ByidCapituloToFormCaseEpidemi(idCapituloCIE10,actionForAjax);
           }
 
   });
@@ -227,7 +227,7 @@ Fecha de Nacimiento
           var idCapituloCIE10 = $(this).val();
 
           if(idCapituloCIE10 != ''){
-          getCasesCIE10ByidCapitulo(idCapituloCIE10,actionForAjax);
+          setEventCIE10ByidCapituloToFormCaseEpidemi(idCapituloCIE10,actionForAjax);
           }
       });
 
@@ -249,12 +249,12 @@ var timeForRequestSearch = "";
 
     if (valueSearch!="")
     {
-        timeForRequestSearch = setTimeout(function(){ getCasesCIE10BySearchPattern(valueSearch,idCapituloCIE10,actionForAjax); }, 2000);
+        timeForRequestSearch = setTimeout(function(){ setEventCIE10BySearchPatternToFormCaseEpidemi(valueSearch,idCapituloCIE10,actionForAjax); }, 2000);
     }
     else
     {
       // si esta vacio llenamos con el cap seleccionado
-             getCasesCIE10ByidCapitulo();
+             setEventCIE10ByidCapituloToFormCaseEpidemi();
     }
 
 
