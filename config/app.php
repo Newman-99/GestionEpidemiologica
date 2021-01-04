@@ -2,7 +2,7 @@
 
 //const SERVERURL="https://gestion-epidemiologica-paraiso.herokuapp.com/";
 
-const SERVERURL="http://localhost/projects/dptoEpidemi/";
+const SERVERURL = "http://localhost/projects/dptoEpidemi/";
 
 const ORGANIZATION = "Clinica Popular el Paraiso: Dpto de Epidemiologia";
 

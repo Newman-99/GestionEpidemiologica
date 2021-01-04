@@ -128,7 +128,7 @@
            <!-- 12 --> <th>Capitulo</th>
            <!-- 13 --> <th>Codigo CIE-10</th>
            <!-- 14 --> <th>Nombre CIE-10</th>
-           <!-- 15 --> <th>id atributo especial</th>5 
+           <!-- 15 --> <th>id atributo especial</th> 
            <!-- 16 --> <th>Atributo Especial</th>
            <!-- 17 --> <th>Notificacion Inmediata</th>             
            <!-- 18 --> <th>is hospital</th>                

@@ -12,5 +12,8 @@
 			$activityLogSessionsController = new activityLogSessionsController();
 	if (isset($_GET['activityLogSessions'])) {
                $activityLogSessionsController->paginateActivityLogSessionsController();
+		}else{
+						self::forceClosureController();
+
 		}
  ?>

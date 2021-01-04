@@ -187,7 +187,7 @@ public function loginUserController($dataUser){
 
 			}
 
-			// Datos para la bitacora
+				// Datos para la bitacora
 			
 				$currentDate =  mainModel::getDateCurrentSystem();
 
@@ -241,6 +241,9 @@ public function loginUserController($dataUser){
                   $_SESSION['iconUser'] = "fermale-user.png"; 
                 }
 						
+
+
+
 				$alert=[
 				"Alert"=>"redirecting",
 				"URL"=>SERVERURL."dashboard/"
@@ -248,7 +251,6 @@ public function loginUserController($dataUser){
 
 				echo json_encode($alert);
 
-				exit();
 
 		}
  
