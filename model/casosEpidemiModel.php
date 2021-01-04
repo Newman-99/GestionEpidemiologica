@@ -1,8 +1,17 @@
-<?php 	require_once "personModel.php";
 
-	class casosEpidemiModel extends personModel
-	
-{
+<?php
+	require_once "personModel.php";
+
+	class casosEpidemiModel extends personModel{
+
+		protected static $personController;
+
+		function __construct()
+			{
+
+			self::$personController = new personController();
+			exit();
+		}
 
 					protected static $queryGetAttribEspecial = "SELECT DISTINCT ON (cie10.catalog_key,atr_esp.id_atrib_especial) /*cie10.catalog_key,*/ atr_esp.id_atrib_especial,
 atr_esp.descripcion
@@ -113,7 +122,7 @@ atr_esp.descripcion atributo_especial,
 			    cie10.CLAVE_CAPITULO clave_capitulo_cie10,
 				split_part(cie10.capitulo,' ',1) as capitulo_cie10,
 
-				isCIE10InmediateNotice(cie10.n_inter,cie10.nin,cie10.ninmtobs,cie10.notdiaria,cie10.sistema_especial,
+				isCIE10InmediateNotice(cie10.n_inter,cie10.nin,cie10.ninmtobs,cie10.notdiaria,cie10.notsemanal,cie10.sistema_especial,
 				cie10.es_suive_notin,cie10.es_suive_est_epi,cie10.es_suive_est_brote) as notific_inmediata
 
 			    FROM casos_epidemi caso,casos_epidemi_bitacora casos_bit,personas pers,parroquias parr,generos gnro,
@@ -496,10 +505,6 @@ if ($dataCasosEpidemi['ifUpdatePerson']) {
 		}
 
 
-			protected static function importCasosEpidemiModel($dataCasosEpidemi){
-
-			}
-
 protected static function getNroCasesEpidemiForEpiModel($epiOrder, $startRegistrationDate, $endRegistrationDate,$id_genero ='',$startAge = '',$ageEnd = ''){
 
 $queryFunctionGetAge = " AND date_part('year',age(casos.fecha_registro, pers.fecha_nacimiento)) ";
@@ -576,8 +581,6 @@ BETWEEN agrup_epi.edad_incio AND agrup_epi.edad_final;";
 
 		return $nroCasesEpidemi;
 }
-	
 
-	}
-
+}
 

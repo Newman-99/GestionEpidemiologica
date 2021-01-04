@@ -63,7 +63,16 @@ if(textMsjAlert==false){
 
 					}
 
-				alert(formFields);
+			if(type==="report"){
+			
+			let modal = form.parents('.modal');
+			let buttonCancelAjax = modal.find('.buttonCancelAjax');
+
+				return sendDataAjax(action,formFields,method,responseProcess,msgBackendProcess,buttonCancelAjax);
+
+					}
+
+
 				return sendDataAjax(action,formFields,method,responseProcess,msgBackendProcess);
 
 			}
@@ -157,6 +166,17 @@ if (buttonCancelAjax) {
 
 		elementAtribute.setAttribute(operationResult.typeSetAtribute,
 		 operationResult.valueSetAtribute); 
+		}
+
+
+		 if (typeof operationResult.idSetAtributeDownload != 'undefined') {
+
+  setTimeout(function(){ 
+		var elementAtributeDownload = document.getElementById(operationResult.idSetAtributeDownload);
+
+		elementAtributeDownload.setAttribute(operationResult.typeSetAtributeDownload,'download'); 
+		}, 100)
+
 		}
 
 

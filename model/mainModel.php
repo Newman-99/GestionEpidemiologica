@@ -25,7 +25,7 @@
 		public static function connectDB(){
 
 
-		try {			
+/*		try {			
 
 $db = (function(){
     $parts = (parse_url(getenv('DATABASE_URL') ?: 'postgres://ilsmpwdzrresby:7879db47bd3be54c574eab3a81a1bc2db477bc890a756eccc406992832a0fd8e@ec2-54-246-87-132.eu-west-1.compute.amazonaws.com:5432/d4hub5gh1m9jjj'));
@@ -40,7 +40,7 @@ return $db;
 		    error_log("Failed to connect to database: ".$e->getMessage());
 		}				
 /**/
-/*
+
 
 		try {			
 	$DB = new PDO("pgsql:host=".SERVER_PATH.";port=".PORT.";dbname=".DB."",USER,PASS, array(
@@ -651,7 +651,7 @@ protected static function isFieldsEqualToThoseInTheDatabase($queryToGet,$fieldst
      
     
     //* DB connection
-     /*
+     
 
     $gaSql['link'] = pg_connect(
         " host=".$gaSql['server'].
@@ -662,7 +662,7 @@ protected static function isFieldsEqualToThoseInTheDatabase($queryToGet,$fieldst
 
 
 /**/
-
+/*
  $db_url = getenv("DATABASE_URL") ?: "postgres://ilsmpwdzrresby:7879db47bd3be54c574eab3a81a1bc2db477bc890a756eccc406992832a0fd8e@ec2-54-246-87-132.eu-west-1.compute.amazonaws.com:5432/d4hub5gh1m9jjj";
 
 $gaSql['link'] = pg_connect($db_url);
@@ -810,12 +810,14 @@ $gaSql['link'] = pg_connect($db_url);
         $sLimit
     ";
 
+
     $rResult = pg_query( $gaSql['link'], $sQuery ) or die(pg_last_error());
      
     $sQuery = "
         SELECT $sIndexColumn
         FROM   $sTable
     ";
+
     $rResultTotal = pg_query( $gaSql['link'], $sQuery ) or die(pg_last_error());
     $iTotal = pg_num_rows($rResultTotal);
     pg_free_result( $rResultTotal );
@@ -827,6 +829,7 @@ $gaSql['link'] = pg_connect($db_url);
             FROM   $sTable
             $sWhere
         ";
+
 
         $rResultFilterTotal = pg_query( $gaSql['link'], $sQuery ) or die(pg_last_error());
         $iFilteredTotal = pg_num_rows($rResultFilterTotal);
@@ -948,5 +951,26 @@ $gaSql['link'] = pg_connect($db_url);
 
 
 	}
+
+	
+public static function utf8_converter($array){
+    /*array_walk_recursive($array, function(&$item, $key){
+    $entry = mb_convert_encoding(
+        $entry,
+        'UTF-8'
+    );
+
+    });
+    return $array;*/
+
+    for ($i=0; $i < count($array) ; $i++) { 
+
+		$array[$i] = mb_convert_encoding($array[$i], 'UTF-16LE', 'UTF-8');
+
+    }
+
+    return $array;
+}
+
 
 }

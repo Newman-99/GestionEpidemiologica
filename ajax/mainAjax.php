@@ -8,6 +8,10 @@
 		
 			$mainModel = new mainModel();
 
+		  require_once "../controller/loginController.php";
+
+		  $loginController = new loginController();
+
 	if (isset($_POST['operationType']) && $_POST['operationType'] == "backup") {
 
 
@@ -18,12 +22,9 @@
 			$mainModel->restoreDatabase($_FILES);
 				
  }else { 
-/*		
-		session_start(["name"=> "systemDptoEpidemi"]);
-		session_unset();
-		session_destroy();
-		header("Location: ".SERVERURL."login/");
-*/	}
+		
+			$loginController->forceClosureController();
+			}
 	
 
 

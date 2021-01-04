@@ -75,7 +75,28 @@
             <!-- Final form to limit query-->
 <br>
     
-                  <thead>
+    <div class="dt-buttons btn-group flex-wrap"> 
+
+      <button class="btn btn-secondary buttons-excel buttons-html5" tabindex="0" type="button" id="button-xlsx" value="xlsx"><span>Excel</span>
+
+      <span id="icon-load-xlsx" class="input-group-addon">
+      <i class="fas fa-circle-notch fa-spin"></i>
+      </span>
+
+      </button> 
+
+      <button class="btn btn-secondary buttons-csv buttons-html5" tabindex="0" type="button" id="button-csv" value="csv"><span>CSV</span>
+
+      <span id="icon-load-csv" class="input-group-addon">
+      <i class="fas fa-circle-notch fa-spin"></i>
+      </span>
+
+      </button>
+
+    </div>
+
+<br><br>
+                <thead>
                     <tr>
                       <th>CONSECUTIVO</th>
                       <th>LETRA</th>
@@ -235,16 +256,17 @@
   <script src="<?php echo SERVERURL; ?>view/js/scriptsSendAndRequestDataFromBakend.js"></script>
 
 <script type="text/javascript">
+
+ var load_csv  = document.getElementById("icon-load-csv");
+load_csv.style.display = "none";
+
+ var load_xlsx  = document.getElementById("icon-load-xlsx");
+load_xlsx.style.display = "none";
   
-    $( document ).ready(function() {
-
-//return getDataCIE10CatalogForDataTables();    
-
-});
-
 
   $( document ).ready(function() {
  
+
 requestQueryByActionToAction();
 
 function requestQueryByActionToAction(){
@@ -266,6 +288,59 @@ $('#idCapitulo').change(function() {
       return getDataCIE10CatalogForDataTables(url,idCapitulo);
 
 }
+
+
+
+
+    let buttons_export = document.getElementsByClassName("buttons-html5")
+
+    for(let  btn of buttons_export) {
+      btn.addEventListener("click", exportCatalogCIE10)
+    }
+
+  async function exportCatalogCIE10(e){
+
+
+  var method = "POST";
+  var action = server_url+'ajax/cie10DataAjax.php';
+
+var typeArchive = this.value;
+
+var data = 
+  'exportCatalogCIE10=true&typeArchive='+typeArchive;
+
+ var load_archive  = document.getElementById("icon-load-"+typeArchive);
+load_archive.style.display = "inline";
+
+ await $.ajax({
+      type:'POST',
+      url: server_url+'ajax/cie10DataAjax.php',
+      data:{
+      'exportCatalogCIE10':true,
+      'typeArchive':typeArchive},
+
+        success:function(response) {
+                console.log(response);
+        
+              var fileData = JSON.parse(response);
+            var a = document.createElement('a');
+            var url = fileData.filePath;
+            a.href = url;
+            a.download = fileData.fileName;
+            document.body.append(a);
+            a.click();
+            a.remove();
+            window.URL.revokeObjectURL(url);
+  
+          }
+
+    });
+
+// await sendDataAjax(action,data,method);
+
+load_archive.style.display = "none";
+
+  }
 
   });
 

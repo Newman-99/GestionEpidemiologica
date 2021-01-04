@@ -52,6 +52,20 @@ General
 
             </div>
            
+
+  <div class='form-group col-sm-2'>
+
+           <button type="button" class="btn btn-primary getReportEpiCompleteModal" data-toggle="modal" data-target="#getReportEpiCompleteModal">
+            Reporte Completo
+          </button>
+
+          <?php  require_once "./view/inc/formGetReportEpiComplete.php";?>
+
+  </div>
+
+
+          <br><br>
+
             <div class='form-group col-sm-2'>
 
             <input type='date' class='form-control' id='startDateRange' name='startDateRange'

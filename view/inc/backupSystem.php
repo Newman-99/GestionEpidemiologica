@@ -80,9 +80,6 @@ var data =
 
       });
 
-
-
-
     });
 
 </script>

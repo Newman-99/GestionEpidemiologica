@@ -169,6 +169,10 @@ function getMsgWarningAttributesEventCIE10(dataEventCIE10){
             warningAttributesEventCIE10+= "<br>- Vigilancia epidemiológica mobilidad notificación diaria.";
             }
 
+          if (dataEventCIE10.notsemanal == 'SI') {
+            warningAttributesEventCIE10+= "<br>- Vigilancia epidemiológica mobilidad notificación semanal.";
+            }
+
           if (dataEventCIE10.sistema_especial == 'SI') {
             warningAttributesEventCIE10+= "<br>- Vigilancia epidemiológica mobilidad notificación especial.";
             }

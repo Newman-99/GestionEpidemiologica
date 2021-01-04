@@ -36,13 +36,14 @@
         "columnDefs": [
             ],
 
-          dom: 'Bfrtip',
-
+          
       lengthMenu: [
             [ 10, 25, 50,100,200,500, -1 ],
             [ '10', '25', '50','100','200', '500', 'Todo' ]
-        ],
+        ]/*,
         
+        dom: 'Bfrtip',
+
         buttons: [
         {
        extend: 'excelHtml5',
@@ -54,7 +55,7 @@
 
         filename: 'catalago_cie10_' + hour
       }
-        ]
+        ]*/
             ,'language': LANGUAGE_SPANISH_DATATABLES,
                 "bDestroy": true,
 

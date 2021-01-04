@@ -9,6 +9,7 @@
         }
     ],
     "require": {
-        "davmixcool/php-dbcloud": "^0.8.2"
+        "davmixcool/php-dbcloud": "^0.8.2",
+        "phpoffice/phpspreadsheet": "^1.15"
     }
 }

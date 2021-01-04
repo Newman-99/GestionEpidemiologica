@@ -8,6 +8,10 @@
 		
 			$userController = new userController();
 
+		  require_once "../controller/loginController.php";
+
+		  $loginController = new loginController();
+
 	if ($_POST['operationType'] === "save") {
 		$userController->addUserController($_POST);
 	}elseif ($_POST['operationType'] === "delete") {
@@ -25,12 +29,9 @@
 	$userController->restartUserController($_POST);		
 				
  }else { 
-/*		
-		session_start(["name"=> "systemDptoEpidemi"]);
-		session_unset();
-		session_destroy();
-		header("Location: ".SERVERURL."login/");
-*/	}
+		
+			$loginController->forceClosureController();
+			}
 	
 
 

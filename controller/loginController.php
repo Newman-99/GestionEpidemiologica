@@ -12,13 +12,14 @@
 
 
 		session_start(['name'=>'dptoEpidemi']);	
-
-	if (isset($_SESSION['timeout']) && (time() - $_SESSION['timeout'] > 28800)) {
+		
+	if (isset($_SESSION['timeout']) && (time() - $_SESSION['timeout'] > 10800)) {
 			
 			self::forceClosureController();
 
 	}
 				$_SESSION['timeout'] = time();
+
 }
 
 

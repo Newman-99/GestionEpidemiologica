@@ -6,4 +6,5 @@ require_once "./controller/viewsController.php";
  $template = new viewsController();
  $template->getTemplateController();
 
- ?>
+
+ ?> 

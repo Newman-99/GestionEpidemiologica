@@ -2,13 +2,14 @@
 
 		use PhpDbCloud\Filesystems\Destination;
 
-		$fileName="gestionEpidemi"; 
+		$fileName="gestion-epidemi"; 
 
-		//$ruta='../backups_temp/'; 
+ 		$currentDate =  mainModel::getDateCurrentSystem();
 
-		$date = date("d-m-Y_");
-		$date.= 'H'.date("H-m-s");
-		$nameBackup =$fileName.'-'.$date.'.sql';
+     	$date = date("d-m-Y_", $currentDate);
+		$date.= date("H-i-s", $currentDate);
+
+		$nameBackup =$fileName.'_'.$date.'.sql';
 
 			$sync = require '../config/boostrap-phpcloud.php';
 

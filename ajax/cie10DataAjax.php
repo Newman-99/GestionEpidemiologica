@@ -1,7 +1,6 @@
 <?php 
 
 
-
 		$requestAjax =  TRUE;
 
 	require_once "../config/app.php";
@@ -9,6 +8,10 @@
 	require_once "../controller/cie10DataController.php";
 	
 			$cie10DataController = new cie10DataController();
+
+		  require_once "../controller/loginController.php";
+
+		  $loginController = new loginController();
 
 	
 	if (isset($_FILES['fileCSVCIE10'])) {
@@ -23,6 +26,10 @@
 		}elseif(isset($_POST['getCasesCIE10'])) {
 	
 		$cie10DataController->getCasesCIE10($_POST);		
+
+		}elseif(isset($_POST['exportCatalogCIE10'])) {
+	
+		$cie10DataController->exportCatalogCIE10($_POST['typeArchive']);		
 
  }else {
 

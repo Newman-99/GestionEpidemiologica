@@ -2,8 +2,18 @@
 <?php 
 
 			ini_set('memory_limit','1024M');
+/*
+  require_once './libraries/spout/src/Spout/Autoloader/autoload.php';
 
-		$requestAjax =  TRUE;
+use Box\Spout\Reader\ReaderFactory;
+use Box\Spout\Writer\WriterFactory;
+use Box\Spout\Common\Type;
+use Box\Spout\Reader\Common\Creator\ReaderEntityFactory;
+
+   $WriterFactory = new WriterFactory();
+
+$writer = $WriterFactory->create(Type::CSV);;
+*/
 
 	if($requestAjax){
 		require_once "../model/mainModel.php";
@@ -830,7 +840,174 @@ $filterValues);
 
 	}
 }
-	
+
+ public static function exportCatalogCIE10($typeArchive){
+
+$filesBackupsTemp = glob(BASE_DIRECTORY.'reports_temp/*');
+
+foreach($filesBackupsTemp as $file){ // iterate files
+
+    $resultDeleteBackups = unlink($file);
+    
+    if (!$resultDeleteBackups) {
+				$alert=[
+					"Alert"=>"simple",
+					"Title"=>"Ha ocurrido un error inesperado",
+					"Text"=>"Los archivos de respaldo de datos no han podido ser borrados en la carpeta (reports_temp)",
+					"Type"=>"error"
+				];	
+
+				echo json_encode($alert);
+    }
+}
+
+require_once "../view/inc/spout.php";
+
+header('Content-Encoding: UTF-8');
+header("Content-type: text/csv; charset=UTF-8");
+header("Content-Disposition: attachment; filename=processed_devices.csv");
+header("Pragma: no-cache");
+header("Expires: 0");
+
+      //fopen(BASE_DIRECTORY."reports_temp/catalog_cie10.csv", 'w+') or die("Se produjo un error al crear el archivo");
+
+     set_time_limit(0);
+     ini_set('memory_limit', -1);
+
+
+
+//     $writer = $WriterEntityFactory::createCSVWriter();
+
+if ($typeArchive == 'csv') {
+     $writer = $WriterEntityFactory::createCSVWriter();
+}else{
+
+$typeArchivo = 'xlsx';
+    $writer = $WriterEntityFactory::createXLSXWriter();
+    $writer->setShouldUseInlineStrings(true);
+}
+ 
+ 		$fileName="catalog-cie10"; 
+  				$currentDate =  mainModel::getDateCurrentSystem();
+   
+     		$date = date("d-m-Y_", $currentDate);
+		$date.= date("H-i-s", $currentDate);
+		$fileName =$fileName.'_'.$date.'.'.$typeArchive;
+
+$filePath =  '../reports_temp/'.$fileName;
+
+$writer->openToFile($filePath);
+
+
+//$writer->openToBrowser($fileName);
+
+$header = array('CONSECUTIVO',
+ 'LETRA',
+ 'CATALOG_KEY',
+ 'NOMBRE',
+ 'CODIGOX',
+ 'LSEX',
+ 'LINF',
+ 'LSUP',
+ 'TRIVIAL',
+ 'ERRADICADO',
+ 'N_INTER',
+ 'NIN',
+ 'NINMTOBS',
+ 'COD_SIT_LESION',
+ 'NO_CBD',
+ 'CBD',
+ 'NO_APH',
+ 'AF_PRIN',
+ 'DIA_SIS',
+ 'CLAVE_PROGRAMA_SIS',
+ 'COD_COMPLEMEN_MORBI',
+ 'DEF_FETAL_CM',
+ 'DEF_FETAL_CBD',
+ 'CLAVE_CAPITULO',
+ 'CAPITULO',
+ 'LISTA1',
+ 'GRUPO1',
+ 'LISTA5',
+ 'RUBRICA_TYPE',
+ 'YEAR_MODIFI',
+ 'YEAR_APLICACION',
+ 'VALID',
+ 'PRINMORTA',
+ 'PRINMORBI',
+ 'LM_MORBI',
+ 'LM_MORTA',
+ 'LGBD165',
+ 'LOMSBECK',
+ 'LGBD190',
+ 'NOTDIARIA',
+ 'NOTSEMANAL',
+ 'SISTEMA_ESPECIAL',
+ 'BIRMM',
+ 'CVE_CAUSA_TYPE',
+ 'CAUSA_TYPE',
+ 'EPI_MORTA',
+ 'EDAS_E_IRAS_EN_M5',
+ 'CSVE_MATERNAS_SEED_EPID',
+ 'EPI_MORTA_M5',
+ 'EPI_MORBI',
+ 'DEF_MATERNAS',
+ 'ES_CAUSES',
+ 'NUM_CAUSES',
+ 'ES_SUIVE_MORTA',
+ 'ES_SUIVE_MORB',
+ 'EPI_CLAVE',
+ 'EPI_CLAVE_DESC',
+ 'ES_SUIVE_NOTIN',
+ 'ES_SUIVE_EST_EPI',
+ 'ES_SUIVE_EST_BROTE',
+ 'SINAC',
+ 'PRIN_SINAC',
+ 'PRIN_SINAC_GRUPO',
+ 'DESCRIPCION_SINAC_GRUPO',
+ 'PRIN_SINAC_SUBGRUPO',
+ 'DESCRIPCION_SINAC_SUBGRUPO',
+ 'DAGA',
+ 'ASTERISCO');
+
+    $rowFromValues = $WriterEntityFactory::createRowFromArray($header);
+
+    $writer->addRow($rowFromValues);
+
+    $queryGetCatalogCIE10 = "SELECT consecutivo, letra, catalog_key, nombre, codigox, lsex, linf, lsup, trivial, erradicado, n_inter, nin, ninmtobs, cod_sit_lesion, no_cbd, cbd, no_aph, af_prin, dia_sis, clave_programa_sis, cod_complemen_morbi, def_fetal_cm, def_fetal_cbd, clave_capitulo, capitulo, lista1, grupo1, lista5, rubrica_type, year_modifi, year_aplicacion, valid, prinmorta, prinmorbi, lm_morbi, lm_morta, lgbd165, lomsbeck, lgbd190, notdiaria, notsemanal, sistema_especial, birmm, cve_causa_type, causa_type, epi_morta, edas_e_iras_en_m5, csve_maternas_seed_epid, epi_morta_m5, epi_morbi, def_maternas, es_causes, num_causes, es_suive_morta, es_suive_morb, epi_clave, epi_clave_desc, es_suive_notin, es_suive_est_epi, es_suive_est_brote, sinac, prin_sinac, prin_sinac_grupo, descripcion_sinac_grupo, prin_sinac_subgrupo, descripcion_sinac_subgrupo, daga, asterisco FROM data_cie10 ORDER BY consecutivo asc";
+
+        $queryGetCatalogCIE10 = mainModel::connectDB()->query($queryGetCatalogCIE10);
+
+$dataForWrite = [];
+
+        while($rows=$queryGetCatalogCIE10->fetch(PDO
+            ::FETCH_NUM)){           
+
+
+
+    $rowFromValues = $WriterEntityFactory::createRowFromArray($rows);
+
+
+    $writer->addRow($rowFromValues);
+
+
+
+         }
+
+
+       //  $writer->addRows($dataForWrite);
+         // add multiple rows at a time
+     $writer->close();
+
+			$dataFile=[
+				"filePath"=>$filePath,
+				"fileName"=>$fileName,
+			];
+ 
+ 		    echo json_encode($dataFile);
+ }
+
+
 }
 
  ?>

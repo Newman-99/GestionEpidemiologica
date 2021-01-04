@@ -1,14 +1,22 @@
 <?php 
 
 
+
 		// para simular la herencia mediante colaboracion de objetos
 		require_once "personController.php";
 
 	if($requestAjax){
 		require_once "../model/casosEpidemiModel.php";
+		require '../vendor_archives/autoload.php';
+
 	}else{
 		require_once "./model/casosEpidemiModel.php";
+		require './vendor_archives/autoload.php';
+
 	}
+
+		use PhpOffice\PhpSpreadsheet\Spreadsheet;
+		use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
 	class casosEpidemiController extends casosEpidemiModel{
 		
@@ -92,7 +100,8 @@
 		"is_hospital"=>$is_hospital,
 		"id_atrib_especial"=>$id_atrib_especial,
 		"indicatorEpidemiCaseError"=>'',
-		"indicatorPersonError"=>''
+		"indicatorPersonError"=>'',
+		"siExistPerson"=>$siExistPerson
 		];
 
 		if (isset($dataCasosEpidemi['fecha_nacimiento'])) {
@@ -109,8 +118,10 @@
 				if (!$siExistPerson) {
 				$dataPerson = self::$personController->addPersonControllerr($dataCasosEpidemi);
 
-				$dataCasosEpidemi = array_merge($dataCasosEpidemi,$dataCasosEpidemiClean);
+				$dataCasosEpidemi = array_merge($dataPerson,$dataCasosEpidemiClean);
+				}else{
 
+				$dataCasosEpidemi = $dataCasosEpidemiClean;					
 				}
 
 		$year_registro = date("Y", strtotime($fecha_registro));
@@ -250,7 +261,6 @@
 
 	self::msgsValidDataBasicCaseEpidemi($dataCasosEpidemiClean);
 	self::msgValidNotRepeatCasoEpidemi($dataCasosEpidemiClean);
-
 
 		$dataPerson = self::$personController->updatePersonaController($dataCasosEpidemi);
 
@@ -777,6 +787,190 @@ echo json_encode($dataToCreateDataTable);
 
 		}
 		
+
+		public static function getReportCompleteEPIController($dataReport){
+
+
+
+		try {			
+
+$filesReportsTemp = glob(BASE_DIRECTORY.'reports_temp/*');
+
+foreach($filesReportsTemp as $file){ // iterate files
+
+    $resultDeleteReports= unlink($file);
+    
+    if (!$resultDeleteReports) {
+				$alert=[
+					"Alert"=>"simple",
+					"Title"=>"Ha ocurrido un error inesperado",
+					"Text"=>"Los archivos temporales de los reportes podido ser borrados en la carpeta (reports_temp)",
+					"Type"=>"error"
+				];	
+
+				echo json_encode($alert);
+    }
+}
+
+
+$initialDate = mainModel::cleanStringSQL($dataReport['initialDate']);
+
+
+		if (mainModel::isDataEmtpy(
+		 $initialDate)){
+
+				$alert=[
+					"Alert"=>"simple",
+					"Title"=>"Campos Vacios",
+					"Text"=>"El campo Fecha esta vacio",
+					"Type"=>"error"
+				];
+
+				echo json_encode($alert);
+
+				exit();
+
+		}
+
+					if (!mainModel::checkDate($initialDate)){
+			$alert=[
+				"Alert"=>"simple",
+				"Title"=>"Datos Invalidos",
+				"Text"=>"La Fecha Inicial Anual es invalido",
+				"Type"=>"error"
+			];
+
+				echo json_encode($alert);
+
+				exit();
+		}
+
+
+$dateReport = explode("-", $initialDate);
+
+$reportYear = $dateReport[0];
+
+$editFile =  '../reports_template/report_epi.xlsx';
+
+$spreadsheet = \PhpOffice\PhpSpreadsheet\IOFactory::load( $editFile );
+
+$sheet = $spreadsheet->getSheet(0);
+
+$dateRangesWeek = self::getDateRangeOfTheWeeksOfTheYear(mainModel::cleanStringSQL($initialDate));
+
+      $rangeAgesStart=['', 1, 5, 7, 10, 12, 15, 20, 25, 45, 60, 65,''];
+
+      $rangeAgesEnd = [1, 4, 6, 9, 11, 14, 19, 24, 44, 59, 64,'', ''];		
+$dataForDataTables = array();
+
+		$queryGetAgrupacionEPI = mainModel::connectDB()->query(parent::$queryGetAgrupacionEPI);
+
+//	$indexRow = 5;
+
+
+
+		while($agrupacion_epi=$queryGetAgrupacionEPI->fetch(PDO
+			::FETCH_ASSOC)){           
+
+
+			$indexRow = $agrupacion_epi["orden"];
+
+			$indexRow = $indexRow+3;
+
+			$indexColumn = 2;
+
+							/// for obtener los datos por todos los rango de edades
+
+
+			for ($idAgeRange=0; $idAgeRange < count($rangeAgesStart); $idAgeRange++) { 
+
+
+			for ($duplic=0; $duplic <2 ; $duplic++) { 
+			// obtnemos los datos para hembras y machos
+			for ($id_genero=1; $id_genero <= 2 ; $id_genero++) { 
+
+			$sheet->setCellValueByColumnAndRow($indexColumn,$indexRow, parent::getNroCasesEpidemiForEpiModel($agrupacion_epi["orden"], $dateRangesWeek[0], $dateRangesWeek[1],$id_genero,$rangeAgesStart[$idAgeRange],$rangeAgesEnd[$idAgeRange]));
+
+				$indexColumn++;
+
+				}
+
+			}
+
+
+			$isRangeAgeEmpty = ($rangeAgesStart[$idAgeRange] == '' && $rangeAgesEnd[$idAgeRange] == '');
+
+
+			if (!$isRangeAgeEmpty) {
+
+			for ($duplic=0; $duplic <2 ; $duplic++) { 
+
+							// el total de todos los sexos por edad
+			    $sheet->setCellValueByColumnAndRow($indexColumn,$indexRow,parent::getNroCasesEpidemiForEpiModel($agrupacion_epi["orden"], $dateRangesWeek[0], $dateRangesWeek[1],'',$rangeAgesStart[$idAgeRange],$rangeAgesEnd[$idAgeRange])); 
+				$indexColumn++;
+
+			}
+
+
+		         $sheet->setCellValueByColumnAndRow($indexColumn,$indexRow,'0');	
+				$indexColumn++;  
+
+			}
+
+
+			}
+
+		}
+
+$writer = new Xlsx($spreadsheet);
+
+ 		$fileName="report-epi"; 
+
+ 		$fileName.='('.$dateRangesWeek[0].'_'.end($dateRangesWeek).")";
+
+  				$currentDate =  mainModel::getDateCurrentSystem();
+   		
+
+     		$date = '('.date("d-m-Y_", $currentDate);
+		$date.= date("H-i-s", $currentDate).')';
+		$fileName =$fileName.''.$date.'.xlsx';
+
+$editFile =  '../reports_temp/'.$fileName;
+
+$writer->save( $editFile );
+
+
+				$operationElementHtml=[
+					"idSetAtribute"=>"reportEpiComplete",
+					"valueSetAtribute"=>SERVERURL."reports_temp/".$fileName,
+					"typeSetAtribute"=>"href",
+
+					"idSetAtributeDownload"=>"reportEpiComplete",
+					"valueSetAtributeDownload"=>$fileName,
+
+					"idAddClass"=>"#reportEpiComplete",
+					"valueAddClass"=>"btn-success",
+
+					"idRemoveClass"=>"#reportEpiComplete",
+					"valueRemoveClass"=>"btn-secondary"
+				];	
+
+		    echo json_encode($operationElementHtml);
+	}catch (Exception $e) {
+
+				$alert=[
+					"Alert"=>"simple",
+					"Title"=>"Ocurrio un error inesperado",
+					"Text"=>"Error en la solicitud del reporte <br> Error: ". $e->getMessage()."",
+					"Type"=>"error"
+				];
+
+
+				echo json_encode($alert);
+	}
+
+
+}
 		public static function getDataTablesEPIController($dataEpi){
 
 		 $startDateRange = mainModel::cleanStringSQL($dataEpi['startDateRange']);
@@ -848,6 +1042,17 @@ public function importCasosEpidemiController($files){
 			
 			ini_set('memory_limit','512M');
 
+if (isset($files['importCaseEpidemiConfirm'])) {
+
+    $dataCasosEpidemi = unserialize($files['dataCasosEpidemi']);
+;
+
+	self::operationsUpsertsCaseEpidemi($dataCasosEpidemi);
+
+	exit();
+
+}
+
 if ($files['fileCSVImportCaseEpidemi']['type'] !='text/csv' || mainModel::isDataEmtpy($files['fileCSVImportCaseEpidemi']['size'])){
 				$alert=[
 					"Alert"=>"simple",
@@ -890,16 +1095,21 @@ $reader->open($filePath);
 			}   
     }
 
-		$DB_transacc = mainModel::connectDB();
 
-		$DB_transacc->beginTransaction();
+$erradicado = '';
+$n_inter = '';
+$nin = '';
+$ninmtobs = '';
+$notdiaria = '';
+$notsemanal = '';
+$sistema_especial = '';
+$es_suive_notin = '';
+$es_suive_est_epi = '';
+$es_suive_est_brote = '';
 
-		session_start(['name'=>'dptoEpidemi']);	
+$msgWarningAttributesEventCIE10 ='';
 
-	try {
-
-	$countOperations=0;
-
+$indicatorCaseEpidemiNotificInmediata ='<br>';
 
 for ($indiceFila = 1; $indiceFila < count($dataForQuery); $indiceFila++) {
 
@@ -984,6 +1194,8 @@ $telefono = mainModel::cleanStringSQL($dataForQuery[$indiceFila][24]);
 
 		}
 
+	// devolver mensaje y exit si hay error
+	self::$personController->addPersonControllerr($dataCasosEpidemi);
 
 	self::msgsValidDataBasicCaseEpidemi($dataCasosEpidemi);
 
@@ -1002,203 +1214,96 @@ $telefono = mainModel::cleanStringSQL($dataForQuery[$indiceFila][24]);
 			}
 
 
-		$currentDate =  mainModel::getDateCurrentSystem();
+	self::msgsValidDataBasicCaseEpidemi($dataCasosEpidemi);
 
-		$currentYear = date("Y", $currentDate);
-
-		$currentHour = date("h:i:s a", $currentDate);
-
-		$currentDate = date("Y-m-d", $currentDate);
-
-		$fecha_registro_values = explode("-", $fecha_registro);
-
-		$dataCasosEpidemiBitacora=[
-		'indicatorPersonError'=>$indicatorEpidemiCaseError,
-		'operationImportCaseEpidemi'=>true,
-		"year_registro"=>$fecha_registro_values[0],
-		"id_nacionalidad_usuario"=>$_SESSION['id_nacionalidad'],
-		"doc_identidad_usuario"=>$_SESSION['doc_identidad'],
-		"usuario_alias"=>$_SESSION['aliasUser'],
-		"bitacora_fecha"=>$currentDate,
-		"bitacora_year"=>$currentYear,
-		"bitacora_hora"=>$currentHour
-	];
-
-		$dataCasosEpidemi = array_merge($dataCasosEpidemi,$dataCasosEpidemiBitacora);
-
-		$queryIsExistcasosEpidemi = $DB_transacc->query("SELECT id_caso_epidemi FROM casos_epidemi WHERE id_nacionalidad = '$id_nacionalidad' AND doc_identidad = '$doc_identidad' AND catalog_key_cie10 = '$catalog_key_cie10' AND fecha_registro = '$fecha_registro'");
-
-			$id_tipo_operacion = 1;
+	$recordsAtributesImmediateNotificEventCIE10 = self::getAtributesOfImmediatelyNotifiableEventCIE10($catalog_key_cie10);
 
 
-		if($queryIsExistcasosEpidemi->rowCount() > 0){
-			
-			$id_tipo_operacion = 2;
+foreach($recordsAtributesImmediateNotificEventCIE10 as $atributesImmediateNotific){
 
-	$dataPerson = self::$personController->updatePersonaController($dataCasosEpidemi);
+          if ($atributesImmediateNotific['erradicado'] == 'SI') {
+            $erradicado =" <br>Causas erradicadas o no existentes.";
+                    
+          }
+          if ($atributesImmediateNotific['n_inter'] == 'SI') {
+            $n_inter = "<br>- Notificación Internacional.";
+            }
 
-	$dataCasosEpidemi = array_merge($dataCasosEpidemi,$dataPerson);
+          if ($atributesImmediateNotific['nin'] == 'SI') {
+            $nin = "<br>- Notificación inmediata de vigilancia epidemiológica de morbilidad.";
+            }
 
-			// si caso de actualizacion verificamos si son los mismos datos
-		
- 		  $columnsTableToCompare = [
-		"catalog_key_cie10",
-		"id_parroquia",
-		"direccion",
-		"fecha_registro",
-		"telefono"];
+          if ($atributesImmediateNotific['ninmtobs'] == 'SI') {
+            $ninmtobs = "<br>- Notificación inmediata de mortalidad obstétrica.";
+            }
 
- 		 $fieldsForFilter = array('doc_identidad'=>$doc_identidad,"id_nacionalidad"=>$id_nacionalidad,"catalog_key_cie10"=>$catalog_key_cie10,'fecha_registro'=>$fecha_registro);
+          if ($atributesImmediateNotific['notdiaria'] == 'SI') {
+            $notdiaria = "<br>- Vigilancia epidemiológica mobilidad notificación diaria.";
+            }
 
-		$queryToGetDataCasoEpidemi = self::getCasosEpidemiController($columnsTableToCompare,$fieldsForFilter);
+          if ($atributesImmediateNotific['notsemanal'] == 'SI') {
+            $notsemanal = "<br>- Vigilancia epidemiológica mobilidad notificación semanal.";
+            }
 
-		$ifCasosEpidemiDataUpdateIsSameDatabase = mainModel::isFieldsEqualToThoseInTheDatabase($queryToGetDataCasoEpidemi,$dataCasosEpidemi);
+          if ($atributesImmediateNotific['sistema_especial'] == 'SI') {
+            $sistema_especial = "<br>- Vigilancia epidemiológica mobilidad notificación especial.";
+            }
 
-		}else{
+          if ($atributesImmediateNotific['es_suive_notin'] == 'SI') {
+            $es_suive_notin = "<br>- Padecimiento de notificación epidemiológica inmediata.";
+            }
 
-	$dataPerson = self::$personController->addPersonControllerr($dataCasosEpidemi);
+          if ($atributesImmediateNotific['es_suive_est_epi'] == 'SI') {
+            $es_suive_est_epi = "<br>- Padecimiento que requiere estudio epidemiológico de caso.";
+            }
 
-	$dataCasosEpidemi = array_merge($dataCasosEpidemi,$dataPerson);
 
-			// para que de paso a la consulta
-		 $ifCasosEpidemiDataUpdateIsSameDatabase = false;
-		 $dataCasosEpidemi['ifUpdatePerson']  = true;
+          if ($atributesImmediateNotific['es_suive_est_brote']  == 'SI') {
+            $es_suive_est_brote = "<br>- Padecimiento que requiere estudio de brote.";
+            }
+}
 
 }
 
-// si updatePersonaController tiene ifUpdatePerson con true y los datos de caos epidemi no son lo mismo hagan las operaiones
 
-$dataCasosEpidemi['ifCasosEpidemiDataUpdateIsSameDatabase'] = $ifCasosEpidemiDataUpdateIsSameDatabase;
+$msgWarningComplete = $erradicado.$n_inter.$nin.$ninmtobs.$notdiaria.$notsemanal.$sistema_especial.$es_suive_notin.$es_suive_est_epi.$es_suive_est_brote;
 
-	if ($dataCasosEpidemi['ifUpdatePerson'] == true || $ifCasosEpidemiDataUpdateIsSameDatabase == false) {
+if (!mainModel::isDataEmtpy($msgWarningComplete)){
 
-
-	$queryInsertPerson  = personModel::stringQueryAddPersonModel();
-
-$sqlQuery = $DB_transacc->prepare($queryInsertPerson."
-ON CONFLICT ON CONSTRAINT personas_key DO UPDATE SET nombres = :nombres,
-		 apellidos = :apellidos,
-		 fecha_nacimiento = :fecha_nacimiento,
-		 id_genero = :id_genero");
-
-		$sqlQuery->execute(array(
-		 "id_nacionalidad"=>$dataCasosEpidemi['id_nacionalidad'],
-		 "doc_identidad"=>$dataCasosEpidemi['doc_identidad'],
-		 "nombres"=>$dataCasosEpidemi['nombres'],
-		 "apellidos"=>$dataCasosEpidemi['apellidos'],
-		 "fecha_nacimiento"=>$dataCasosEpidemi['fecha_nacimiento'],
-		 "id_nacionalidad"=>$dataCasosEpidemi['id_nacionalidad'],
-		 "id_genero"=>$dataCasosEpidemi['id_genero']));
-
-		
-		$queryAddCasosEpidemi = parent::$queryAddCasosEpidemi;
-
-$sqlQuery = $DB_transacc->prepare($queryAddCasosEpidemi."
-ON CONFLICT ON CONSTRAINT casos_epidemi_bitacora_unq_1 DO UPDATE SET 
-		 catalog_key_cie10 = :catalog_key_cie10,
-		 id_parroquia = :id_parroquia,
-		 direccion = :direccion,
-		 telefono = :telefono,
-		 fecha_registro = :fecha_registro,
-		 year_registro = :year_registro ;");	
-
-		$sqlQuery->execute(array(
-		 "doc_identidad" => $dataCasosEpidemi['doc_identidad'],
-		 "id_nacionalidad" => $dataCasosEpidemi['id_nacionalidad'],
-		 "catalog_key_cie10" => $dataCasosEpidemi['catalog_key_cie10'],
-		 "id_atrib_especial" => $dataCasosEpidemi['id_atrib_especial'],
-		 "is_hospital" => $dataCasosEpidemi['is_hospital'],		 
-		 "id_parroquia" => $dataCasosEpidemi['id_parroquia'],
-		 "direccion" => $dataCasosEpidemi['direccion'],
-		 "telefono" => $dataCasosEpidemi['telefono'],
-		 "year_registro" => $dataCasosEpidemi['year_registro'],
-		 "fecha_registro" => $dataCasosEpidemi['fecha_registro']));
-
-
-    $queryGetIdEpidemi = $DB_transacc->query("SELECT id_caso_epidemi FROM public.casos_epidemi WHERE catalog_key_cie10 = '$catalog_key_cie10' AND id_nacionalidad = '$id_nacionalidad' AND doc_identidad = '$doc_identidad' limit 1;");
-
-	$idEpidemiCase = $queryGetIdEpidemi->fetchColumn();
-		
-	$dataCasosEpidemi["id_caso_epidemi"]=$idEpidemiCase;
-
-		$sqlQuery = $DB_transacc->prepare(self::$queryAddBitacoraCasoEpidemi);
-
-		$sqlQuery->execute(array(
-		 "usuario_alias"=>$dataCasosEpidemi['usuario_alias'],
-		 "bitacora_fecha"=>$dataCasosEpidemi['bitacora_fecha'],
-		 "bitacora_hora"=>$dataCasosEpidemi['bitacora_hora'],
-		 "bitacora_year"=>$dataCasosEpidemi['bitacora_year'],
-		 "id_tipo_operacion"=>$id_tipo_operacion,
-		 "id_caso_epidemi"=>$dataCasosEpidemi['id_caso_epidemi'],
-		 "fecha_caso_epidemi"=>$dataCasosEpidemi['fecha_registro'],
-		 "catalog_key_cie10"=>$dataCasosEpidemi['catalog_key_cie10'],
-		 "id_atrib_especial" => $dataCasosEpidemi['id_atrib_especial'],
-		 "is_hospital" => $dataCasosEpidemi['is_hospital'],
-		 "id_nacionalidad_caso"=>$dataCasosEpidemi['id_nacionalidad'],
-		 "doc_identidad_caso"=>$dataCasosEpidemi['doc_identidad'],
-		 "id_nacionalidad_usuario"=>$dataCasosEpidemi['id_nacionalidad_usuario'],
-		 "doc_identidad_usuario"=>$dataCasosEpidemi['doc_identidad_usuario']));
-
-	$countOperations++;
-	}
-
-	}
-
-
-//var_dump($countOperations);
-
-if ($countOperations != 0) {
-	 $DB_transacc->commit();
+$indicatorCaseEpidemiNotificInmediata.='<br>('.$id_caso_epidemi.','.$catalog_key_cie10.')';
 }
-	
-			$alert=[
-				"cleanInput"=>"true",
-				"reloadDataTable"=>"true",
-				"Alert"=>"simple",
-				"Title"=>"Operacion Exitosa",
-				"Text"=>"Casos Epidemiologicos Importados",
-				"Type"=>"success"
-			];
 
-	}catch (Exception $e) {
 
-			$error = '';
+$msgWarningAttributesEventCIE10 = $erradicado.$n_inter.$nin.$ninmtobs.$notdiaria.$notsemanal.$sistema_especial.$es_suive_notin.$es_suive_est_epi.$es_suive_est_brote;
 
-if ($countOperations == 0) {
+if (!mainModel::isDataEmtpy($msgWarningAttributesEventCIE10)){
 
-		$DB_transacc->rollBack();
-
-    	$codeError = $e->getCode();
-
-    	$textDetailsTecnics =  "<br><br> Detalles Tecnicos: ". $e->getMessage();
-		
-		$textError = mainModel:: getMsgErrorSQL($codeError);
+$dataSendCasos = serialize($dataForQuery);
+$dataSendCasos = urlencode($dataSendCasos);
 
 			$alert=[
-				"Alert"=>"simple",
-				"Title"=>"Ocurrio un error inesperado",
-				"Text"=>$textError.$textDetailsTecnics,
-				"Type"=>"error"
-			];
+				"Alert"=>"confirmation",
+				"Title"=>"¿Estás seguro?",
+				"Text"=>"<span style='color: red;''><b>Los (id caso epidemi, Clave CIE-10).".
 
-	}else{
-					$alert=[
-				"cleanInput"=>"true",		
-				"reloadDataTable"=>"true",
-				"Alert"=>"clean",
-				"Title"=>"Operacion Exitosa",
-				"Text"=>"Casos Epidemiologicos Importados",
-				"Type"=>"success"
-			];
-	}
+					$indicatorCaseEpidemiNotificInmediata
 
+				."<br><br>Son de notificacion inmediata, se consideran:</b><br>".
+				$msgWarningAttributesEventCIE10.
+				"<br><br>¿Desea continuar?</b></span>",
+				"Type"=>"warning",
+				"Data"=>"importCaseEpidemiConfirm=true&dataCasosEpidemi=".$dataSendCasos."",
+				"Method"=>"POST",
+				"Url"=>"".SERVERURL."ajax/casosEpidemiAjax.php"];
 
-	}
-
-
-	return json_encode($alert);
+	echo json_encode($alert);
 	exit();
 
+}else{
+
+	self::operationsUpsertsCaseEpidemi($dataForQuery);
+
+}
 
 }
 
@@ -1238,6 +1343,8 @@ if ($countOperations == 0) {
 		
 				$currentDate =  mainModel::getDateCurrentSystem();
 
+//				$currentDate = $currentDate - 604800;
+
        			$dateYesterday = date("Y-m-d",strtotime($currentDate."- 1 days"));
 
        			$dateDay = date("d",strtotime($currentDate."- 1 days"));
@@ -1247,42 +1354,124 @@ if ($countOperations == 0) {
 				$currentYear = date("Y", $currentDate);
 
 				$currentDate = date("y-m-d", $currentDate);
-				    
+
+$queryForCasosEpidemiNotificInmediate = "SELECT  
+ DISTINCT ON (casos_epi.id_caso_epidemi)  ROW_NUMBER() OVER(ORDER BY casos_epi.id_caso_epidemi desc)
+FROM casos_epidemi casos_epi, data_cie10 cie10
+where cie10.CATALOG_KEY = casos_epi.catalog_key_cie10
+and isCIE10InmediateNotice(cie10.n_inter,cie10.nin,cie10.ninmtobs,cie10.notdiaria,cie10.notsemanal,cie10.sistema_especial,
+				cie10.es_suive_notin,cie10.es_suive_est_epi,cie10.es_suive_est_brote) = 'SI' ";
+
 		$queryCountCasosEpidemiCurrentYear = mainModel::connectDB()->query("SELECT count(id_caso_epidemi) FROM casos_epidemi where year_registro = '$currentYear'");
 
+
+		$queryCountCasosEpidemiCurrentYearNotificInmediate = mainModel::connectDB()->query($queryForCasosEpidemiNotificInmediate." and casos_epi.year_registro = '$currentYear' limit 1");
+
+
 		$queryCountCasosEpidemiMounth = mainModel::connectDB()->query("SELECT count(id_caso_epidemi) FROM casos_epidemi where DATE_PART('month',fecha_registro) = '$currentMounth';");
+
+		$queryCountCasosEpidemiMounthNotificInmediate = mainModel::connectDB()->query($queryForCasosEpidemiNotificInmediate." AND DATE_PART('month',casos_epi.fecha_registro) = '$currentMounth' limit 1");
 
 		$queryCountCasosEpidemiWeek = mainModel::connectDB()->query("SELECT count(id_caso_epidemi)
         FROM casos_epidemi where DATE_PART('week',fecha_registro) = DATE_PART('week','$dateYesterday'::date);");
 
+		$queryCountCasosEpidemiWeekNotificInmediate = mainModel::connectDB()->query($queryForCasosEpidemiNotificInmediate." AND DATE_PART('week',casos_epi.fecha_registro) = DATE_PART('week','$dateYesterday'::date) limit 1;");
+
 		$queryCountCasosEpidemiYesterday = mainModel::connectDB()->query("SELECT count(id_caso_epidemi)
         FROM casos_epidemi where fecha_registro = '$dateYesterday'");
 
+		$queryCountCasosEpidemiYesterdayNotificInmediate = mainModel::connectDB()->query($queryForCasosEpidemiNotificInmediate." AND casos_epi.fecha_registro = '$dateYesterday' limit 1");
+
 		$queryCountCasosEpidemiTotal = mainModel::connectDB()->query("SELECT count(id_caso_epidemi) FROM casos_epidemi");
+
+		$queryCountCasosEpidemiTotalNotificInmediate = mainModel::connectDB()->query($queryForCasosEpidemiNotificInmediate);
+
 
 		$countCasosEpidemiCurrentYear = $queryCountCasosEpidemiCurrentYear->fetchColumn();
 
+		$countCasosEpidemiCurrentYearNotificInmediate = $queryCountCasosEpidemiCurrentYearNotificInmediate->fetchColumn();
+
 		$countCasosEpidemiMounth = $queryCountCasosEpidemiMounth->fetchColumn();
+
+		$countCasosEpidemiMounthNotificInmediate = $queryCountCasosEpidemiMounthNotificInmediate->fetchColumn();
 
 		$countCasosEpidemiWeek = $queryCountCasosEpidemiWeek->fetchColumn();
 
+		$countCasosEpidemiWeekNotificInmediate = $queryCountCasosEpidemiWeekNotificInmediate->fetchColumn();
+
 		$countCasosEpidemiYesterday = $queryCountCasosEpidemiYesterday->fetchColumn();
+
+		$countCasosEpidemiYesterdayNotificInmediate = $queryCountCasosEpidemiYesterdayNotificInmediate->fetchColumn();
 
 		$countCasosEpidemiTotal = $queryCountCasosEpidemiTotal->fetchColumn();
         
+       $countCasosEpidemiTotalNotificInmediate = $queryCountCasosEpidemiTotalNotificInmediate->fetchColumn();
+
         return "
-  		Año ($currentYear) : ".$countCasosEpidemiCurrentYear." 
+  		Año ($currentYear) : ".intval($countCasosEpidemiCurrentYear)." 
   		<br>
-        Mes ($currentMounth) : ".$countCasosEpidemiMounth."
+  		 Notificacion: ".intval($countCasosEpidemiCurrentYearNotificInmediate)." 
+  		<br><br>
+
+        Mes ($currentMounth) : ".intval($countCasosEpidemiMounth)."
+  		<br> 
+  		Notificacion: ".intval($countCasosEpidemiMounthNotificInmediate)." 
+  		<br><br>
+
+        Semana: ".intval($countCasosEpidemiWeek)."
   		<br>
-        Semana: ".$countCasosEpidemiWeek."
+  		Notificacion: ".intval($countCasosEpidemiWeekNotificInmediate)." 
+  		<br><br>
+
+        Hasta Hoy : ".intval($countCasosEpidemiYesterday)."
   		<br>
-        Hoy : ".$countCasosEpidemiYesterday."
-  		<br>
-        Total: ".$countCasosEpidemiTotal."
-		<br>";
+  		Notificacion: ".intval($countCasosEpidemiYesterdayNotificInmediate)." 
+  		<br><br>
+
+        Total: ".intval($countCasosEpidemiTotal)."
+		<br>
+  		Notificacion: ".intval($countCasosEpidemiTotalNotificInmediate)." 
+  		<br><br>
+		";
 		
 }
+
+
+// Ahora revisaremos los casos epidemiplogicos de notificacion
+// Inmediata
+protected static function getAtributesOfImmediatelyNotifiableEventCIE10($catalog_key){
+                
+                $attributesFilter =  [];
+
+                $filterValues = [];
+
+                array_push($attributesFilter, 'catalog_key = :catalog_key');
+                $filterValues[':catalog_key'] = [
+                'value' => $catalog_key,
+                'type' => \PDO::PARAM_STR,
+                ];
+
+$queryGetAtributesImmediateNotific = mainModel::querySelectsCreator('data_cie10',
+	array(
+'erradicado',
+'n_inter', 
+'nin', 
+'ninmtobs', 
+'notdiaria', 
+'notsemanal', 
+'sistema_especial', 
+'es_suive_notin', 
+'es_suive_est_epi', 
+'es_suive_est_brote'),
+$attributesFilter,
+$filterValues);
+
+	 $queryGetAtributesImmediateNotific->execute();
+
+$recordsAtributesImmediateNotificEventCIE10 = $queryGetAtributesImmediateNotific->fetchAll(PDO::FETCH_ASSOC);
+
+return $recordsAtributesImmediateNotificEventCIE10;
+		}
 
 //  comprobar que no se repita el caso epidemiologico
 		protected static function msgsValidDataBasicCaseEpidemi($dataCasosEpidemi){
@@ -1614,6 +1803,291 @@ function getInicialGeneroController($id_genero){
 }
 
 
+protected static function operationsUpsertsCaseEpidemi($dataForQuery){
+
+			$DB_transacc = mainModel::connectDB();
+
+		$DB_transacc->beginTransaction();
+
+		session_start(['name'=>'dptoEpidemi']);	
+
+	try {
+
+	$countOperations=0;
+
+
+for ($indiceFila = 1; $indiceFila < count($dataForQuery); $indiceFila++) {
+
+
+$id_caso_epidemi = mainModel::cleanStringSQL($dataForQuery[$indiceFila][1]);
+
+$id_genero = mainModel::cleanStringSQL($dataForQuery[$indiceFila][2]);
+
+$id_nacionalidad = mainModel::cleanStringSQL($dataForQuery[$indiceFila][4]);
+
+
+$doc_identidad = mainModel::cleanStringSQL($dataForQuery[$indiceFila][5]);
+
+$fecha_nacimiento = mainModel::cleanStringSQL($dataForQuery[$indiceFila][7]);
+
+$nombres = mainModel::cleanStringSQL($dataForQuery[$indiceFila][9]);
+
+$apellidos = mainModel::cleanStringSQL($dataForQuery[$indiceFila][10]);
+
+
+$catalog_key_cie10 = mainModel::cleanStringSQL($dataForQuery[$indiceFila][13]);
+
+$id_atrib_especial = mainModel::cleanStringSQL($dataForQuery[$indiceFila][15]);
+
+$is_hospital = mainModel::cleanStringSQL($dataForQuery[$indiceFila][18]);
+
+$fecha_registro = mainModel::cleanStringSQL($dataForQuery[$indiceFila][20]);
+
+$id_parroquia = mainModel::cleanStringSQL($dataForQuery[$indiceFila][21]);
+
+$direccion = mainModel::cleanStringSQL($dataForQuery[$indiceFila][23]);
+
+$telefono = mainModel::cleanStringSQL($dataForQuery[$indiceFila][24]);
+
+		 $indicatorEpidemiCaseError = " <br> En id Caso Epidemiologico (".$id_caso_epidemi.")";
+
+		$dataCasosEpidemi=[
+		'indicatorPersonError'=>$indicatorEpidemiCaseError,
+		'indicatorEpidemiCaseError'=>$indicatorEpidemiCaseError,
+		'doc_identidad'=>$doc_identidad,
+		"nombres"=>$nombres,
+		"apellidos"=>$apellidos,
+		"fecha_nacimiento"=>$fecha_nacimiento,
+		"id_nacionalidad"=>$id_nacionalidad,
+		"id_genero"=>$id_genero,
+		"catalog_key_cie10"=>$catalog_key_cie10,
+		"is_hospital"=>$is_hospital,
+		"id_atrib_especial"=>$id_atrib_especial,
+		"id_parroquia"=>$id_parroquia,
+		"direccion"=>$direccion,
+		"fecha_registro"=>$fecha_registro,
+		"telefono"=>$telefono];
+
+// procesos de registro y actualizacion
+			
+
+		$currentDate =  mainModel::getDateCurrentSystem();
+
+		$currentYear = date("Y", $currentDate);
+
+		$currentHour = date("h:i:s a", $currentDate);
+
+		$currentDate = date("Y-m-d", $currentDate);
+
+		$fecha_registro_values = explode("-", $fecha_registro);
+
+		$dataCasosEpidemiBitacora=[
+		'indicatorPersonError'=>$indicatorEpidemiCaseError,
+		'operationImportCaseEpidemi'=>true,
+		"year_registro"=>$fecha_registro_values[0],
+		"id_nacionalidad_usuario"=>$_SESSION['id_nacionalidad'],
+		"doc_identidad_usuario"=>$_SESSION['doc_identidad'],
+		"usuario_alias"=>$_SESSION['aliasUser'],
+		"bitacora_fecha"=>$currentDate,
+		"bitacora_year"=>$currentYear,
+		"bitacora_hora"=>$currentHour
+	];
+
+		$dataCasosEpidemi = array_merge($dataCasosEpidemi,$dataCasosEpidemiBitacora);
+
+		$queryIsExistcasosEpidemi = $DB_transacc->query("SELECT id_caso_epidemi FROM casos_epidemi WHERE id_nacionalidad = '$id_nacionalidad' AND doc_identidad = '$doc_identidad' AND catalog_key_cie10 = '$catalog_key_cie10' AND fecha_registro = '$fecha_registro'");
+
+			$id_tipo_operacion = 1;
+
+
+		if($queryIsExistcasosEpidemi->rowCount() > 0){
+			
+			$id_tipo_operacion = 2;
+	$dataPerson = self::$personController->updatePersonaController($dataCasosEpidemi);
+
+	$dataCasosEpidemi = array_merge($dataCasosEpidemi,$dataPerson);
+
+			// si caso de actualizacion verificamos si son los mismos datos
+		
+ 		  $columnsTableToCompare = [
+		"catalog_key_cie10",
+		"id_parroquia",
+		"direccion",
+		"fecha_registro",
+		"telefono"];
+
+ 		 $fieldsForFilter = array('doc_identidad'=>$doc_identidad,"id_nacionalidad"=>$id_nacionalidad,"catalog_key_cie10"=>$catalog_key_cie10,'fecha_registro'=>$fecha_registro);
+
+		$queryToGetDataCasoEpidemi = self::getCasosEpidemiController($columnsTableToCompare,$fieldsForFilter);
+
+		$ifCasosEpidemiDataUpdateIsSameDatabase = mainModel::isFieldsEqualToThoseInTheDatabase($queryToGetDataCasoEpidemi,$dataCasosEpidemi);
+
+		}else{
+
+	$dataPerson = self::$personController->addPersonControllerr($dataCasosEpidemi);
+
+	$dataCasosEpidemi = array_merge($dataCasosEpidemi,$dataPerson);
+
+			// para que de paso a la consulta
+		 $ifCasosEpidemiDataUpdateIsSameDatabase = false;
+		 $dataCasosEpidemi['ifUpdatePerson']  = true;
+
 }
-								
+
+// si updatePersonaController tiene ifUpdatePerson con true y los datos de caos epidemi no son lo mismo hagan las operaiones
+
+$dataCasosEpidemi['ifCasosEpidemiDataUpdateIsSameDatabase'] = $ifCasosEpidemiDataUpdateIsSameDatabase;
+
+	if ($dataCasosEpidemi['ifUpdatePerson'] == true || $ifCasosEpidemiDataUpdateIsSameDatabase == false) {
+
+
+	$queryInsertPerson  = personModel::stringQueryAddPersonModel();
+
+$sqlQuery = $DB_transacc->prepare($queryInsertPerson."
+ON CONFLICT ON CONSTRAINT personas_key DO UPDATE SET nombres = :nombres,
+		 apellidos = :apellidos,
+		 fecha_nacimiento = :fecha_nacimiento,
+		 id_genero = :id_genero");
+
+		$sqlQuery->execute(array(
+		 "id_nacionalidad"=>$dataCasosEpidemi['id_nacionalidad'],
+		 "doc_identidad"=>$dataCasosEpidemi['doc_identidad'],
+		 "nombres"=>$dataCasosEpidemi['nombres'],
+		 "apellidos"=>$dataCasosEpidemi['apellidos'],
+		 "fecha_nacimiento"=>$dataCasosEpidemi['fecha_nacimiento'],
+		 "id_nacionalidad"=>$dataCasosEpidemi['id_nacionalidad'],
+		 "id_genero"=>$dataCasosEpidemi['id_genero']));
+
+		
+		$queryAddCasosEpidemi = parent::$queryAddCasosEpidemi;
+
+$sqlQuery = $DB_transacc->prepare($queryAddCasosEpidemi."
+ON CONFLICT ON CONSTRAINT casos_epidemi_bitacora_unq_1 DO UPDATE SET 
+		 catalog_key_cie10 = :catalog_key_cie10,
+		 id_parroquia = :id_parroquia,
+		 direccion = :direccion,
+		 telefono = :telefono,
+		 fecha_registro = :fecha_registro,
+		 year_registro = :year_registro ;");	
+
+		$sqlQuery->execute(array(
+		 "doc_identidad" => $dataCasosEpidemi['doc_identidad'],
+		 "id_nacionalidad" => $dataCasosEpidemi['id_nacionalidad'],
+		 "catalog_key_cie10" => $dataCasosEpidemi['catalog_key_cie10'],
+		 "id_atrib_especial" => $dataCasosEpidemi['id_atrib_especial'],
+		 "is_hospital" => $dataCasosEpidemi['is_hospital'],		 
+		 "id_parroquia" => $dataCasosEpidemi['id_parroquia'],
+		 "direccion" => $dataCasosEpidemi['direccion'],
+		 "telefono" => $dataCasosEpidemi['telefono'],
+		 "year_registro" => $dataCasosEpidemi['year_registro'],
+		 "fecha_registro" => $dataCasosEpidemi['fecha_registro']));
+
+
+    $queryGetIdEpidemi = $DB_transacc->query("SELECT id_caso_epidemi FROM public.casos_epidemi WHERE catalog_key_cie10 = '$catalog_key_cie10' AND id_nacionalidad = '$id_nacionalidad' AND doc_identidad = '$doc_identidad' limit 1;");
+
+	$idEpidemiCase = $queryGetIdEpidemi->fetchColumn();
+		
+	$dataCasosEpidemi["id_caso_epidemi"]=$idEpidemiCase;
+
+		$sqlQuery = $DB_transacc->prepare(self::$queryAddBitacoraCasoEpidemi);
+
+		$sqlQuery->execute(array(
+		 "usuario_alias"=>$dataCasosEpidemi['usuario_alias'],
+		 "bitacora_fecha"=>$dataCasosEpidemi['bitacora_fecha'],
+		 "bitacora_hora"=>$dataCasosEpidemi['bitacora_hora'],
+		 "bitacora_year"=>$dataCasosEpidemi['bitacora_year'],
+		 "id_tipo_operacion"=>$id_tipo_operacion,
+		 "id_caso_epidemi"=>$dataCasosEpidemi['id_caso_epidemi'],
+		 "fecha_caso_epidemi"=>$dataCasosEpidemi['fecha_registro'],
+		 "catalog_key_cie10"=>$dataCasosEpidemi['catalog_key_cie10'],
+		 "id_atrib_especial" => $dataCasosEpidemi['id_atrib_especial'],
+		 "is_hospital" => $dataCasosEpidemi['is_hospital'],
+		 "id_nacionalidad_caso"=>$dataCasosEpidemi['id_nacionalidad'],
+		 "doc_identidad_caso"=>$dataCasosEpidemi['doc_identidad'],
+		 "id_nacionalidad_usuario"=>$dataCasosEpidemi['id_nacionalidad_usuario'],
+		 "doc_identidad_usuario"=>$dataCasosEpidemi['doc_identidad_usuario']));
+
+	$countOperations++;
+	
+	}
+
+}
+	if ($countOperations != 0) {
+	 $DB_transacc->commit();
+}
+
+
+			$alert=[
+				"cleanInput"=>"true",
+				"reloadDataTable"=>"true",
+				"Alert"=>"simple",
+				"Title"=>"Operacion Exitosa",
+				"Text"=>"Casos Epidemiologicos Importados",
+				"Type"=>"success"
+			];
+
+	}catch (Exception $e) {
+
+			$error = '';
+
+if ($countOperations == 0) {
+
+		$DB_transacc->rollBack();
+
+    	$codeError = $e->getCode();
+
+    	$textDetailsTecnics =  "<br><br> Detalles Tecnicos: ". $e->getMessage();
+		
+		$textError = mainModel:: getMsgErrorSQL($codeError);
+
+			$alert=[
+				"Alert"=>"simple",
+				"Title"=>"Ocurrio un error inesperado",
+				"Text"=>$textError.$textDetailsTecnics,
+				"Type"=>"error"
+			];
+
+	}else{
+					$alert=[
+				"cleanInput"=>"true",		
+				"reloadDataTable"=>"true",
+				"Alert"=>"clean",
+				"Title"=>"Operacion Exitosa",
+				"Text"=>"Casos Epidemiologicos Importados",
+				"Type"=>"success"
+			];
+	}
+
+
+	}
+
+
+	echo json_encode($alert);
+	exit();
+
+	}
+
+
+	protected static function getDateRangeOfTheWeeksOfTheYear($initialDate){
+		
+		 $dateRengWeek[] = $initialDate; 
+
+	for ($i=0; $i < 104 ; $i++) { 
+
+	 $dateRengWeek[] = date("d-m-Y",strtotime($dateRengWeek[$i]."+ 6 days")); 
+
+	    $i++;
+
+	 $dateRengWeek[] = date("d-m-Y",strtotime($dateRengWeek[$i]."+ 1 days")); 
+
+	}
+
+	 $dateRengWeek[] = date("d-m-Y",strtotime($dateRengWeek[$i]."+ 6 days")); 
+
+	 return $dateRengWeek;
+	}
+
+}
+
+							
  ?>

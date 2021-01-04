@@ -1,9 +1,13 @@
 <?php 
 
-	$requestAjax = TRUE;
+  	$requestAjax = TRUE;
 
 
 	require_once "../config/app.php";
+
+		  require_once "../controller/loginController.php";
+
+		  $loginController = new loginController();
 
 		require_once "../controller/casosEpidemiController.php";
 
@@ -37,9 +41,19 @@ if (isset($_POST['operationType']) && $_POST['operationType'] == "register"){
 
 	 	echo $casosEpidemiController->importCasosEpidemiController($_FILES);
 
+}elseif (isset($_POST['importCaseEpidemiConfirm'])) {
+
+	 	$casosEpidemiController->importCasosEpidemiController($_POST);
+
 		}elseif(isset($_POST['getEspecialAttributes'])) {
 	
 		$casosEpidemiController->getEspecialAttributesCIE10($_POST);		
+
+		}elseif($_POST['operationType'] == "report") {
+
+     $casosEpidemiController->getReportCompleteEPIController($_POST);
+
+
 
 		} else { 
 		/*

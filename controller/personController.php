@@ -38,7 +38,7 @@
 		 $id_genero = mainModel::cleanStringSQL($dataPerson['id_genero']);
 
 		 // en las importaciones de datos no tendran los nros separados
-if (!isset($dataPerson['operationImportCaseEpidemi'])) {
+if (!isset($dataPerson['telefono'])) {
 		 $telefono = mainModel::cleanStringSQL($dataPerson['telefonoPart1'].$dataPerson['telefonoPart2'].$dataPerson['telefonoPart3']);
 		}else{
 		 $telefono = mainModel::cleanStringSQL($dataPerson['telefono']);

@@ -4,9 +4,14 @@
 
 		require_once "../config/app.php";
 
+		  require_once "../controller/loginController.php";
+
+		  $loginController = new loginController();
+
 		require_once "../controller/loginController.php";
 
 		$loginController = new loginController();
+
 
 if (isset($_POST['operationType']) && $_POST['operationType'] === "login") {
 
