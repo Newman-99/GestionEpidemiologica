@@ -56,12 +56,7 @@ if (isset($_POST['operationType']) && $_POST['operationType'] == "register"){
 
 
 		} else { 
-		/*
-		session_start(["name"=> "dptoEpidemi"]);
-		session_unset();
-		session_destroy();
-		header("Location: ".SERVERURL."login/");
-		*/
+			self::forceClosureController();
 	}
 
 	

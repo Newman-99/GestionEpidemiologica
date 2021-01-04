@@ -32,13 +32,9 @@
 		$cie10DataController->exportCatalogCIE10($_POST['typeArchive']);		
 
  }else {
-
- /*		
-		session_start(["name"=> "systemDptoEpidemi"]);
-		session_unset();
-		session_destroy();
-		header("Location: ".SERVERURL."login/");
-*/	}
+ 		
+			self::forceClosureController();
+			}
 	
 
 
