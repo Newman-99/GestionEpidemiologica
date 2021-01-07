@@ -65,7 +65,6 @@
 		$is_hospital = 1;
 		}
 
-
 		if (mainModel::isDataEmtpy(
 		 $id_nacionalidad,
 		 $doc_identidad,
@@ -134,13 +133,11 @@
 
 				$currentDate =  mainModel::getDateCurrentSystem();
 
-				$currentYear = date("Y", $currentDate);
+				$currentYear = date("Y", strtotime($currentDate));
 
-				$currentHour = date("h:i:s a", $currentDate);
+				$currentHour = date("h:i:s a", strtotime($currentDate));
 
-				$currentDate = date("Y-m-d", $currentDate);
-
-		session_start(['name'=>'dptoEpidemi']);	
+				$currentDate = date("Y-m-d", strtotime($currentDate));
 
 		$dataCasosEpidemiBitacora = 
 		["id_nacionalidad_usuario"=>$_SESSION['id_nacionalidad'],
@@ -155,8 +152,7 @@
 
 		$dataCasosEpidemi = array_merge($dataCasosEpidemi,$dataCasosEpidemiBitacora);
 
-
-			echo casosEpidemiModel::addcasosEpidemiModel($dataCasosEpidemi);
+		 casosEpidemiModel::addcasosEpidemiModel($dataCasosEpidemi);
 
 
 				 	
@@ -312,13 +308,11 @@
 				$currentDate =  mainModel::getDateCurrentSystem();
 
 
-				$currentYear = date("Y", $currentDate);
+				$currentYear = date("Y", strtotime($currentDate));
 
-				$currentHour = date("h:i:s a", $currentDate);
+				$currentHour = date("h:i:s a", strtotime($currentDate));
 
-				$currentDate = date("Y-m-d", $currentDate);
-
-		session_start(['name'=>'dptoEpidemi']);	
+				$currentDate = date("Y-m-d", strtotime($currentDate));	
 
 		$dataCasosEpidemiBitacora = 
 		["id_nacionalidad_usuario"=>$_SESSION['id_nacionalidad'],
@@ -494,13 +488,11 @@ if (!isset($dataCasosEpidemi['confirmDelete'])) {
 				$currentDate =  mainModel::getDateCurrentSystem();
 
 
-				$currentYear = date("Y", $currentDate);
+				$currentYear = date("Y", strtotime($currentDate));
 
-				$currentHour = date("h:i:s a", $currentDate);
+				$currentHour = date("h:i:s a", strtotime($currentDate));
 
-				$currentDate = date("Y-m-d", $currentDate);
-
-		session_start(['name'=>'dptoEpidemi']);	
+				$currentDate = date("Y-m-d", strtotime($currentDate));	
 
 		$bitacora_year = date("Y", strtotime($fecha_registro));
 		$dataCasosEpidemiBitacora = 
@@ -931,8 +923,8 @@ $writer = new Xlsx($spreadsheet);
   				$currentDate =  mainModel::getDateCurrentSystem();
    		
 
-     		$date = '('.date("d-m-Y_", $currentDate);
-		$date.= date("H-i-s", $currentDate).')';
+     		$date = '('.date("d-m-Y_", strtotime($currentDate));
+		$date.= date("H-i-s", strtotime($currentDate)).')';
 		$fileName =$fileName.''.$date.'.xlsx';
 
 $editFile =  '../reports_temp/'.$fileName;
@@ -1343,17 +1335,18 @@ $dataSendCasos = urlencode($dataSendCasos);
 		
 				$currentDate =  mainModel::getDateCurrentSystem();
 
-//				$currentDate = $currentDate - 604800;
-
        			$dateYesterday = date("Y-m-d",strtotime($currentDate."- 1 days"));
 
        			$dateDay = date("d",strtotime($currentDate."- 1 days"));
 
-				$currentMounth = date("m", $currentDate);
+				$currentMounth = date("m", strtotime($currentDate
+				));
 
-				$currentYear = date("Y", $currentDate);
+				$currentYear = date("Y", strtotime($currentDate
+				));
 
-				$currentDate = date("y-m-d", $currentDate);
+				$currentDate = date("y-m-d", strtotime($currentDate));
+
 
 $queryForCasosEpidemiNotificInmediate = "SELECT  
  DISTINCT ON (casos_epi.id_caso_epidemi)  ROW_NUMBER() OVER(ORDER BY casos_epi.id_caso_epidemi desc)
@@ -1423,7 +1416,7 @@ and isCIE10InmediateNotice(cie10.n_inter,cie10.nin,cie10.ninmtobs,cie10.notdiari
   		Notificacion: ".intval($countCasosEpidemiWeekNotificInmediate)." 
   		<br><br>
 
-        Hasta Hoy : ".intval($countCasosEpidemiYesterday)."
+        Hoy : ".intval($countCasosEpidemiYesterday)."
   		<br>
   		Notificacion: ".intval($countCasosEpidemiYesterdayNotificInmediate)." 
   		<br><br>
@@ -1475,6 +1468,22 @@ return $recordsAtributesImmediateNotificEventCIE10;
 
 //  comprobar que no se repita el caso epidemiologico
 		protected static function msgsValidDataBasicCaseEpidemi($dataCasosEpidemi){
+
+if ($dataCasosEpidemi['doc_identidad'] === 'admin') {
+
+
+				$alert=[
+					"Alert"=>"simple",
+					"Title"=>"Datos Invalidos",
+					"Text"=>"Esta operacion no es permitida",
+					"Type"=>"error"
+				];
+
+				echo json_encode($alert);
+
+				exit();
+
+}
 
 	self::msgValidExistCatalogKeyCIE10($dataCasosEpidemi);
 
@@ -1807,9 +1816,7 @@ protected static function operationsUpsertsCaseEpidemi($dataForQuery){
 
 			$DB_transacc = mainModel::connectDB();
 
-		$DB_transacc->beginTransaction();
-
-		session_start(['name'=>'dptoEpidemi']);	
+		$DB_transacc->beginTransaction();	
 
 	try {
 
@@ -1873,11 +1880,11 @@ $telefono = mainModel::cleanStringSQL($dataForQuery[$indiceFila][24]);
 
 		$currentDate =  mainModel::getDateCurrentSystem();
 
-		$currentYear = date("Y", $currentDate);
+		$currentYear = date("Y", strtotime($currentDate));
 
-		$currentHour = date("h:i:s a", $currentDate);
+		$currentHour = date("h:i:s a", strtotime($currentDate));
 
-		$currentDate = date("Y-m-d", $currentDate);
+		$currentDate = date("Y-m-d", strtotime($currentDate));
 
 		$fecha_registro_values = explode("-", $fecha_registro);
 

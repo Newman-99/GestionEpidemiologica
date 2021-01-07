@@ -275,7 +275,7 @@ if (isset($dataPerson['ifUpdatePerson']) && $dataPerson['ifUpdatePerson'] == tru
 
 		}
 
-			public static function getQueryInnerJoimForUserModel($userAttributesFilter,$filterValues){
+			public static function getQueryInnerJoimForUserstringQueryInnerJoinForGetDataSecurityUserModel($userAttributesFilter,$filterValues){
 
   
 		    $sqlQuery=self::stringQueryInnerJoinForGetUser();                  
@@ -314,6 +314,19 @@ if (isset($dataPerson['ifUpdatePerson']) && $dataPerson['ifUpdatePerson'] == tru
 				return $stringQueryInnerJoinForGetUser;
 			}
 		
+					public static function stringQueryInnerJoinForGetDataSecurityUser(){
+				$stringQueryInnerJoinForGetDataSecurityUser = " SELECT  DISTINCT ON (usr.alias) usr.alias usuario_alias,usr.id_nacionalidad, usr.pass_encrypt,
+				usrQuest.id_pregunta,usrQuest.respuesta
+
+ 				FROM usuarios usr
+				INNER JOIN usuarios_estados usrEtdo ON usr.id_estado =  usrEtdo.id_estado
+				INNER JOIN usuarios_niveles usrNivl ON usr.id_nivel_permiso =  usrNivl.id_nivel_permiso
+				INNER JOIN usuarios_preguntas usrQuest ON usr.alias =  usrQuest.usuario_alias ";
+
+				return $stringQueryInnerJoinForGetDataSecurityUser;
+			}
+		
+
 	 public static function userTypeCounterModel($userAttribute,$userType){
 
 	 $WHERE = "";
@@ -328,6 +341,7 @@ if (isset($dataPerson['ifUpdatePerson']) && $dataPerson['ifUpdatePerson'] == tru
 
 	}
 	
+
 
 	}
 

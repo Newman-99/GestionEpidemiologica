@@ -2,18 +2,6 @@
 <?php 
 
 			ini_set('memory_limit','1024M');
-/*
-  require_once './libraries/spout/src/Spout/Autoloader/autoload.php';
-
-use Box\Spout\Reader\ReaderFactory;
-use Box\Spout\Writer\WriterFactory;
-use Box\Spout\Common\Type;
-use Box\Spout\Reader\Common\Creator\ReaderEntityFactory;
-
-   $WriterFactory = new WriterFactory();
-
-$writer = $WriterFactory->create(Type::CSV);;
-*/
 
 	if($requestAjax){
 		require_once "../model/mainModel.php";
@@ -58,19 +46,17 @@ if ($files['fileCSVCIE10']['size'] >20000000){
 	}
 
 
-
-// Se llamara la libreria para procesar e insetrar los valores del .csv
-
-
 require_once "../view/inc/spout.php";
+
 
 $filePath = $files['fileCSVCIE10']['tmp_name'];
 
+
 $reader = $ReaderEntityFactory::createCSVReader();
 
+$typeFileEncoding = mb_detect_encoding(file_get_contents($filePath), mb_list_encodings());
+
 $reader->open($filePath);
-
-
 // se recolectan los valores del CSV
  
     $count = 0;
@@ -81,10 +67,25 @@ $reader->open($filePath);
         foreach ($sheet->getRowIterator() as $row) {
 
 			foreach($row->getCells() as $key => $cell){
-			
-			$ceilUTF8=utf8_encode($cell);
+
+
+
+
+		if ($typeFileEncoding == 'UTF-8') {
+			$cell = html_entity_decode(htmlentities($cell, ENT_QUOTES, 'UTF-8'), ENT_QUOTES , 'ISO-8859-1');
+		}
+
+		$cell=utf8_encode($cell);
+
+
+			$dataForQuery[$count][$key]=$cell;
+
+//			var_dump($dataForQuery[$count][$key]);
+
+			if ($count == 100) {
 				
-			$dataForQuery[$count][$key]=$ceilUTF8;
+				//var_dump($dataForQuery);
+			}
 
 			        }
 			  $count++;
@@ -358,6 +359,11 @@ $CONSECUTIVO = mainModel::cleanStringSQL($dataForQuery[$indiceFila][0]);
 $LETRA = mainModel::cleanStringSQL($dataForQuery[$indiceFila][1]); 
 $catalogKeyCie10ToRegister[] = $CATALOG_KEY;
 $NOMBRE = mainModel::cleanStringSQL($dataForQuery[$indiceFila][3]); 
+
+/*
+var_dump($NOMBRE,mb_strtolower($NOMBRE, 'UTF-8'));
+exit();
+*/
 $CODIGOX = mainModel::cleanStringSQL($dataForQuery[$indiceFila][4]); 
 $LSEX = mainModel::cleanStringSQL($dataForQuery[$indiceFila][5]); 
 $LINF = mainModel::cleanStringSQL($dataForQuery[$indiceFila][6]); 
@@ -368,6 +374,7 @@ $N_INTER = mainModel::cleanStringSQL($dataForQuery[$indiceFila][10]);
 $NIN = mainModel::cleanStringSQL($dataForQuery[$indiceFila][11]); 
 $NINMTOBS = mainModel::cleanStringSQL($dataForQuery[$indiceFila][12]); 
 $COD_SIT_LESION = mainModel::cleanStringSQL($dataForQuery[$indiceFila][13]); 
+
 $NO_CBD = mainModel::cleanStringSQL($dataForQuery[$indiceFila][14]); 
 $CBD = mainModel::cleanStringSQL($dataForQuery[$indiceFila][15]); 
 $NO_APH = mainModel::cleanStringSQL($dataForQuery[$indiceFila][16]); 
@@ -890,8 +897,8 @@ $typeArchivo = 'xlsx';
  		$fileName="catalog-cie10"; 
   				$currentDate =  mainModel::getDateCurrentSystem();
    
-     		$date = date("d-m-Y_", $currentDate);
-		$date.= date("H-i-s", $currentDate);
+     		$date = date("d-m-Y_", strtotime($currentDate));
+		$date.= date("H-i-s", strtotime($currentDate));
 		$fileName =$fileName.'_'.$date.'.'.$typeArchive;
 
 $filePath =  '../reports_temp/'.$fileName;

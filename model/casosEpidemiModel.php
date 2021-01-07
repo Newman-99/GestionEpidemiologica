@@ -150,12 +150,11 @@ atr_esp.descripcion atributo_especial,
 				AND caso.catalog_key_cie10 = cie10.CATALOG_KEY ORDER BY caso.id_caso_epidemi DESC ";
 
 
-			protected static function addcasosEpidemiModel($dataCasosEpidemi){
+			public static function addcasosEpidemiModel($dataCasosEpidemi){
 
 		$DB_transacc = mainModel::connectDB();
 
 		$DB_transacc->beginTransaction();
-
 
 	try {
 
@@ -192,6 +191,7 @@ atr_esp.descripcion atributo_especial,
 		
 		$sqlQuery = $DB_transacc->prepare(self::$queryAddCasosEpidemi);
 
+
 			$sqlQuery->execute(array(
 		 "doc_identidad"=>$dataCasosEpidemi['doc_identidad'],
 		 "id_nacionalidad"=>$dataCasosEpidemi['id_nacionalidad'],
@@ -204,6 +204,7 @@ atr_esp.descripcion atributo_especial,
 		 "is_hospital"=>$dataCasosEpidemi['is_hospital'],
 		 "id_atrib_especial"=>$dataCasosEpidemi['id_atrib_especial']));
 
+
 		$sqlQuery->closeCursor();
 
 		// registrar bitacora
@@ -211,7 +212,12 @@ atr_esp.descripcion atributo_especial,
 
            $queryGetIdEpidemiCaseToRegister = mainModel::connectDB()->query("SELECT id_caso_epidemi FROM public.casos_epidemi ORDER BY id_caso_epidemi DESC limit 1;");
 
+
 			$idEpidemiCaseToRegister = $queryGetIdEpidemiCaseToRegister->fetchColumn();
+
+           	if (!$idEpidemiCaseToRegister) {
+           		$idEpidemiCaseToRegister = 1;
+           	}
 
 
 			$dataCasosEpidemi["id_caso_epidemi"]=$idEpidemiCaseToRegister;
@@ -260,9 +266,11 @@ atr_esp.descripcion atributo_especial,
 				"Type"=>"error"
 			];
 
+
 		}
 
-		 return json_encode($alert);
+		echo json_encode($alert);
+
 
 	}	
 	

@@ -56,7 +56,7 @@ if (isset($_POST['operationType']) && $_POST['operationType'] == "register"){
 
 
 		} else { 
-			self::forceClosureController();
+			$casosEpidemiController->forceClosureController();
 	}
 
 	

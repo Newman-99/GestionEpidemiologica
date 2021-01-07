@@ -13,7 +13,7 @@
 	if (isset($_GET['activityLogSessions'])) {
                $activityLogSessionsController->paginateActivityLogSessionsController();
 		}else{
-						self::forceClosureController();
+						$loginController->forceClosureController();
 
 		}
  ?>

@@ -49,18 +49,27 @@
               </a>
               <!-- Dropdown - User Information -->
               <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
+
+
+                <?php if ($_SESSION['aliasUser'] !== 'admin'): ?>
+                  
                 <a class="dropdown-item" href="<?php echo SERVERURL; ?>dataAccount/<?php echo $loginController->encryption($_SESSION['aliasUser']);?>/">
                   <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
                   Perfil
                 </a>
+              
+              <?php endif ?>
+
                 <a class="dropdown-item" href="<?php echo SERVERURL; ?>userSettings/<?php echo $loginController->encryption($_SESSION['aliasUser']);?>/">
                   <i class="fas fa-lock fa-sm fa-fw mr-2 text-gray-400"></i>
                   Seguridad
                 </a>
+
                 <a class="dropdown-item" href="<?php echo SERVERURL; ?>activityLogSessions/<?php echo $loginController->encryption($_SESSION['aliasUser']);?>/">
                   <i class="fas fa-list fa-sm fa-fw mr-2 text-gray-400"></i>
                   Mi Registro de Sesiones
                 </a>
+
 
               <?php $URL_token_dptoEpidemi = SERVERURL."ajax/loginAjax.php?"."operationType=closeSession"."&tokenCurrentUser=".$loginController->encryption($_SESSION["token_dptoEpidemi"])?>
 

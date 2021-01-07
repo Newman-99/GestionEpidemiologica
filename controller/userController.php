@@ -593,6 +593,16 @@ if ($dataUser["operationType"] == "restart") {
 
 if ($dataUser["operationType"] == "config") {
 
+if ($aliasUser === 'admin') {
+$dataUser["question1"] = 'admin1';
+$dataUser["question2"] = 'admin2';
+
+$dataUser["newQuestion1"] = '';
+
+$dataUser["newQuestion2"] = '';
+
+}
+
 		// Estos datos deben estar llenados en cofig
 		if (mainModel::isDataEmtpy($aliasUser,
 		 	$dataUser["question1"],$dataUser["question2"],$dataUser["password"])){
@@ -608,6 +618,9 @@ if ($dataUser["operationType"] == "config") {
 				exit();
 
 			}
+
+
+		// Estos datos deben estar llenados en cofig
 
 if (mainModel::isDataEmtpy($dataUser["newQuestion1"]) &&
 	mainModel::isDataEmtpy($dataUser["newQuestion2"]) &&
@@ -625,6 +638,23 @@ if (mainModel::isDataEmtpy($dataUser["newQuestion1"]) &&
 				exit();
  
 			}
+
+if (!mainModel::isDataEmtpy($dataUser["newQuestion1"]) ||
+	!mainModel::isDataEmtpy($dataUser["newQuestion2"]) &&
+	$aliasUser === 'admin'){
+
+				$alert=[
+					"Alert"=>"simple",
+					"Title"=>"Datos Invalidos",
+					"Text"=>"Esta operacion no es permitida",
+					"Type"=>"error"
+				];
+
+				echo json_encode($alert);
+
+				exit();
+}
+
 // Imprime msj si es incorrecta
 self::passwordCorrespondDatabase($dataUser);
 
@@ -831,6 +861,8 @@ protected static function passwordCorrespondDatabase($dataUser){
 				}
 
 		}
+
+//		var_dump($registeredQuestion1,$registeredQuestion2);
 
 		$question1 = mainModel::cleanStringSQL($dataUser["question1"]); 
 
@@ -1174,7 +1206,7 @@ public static function paginateUserController($currentAliasUser){
 
 	$stringQueryInnerJoinForGetUsers = userModel::stringQueryInnerJoinForGetUser();
 
-	$queryForGetUsers = mainModel::connectDB()->query($stringQueryInnerJoinForGetUsers." WHERE usr.alias != '$currentAliasUser' AND usr.alias != 'Master' 
+	$queryForGetUsers = mainModel::connectDB()->query($stringQueryInnerJoinForGetUsers." WHERE usr.alias != '$currentAliasUser' AND usr.alias != 'admin' 
 		");
 
 $table = "";

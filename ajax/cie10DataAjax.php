@@ -33,7 +33,7 @@
 
  }else {
  		
-			self::forceClosureController();
+			$loginController->forceClosureController();
 			}
 	
 

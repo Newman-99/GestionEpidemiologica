@@ -47,22 +47,25 @@
 
                 $userFilterValues = [];
 
+/*
                 array_push($userAttributesFilter, 'alias = :aliasUser');
                 $userFilterValues[':aliasUser'] = [
                 'value' => $requestedAliasUser,
                 'type' => \PDO::PARAM_STR,
                 ];
-                           $queryUserRequested=$userController->getQueryInnerJoimForUserModel($userAttributesFilter,$userFilterValues);
 
-                $queryUserRequested->execute();     
+*/
+                $queryIsExistUser = mainModel::connectDB()->query("SELECT alias FROM usuarios WHERE alias = '$requestedAliasUser'");
+  
+                $queryIsExistUser->execute();     
                 
-                if(!$queryUserRequested->rowCount()){
+                if(!$queryIsExistUser->rowCount()){
                 echo $msjError;
 
                 exit;
                 }
 
-                $fieldsUserRequested=$queryUserRequested->fetch();
+                $fieldsUserRequested=$queryIsExistUser->fetch();
 
 ?>
 
@@ -72,9 +75,9 @@
 
                 <div class="form-group">
             <p class="form-control">
-                <?php echo $fieldsUserRequested['usuario_alias'];
+                <?php echo $fieldsUserRequested['alias'];
                 ?>
-            <input name= "aliasUser" type="hidden" value="<?php echo $fieldsUserRequested['usuario_alias']; ?>">
+            <input name= "aliasUser" type="hidden" value="<?php echo $fieldsUserRequested['alias']; ?>">
 
             </p>
             </div>
@@ -82,15 +85,24 @@
                 <div class="form-group">
                     <input type="password" class="form-control form-control-user" id="password" name="password" placeholder="Contraseña">
               </div>
+
+
+  <?php 
+
+$isDisabled = '';
+
+  if ($requestedAliasUser === 'admin'){$isDisabled = 'disabled';}?>
+    
+
  
                 <div class="form-group">
                   <input type="password" class="form-control 
-                  form-control-user" id="question1" name="question1" placeholder="¿Cual fue el nombre de tu primera mascota?">
+                  form-control-user" id="question1" name="question1" <?php echo $isDisabled ?> placeholder="¿Cual fue el nombre de tu primera mascota?">
                 </div>
 
                 <div class="form-group">
                   <input type="password" class="form-control 
-                  form-control-user" id="question2" name="question2" placeholder="¿Cual es el nombre de tu artista favorita?">
+                  form-control-user" id="question2" name="question2" <?php echo $isDisabled ?> placeholder="¿Cual es el nombre de tu artista favorita?">
                 </div>
 
             <hr>
@@ -101,18 +113,18 @@
                     <input type="password" class="form-control form-control-user" id="newPassword" name="newPassword" placeholder="Nueva Contraseña">
                   </div>
                   <div class="col-sm-6">
-                    <input type="password" class="form-control form-control-user" id="newPasswordConfirm" name="newPasswordConfirm" placeholder="Confirmar contraseña">
+                    <input type="password" class="form-control form-control-user" id="newPasswordConfirm" name="newPasswordConfirm" placeholder="Confirmar contraseña" >
                   </div>
                 </div>
 
                 <div class="form-group">
                   <input type="password" class="form-control 
-                  form-control-user" id="newQuestion1" name="newQuestion1" placeholder="¿Cual fue el nombre de tu primera mascota?">
+                  form-control-user" id="newQuestion1" name="newQuestion1" <?php echo $isDisabled ?> placeholder="¿Cual fue el nombre de tu primera mascota?">
                 </div>
 
                 <div class="form-group">
                   <input type="password" class="form-control 
-                  form-control-user" id="newQuestion2" name="newQuestion2" placeholder="¿Cual es el nombre de tu artista favorita?">
+                  form-control-user" id="newQuestion2" name="newQuestion2" <?php echo $isDisabled ?> placeholder="¿Cual es el nombre de tu artista favorita?">
                 </div>
 
 

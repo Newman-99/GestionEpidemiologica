@@ -6,8 +6,8 @@
 
  		$currentDate =  mainModel::getDateCurrentSystem();
 
-     	$date = date("d-m-Y_", $currentDate);
-		$date.= date("H-i-s", $currentDate);
+     	$date = date("d-m-Y_", strtotime($currentDate));
+		$date.= date("H-i-s", strtotime($currentDate));
 
 		$nameBackup =$fileName.'_'.$date.'.sql';
 

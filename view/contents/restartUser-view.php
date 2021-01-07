@@ -73,6 +73,15 @@ $queryIsExistUserReload = $loginController->getUserController(["id_estado"],arra
 
               </form>
 
+              <hr>
+              <div class="text-center">
+                <a class="small" href=" <?php echo SERVERURL ?>forgotPassword/">Olvido su contraseña?</a>
+              </div>
+
+              <div class="text-center">
+                <a class="small" href=" <?php echo SERVERURL ?>login/">Ya posee un cuenta? Inicie Sesion</a>
+              </div>
+
                 </div>
               </div>
             </div>

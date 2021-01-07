@@ -31,7 +31,7 @@ public function loginUserController($dataUser){
 
 			$currentDate =  mainModel::getDateCurrentSystem();
 
-			$currentHour = date("h:i:s a", $currentDate);
+			$currentHour = date("h:i:s a", strtotime($currentDate));
  
 			$dataSession=[
 			"aliasUser"=>$_SESSION["aliasUser"],
@@ -90,7 +90,10 @@ public function loginUserController($dataUser){
     'value' => $aliasUser,
     'type' => \PDO::PARAM_STR,
     ];
-               $recordsUserSQL=parent::getQueryInnerJoimForUserModel($userAttributesFilter,$userFilterValues);
+
+$columns = array("pass_encrypt","alias","id_nacionalidad","doc_identidad","id_nivel_permiso","id_estado");
+
+               $recordsUserSQL=parent::querySelectsCreator('usuarios',$columns,$userAttributesFilter,$userFilterValues);
 					
 			$recordsUserSQL->execute();
 
@@ -115,7 +118,7 @@ public function loginUserController($dataUser){
 
 			$pass_encryptDB = $valuesDataUser["pass_encrypt"]; 
 
-			$aliasUser = $valuesDataUser["usuario_alias"]; 			
+			$aliasUser = $valuesDataUser["alias"]; 			
 
 			$id_nacionalidad = $valuesDataUser["id_nacionalidad"];
 
@@ -129,6 +132,8 @@ public function loginUserController($dataUser){
 			// Comprobar contrasenas
 
 			$passRequest = mainModel::encryption($passRequest);
+
+			//var_dump(mainModel::decryption($pass_encryptDB),mainModel::decryption($passRequest));
 
 		    if (strcmp($pass_encryptDB, $passRequest) != 0){
 				$alert=[
@@ -144,8 +149,27 @@ public function loginUserController($dataUser){
     	}
 
 
+		// Comprobar que el estado del usuario se ha valido
+		
+		if($id_estado == 0 || $id_estado == 2){
+				
+				$alert=[
+				"Alert"=>"simple",
+				"Title"=>"Permiso Denegado",
+				"Text"=>"El usuario se encuentra inactivo o reiniciado, por favor contactar un administrador",
+				"Type"=>"error"
+			];
+
+				echo json_encode($alert);
+
+				exit();
+
+			}
+
+
 		// Obtener datos de person
 
+if ($aliasUser !== 'admin') {
  		  $columnsTablePersona = [
 		'id_genero',
 		"nombres",
@@ -169,34 +193,25 @@ public function loginUserController($dataUser){
 
 		}
 
+}else{
+			$nameUser = "admin";
+			$lastNamesUser = ""; 
+			$id_generoUser = "2"; 	
+}
 
-		// Comprobar que el estado del usuario se ha valido
-		
-		if($id_estado == 0 || $id_estado == 2){
-				
-				$alert=[
-				"Alert"=>"simple",
-				"Title"=>"Permiso Denegado",
-				"Text"=>"El usuario se encuentra inactivo o reiniciado, por favor contactar un administrador",
-				"Type"=>"error"
-			];
 
-				echo json_encode($alert);
 
-				exit();
-
-			}
 
 				// Datos para la bitacora
 			
 				$currentDate =  mainModel::getDateCurrentSystem();
 
 
-				$currentYear = date("Y", $currentDate);
+				$currentYear = date("Y", strtotime($currentDate));
 
-				$currentHour = date("h:i:s a", $currentDate);
+				$currentHour = date("h:i:s a", strtotime($currentDate));
 
-				$currentDate = date("Y-m-d", $currentDate);
+				$currentDate = date("Y-m-d", strtotime($currentDate));
 
 
 				$queryRecordsBitacora = mainModel::connectDB()->query("SELECT id_bitacora FROM usuario_bitacora");
@@ -281,7 +296,7 @@ public function loginUserController($dataUser){
 
 			$currentDate =  mainModel::getDateCurrentSystem();
 
-			$currentHour = date("h:i:s a", $currentDate);
+			$currentHour = date("h:i:s a", strtotime($currentDate));
 
 			$dataSession=[
 			"aliasUser"=>$aliasUser,
@@ -322,6 +337,7 @@ public function forgotPassUserController($dataUser){
 		 $aliasUser = mainModel::cleanStringSQL($dataUser["aliasUser"]);
 
 
+
 		if (mainModel::isDataEmtpy($aliasUser,
 		 	$dataUser["question1"],$dataUser["question2"],$dataUser["newPassword"],$dataUser["newPasswordConfirm"])){
 
@@ -329,6 +345,21 @@ public function forgotPassUserController($dataUser){
 					"Alert"=>"simple",
 					"Title"=>"Campos Vacios",
 					"Text"=>"Todos los campos son obligatorios",
+					"Type"=>"error"
+				];
+
+				echo json_encode($alert);
+
+				exit();
+
+			}
+
+		if ($aliasUser === 'admin'){
+
+				$alert=[
+					"Alert"=>"simple",
+					"Title"=>"Datos Invalidos",
+					"Text"=>"Esta operacion no es permitida",
 					"Type"=>"error"
 				];
 
