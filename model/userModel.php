@@ -275,7 +275,7 @@ if (isset($dataPerson['ifUpdatePerson']) && $dataPerson['ifUpdatePerson'] == tru
 
 		}
 
-			public static function getQueryInnerJoimForUserstringQueryInnerJoinForGetDataSecurityUserModel($userAttributesFilter,$filterValues){
+			public static function getQueryInnerJoimForUser($userAttributesFilter,$filterValues){
 
   
 		    $sqlQuery=self::stringQueryInnerJoinForGetUser();                  

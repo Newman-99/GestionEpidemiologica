@@ -40,9 +40,9 @@ return $db;
 		    error_log("Failed to connect to database: ".$e->getMessage());
 		}				
 /**/
+
+
 /*
-
-
 		try {			
 	$DB = new PDO("pgsql:host=".SERVER_PATH.";port=".PORT.";dbname=".DB."",USER,PASS, array(
 				PDO::ATTR_PERSISTENT => true, PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8'));
@@ -654,8 +654,8 @@ protected static function isFieldsEqualToThoseInTheDatabase($queryToGet,$fieldst
      
     
     //* DB connection
-     /*
-
+     
+/*
     $gaSql['link'] = pg_connect(
         " host=".$gaSql['server'].
         " dbname=".$gaSql['db'].

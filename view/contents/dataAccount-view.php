@@ -61,7 +61,7 @@
     'value' => $requestedAliasUser,
     'type' => \PDO::PARAM_STR,
     ];
-               $queryUserRequested=$userController->getQueryInnerJoimForUserModel($userAttributesFilter,$userFilterValues);
+               $queryUserRequested=$userController->getQueryInnerJoimForUser($userAttributesFilter,$userFilterValues);
               
                 $queryUserRequested->execute();     
                 
