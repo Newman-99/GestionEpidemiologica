@@ -14,7 +14,7 @@
 		session_start(['name'=>'dptoEpidemi']);	
 		
 	if (isset($_SESSION['timeout']) && (time() - $_SESSION['timeout'] > 10800)) {
-			
+			//
 			self::forceClosureController();
 
 	}
@@ -279,8 +279,11 @@ if ($aliasUser !== 'admin') {
 
 			self::closeSessionController($dataSession);
 
+
 	}else{
 
+				session_unset();
+				session_destroy();
 
 		 header("Location: ".SERVERURL);
 	}
@@ -309,15 +312,17 @@ if ($aliasUser !== 'admin') {
 			if($tokenCurrentUser==$_SESSION['token_dptoEpidemi']){
 
 
-			mainModel::updateUsuarioBitacora($dataSession);
+			$alert = mainModel::updateUsuarioBitacora($dataSession);
 
-		$alert=["Alert"=>"redirecting",
-				"URL"=>SERVERURL];
-			echo json_encode($alert);
-			exit();
+			if ($alert['Alert'] == 'redirecting') {
+				echo json_encode($alert);
+				session_unset();
+				session_destroy();
+			}else{
+				echo json_encode($alert);				
+			}
 
-		}			
-
+		}else{
 		// si hay alerta de updateBitacoraModel
 		$alert=[
 		"Alert"=>"simple",
@@ -329,6 +334,7 @@ if ($aliasUser !== 'admin') {
 
 			echo json_encode($alert);
 			exit();
+		}
 	}
 
 public function forgotPassUserController($dataUser){

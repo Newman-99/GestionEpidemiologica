@@ -18,31 +18,34 @@
 
     <input type="hidden" name="id_caso_epidemi" id="id_caso_epidemi"  class='form-control' value=''>
 
-    <input type="hidden" name="id_nacionalidad_update" id="id_nacionalidad_update"  class='form-control' value=''>
+    <input type="hidden" name="id_nacionalidad_update" id="id_nacionalidad_update"  class='form-control' value='' >
 
     <input type="hidden" name="doc_identidad_update" id="doc_identidad_update"  class='form-control' value=''>
 
     <div id="si-exist-person">
 
-       <span alt="¿La person ya ha sido registrada como paciente o usuario?">¿person ya registrada?<input type="checkbox" name="siExistPerson" id="siExistPerson" class="form-control form-control-user" value="1">  
+       <span alt="¿La person ya ha sido registrada como paciente o usuario?">¿person ya registrada?<input type="checkbox" name="siExistPerson" id="siExistPerson" class="form-control form-control-user" value="1">
         </span>
 
   </div>
 
 
     <br>
-        <select name='id_nacionalidad' id='id_nacionalidad' class="form-control" autocomplete='on' class="form-control" >
+        <select name='id_nacionalidad' id='id_nacionalidad' class="form-control" class="form-control" required>
             <option  value=''>Nacionalidad</option>
             <option  value='1'>V</option>
             <option value='2'>E</option>
         </select>
 
     <br>
-    <input type="number" name="doc_identidad" id="doc_identidad" class="form-control" placeholder="Cedula">
+    <input type="text" name="doc_identidad" id="doc_identidad" class="form-control" placeholder="Cedula"
+    pattern="[0-9]{7,9}"  required
+    title="El campo debe poseer entre 7 y 9 cifras numericas"
+    >
 
-	<!-- Solo valido para el form de actualizar // solo test -->	
+	<!-- Solo valido para el form de actualizar // solo test -->
   	<br>
-          <select name='idCapituloCIE10' id='idCapituloCIE10' class="form-control" autocomplete='on' class="form-control" >
+          <select name='idCapituloCIE10' id='idCapituloCIE10' class="form-control" class="form-control" required>
 
             <option value="">SELECCIONAR CAPITULOS CIE-10</option>
 
@@ -102,14 +105,13 @@
 
 
 
-
         <input type="text" name="searchCIE10" id="searchCIE10" class="form-control" placeholder="Buscar (Nombre/Clave) Evento CIE-10">
 
     <br>
 
 <div class="input-group">
   
-    <select name='catalogKeyCIE10' id='catalogKeyCIE10' class="form-control" autocomplete='on' class="form-control" >
+    <select name='catalogKeyCIE10' id='catalogKeyCIE10' class="form-control" class="form-control" >
 
             <option value="0">Selecionar Capitulo o CIE-10 Buscar Nombre </option>
 
@@ -126,7 +128,7 @@
 
 <div class="input-group">
 
-    <select name='id_atrib_especial' id='id_atrib_especial' class="form-control" autocomplete='on' class="form-control" >
+    <select name='id_atrib_especial' id='id_atrib_especial' class="form-control" class="form-control" >
 
             <option value="0">Seleccionar Atributo Especial </option>
 
@@ -139,13 +141,13 @@
 </div>
 
 <br>
-       <span>Hospitalizada o Referida<input type="checkbox" name="is_hospital" id="is_hospital" class="form-control" value="1">  
+       <span>Hospitalizada o Referida<input type="checkbox" name="is_hospital" id="is_hospital" class="form-control" value="1">
         </span>
 
 <br>
 
 
-<?php 
+<?php
    // los casos no pueden se registrados con fecha dia de manana
    // osea lo maximo es el dia de hpy
         $currentDate = date("d-m-Y");
@@ -154,13 +156,13 @@
 
        $maxDateAllowed = date("Y-m-d",strtotime($currentDate."- 1 days"));
 
-       $minDateAllowed = date("Y-m-d",strtotime($maxDateAllowed."- 7 days"));
-          
+      // $minDateAllowed = date("Y-m-d",strtotime($maxDateAllowed."- 7 days"));
+        var_dump($maxDateAllowed);
  ?>
 
 	Fecha de Registro
   	<br>
-    <input type="date" name="fecha_registro" id="fecha_registro" class="form-control" placeholder="Fecha de Registro" max="<?php echo $maxDateAllowed; ?>" min="">
+    <input type="date" name="fecha_registro" id="fecha_registro" class="form-control" placeholder="Fecha de Registro" max="<?php echo $maxDateAllowed; ?>" required>
 
   	<br>
     <input type="text" name="nombres" id="nombres" class="form-control form-control-person" placeholder="Nombres" value="">
@@ -169,7 +171,7 @@
     <input type="text" name="apellidos" id="apellidos" class="form-control form-control-person" placeholder="Apellidos">
   <br>
 
-    <select name='id_genero' id='id_genero' class="form-control form-control-person" autocomplete='on'>
+    <select name='id_genero' id='id_genero' class="form-control form-control-person">
        <option value=''>Genero</option>
        <option value='1'>Masculino</option>
        <option value='2'>Femenino</option>
@@ -201,7 +203,7 @@ Fecha de Nacimiento
                   </div>
                 </div>
 <br>
-        <select name='id_parroquia' id='id_parroquia' class="form-control" autocomplete='on' class="form-control" >
+        <select name='id_parroquia' id='id_parroquia' class="form-control" class="form-control" >
             <option  value=''>Seleccionar Parroquia</option>
         </select>
 <br>
@@ -271,7 +273,7 @@ var timeForRequestSearch = "";
 
   	load.style.display = "block";
 
-    clearTimeout(timeForRequestSearch);   
+    clearTimeout(timeForRequestSearch);
 
   var actionAjaxForCie10 = $('#actionAjaxForCie10').val();
 

@@ -24,8 +24,7 @@
 
 		public static function connectDB(){
 
-
-		try {			
+/*		try {			
 
 $db = (function(){
     $parts = (parse_url(getenv('DATABASE_URL') ?: 'postgres://ilsmpwdzrresby:7879db47bd3be54c574eab3a81a1bc2db477bc890a756eccc406992832a0fd8e@ec2-54-246-87-132.eu-west-1.compute.amazonaws.com:5432/d4hub5gh1m9jjj'));
@@ -42,7 +41,7 @@ return $db;
 /**/
 
 
-/*
+
 		try {			
 	$DB = new PDO("pgsql:host=".SERVER_PATH.";port=".PORT.";dbname=".DB."",USER,PASS, array(
 				PDO::ATTR_PERSISTENT => true, PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8'));
@@ -503,6 +502,7 @@ protected function updateUsuarioBitacora($dataUserBitacora){
 
 		$DB_transacc->beginTransaction();
 
+
 	try {
 
 $sqlQuery = $DB_transacc->prepare("UPDATE usuario_bitacora SET 
@@ -516,12 +516,9 @@ $sqlQuery = $DB_transacc->prepare("UPDATE usuario_bitacora SET
 
 			$DB_transacc->commit();
 
-				$alert=[
-				"Alert"=>"simpleReload",
-				];
 
-				session_unset();
-				session_destroy();
+		$alert= ["Alert"=>"redirecting",
+				"URL"=>SERVERURL];
 			
 			}catch (Exception $e) {
 
@@ -536,9 +533,10 @@ $sqlQuery = $DB_transacc->prepare("UPDATE usuario_bitacora SET
 
 				];
 
-		}
 
-		 return json_encode($alert);
+		}
+			return $alert;
+
 
 	}	
 
@@ -654,8 +652,8 @@ protected static function isFieldsEqualToThoseInTheDatabase($queryToGet,$fieldst
      
     
     //* DB connection
-     
-/*
+   
+
     $gaSql['link'] = pg_connect(
         " host=".$gaSql['server'].
         " dbname=".$gaSql['db'].
@@ -665,7 +663,7 @@ protected static function isFieldsEqualToThoseInTheDatabase($queryToGet,$fieldst
 
 /**/
 
-
+/*
  $db_url = getenv("DATABASE_URL") ?: "postgres://ilsmpwdzrresby:7879db47bd3be54c574eab3a81a1bc2db477bc890a756eccc406992832a0fd8e@ec2-54-246-87-132.eu-west-1.compute.amazonaws.com:5432/d4hub5gh1m9jjj";
 
 $gaSql['link'] = pg_connect($db_url);

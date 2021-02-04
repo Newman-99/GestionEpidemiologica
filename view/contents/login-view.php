@@ -22,10 +22,20 @@
                     <div class="form-group">
                   <input type="text" class="form-control 
                   form-control-user
-                  form-control-user" id="aliasUser" name="aliasUser" placeholder="Alias de Usuario">
+                  form-control-user" id="aliasUser" name="aliasUser" placeholder="Alias de Usuario"
+                  required
+                  minlength = '5' maxlength = '20'  
+
+                  >
                     </div>
                     <div class="form-group">
-                    <input type="password" class="form-control form-control-user" id="password" name="password" placeholder="Contraseña">
+                    <input type="password" class="form-control form-control-user" id="password" name="password" placeholder="Contraseña"
+                  required
+                  minlength = '8' maxlength = '20'  
+                    >
+
+
+
                     </div>
 
                   <button class="btn btn-primary btn-user btn-block" type="submit" value="loginSession" name="login">Ingresar</button>
