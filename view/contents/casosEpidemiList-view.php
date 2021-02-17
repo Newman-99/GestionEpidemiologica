@@ -1,5 +1,5 @@
 
-<?php 
+<?php
 
 
   // solicitar dara de person en especifico
@@ -47,7 +47,7 @@
            <!-- Formulario para limitar fecha mediante el Backend -->
           <div class='form-group col-sm-2'>
 
-          <?php  
+          <?php
             $requestAjax = FALSE;
            require_once "./controller/casosEpidemiController.php";
           $casosEpidemiController= new casosEpidemiController();
@@ -77,6 +77,7 @@
                     <tr>
                       <th>Nro. </th>
                       <th >id Caso</th>
+                      <th >id Persona</th>
                       <th>id Genero</th>
                       <th>Genero</th>
                       <th>id Nacionalidad (Caso)</th>
@@ -92,8 +93,10 @@
                       <th>Nombre CIE-10</th>
                       <th>id atributo especial</th>
                       <th>Atributo Especial</th>
-                       <th>Notificacion Inmediata</th>            
-                       <th>is hospital</th>        
+           <!-- 16 --> <th>Id Tipo Entrada Caso </th>
+           <!-- 17 --> <th>Tipo de Entrada</th>                     
+                       <th>Notificacion Inmediata</th>
+                       <th>is hospital</th>
                       <th>Hospitalizado o Referido</th>
                       <th>Fecha</th>
                       <th>id Parroquia</th>
@@ -101,10 +104,8 @@
                       <th>Direccion</th>
                       <th>Telefono</th>
                       <th>Usuario</th>
-                      <th>id Nacionalidad (usuario)</th>
-                      <th>Nro. Documento Identidad (usuario)</th>
                       <th>Documento de Identidad</th>
-                       <th>Anio de Operacion</th>                     
+                       <th>Anio de Operacion</th>
                       <th>Fecha de Operacion</th>
                       <th>Hora de Operacion</th>
                       <th></th>
@@ -115,37 +116,38 @@
                     <tr>
            <!--  0 --> <th>Nro. </th>
            <!--  1 --> <th >id Caso</th>
-           <!--  2 --> <th>id Genero</th>
-           <!--  3 --> <th>Genero</th>
-           <!--  4 --> <th>id Nacionalidad (Caso)</th>
-           <!--  5 --> <th>Nro. Documento de Identidad (Caso)</th>
-           <!--  6 --> <th>Documento de Identidad</th>
-           <!--  7 --> <th>Fecha de Nacimiento</th>
-           <!--  8 --> <th>Edad</th>
-           <!--  9 --> <th>Nombres</th>
-           <!-- 10 --> <th>Apellidos</th>
-           <!-- 11 --> <th>Clave Capitulo CIE-10</th>
-           <!-- 12 --> <th>Capitulo</th>
-           <!-- 13 --> <th>Codigo CIE-10</th>
-           <!-- 14 --> <th>Nombre CIE-10</th>
-           <!-- 15 --> <th>id atributo especial</th> 
-           <!-- 16 --> <th>Atributo Especial</th>
-           <!-- 17 --> <th>Notificacion Inmediata</th>             
-           <!-- 18 --> <th>is hospital</th>                
-           <!-- 19 --> <th>Hospitalizado o Referido</th>
-           <!-- 20 --> <th>Fecha</th>
-           <!-- 21 --> <th>id Parroquia</th>
-           <!-- 22 --> <th>Parroquia</th>
-           <!-- 23 --> <th>Direccion</th>
-           <!-- 24 --> <th>Telefono</th>
-           <!-- 25 --> <th>Usuario</th>
-           <!-- 26 --> <th>id Nacionalidad (usuario)</th>
-           <!-- 27 --> <th>Nro. Documento Identidad (usuario)</th>
-           <!-- 28 --> <th>Documento de Identidad</th>
-           <!-- 29 --> <th>Anio de Operacion</th>                    
-           <!-- 30 --> <th>Fecha de Operacion</th>
-           <!-- 31 --> <th>Hora de Operacion</th>
-           <!-- 32 --> <th></th>
+           <!--  2 --> <th >id Persona</th>
+           <!--  3 --> <th>id Genero</th>
+           <!--  4 --> <th>Genero</th>
+           <!--  5 --> <th>id Nacionalidad (Caso)</th>
+           <!--  6 --> <th>Nro. Documento de Identidad (Caso)</th>
+           <!--  7 --> <th>Documento de Identidad</th>
+           <!--  8 --> <th>Fecha de Nacimiento</th>
+           <!--  9 --> <th>Edad</th>
+           <!--  10 --> <th>Nombres</th>
+           <!-- 11 --> <th>Apellidos</th>
+           <!-- 12 --> <th>Clave Capitulo CIE-10</th>
+           <!-- 13 --> <th>Capitulo</th>
+           <!-- 14 --> <th>Codigo CIE-10</th>
+           <!-- 15 --> <th>Nombre CIE-10</th>
+           <!-- 16 --> <th>id atributo especial</th>
+           <!-- 17 --> <th>Atributo Especial</th>
+           <!-- 18 --> <th>Id Tipo  Caso </th>
+           <!-- 19 --> <th>Tipo de Entrada</th>
+           <!-- 20 --> <th>Notificacion Inmediata</th>
+           <!-- 21 --> <th>is hospital</th>
+           <!-- 22 --> <th>Hospitalizado o Referido</th>
+           <!-- 23 --> <th>Fecha</th>
+           <!-- 24 --> <th>id Parroquia</th>
+           <!-- 25 --> <th>Parroquia</th>
+           <!-- 26 --> <th>Direccion</th>
+           <!-- 27 --> <th>Telefono</th>
+           <!-- 28 --> <th>Usuario</th>
+           <!-- 29 --> <th>Documento de Identidad</th>
+           <!-- 30 --> <th>Anio de Operacion</th>
+           <!-- 31 --> <th>Fecha de Operacion</th>
+           <!-- 32 --> <th>Hora de Operacion</th>
+           <!-- 33 --> <th></th>
                     </tr>
 
                     <div class="responseProcessAjax"></div>
@@ -190,7 +192,7 @@ $('#minDateRange,#maxDateRange').change(function() {
 if (!isBlank(minDateRange) && !isBlank(maxDateRange)) {
 
 
-return getDataCasosEpidemiForDataTablesAsync(requestedPersonEpidemi,minDateRange,maxDateRange,url);  
+return getDataCasosEpidemiForDataTablesAsync(requestedPersonEpidemi,minDateRange,maxDateRange,url);
 }
 
 })
@@ -213,7 +215,7 @@ $('#minDateRange').val(minDateRangeDefaulPHP)
 $('#maxDateRange').val(maxDateAllowedPHP)
 
 
-return getDataCasosEpidemiForDataTablesAsync(requestedPersonEpidemi,minDateRangeDefaulPHP,maxDateAllowedPHP,url);    
+return getDataCasosEpidemiForDataTablesAsync(requestedPersonEpidemi,minDateRangeDefaulPHP,maxDateAllowedPHP,url);
 
 }
 
@@ -224,11 +226,15 @@ return getDataCasosEpidemiForDataTablesAsync(requestedPersonEpidemi,minDateRange
 
     $(".modal-title").text("Registrar Caso Epidemiologico");
 
-    $(".btn-caso-epidemi").text("Registrar");   
+    $(".btn-caso-epidemi").text("Registrar");
      
+           var person_not_ci = document.getElementById('person_not_ci');
+
+          person_not_ci.style.display = "block";
+
       // Establecer parametros de fecha de registro del caso epidmi
       
-      // la fecha recomendada de registro de casos, es del dia de ayer, pero e ocaciones puede ser cambiada  
+      // la fecha recomendada de registro de casos, es del dia de ayer, pero e ocaciones puede ser cambiada
 
 var currentDate = new Date;
 
@@ -240,28 +246,28 @@ var minDateRangeDefault = addOrRemoveDaysToDate(maxDateAllowed,7,false);
 
 var minDateRangeDefaulPHP = minDateRangeDefault.toISOString().split('T')[0];
 
-         document.getElementById("fecha_registro").setAttribute("min",minDateRangeDefaulPHP );
+//         document.getElementById("fecha_registro").setAttribute("min",minDateRangeDefaulPHP );
 
-         document.getElementById("fecha_registro").setAttribute("max", maxDateAllowedPHP);
+    document.getElementById("fecha_registro").setAttribute("max", maxDateAllowedPHP);
 
       $('#fecha_registro').val(maxDateAllowedPHP);
 
+      $('#id_atrib_rango_especial').empty();
 
-      $("#si-exist-person").css("display", "block");
-
-      // rellenar el maximo y minimo de fecha registro
-  
-    $("#id_nacionalidad").prop('disabled', false);
-
-    $("#doc_identidad").prop('disabled', false);
-
-      $('#id_atrib_especial').empty();
-
-     $('#id_atrib_especial').append('<option value=0>Seleccionar Atributo Especial</option>')
+     $('#id_atrib_rango_especial').append('<option value=0>Seleccionar Atributo Especial</option>')
 
     document.getElementById("id_caso_epidemi").setAttribute("value",'');
 
     document.getElementById("form_caso_epidemi").setAttribute("data-form", 'register');
+
+      $("#si-exist-person").css("display", "block");
+
+  $("#doc_identidad").prop('readonly', $('#ifNotHaveIdentityDocument').checked);
+  $("#id_nacionalidad").prop('disabled', $('#ifNotHaveIdentityDocument').checked);
+
+
+  // osea si la persona existe dale la opcion de inserar id persona
+
 
   });
 
@@ -295,17 +301,19 @@ function deleteCasosEpidemi(data){
 
     var id_caso_epidemi = data[1];
 
-    var id_nacionalidad = data[4];
+    var id_person = data[2];
 
-    var doc_identidad = data[5];
+    var id_nacionalidad = data[5];
 
-    var catalog_key_cie10 = data[12];
+    var doc_identidad = data[6];
 
-    var id_atrib_especial = data[15];
+    var catalog_key_cie10 = data[13];
 
-    var is_hospital = data[18];
+    var id_atrib_rango_especial = data[16];
 
-    var fecha_registro = data[20];
+    var is_hospital = data[21];
+
+    var fecha_registro = data[23];
 
     var textMsjAlert = 'Los datos del Caso Epidemiologico seran elimnados del sistema';
 
@@ -320,17 +328,18 @@ var dataCasoEpidemi = {
 
  };
 */
-var dataCasoEpidemi = 
+var dataCasoEpidemi =
   'id_nacionalidad='+id_nacionalidad+
   '&doc_identidad='+doc_identidad+
+  '&id_person='+id_person+
   '&id_caso_epidemi='+id_caso_epidemi+
   '&catalog_key_cie10='+catalog_key_cie10+
-  '&id_atrib_especial='+id_atrib_especial+
+  '&id_atrib_rango_especial='+id_atrib_rango_especial+
   '&is_hospital='+is_hospital+
   '&fecha_registro='+fecha_registro+
   '&operationType='+'delete';
 
-    var actionForAjax = $('#actionForAjax').val();
+    var server_url = $('#server_url').val();
 
           Swal.fire({
             title: '¿Estás seguro?',
@@ -347,7 +356,7 @@ var dataCasoEpidemi =
   let responseProcess=table.find('.responseProcessAjax');
   let msgBackendProcess=table.find('.msgBackendProcess');
 
-      sendDataAjax(actionForAjax,dataCasoEpidemi,'POST',responseProcess,msgBackendProcess);
+      sendDataAjax(server_url+'ajax/casosEpidemiAjax.php',dataCasoEpidemi,'POST',responseProcess,msgBackendProcess);
 
 //      $('#dataTable').DataTable().ajax.reload( null, false );
 
@@ -376,39 +385,56 @@ var dataCasoEpidemi =
 
 function updateCasosEpidemi(data){
 
+    document.getElementById("form_caso_epidemi").setAttribute("data-form", 'update');
+
+      var person_not_ci = document.getElementById('person_not_ci');
+
+      var ifNotHaveIdentityDocument = document.getElementById('ifNotHaveIdentityDocument');
+
+
     var id_caso_epidemi = data[1];
 
-    var id_genero = data[2];
+    var id_person = data[2];
 
-    var id_nacionalidad = data[4];
+    var id_genero = data[3];
 
-    var doc_identidad = data[5];
+    var id_nacionalidad = data[5];
 
-    var fecha_nacimiento = data[7];
+    var doc_identidad = data[6];
 
-    var nombres = data[9];
+    var fecha_nacimiento = data[8];
 
-    var apellidos = data[10];
+    var nombres = data[10];
 
-    var clave_capitulo_cie10 = data[11];
+    var apellidos = data[11];
 
-    var catalog_key_cie10 = data[13];
+    var clave_capitulo_cie10 = data[12];
 
-    var id_atrib_especial = data[15];  
+    var catalog_key_cie10 = data[14];
 
-    var is_hospital = data[18];  
+    var id_atrib_rango_especial = data[16];
+
+    var id_tipo_entrada = data[18];
+
+    var is_hospital = data[21];
   
-    var fecha_registro = data[20];
+    var fecha_registro = data[23];
 
-    var id_parroquia = data[21];
+    var id_parroquia = data[24];
 
-    var direccion = data[23];
+    var direccion = data[26];
     
-    var telefono = data[24];
+    var telefono = data[27];
+    
+    $("#id_caso_epidemi").val(id_caso_epidemi);
 
     $("#id_nacionalidad").val(id_nacionalidad);
 
     $("#doc_identidad").val(doc_identidad);
+
+    $("#id_person").val(id_person);
+
+    $("#id_person_update").val(id_person);
 
     $("#id_nacionalidad_update").val(id_nacionalidad);
 
@@ -422,15 +448,16 @@ function updateCasosEpidemi(data){
 
     $("#idCapituloCIE10").val(clave_capitulo_cie10);
 
+    $("#id_tipo_entrada").val(id_tipo_entrada);
+
           var actionAjaxForCie10 = $('#actionAjaxForCie10').val();
 
-
-setCIE10ToFormUpdateCaseEpidemiAsync(clave_capitulo_cie10,catalog_key_cie10,actionAjaxForCie10,id_atrib_especial);
+ 
+setCIE10ToFormUpdateCaseEpidemiAsync(clave_capitulo_cie10,catalog_key_cie10,actionAjaxForCie10,id_atrib_rango_especial);
 
 
     
       $('#is_hospital').prop('checked', is_hospital);
-
 
     $("#idCapituloCIE10").val(clave_capitulo_cie10);
 
@@ -457,23 +484,43 @@ setCIE10ToFormUpdateCaseEpidemiAsync(clave_capitulo_cie10,catalog_key_cie10,acti
     
     $(".modal-title").text("Editar Caso Epidemiologico");
 
-    $(".btn-caso-epidemi").text("Editar");   
+    $(".btn-caso-epidemi").text("Editar");
 
-    $('#formCasosEpidemiModal').modal('show');       
+    $('#formCasosEpidemiModal').modal('show');
 
     $(".form-control-person").prop('disabled', false);
 
     $("#si-exist-person").css("display", "none");
+    // disbled por que nunca puede cambiarse
+    $("#id_person").prop('readonly', true);
+
+    $("#id_nacionalidad").prop('disabled', false);
+    $("#doc_identidad").prop('readonly', false);
+
+    ifNotHaveIdentityDocument.checked= false;
+
+    if (isBlank(doc_identidad) || isBlank(id_nacionalidad)) {
+
+    person_not_ci.style.display = "block";
+
+    $("#id_nacionalidad").val('');
 
     $("#id_nacionalidad").prop('disabled', true);
 
-    $("#doc_identidad").prop('disabled', true);
+    $("#doc_identidad").prop('readonly', true);
 
+    ifNotHaveIdentityDocument.checked= true;
 
-    document.getElementById("id_caso_epidemi").setAttribute("value", id_caso_epidemi);
+    }else{
+
+    person_not_ci.style.display = "none";
+
+    }
+
+  $(".form-control-person").prop('readonly', false);
   
-    document.getElementById("form_caso_epidemi").setAttribute("data-form", 'update');
 }
+
   
   });
 

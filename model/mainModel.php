@@ -975,4 +975,12 @@ public static function utf8_converter($array){
 }
 
 
+
+public static function msgIfNotHaveIdentityDoc($doc_identidad){
+	if (empty($doc_identidad)){
+		return "No Posee";
+	}
+		return $doc_identidad;
+}
+
 }

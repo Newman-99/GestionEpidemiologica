@@ -25,29 +25,29 @@
                 <div class="form-group">
                   <input type="text" class="form-control 
                   form-control-user
-                  form-control-user" id="aliasUser" name="aliasUser" placeholder="Alias de Usuario">
+                  form-control-user" id="aliasUser" name="aliasUser" placeholder="Alias de Usuario" required minlength = '5' maxlength = '20'>
                 </div>
 
                 <div class="form-group">
                   <input type="password" class="form-control 
-                  form-control-user" id="question1" name="question1" placeholder="¿Cual fue el nombre de tu primera mascota?">
+                  form-control-user" id="question1" name="question1" placeholder="¿Cual fue el nombre de tu primera mascota?" required  minlength = '3' maxlength = '30'>
                 </div>
 
                 <div class="form-group">
                   <input type="password" class="form-control 
-                  form-control-user" id="question2" name="question2" placeholder="¿Cual es el nombre de tu artista favorita?">
+                  form-control-user" id="question2" name="question2" placeholder="¿Cual es el nombre de tu artista favorita?" required  minlength = '3' maxlength = '30'>
                 </div>
 
 <hr>
                 <div class="form-group">
                   <input type="password" class="form-control 
-                  form-control-user" id="newPassword" name="newPassword" placeholder="Nueva Contraseña">
+                  form-control-user" id="newPassword" name="newPassword" placeholder="Nueva Contraseña" minlength = '8' maxlength = '20' required>
                 </div>
 
 
                 <div class="form-group">
                   <input type="password" class="form-control 
-                  form-control-user" id="newPasswordConfirm" name="newPasswordConfirm" placeholder="Confirmar Contraseña">
+                  form-control-user" id="newPasswordConfirm" name="newPasswordConfirm" placeholder="Confirmar Contraseña" minlength = '8' maxlength = '20' required>
                 </div>
 
                   <button class="btn btn-primary btn-user btn-block" type="submit" value="forgotPassUser" name="forgotPassUser">Recuperar</button>

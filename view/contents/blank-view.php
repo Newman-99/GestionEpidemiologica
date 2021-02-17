@@ -1,6 +1,25 @@
 <?php
 
+
+        $queryGetDataDocIdentidadPerson = mainModel::connectDB()->query("select doc_identidad,id_nacionalidad from personas where id_person = '$id_person'");
+
+        $dataDocIdentidadPerson = $queryGetDataDocIdentidadPerson->fetchAll(PDO::FETCH_ASSOC);
+
+        if (mainModel::isDataEmtpy($dataDocIdentidadPerson['doc_identidad'],$dataDocIdentidadPerson['id_nacionalidad'])) {
+            $alert=[
+              "Alert"=>"simple",
+              "Title"=>"Datos Invalidos",
+              "Text"=>"La persona ya posee documento de identidad".$indicatorPersonError,
+              "Type"=>"error"
+            ];
+
+              echo json_encode($alert);
+
+              exit();         
+        }
+
         $requestAjax =  false;
+
 
     require_once "./config/app.php";
 
@@ -59,9 +78,9 @@ $dataCasosEpidemi =
   "indicatorPersonError"=>"",
   "id_parroquia"=>"650",
   "direccion"=> "Calle 22 casa 133",
-  "siExistPerson"=>0,
+  "ifExistPerson"=>0,
   "is_hospital"=>1,
-  "id_atrib_especial"=>"0",
+  "id_atrib_rango_especial"=>"0",
   "indicatorEpidemiCaseError"=>"",
   "year_registro"=>"2021",
   "id_nacionalidad_usuario"=>1,
@@ -84,9 +103,9 @@ $dataCasosEpidemi =
   "indicatorPersonError"=>"",
   "id_parroquia"=>"1118",
   "direccion"=> "Calle Miranda Edif 33 apto 120",
-  "siExistPerson"=>0,
+  "ifExistPerson"=>0,
   "is_hospital"=>false,
-  "id_atrib_especial"=>'0',
+  "id_atrib_rango_especial"=>'0',
   "indicatorEpidemiCaseError"=>"",
   "year_registro"=>"2021",
   "id_nacionalidad_usuario"=>1,
@@ -115,7 +134,7 @@ $dateRegister = date('Y-m-d', $dateRegister);
 for ($i=0; $i < count($cie10); $i++) { 
 
 if ($i > 0) {
-  $dataCasosEpidemi["siExistPerson"]=1;
+  $dataCasosEpidemi["ifExistPerson"]=1;
 }
   $dataCasosEpidemi["fecha_registro"]=$dateRegister;
 

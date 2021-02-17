@@ -10,7 +10,7 @@
 
 
 
-              <?php 
+              <?php
               $userEncryptURl= explode("/",$_GET['views']);
 
               $msjError="<div class='form-group row'>
@@ -23,7 +23,7 @@
           </div>
         </div>
       </div>
-              ";              
+              ";
               if (!isset($userEncryptURl[1]) || empty($userEncryptURl[1])){
 
                 echo $msjError;
@@ -34,7 +34,7 @@
 
                
                 // Evitar que un user no admin  entre a los datos de otros usuarios
-                // 
+                //
               $requestedAliasUser = $loginController->decryption($userEncryptURl[1]);
 
               if ($_SESSION["id_nivel_permiso"] > 1 && strcmp($_SESSION["aliasUser"],$requestedAliasUser) != 0) {
@@ -63,7 +63,7 @@
     ];
                $queryUserRequested=$userController->getQueryInnerJoimForUser($userAttributesFilter,$userFilterValues);
               
-                $queryUserRequested->execute();     
+                $queryUserRequested->execute();
                 
                 if(!$queryUserRequested->rowCount()){
                 echo $msjError;
@@ -77,10 +77,9 @@
    <form class="formAjax form-update form-group text-center user" action="<?php echo SERVERURL; ?>ajax/userAjax.php" method="POST" data-form="update" autocomplete="off">
             
 
-        <div class="form-group row">
-          <div class="col-sm-5">
-            <p class="form-control">
+                <input type="hidden" class="form-control" id="id_person" name="id_person" value="<?php if(isset($fieldsUserRequested['id_person'])) echo $fieldsUserRequested['id_person']; ?>" >
 
+          <div class="form-group row">
 
           <?php if($fieldsUserRequested['id_nacionalidad'] == 1){
             $fieldsUserRequested['nacionalidad']='V';}else{
@@ -88,14 +87,23 @@
               }
             ?>
 
-          <?php echo $fieldsUserRequested['nacionalidad']."-".$fieldsUserRequested['doc_identidad']; ?>
+          <?php //echo $fieldsUserRequested['nacionalidad']."-".$fieldsUserRequested['doc_identidad']; ?>
 
-            <input name= "id_nacionalidad" type="hidden" value="<?php echo $fieldsUserRequested['id_nacionalidad']; ?>">
+          <div class="col-sm-6 mb-3 mb-sm-0">
 
-            <input name= "doc_identidad" type="hidden" value="<?php echo $fieldsUserRequested['doc_identidad']; ?>">
+        <select name='id_nacionalidad' id='id_nacionalidad' class="form-control" required>
+            <option  value=''>Nacionalidad</option>
+            
+            <option  value='1' <?php if($fieldsUserRequested['id_nacionalidad'] == 1) echo 'selected';?>>V</option>
+            <option value='2' <?php if($fieldsUserRequested['id_nacionalidad'] == 2) echo 'selected';?>>E</option>
+        </select>
 
-            </p>
-          </div>
+            </div>
+
+            <div class="col-sm-6">
+            <input name= "doc_identidad" type="readonly" class="form-control form-control-user" value="<?php echo $fieldsUserRequested['doc_identidad']; ?>">
+            </div>
+
         </div>
 
                 <div class="form-group row">
@@ -121,7 +129,7 @@
     
                   </div>
               <div class="col-sm-6">
-                <input type="date" class="form-control 
+                <input type="date" class="form-control
                 form-control-user
                 form-control-person" id="fecha_nacimiento" name="fecha_nacimiento" value="<?php if(isset($fieldsUserRequested['fecha_nacimiento'])) echo $fieldsUserRequested['fecha_nacimiento']; ?>" >
 
@@ -129,16 +137,21 @@
 
                 </div>
 
-            <p class="form-control ">
-                <?php echo $fieldsUserRequested['usuario_alias'];
-                ?>
-            <input name= "aliasUser" type="hidden" value="<?php echo $fieldsUserRequested['usuario_alias']; ?>">
 
-            </p>
+      
+                <div class="form-group row">
+      
+                   <div class="col-sm-6">
 
-                <div class="form-group">
-                  <input type="email" class="form-control 
+                  <input name= "aliasUser" class="form-control form-control-user" type="text" readonly value="<?php echo $fieldsUserRequested['usuario_alias']; ?>">
+                  </div>
+                  
+                  <div class="col-sm-6">
+
+                  <input type="email" class="form-control
                   form-control-user" id="email" name="email" placeholder="Correo Electronico" value ="<?php if(isset($fieldsUserRequested['email'])) echo $fieldsUserRequested['email']; ?>">
+                  </div>
+      
                 </div>
                 
                 <div class="form-group row">
@@ -171,7 +184,7 @@
                 <div class="form-group row">
                   <div class="col-sm-6 mb-3 mb-sm-0">
                 <select name='id_nivel_permiso' id='id_nivel_permiso' class="form-control
-                form-control-person" autocomplete='on' class="form-control"<?php if ($_SESSION['id_nivel_permiso'] != 1) echo "disabled"; ?>
+                " autocomplete='on' class="form-control"<?php if ($_SESSION['id_nivel_permiso'] != 1) echo "disabled"; ?>
 >
                       <option value="">Nivel Permiso</option>
                         <option <?php if($fieldsUserRequested['id_nivel_permiso'] == 1) echo 'selected';?> value="1">Nivel: Administrador</option>
@@ -186,18 +199,18 @@
 
                   <div class="col-sm-6 mb-3 mb-sm-0">
                 <select name='id_estado' id='id_estado' class="form-control
-                form-control-person" autocomplete='on' class="form-control" <?php if ($_SESSION['id_nivel_permiso'] != 1) echo "disabled"; ?> >
+                " autocomplete='on' class="form-control" <?php if ($_SESSION['id_nivel_permiso'] != 1) echo "disabled"; ?> >
                       <option value="">Estado</option>
                         <option <?php if($fieldsUserRequested['id_estado'] == 0) echo 'selected';?> value="0">Estado: Inactivo</option>
                         <option <?php if($fieldsUserRequested['id_estado'] == 1) echo 'selected'; ?> value="1">Estado: Activo</option>
                         <option <?php if($fieldsUserRequested['id_estado'] == 2) echo 'selected'; ?> value="2">Estado: Reiniciado</option>
                     </select>
     
-                  </div>                
+                  </div>
                 </div>
 
                   <button class="btn btn-primary btn-user btn-block" type="submit" value="updaterUser" name="save">Actualizar</button>
-                </a> 
+                </a>
 
                 <div class="responseProcessAjax"></div>
               </form>

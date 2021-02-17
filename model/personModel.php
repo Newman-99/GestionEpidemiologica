@@ -22,16 +22,18 @@
 
 			protected static function stringQueryUpdatePersonModel(){
 		return $sqlQuery = "UPDATE personas SET
+		 doc_identidad = :doc_identidad,
+		 id_nacionalidad = :id_nacionalidad,
 		 nombres = :nombres,
 		 apellidos = :apellidos,
 		 fecha_nacimiento = :fecha_nacimiento,
-		 id_genero = :id_genero WHERE doc_identidad = :doc_identidad AND id_nacionalidad = :id_nacionalidad ";
+		 id_genero = :id_genero WHERE id_person = :id_person;";
 		}
 
 
 			protected static function stringQueryDeletePersonModel(){
 		
-		return $sqlQuery = "DELETE FROM personas WHERE id_nacionalidad =:id_nacionalidad AND doc_identidad = :doc_identidad";
+		return $sqlQuery = "DELETE FROM personas WHERE id_person = :id_person";
 
 		}
 

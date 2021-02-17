@@ -17,7 +17,7 @@
     <input type="hidden" name="actionForAjax" id="actionForAjax"  class='form-control' value='<?php echo SERVERURL; ?>ajax/cie10DataAjax.php'>
 
 
-       <span alt="¿La person ya ha sido registrada como paciente o usuario?">¿person ya registrada?<input type="checkbox" name="siExistPerson" id="siExistPerson" class="form-control form-control-user" value="1">  
+       <span alt="¿La person ya ha sido registrada como paciente o usuario?">¿person ya registrada?<input type="checkbox" name="ifExistPerson" id="ifExistPerson" class="form-control form-control-user" value="1">  
         </span>
 
 

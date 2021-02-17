@@ -46,7 +46,7 @@ CREATE OR REPLACE VIEW activity_log_sessions_view AS SELECT
     pers.id_nacionalidad,
     nacion.descripcion_nacionalidad,
   (nacion.descripcion_nacionalidad || '' || pers.doc_identidad) AS doc_identidad_complete,
-  usr.doc_identidad,
+  pers.doc_identidad,
     usr.alias,
     pers.nombres,
   pers.apellidos,
@@ -56,7 +56,7 @@ CREATE OR REPLACE VIEW activity_log_sessions_view AS SELECT
   usr_bit.bitacora_hora_final
    FROM usuarios usr,personas pers, nacionalidades nacion,
   generos gnro, usuarios_niveles usr_nivl, usuario_bitacora usr_bit
-  WHERE usr.doc_identidad = pers.doc_identidad
+  WHERE usr.id_person = pers.id_person
   AND pers.id_nacionalidad = nacion.id_nacionalidad 
   AND pers.id_genero = gnro.id_genero 
   AND usr.alias = usr_bit.usuario_alias

@@ -17,6 +17,11 @@ if (typeOperation) {
 }
 
 function isBlank(str) {
+
+if (str == null) {
+  return true;
+}
+    
     return (str.length === 0 || !str.trim());
 
 }
@@ -40,9 +45,59 @@ data.forEach(function(str) {
 
     $( document ).ready(function() {
 
-$('#siExistPerson').change(function() {
 
-	$(".form-control-person").prop('disabled', this.checked);
+ // document.getElementById("id_person").style.display = "none";
+
+  $("#id_person").prop('readonly', true);
+
+
+  $('#ifExistPerson').change(function() {
+
+	$(".form-control-person").prop('readonly', this.checked);
+
+  $("select.form-control-person").prop('disabled', this.checked);
+
+if ($('input:checkbox[name=ifExistPerson]:checked').val() == 1) {
+
+if ($('input:checkbox[name=ifNotHaveIdentityDocument]:checked').val() == 1) {
+  $("#id_person").prop('readonly', false);
+}
+
+}else{
+    $("#id_person").prop('readonly', true);
+}
+
+
+
+
+});
+
+
+$('#ifNotHaveIdentityDocument').change(function() {
+
+  var showElelemt;
+
+  if (this.checked) {
+    showElelemt = 'block'
+  }else{
+    showElelemt = 'none'    
+  }
+
+  $("#doc_identidad").prop('readonly', this.checked);
+  $("#id_nacionalidad").prop('disabled', this.checked);
+
+
+  // osea si la persona existe dale la opcion de inserar id persona
+
+if ($('input:checkbox[name=ifExistPerson]:checked').val() == 1) {
+
+  $("#id_person").prop('readonly', !this.checked);
+}
+ 
+
+//  document.getElementById("id_person").style.display = showElelemt;
+
+//      $("#id_person").prop('readonly', !this.checked);
 
 });
 
@@ -76,22 +131,22 @@ function getHourForFileExport(){
 
 }
 
-async function setCIE10ToFormUpdateCaseEpidemiAsync(clave_capitulo_cie10,catalog_key_cie10,actionAjaxForCie10,id_atrib_especial) {
+async function setCIE10ToFormUpdateCaseEpidemiAsync(clave_capitulo_cie10,catalog_key_cie10,actionAjaxForCie10,id_atrib_rango_especial) {
   try {
     
     await setEventCIE10ByidCapituloToFormCaseEpidemi(clave_capitulo_cie10,actionAjaxForCie10);
 
     await setTimeout(function(){ $("#catalogKeyCIE10").val(catalog_key_cie10);}, 500);
 
-    await $('#id_atrib_especial').empty();
+    await $('#id_atrib_rango_especial').empty();
 
-    await $('#id_atrib_especial').append('<option value=0>Seleccionar Atributo Especial</option>')
+    await $('#id_atrib_rango_especial').append('<option value=0>Seleccionar Atributo Especial</option>')
 
     await getEspecialAttributesCIE10();
 
    await setTimeout(function(){ getEspecialAttributesCIE10()}, 500);
 
-  setTimeout(function(){ $("#id_atrib_especial").val(id_atrib_especial);}, 1000);
+  setTimeout(function(){ $("#id_atrib_rango_especial").val(id_atrib_rango_especial);}, 1000);
 
   }catch (e) {
     alert('error: '+e);
@@ -103,7 +158,8 @@ async function setCIE10ToFormRegisterCaseEpidemByidCapituloAsync(idCapituloCIE10
 
         await  setEventCIE10ByidCapituloToFormCaseEpidemi(idCapituloCIE10,actionAjaxForCie10);
 
-          getEspecialAttributesCIE10();
+       await setTimeout(function(){ getEspecialAttributesCIE10()}, 500);
+
   }catch (e) {
     alert(e);
   }
@@ -114,7 +170,7 @@ async function setCIE10ToFormRegisterCaseEpidemBySearchPatternAsync(valueSearch,
 
         await  setEventCIE10BySearchPatternToFormCaseEpidemi(valueSearch,idCapituloCIE10,actionAjaxForCie10);
 
-          getEspecialAttributesCIE10();
+        getEspecialAttributesCIE10();
   }catch (e) {
     alert(e);
   }

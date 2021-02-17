@@ -11,6 +11,7 @@
 
 	class activityLogCasosEpidemiController extends userModel{
 
+//  (get_descripcion_nacionalidad(id_nacionalidad_caso::integer) || '' || doc_identidad_caso) AS doc_identidad_caso_complete,
 
 
 protected static   $queryCreateViewGetCasosEpidemiBitacora = "
@@ -19,16 +20,15 @@ CREATE OR REPLACE VIEW casos_epidemi_bitacora_view  AS SELECT DISTINCT ON (id_bi
   id_caso_epidemi,
   catalog_key_cie10,fecha_caso_epidemi,
   usuario_alias,
-
-  doc_identidad_usuario,
-  id_nacionalidad_usuario,
-
+  id_person_usuario,
+  id_person_caso,
   doc_identidad_caso,
   id_nacionalidad_caso,
 
-  (get_descripcion_nacionalidad(id_nacionalidad_caso) || '' || doc_identidad_caso) AS doc_identidad_caso_complete,
+  get_doc_identidad_complete(id_nacionalidad_caso,doc_identidad_caso) AS doc_identidad_caso_complete,
 
-  (get_descripcion_nacionalidad(id_nacionalidad_usuario) || '' || doc_identidad_usuario) AS doc_identidad_usuario_complete,
+  (select get_doc_identidad_complete(id_nacionalidad,doc_identidad) from personas
+                       where id_person = id_person_usuario) AS doc_identidad_usuario_complete,
 
   tpo.descripcion_tipo_operacion,
 
@@ -41,10 +41,8 @@ CREATE OR REPLACE VIEW casos_epidemi_bitacora_view  AS SELECT DISTINCT ON (id_bi
   FROM casos_epidemi_bitacora casos_bit ,tipos_operaciones tpo, atribs_especiales_cie10 atr_esp
   
   WHERE tpo.id_tipo_operacion = casos_bit.id_tipo_operacion 
-
-  AND casos_bit.id_atrib_especial = atr_esp.id_atrib_especial
         
-  ORDER BY id_bitacora DESC";
+  ORDER BY id_bitacora DESC;";
 
 
 	public static function getFirstDateRecordsActivityLogCasosEpidemi(){

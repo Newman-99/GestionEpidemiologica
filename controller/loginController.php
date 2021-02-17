@@ -34,6 +34,7 @@ public function loginUserController($dataUser){
 			$currentHour = date("h:i:s a", strtotime($currentDate));
  
 			$dataSession=[
+			"id_person"=>$_SESSION["id_person"],
 			"aliasUser"=>$_SESSION["aliasUser"],
 			"tokenCurrentUser"=>$_SESSION["token_dptoEpidemi"],
 			"bitacora_hora_final"=>$currentHour,
@@ -91,7 +92,7 @@ public function loginUserController($dataUser){
     'type' => \PDO::PARAM_STR,
     ];
 
-$columns = array("pass_encrypt","alias","id_nacionalidad","doc_identidad","id_nivel_permiso","id_estado");
+$columns = array("pass_encrypt","alias","id_person","id_nivel_permiso","id_estado");
 
                $recordsUserSQL=parent::querySelectsCreator('usuarios',$columns,$userAttributesFilter,$userFilterValues);
 					
@@ -120,9 +121,7 @@ $columns = array("pass_encrypt","alias","id_nacionalidad","doc_identidad","id_ni
 
 			$aliasUser = $valuesDataUser["alias"]; 			
 
-			$id_nacionalidad = $valuesDataUser["id_nacionalidad"];
-
-			$doc_identidad = $valuesDataUser["doc_identidad"];
+			$id_person = $valuesDataUser["id_person"];
 
 			$id_nivel_permiso = $valuesDataUser["id_nivel_permiso"];
 
@@ -171,11 +170,13 @@ $columns = array("pass_encrypt","alias","id_nacionalidad","doc_identidad","id_ni
 
 if ($aliasUser !== 'admin') {
  		  $columnsTablePersona = [
+		'doc_identidad',
+		'id_nacionalidad',
 		'id_genero',
 		"nombres",
 		"apellidos"];
 
-    	$fieldsForFilter = array("doc_identidad"=>$doc_identidad,'id_nacionalidad'=>$id_nacionalidad);
+    	$fieldsForFilter = array("id_person"=>$id_person);
 
     		// para instaciar el object person
 			 parent::__construct();
@@ -187,6 +188,8 @@ if ($aliasUser !== 'admin') {
 			while($recordsDataPerson=$queryToGetDataPerson->fetch(PDO
 			::FETCH_ASSOC)){ 
 
+			$doc_identidad = $recordsDataPerson["doc_identidad"]; 
+			$id_nacionalidad = $recordsDataPerson["id_nacionalidad"]; 
 			$nameUser = $recordsDataPerson["nombres"]; 
 			$lastNamesUser = $recordsDataPerson["apellidos"]; 
 			$id_generoUser = $recordsDataPerson["id_genero"]; 
@@ -194,6 +197,9 @@ if ($aliasUser !== 'admin') {
 		}
 
 }else{
+			$id_person = '0'; 
+			$doc_identidad = 'admin'; 
+			$id_nacionalidad = 1; 
 			$nameUser = "admin";
 			$lastNamesUser = ""; 
 			$id_generoUser = "2"; 	
@@ -240,7 +246,7 @@ if ($aliasUser !== 'admin') {
 				$_SESSION['doc_identidad']=$doc_identidad;
 				$_SESSION['id_nacionalidad']=$id_nacionalidad;
 				$_SESSION['aliasUser']=$aliasUser;
-
+				$_SESSION['id_person']=$id_person;
 				$_SESSION['nameUser']=$arrayNamesUser[0];
 				$_SESSION['lastNameUser']=$arrayLastNamesUser[0];
 				$_SESSION['id_nivel_permiso']=$id_nivel_permiso;
@@ -257,15 +263,12 @@ if ($aliasUser !== 'admin') {
                 }
 						
 
-
-
 				$alert=[
 				"Alert"=>"redirecting",
 				"URL"=>SERVERURL."dashboard/"
 				];
 
 				echo json_encode($alert);
-
 
 		}
  

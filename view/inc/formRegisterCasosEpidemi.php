@@ -18,20 +18,28 @@
 
     <input type="hidden" name="id_caso_epidemi" id="id_caso_epidemi"  class='form-control' value=''>
 
+    <input type="hidden" name="id_person_update" id="id_person_update"  class='form-control' value='' >
+
     <input type="hidden" name="id_nacionalidad_update" id="id_nacionalidad_update"  class='form-control' value='' >
 
     <input type="hidden" name="doc_identidad_update" id="doc_identidad_update"  class='form-control' value=''>
 
     <div id="si-exist-person">
+       <span>¿persona registrada?<input type="checkbox" name="ifExistPerson" id="ifExistPerson" class="form-control form-control-user" value="1">
+        </span>
+  </div>
 
-       <span alt="¿La person ya ha sido registrada como paciente o usuario?">¿person ya registrada?<input type="checkbox" name="siExistPerson" id="siExistPerson" class="form-control form-control-user" value="1">
+    <div id="person_not_ci">
+       <span>¿persona sin C.I.?<input type="checkbox" name="ifNotHaveIdentityDocument" id="ifNotHaveIdentityDocument" class="form-control form-control-user ifNotHaveIdentityDocument" value="1">
         </span>
 
   </div>
 
 
+    <input type="number" name="id_person" id="id_person" class="form-control" placeholder="Id Persona"  >
+
     <br>
-        <select name='id_nacionalidad' id='id_nacionalidad' class="form-control" class="form-control" required>
+        <select name='id_nacionalidad' id='id_nacionalidad' class="form-control" >
             <option  value=''>Nacionalidad</option>
             <option  value='1'>V</option>
             <option value='2'>E</option>
@@ -39,13 +47,13 @@
 
     <br>
     <input type="text" name="doc_identidad" id="doc_identidad" class="form-control" placeholder="Cedula"
-    pattern="[0-9]{7,9}"  required
+    pattern="[0-9]{7,9}"
     title="El campo debe poseer entre 7 y 9 cifras numericas"
     >
 
 	<!-- Solo valido para el form de actualizar // solo test -->
   	<br>
-          <select name='idCapituloCIE10' id='idCapituloCIE10' class="form-control" class="form-control" required>
+          <select name='idCapituloCIE10' id='idCapituloCIE10' class="form-control" class="form-control">
 
             <option value="">SELECCIONAR CAPITULOS CIE-10</option>
 
@@ -113,7 +121,7 @@
   
     <select name='catalogKeyCIE10' id='catalogKeyCIE10' class="form-control" class="form-control" >
 
-            <option value="0">Selecionar Capitulo o CIE-10 Buscar Nombre </option>
+            <option value="">Seleciona Capitulo o CIE-10 Buscar Nombre </option>
 
         </select>
 
@@ -128,7 +136,7 @@
 
 <div class="input-group">
 
-    <select name='id_atrib_especial' id='id_atrib_especial' class="form-control" class="form-control" >
+    <select name='id_atrib_rango_especial' id='id_atrib_rango_especial' class="form-control" class="form-control" >
 
             <option value="0">Seleccionar Atributo Especial </option>
 
@@ -141,44 +149,61 @@
 </div>
 
 <br>
+
+                <div class="form-group row">
+                  <div class="col-sm-3 mb-3 mb-sm-0">
+
+
        <span>Hospitalizada o Referida<input type="checkbox" name="is_hospital" id="is_hospital" class="form-control" value="1">
         </span>
+                  </div>
 
-<br>
+                  <div class="col-sm-6 mb-3 mb-sm-0">
+
+          <select name='id_tipo_entrada' id='id_tipo_entrada' class="form-control" >
+
+               <option value=''>Tipo de Entrada</option>
+               <option value='1'>Primerizo</option>
+               <option value='2'>Susecivo</option>
+
+          </select>
+                  </div>
+                  
+                  </div>                    
+
 
 
 <?php
    // los casos no pueden se registrados con fecha dia de manana
    // osea lo maximo es el dia de hpy
-        $currentDate = date("d-m-Y");
+        $currentDate = date("Y-m-d");
 
 // Esta vendira siendo la fecha de hoy
 
        $maxDateAllowed = date("Y-m-d",strtotime($currentDate."- 1 days"));
-
-      // $minDateAllowed = date("Y-m-d",strtotime($maxDateAllowed."- 7 days"));
-        var_dump($maxDateAllowed);
+       //
  ?>
 
 	Fecha de Registro
   	<br>
-    <input type="date" name="fecha_registro" id="fecha_registro" class="form-control" placeholder="Fecha de Registro" max="<?php echo $maxDateAllowed; ?>" required>
+  	<input type="date" name="fecha_registro" id="fecha_registro" class="form-control ">
+  	<br>
+    <input type="text" name="nombres" id="nombres" class="form-control form-control-person" placeholder="Nombres"  minlength = '2' maxlength = '40'
+>
 
   	<br>
-    <input type="text" name="nombres" id="nombres" class="form-control form-control-person" placeholder="Nombres" value="">
-
-  	<br>
-    <input type="text" name="apellidos" id="apellidos" class="form-control form-control-person" placeholder="Apellidos">
+    <input type="text" name="apellidos" id="apellidos" class="form-control form-control-person" placeholder="Apellidos"  minlength = '2' maxlength = '40'
+>
   <br>
 
-    <select name='id_genero' id='id_genero' class="form-control form-control-person">
+    <select name='id_genero' id='id_genero' class="form-control form-control-person" >
        <option value=''>Genero</option>
        <option value='1'>Masculino</option>
        <option value='2'>Femenino</option>
     </select>
 <br>
 Fecha de Nacimiento
-  	<input type="date" name="fecha_nacimiento" id="fecha_nacimiento" class="form-control form-control-person">
+  	<input type="date" name="fecha_nacimiento" id="fecha_nacimiento" class="form-control form-control-person" >
 
 <br>
                 <div class="form-group row">
@@ -188,18 +213,18 @@ Fecha de Nacimiento
 
                   <div class="col-sm-3">
 
-                    <input type="number" class="form-control
-                    form-control-user" id="telefonoPart1" name="telefonoPart1"placeholder="0000">
+                    <input type="text" class="form-control
+                    form-control-user" id="telefonoPart1" name="telefonoPart1"placeholder="0000" pattern="[0-9]{4}"  title="El campo debe poseer 4 cifras numericas" >
                   </div>
                   
                   <div class="col-sm-3">
-                    <input type="number" class="form-control
-                    form-control-user" id="telefonoPart2" name="telefonoPart2" placeholder="0000">
+                    <input type="text" class="form-control
+                    form-control-user" id="telefonoPart2" name="telefonoPart2" placeholder="0000" pattern="[0-9]{4}"  title="El campo debe poseer 4 cifras numericas"  >
                   </div>
 
                   <div class="col-sm-3">
-                    <input type="number" class="form-control
-                    form-control-user" id="telefonoPart3" name="telefonoPart3" placeholder="000">
+                    <input type="text" class="form-control
+                    form-control-user" id="telefonoPart3" name="telefonoPart3" placeholder="000" pattern="[0-9]{3}" title="El campo debe poseer 3 cifras numericas" >
                   </div>
                 </div>
 <br>
@@ -208,7 +233,7 @@ Fecha de Nacimiento
         </select>
 <br>
 
-    <textarea rows="3" cols="40" name="direccion" id="direccion" class="form-control" placeholder="Direccion"></textarea>
+    <textarea rows="3" cols="40" name="direccion" id="direccion" class="form-control" placeholder="Direccion" ></textarea>
 <br>
 
       </div>
@@ -235,10 +260,10 @@ Fecha de Nacimiento
       <script type="text/javascript">
 
 
-
-  document.getElementById("form_caso_epidemi").addEventListener("submit", sendFormToRegisterOrUpdateCasesEpidemi );
+        document.getElementById("form_caso_epidemi").addEventListener("submit", sendFormToRegisterOrUpdateCasesEpidemi );
 
           $( document ).ready(function() {
+
 
 var load_atrib_especial  = document.getElementById("icon-load-atrib-especial");
 load_atrib_especial.style.display = "none";
@@ -264,22 +289,24 @@ load.style.display = "block";
   });
 
 
-
   // Al escribir en el input buscador se mostraran los casos CIE10 correspondientes en el select
   
-var timeForRequestSearch = "";
 
-  $(document).on('keyup', '#searchCIE10', function(){
+document.getElementById('searchCIE10').addEventListener('keyup', searchCIE10forPattern);
 
-  	load.style.display = "block";
 
-    clearTimeout(timeForRequestSearch);
+function searchCIE10forPattern(){
+
+  var timer;
+
+  window.clearTimeout(timer); // prevent errant multiple timeouts from being generated
+  timer = window.setTimeout(() => {
 
   var actionAjaxForCie10 = $('#actionAjaxForCie10').val();
 
   var idCapituloCIE10 = $('#idCapituloCIE10').val();
 
-  var valueSearch=$(this).val();
+  var valueSearch=$('#searchCIE10').val();
 
     if (valueSearch!="")
     {
@@ -292,17 +319,19 @@ var timeForRequestSearch = "";
              setCIE10ToFormRegisterCaseEpidemByidCapituloAsync();
     }
 
+    load.style.display = "block";
 
-});
+  }, 1000);
+
+}
+
 
 
 
       $('#catalogKeyCIE10').on('change',function(){
-
-      getEspecialAttributesCIE10();
+      setTimeout(function(){ getEspecialAttributesCIE10()}, 500);
 
       });
-
         // llenar select parroquia
   
         var selectParroquia = document.getElementById("id_parroquia");

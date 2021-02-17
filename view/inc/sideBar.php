@@ -26,7 +26,7 @@
       </li>
 
       <!-- Nav Item - Casos epidemis Collapse Menu -->
-      <?php if ($_SESSION['id_nivel_permiso'] != "2" || $_SESSION['id_nivel_permiso'] != "0" ): ?>
+      <?php if ($_SESSION['id_nivel_permiso'] == "1" || $_SESSION['id_nivel_permiso'] == "2" ): ?>
 
       <li class="nav-item">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsecasosEpidemi" aria-expanded="true" aria-controls="collapsecasosEpidemi">
@@ -36,7 +36,7 @@
         <div id="collapsecasosEpidemi" class="collapse" aria-labelledby="headingUsers" data-parent="#accordionSidebar">
           <div class="bg-white py-2 collapse-inner rounded">
 
-            <?php if ($_SESSION['id_nivel_permiso'] < 2): ?>
+            <?php if ($_SESSION['id_nivel_permiso'] < 3): ?>
 
             <a class="collapse-item" href="<?php echo SERVERURL; ?>casosEpidemiList/">Lista de Casos</a>
           <?php endif; ?>

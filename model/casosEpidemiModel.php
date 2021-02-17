@@ -13,15 +13,17 @@
 			exit();
 		}
 
-					protected static $queryGetAttribEspecial = "SELECT DISTINCT ON (cie10.catalog_key,atr_esp.id_atrib_especial) /*cie10.catalog_key,*/ atr_esp.id_atrib_especial,
+					protected static $queryGetAttribEspecial = "SELECT DISTINCT ON (cie10.catalog_key,atr_esp.id_atrib_rango_especial,atr_esp.id_atrib_rango_especial) /*cie10.catalog_key,*/ atr_esp.id_atrib_rango_especial,
 atr_esp.descripcion
 from atribs_especiales_cie10 atr_esp,data_cie10 cie10
 WHERE cie10.catalog_key BETWEEN atr_esp.key_cie10_inicio 
 AND atr_esp.key_cie10_final 
 AND cie10.catalog_key = :catalog_key
-order by atr_esp.id_atrib_especial";
+order by atr_esp.id_atrib_rango_especial";
 
 				protected static $queryAddBitacoraCasoEpidemi = "INSERT INTO public.casos_epidemi_bitacora(
+		 id_person_usuario,
+		 id_person_caso,
 		 usuario_alias,
 		 bitacora_fecha,
 		 bitacora_hora,
@@ -32,11 +34,10 @@ order by atr_esp.id_atrib_especial";
 		 catalog_key_cie10,
 		 id_nacionalidad_caso,
 		 doc_identidad_caso,
-		 id_nacionalidad_usuario,
-		 doc_identidad_usuario,
-		 is_hospital,
-		id_atrib_especial
-		 ) VALUES (		
+		 is_hospital
+		 ) VALUES (	
+		:id_person_usuario,	
+		:id_person_caso,	
 		:usuario_alias, 
 		:bitacora_fecha, 
 		:bitacora_hora, 
@@ -47,10 +48,7 @@ order by atr_esp.id_atrib_especial";
 		:catalog_key_cie10, 
 		:id_nacionalidad_caso, 
 		:doc_identidad_caso, 
-		:id_nacionalidad_usuario, 
-		:doc_identidad_usuario,
-		 :is_hospital,
-		 :id_atrib_especial)";
+		 :is_hospital)";
 
 
 		protected static $queryUpdateCasoEpidemi = "UPDATE casos_epidemi  SET 
@@ -61,13 +59,13 @@ order by atr_esp.id_atrib_especial";
 		 fecha_registro = :fecha_registro,
 		 year_registro = :year_registro,
 		 is_hospital = :is_hospital,
-		 id_atrib_especial = :id_atrib_especial 
+		 id_atrib_rango_especial = :id_atrib_rango_especial, 
+		 id_tipo_entrada = :id_tipo_entrada
 		 WHERE id_caso_epidemi = :id_caso_epidemi;";
 
 
 		protected static $queryAddCasosEpidemi = "INSERT INTO casos_epidemi(
-		 doc_identidad,
-		 id_nacionalidad,
+		 id_person,
 		 catalog_key_cie10,
 		 id_parroquia,
 		 direccion,
@@ -75,10 +73,10 @@ order by atr_esp.id_atrib_especial";
 		 fecha_registro,
 		 year_registro,
 		 is_hospital,
-		 id_atrib_especial
+		 id_tipo_entrada,
+		 id_atrib_rango_especial
 		 ) VALUES (		
-		 :doc_identidad,
-		 :id_nacionalidad,
+		 :id_person,		 
 		 :catalog_key_cie10,
 		 :id_parroquia,
 		 :direccion,
@@ -86,7 +84,8 @@ order by atr_esp.id_atrib_especial";
 		 :fecha_registro,
 		 :year_registro,
 		 :is_hospital,
-		 :id_atrib_especial)";
+		 :id_tipo_entrada,
+		 :id_atrib_rango_especial)";
 
 
 protected static $queryGetAgrupacionEPI =	"SELECT DISTINCT ON (orden) orden, enfermedad_evento, key_cie10_Inicio, key_cie10_final 
@@ -100,7 +99,7 @@ CREATE OR REPLACE VIEW caso_epidemi_view  AS SELECT DISTINCT ON (caso.id_caso_ep
 caso.catalog_key_cie10,caso.fecha_registro,caso.direccion,
 strFromBool(caso.is_hospital) as hospitalizado,
 caso.is_hospital,
-caso.id_atrib_especial,
+caso.id_atrib_rango_especial,
 atr_esp.descripcion atributo_especial,
 			    parr.parroquia,
 			    parr.id_parroquia,			        
@@ -108,46 +107,50 @@ atr_esp.descripcion atributo_especial,
 
 			    pers.nombres, pers.apellidos, pers.fecha_nacimiento,pers.id_genero,
 					date_part('year',age(caso.fecha_registro, pers.fecha_nacimiento))::int as edad,
-	
-				casos_bit.id_nacionalidad_caso, casos_bit.doc_identidad_caso,
 
-				(nacion.descripcion_nacionalidad || '' || casos_bit.doc_identidad_caso) AS doc_identidad_caso_complete,
+				pers.id_person id_person_caso,
 
-				casos_bit.id_nacionalidad_usuario, casos_bit.doc_identidad_usuario,				
-				(get_descripcion_nacionalidad(casos_bit.id_nacionalidad_usuario) || '' || casos_bit.doc_identidad_usuario) AS doc_identidad_usuario_complete,
+				pers.id_nacionalidad id_nacionalidad_caso, pers.doc_identidad doc_identidad_caso,
+
+				get_doc_identidad_complete(pers.id_nacionalidad,pers.doc_identidad) AS doc_identidad_caso_complete,
+
+  (select get_doc_identidad_complete(id_nacionalidad,doc_identidad) from personas
+                       where id_person = casos_bit.id_person_usuario) AS doc_identidad_usuario_complete,
 
 			    gnro.descripcion_genero descripcion_genero_caso,
 
 			    cie10.NOMBRE nombre_cie10,
 			    cie10.CLAVE_CAPITULO clave_capitulo_cie10,
-				split_part(cie10.capitulo,' ',1) as capitulo_cie10,
+				split_part(cie10.capitulo,' ',1) as  capitulo_cie10,
 
-				isCIE10InmediateNotice(cie10.n_inter,cie10.nin,cie10.ninmtobs,cie10.notdiaria,cie10.notsemanal,cie10.sistema_especial,
+				caso.id_tipo_entrada, entrad_caso.descripcion descrip_entrad_caso,
+
+				isCIE10InmediateNotice(cie10.n_inter,cie10.nin,cie10.ninmtobs,cie10.notdiaria,cie10.sistema_especial,
 				cie10.es_suive_notin,cie10.es_suive_est_epi,cie10.es_suive_est_brote) as notific_inmediata
 
 			    FROM casos_epidemi caso,casos_epidemi_bitacora casos_bit,personas pers,parroquias parr,generos gnro,
 				nacionalidades nacion, usuarios usr, data_cie10 cie10,
-				atribs_especiales_cie10 atr_esp
+				atribs_especiales_cie10 atr_esp, tipos_de_entrada_caso_epidemi entrad_caso
 
 				WHERE caso.id_caso_epidemi = casos_bit.id_caso_epidemi 
 				
-				AND  casos_bit.doc_identidad_caso = pers.doc_identidad 
-				
-				AND casos_bit.id_nacionalidad_caso = pers.id_nacionalidad 
+				AND  casos_bit.id_person_caso = pers.id_person 
 
+				AND caso.id_person = casos_bit.id_person_caso
+				
 				AND caso.id_parroquia = parr.id_parroquia 
 				
 				AND pers.id_genero = gnro.id_genero 
 				
-				AND casos_bit.id_nacionalidad_caso = nacion.id_nacionalidad
-
 				AND usr.alias = casos_bit.usuario_alias 
 
 				AND casos_bit.id_tipo_operacion =  1
 
-				AND caso.id_atrib_especial = atr_esp.id_atrib_especial
+				AND caso.id_tipo_entrada = entrad_caso.id_tipo_entrada
+
+				AND caso.id_atrib_rango_especial = atr_esp.id_atrib_rango_especial
 				
-				AND caso.catalog_key_cie10 = cie10.CATALOG_KEY ORDER BY caso.id_caso_epidemi DESC ";
+				AND caso.catalog_key_cie10 = cie10.CATALOG_KEY ORDER BY caso.id_caso_epidemi DESC";
 
 
 			public static function addcasosEpidemiModel($dataCasosEpidemi){
@@ -156,16 +159,16 @@ atr_esp.descripcion atributo_especial,
 
 		$DB_transacc->beginTransaction();
 
+
 	try {
 
-//		$DB_transacc->query("ALTER TABLE casos_epidemi DISABLE TRIGGER ALL");
-
 		//si no existe la persona
-	if(!$dataCasosEpidemi['siExistPerson']){
+	if(!$dataCasosEpidemi['ifExistPerson']){
 		// registrar como person
 		$sqlQuery  = personModel::stringQueryAddPersonModel();
 
 		$sqlQuery = $DB_transacc->prepare($sqlQuery);
+
 
 		$sqlQuery->execute(array(
 		 "doc_identidad"=>$dataCasosEpidemi['doc_identidad'],
@@ -177,24 +180,34 @@ atr_esp.descripcion atributo_especial,
 
 
 		$sqlQuery->closeCursor();
+
+		//registrar caso epidemiologico
+
+
+			$queryGetIdPersonToRegister = $DB_transacc->query("SELECT id_person FROM public.personas ORDER BY id_person DESC limit 1;");
+		  
+		  			$idPersonToRegister = $queryGetIdPersonToRegister->fetchColumn();
+		  			
+		  if (!$idPersonToRegister) {
+           		$idPersonToRegister = 1;
+           	}
+
+			$dataCasosEpidemi["id_person"]=$idPersonToRegister;
+
 		}		
 
 		if ($dataCasosEpidemi['is_hospital'] == true) {
 		$dataCasosEpidemi['is_hospital'] = 'true';
-		}		
-
-		if ($dataCasosEpidemi['is_hospital'] == false) {
+		}else{
 		$dataCasosEpidemi['is_hospital'] = 'false';
 		}
 
-		//registrar caso epidemiologico
-		
+
+
 		$sqlQuery = $DB_transacc->prepare(self::$queryAddCasosEpidemi);
 
-
 			$sqlQuery->execute(array(
-		 "doc_identidad"=>$dataCasosEpidemi['doc_identidad'],
-		 "id_nacionalidad"=>$dataCasosEpidemi['id_nacionalidad'],
+		 "id_person"=>$dataCasosEpidemi['id_person'],
 		 "catalog_key_cie10"=>$dataCasosEpidemi['catalog_key_cie10'],
 		 "id_parroquia"=>$dataCasosEpidemi['id_parroquia'],
 		 "direccion"=>$dataCasosEpidemi['direccion'],
@@ -202,15 +215,14 @@ atr_esp.descripcion atributo_especial,
 		 "fecha_registro"=>$dataCasosEpidemi['fecha_registro'],
 		 "year_registro"=>$dataCasosEpidemi['year_registro'],
 		 "is_hospital"=>$dataCasosEpidemi['is_hospital'],
-		 "id_atrib_especial"=>$dataCasosEpidemi['id_atrib_especial']));
+		 "id_atrib_rango_especial"=>$dataCasosEpidemi['id_atrib_rango_especial'],
+		 "id_tipo_entrada"=>$dataCasosEpidemi['id_tipo_entrada']));
 
-
-		$sqlQuery->closeCursor();
+			$sqlQuery->closeCursor();
 
 		// registrar bitacora
-		// 
 
-           $queryGetIdEpidemiCaseToRegister = mainModel::connectDB()->query("SELECT id_caso_epidemi FROM public.casos_epidemi ORDER BY id_caso_epidemi DESC limit 1;");
+           $queryGetIdEpidemiCaseToRegister = $DB_transacc->query("SELECT id_caso_epidemi FROM public.casos_epidemi ORDER BY id_caso_epidemi DESC limit 1;");
 
 
 			$idEpidemiCaseToRegister = $queryGetIdEpidemiCaseToRegister->fetchColumn();
@@ -222,9 +234,14 @@ atr_esp.descripcion atributo_especial,
 
 			$dataCasosEpidemi["id_caso_epidemi"]=$idEpidemiCaseToRegister;
 
+
+		$DB_transacc->query("ALTER TABLE casos_epidemi_bitacora DISABLE TRIGGER ALL;");
+
 		$sqlQuery = $DB_transacc->prepare(self::$queryAddBitacoraCasoEpidemi);
 
 			$sqlQuery->execute(array(
+		 "id_person_caso"=>$dataCasosEpidemi['id_person'],
+		 "id_person_usuario"=>$dataCasosEpidemi['id_person_usuario'],
 		 "usuario_alias"=>$dataCasosEpidemi['usuario_alias'],
 		 "bitacora_fecha"=>$dataCasosEpidemi['bitacora_fecha'],
 		 "bitacora_hora"=>$dataCasosEpidemi['bitacora_hora'],
@@ -235,12 +252,9 @@ atr_esp.descripcion atributo_especial,
 		 "catalog_key_cie10"=>$dataCasosEpidemi['catalog_key_cie10'],
 		 "id_nacionalidad_caso"=>$dataCasosEpidemi['id_nacionalidad'],
 		 "doc_identidad_caso"=>$dataCasosEpidemi['doc_identidad'],
-		 "id_nacionalidad_usuario"=>$dataCasosEpidemi['id_nacionalidad_usuario'],
-		 "doc_identidad_usuario"=>$dataCasosEpidemi['doc_identidad_usuario'],
-		 "is_hospital"=>$dataCasosEpidemi['is_hospital'],
-		"id_atrib_especial"=>$dataCasosEpidemi['id_atrib_especial']));
+		 "is_hospital"=>$dataCasosEpidemi['is_hospital']));
 
-//		$DB_transacc->query("ALTER TABLE casos_epidemi ENABLE TRIGGER ALL");
+		$DB_transacc->query("ALTER TABLE casos_epidemi_bitacora ENABLE TRIGGER ALL;");
 
 		$sqlQuery->closeCursor();
 
@@ -253,7 +267,7 @@ atr_esp.descripcion atributo_especial,
 				"Type"=>"success",
 				"reloadDataTable"=>"true"
 			];
-
+/**/
 			}catch (Exception $e) {
 
 			$DB_transacc->rollBack();
@@ -270,8 +284,7 @@ atr_esp.descripcion atributo_especial,
 		}
 
 		echo json_encode($alert);
-
-
+/**/
 	}	
 	
 	protected static function updatecasosEpidemiModel($dataCasosEpidemi){
@@ -284,11 +297,13 @@ atr_esp.descripcion atributo_especial,
 
 
 if ($dataCasosEpidemi['ifUpdatePerson']) {
+	
 		$sqlQuery  = personModel::stringQueryUpdatePersonModel();
 
 		$sqlQuery = $DB_transacc->prepare($sqlQuery);
 
 		 $sqlQuery->execute(array(
+		 "id_person"=>$dataCasosEpidemi['id_person'],
 		 "id_nacionalidad"=>$dataCasosEpidemi['id_nacionalidad'],
 		 "doc_identidad"=>$dataCasosEpidemi['doc_identidad'],
 		 "nombres"=>$dataCasosEpidemi['nombres'],
@@ -315,6 +330,7 @@ if ($dataCasosEpidemi['ifUpdatePerson']) {
 
 		$sqlQuery = $DB_transacc->prepare($sqlQuery);
 
+
 			$sqlQuery->execute(array(
 		 "id_caso_epidemi" => $dataCasosEpidemi['id_caso_epidemi'],
 		 "catalog_key_cie10" => $dataCasosEpidemi['catalog_key_cie10'],
@@ -324,7 +340,8 @@ if ($dataCasosEpidemi['ifUpdatePerson']) {
 		 "year_registro" => $dataCasosEpidemi['year_registro'],
 		 "fecha_registro" => $dataCasosEpidemi['fecha_registro'],
 		 "is_hospital"=>$dataCasosEpidemi['is_hospital'],
-		 "id_atrib_especial"=>$dataCasosEpidemi['id_atrib_especial']
+		 "id_atrib_rango_especial"=>$dataCasosEpidemi['id_atrib_rango_especial'],
+		 "id_tipo_entrada"=>$dataCasosEpidemi['id_tipo_entrada']
 		));
 
 
@@ -333,6 +350,8 @@ if ($dataCasosEpidemi['ifUpdatePerson']) {
 		$sqlQuery = $DB_transacc->prepare(self::$queryAddBitacoraCasoEpidemi);
 
 			$sqlQuery->execute(array(
+		 "id_person_caso"=>$dataCasosEpidemi['id_person'],
+		 "id_person_usuario"=>$dataCasosEpidemi['id_person_usuario'],
 		 "usuario_alias"=>$dataCasosEpidemi['usuario_alias'],
 		 "bitacora_fecha"=>$dataCasosEpidemi['bitacora_fecha'],
 		 "bitacora_hora"=>$dataCasosEpidemi['bitacora_hora'],
@@ -343,10 +362,7 @@ if ($dataCasosEpidemi['ifUpdatePerson']) {
 		 "catalog_key_cie10"=>$dataCasosEpidemi['catalog_key_cie10'],
 		 "id_nacionalidad_caso"=>$dataCasosEpidemi['id_nacionalidad'],
 		 "doc_identidad_caso"=>$dataCasosEpidemi['doc_identidad'],
-		 "id_nacionalidad_usuario"=>$dataCasosEpidemi['id_nacionalidad_usuario'],
-		 "doc_identidad_usuario"=>$dataCasosEpidemi['doc_identidad_usuario'],
-		 "is_hospital"=>$dataCasosEpidemi['is_hospital'],
-		 "id_atrib_especial"=>$dataCasosEpidemi['id_atrib_especial']));
+		 "is_hospital"=>$dataCasosEpidemi['is_hospital']));
 
 		$sqlQuery->closeCursor();
 
@@ -360,7 +376,7 @@ if ($dataCasosEpidemi['ifUpdatePerson']) {
 			];
 
 		  	$DB_transacc->commit();
-			
+
 			}catch (Exception $e) {
 
 			$DB_transacc->rollBack();
@@ -376,7 +392,6 @@ if ($dataCasosEpidemi['ifUpdatePerson']) {
 		}
 
 			return json_encode($alert);
-
 
 		}
 
@@ -396,6 +411,7 @@ if ($dataCasosEpidemi['ifUpdatePerson']) {
 		$DB_transacc->query("ALTER TABLE casos_epidemi DISABLE TRIGGER ALL");
 
 
+
 		$sqlQuery = $DB_transacc->prepare("DELETE FROM casos_epidemi WHERE id_caso_epidemi = :id_caso_epidemi;");
 
 			$sqlQuery->execute(array(
@@ -403,16 +419,18 @@ if ($dataCasosEpidemi['ifUpdatePerson']) {
 
 		  $sqlQuery->closeCursor();
 
+
 		  //si existe elimnamos persona
 		if (isset($dataCasosEpidemi['deletePerson'])) {
 		
+
 		$stringQueryDeletePersonModel = personModel::stringQueryDeletePersonModel();
+
 
 		$sqlQuery = $DB_transacc->prepare($stringQueryDeletePersonModel);
 
 		  $sqlQuery->execute(array(
-		 "id_nacionalidad"=>$dataCasosEpidemi['id_nacionalidad'],
-		 "doc_identidad"=>$dataCasosEpidemi['doc_identidad']));
+		 "id_person"=>$dataCasosEpidemi['id_person']));
 		 
 		  $sqlQuery->closeCursor();	
 
@@ -429,7 +447,12 @@ if ($dataCasosEpidemi['ifUpdatePerson']) {
 
 		$sqlQuery = $DB_transacc->prepare(self::$queryAddBitacoraCasoEpidemi);
 
+		$sqlQuery->closeCursor();
+
+
 			$sqlQuery->execute(array(
+		 "id_person_caso"=>$dataCasosEpidemi['id_person'],
+		 "id_person_usuario"=>$dataCasosEpidemi['id_person_usuario'],
 		 "usuario_alias"=>$dataCasosEpidemi['usuario_alias'],
 		 "bitacora_fecha"=>$dataCasosEpidemi['bitacora_fecha'],
 		 "bitacora_hora"=>$dataCasosEpidemi['bitacora_hora'],
@@ -440,13 +463,9 @@ if ($dataCasosEpidemi['ifUpdatePerson']) {
 		 "catalog_key_cie10"=>$dataCasosEpidemi['catalog_key_cie10'],
 		 "id_nacionalidad_caso"=>$dataCasosEpidemi['id_nacionalidad'],
 		 "doc_identidad_caso"=>$dataCasosEpidemi['doc_identidad'],
-		 "id_nacionalidad_usuario"=>$dataCasosEpidemi['id_nacionalidad_usuario'],
-		 "doc_identidad_usuario"=>$dataCasosEpidemi['doc_identidad_usuario'],
-		 "is_hospital"=>$dataCasosEpidemi['is_hospital'],
-		 "id_atrib_especial"=>$dataCasosEpidemi['id_atrib_especial']
+		 "is_hospital"=>$dataCasosEpidemi['is_hospital']
 		));
 
-		$sqlQuery->closeCursor();
 
 
 
@@ -483,7 +502,7 @@ if ($dataCasosEpidemi['ifUpdatePerson']) {
 		}
 
 			return json_encode($alert);
-		
+
 
 		}
 
@@ -572,10 +591,10 @@ casos.id_caso_epidemi
 from agrupacion_epi agrup_epi, casos_epidemi casos,personas pers 
 WHERE casos.catalog_key_cie10 BETWEEN agrup_epi.key_cie10_Inicio AND agrup_epi.key_cie10_final 
  ".$genreSelededForQuery." ".$ageRangeForQuery."
-AND pers.doc_identidad = casos.doc_identidad AND pers.id_nacionalidad = casos.id_nacionalidad ".
+AND pers.id_person = casos.id_person ".
 $epiOrderSelededForQuery." AND casos.fecha_registro BETWEEN '$startRegistrationDate' AND '$endRegistrationDate' 
 ".$forHospitalized."
-AND casos.id_atrib_especial BETWEEN agrup_epi.inicio_atrib_especial AND agrup_epi.final_atrib_especial
+AND casos.id_atrib_rango_especial BETWEEN agrup_epi.inicio_id_rango_atrib_especial AND agrup_epi.final_id_rango_atrib_especial
 AND date_part('year',age(casos.fecha_registro, pers.fecha_nacimiento))::int 
 BETWEEN agrup_epi.edad_incio AND agrup_epi.edad_final;";
 

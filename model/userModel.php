@@ -16,7 +16,7 @@
 
 	try {
 		//si no existe la persona
-	if(!$dataUser['siExistPerson']){
+	if(!$dataUser['ifExistPerson']){
 		// registrar como person
 		$sqlQuery  = personModel::stringQueryAddPersonModel();
 
@@ -31,22 +31,31 @@
 		 "id_genero"=>$dataUser['id_genero']));
 
 		$sqlQuery->closeCursor();
+
+			$queryGetIdPersonToRegister = $DB_transacc->query("SELECT id_person FROM public.personas ORDER BY id_person DESC limit 1;");
+		  
+		  			$idPersonToRegister = $queryGetIdPersonToRegister->fetchColumn();
+		  			
+		  if (!$idPersonToRegister) {
+           		$idPersonToRegister = 1;
+           	}
+
+			$dataUser["id_person"]=$idPersonToRegister;
+
 		}		
 
 		//registrar como usuario
 		
 		$sqlQuery = $DB_transacc->prepare("INSERT INTO usuarios ( 
 			alias,
-			id_nacionalidad,
-		 	doc_identidad,
+			id_person,
 		 	id_nivel_permiso,
 		 	id_estado,
 		 	pass_encrypt, 
 		 	email,
 		 	telefono) VALUES (
 		 	:alias,
-		 	:id_nacionalidad,
-		 	:doc_identidad,
+		 	:id_person,
 		 	:id_nivel_permiso,
 		 	:id_estado,
 		 	:pass_encrypt, 
@@ -55,8 +64,7 @@
 
 			$sqlQuery->execute(array(
 		"alias"=>$dataUser['aliasUser'],
-		"id_nacionalidad"=>$dataUser['id_nacionalidad'],
-		"doc_identidad"=>$dataUser['doc_identidad'],
+		"id_person"=>$dataUser['id_person'],
 		"id_nivel_permiso"=>$dataUser['id_nivel_permiso'],
 		"id_estado"=>$dataUser['id_estado'],
 		"pass_encrypt"=>$dataUser['password'],
@@ -98,7 +106,6 @@
 				"Type"=>"success"
 			];
 
-			
 			}catch (Exception $e) {
 
 			$DB_transacc->rollBack();
@@ -114,7 +121,6 @@
 		}
 
 		 return json_encode($alert);
-
 	}	
 
 
@@ -124,7 +130,7 @@
 
 		$DB_transacc->beginTransaction();
 
-	try {
+//	try {
 
 // si no son los mismos datos personales acualizamos
 if (isset($dataPerson['ifUpdatePerson']) && $dataPerson['ifUpdatePerson'] == true ) {
@@ -133,6 +139,7 @@ if (isset($dataPerson['ifUpdatePerson']) && $dataPerson['ifUpdatePerson'] == tru
 		$sqlQuery = $DB_transacc->prepare($sqlQuery);
 
 		 $sqlQuery->execute(array(
+		 "id_person"=>$dataPerson['id_person'],
 		 "id_nacionalidad"=>$dataPerson['id_nacionalidad'],
 		 "doc_identidad"=>$dataPerson['doc_identidad'],
 		 "nombres"=>$dataPerson['nombres'],
@@ -165,7 +172,7 @@ if (isset($dataPerson['ifUpdatePerson']) && $dataPerson['ifUpdatePerson'] == tru
 			];
 
 		  	$DB_transacc->commit();
-			
+		/*	
 			}catch (Exception $e) {
 
 			$DB_transacc->rollBack();
@@ -179,7 +186,7 @@ if (isset($dataPerson['ifUpdatePerson']) && $dataPerson['ifUpdatePerson'] == tru
 			];
 
 		}
-
+*/
 			return json_encode($alert);
 
 	}
@@ -238,10 +245,8 @@ if (isset($dataPerson['ifUpdatePerson']) && $dataPerson['ifUpdatePerson'] == tru
 		$sqlQuery = $DB_transacc->prepare($stringQueryDeletePersonModel);
 
 		  $sqlQuery->execute(array(
-		 "id_nacionalidad"=>$dataUser['id_nacionalidad'],
-		 "doc_identidad"=>$dataUser['doc_identidad']));
+		 "id_person"=>$dataUser['id_person']));
 	
-
 		}
 
 		$DB_transacc->query(parent::$stringQueryEnableForeingDB);
@@ -297,14 +302,14 @@ if (isset($dataPerson['ifUpdatePerson']) && $dataPerson['ifUpdatePerson'] == tru
 			}
 
 			public static function stringQueryInnerJoinForGetUser(){
-				$stringQueryInnerJoinForGetUser = " SELECT  DISTINCT ON (usr.alias) usr.alias usuario_alias,usr.id_nacionalidad,usr.doc_identidad, usr.id_nivel_permiso, usr.id_estado, usr.pass_encrypt, usr.email, usr.telefono, pers.nombres, pers.apellidos, pers.fecha_nacimiento, pers.id_genero,
+				$stringQueryInnerJoinForGetUser = " SELECT  DISTINCT ON (usr.alias) usr.alias usuario_alias,pers.id_nacionalidad,pers.doc_identidad, usr.id_nivel_permiso, usr.id_estado, usr.pass_encrypt, usr.email, usr.telefono,pers.id_person, pers.nombres, pers.apellidos, pers.fecha_nacimiento, pers.id_genero,
 				nacion.descripcion_nacionalidad,
 				gnro.descripcion_genero,
 				usrEtdo.descripcion_estado,
 				usrNivl.descripcion_nivel_permiso,
 				usrQuest.id_pregunta,usrQuest.respuesta,(nacion.descripcion_nacionalidad || '' || pers.doc_identidad) AS doc_identidad_complete
  				FROM usuarios usr
-				INNER JOIN personas pers ON usr.doc_identidad = pers.doc_identidad
+				INNER JOIN personas pers ON usr.id_person = pers.id_person
 				INNER JOIN nacionalidades nacion ON pers.id_nacionalidad = nacion.id_nacionalidad 
 				INNER JOIN generos gnro ON pers.id_genero = gnro.id_genero 
 				INNER JOIN usuarios_estados usrEtdo ON usr.id_estado =  usrEtdo.id_estado
@@ -315,7 +320,7 @@ if (isset($dataPerson['ifUpdatePerson']) && $dataPerson['ifUpdatePerson'] == tru
 			}
 		
 					public static function stringQueryInnerJoinForGetDataSecurityUser(){
-				$stringQueryInnerJoinForGetDataSecurityUser = " SELECT  DISTINCT ON (usr.alias) usr.alias usuario_alias,usr.id_nacionalidad, usr.pass_encrypt,
+				$stringQueryInnerJoinForGetDataSecurityUser = " SELECT  DISTINCT ON (usr.alias) usr.alias usuario_alias, usr.pass_encrypt,
 				usrQuest.id_pregunta,usrQuest.respuesta
 
  				FROM usuarios usr
