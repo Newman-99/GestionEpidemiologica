@@ -135,17 +135,17 @@ load_atrib_especial.style.display = "block";
      success:function(JsonEspecialAttributes){
       console.log(JsonEspecialAttributes);
 
-//     $('#id_atrib_rango_especial').append("<option value="+0+">Seleccionar Atributo Especial</option>");
+//     $('#id_atrib_especial').append("<option value="+0+">Seleccionar Atributo Especial</option>");
        count = 0;
 
-      $('#id_atrib_rango_especial').empty();
+      $('#id_atrib_especial').empty();
 
       especialAttributes = JSON.parse(JsonEspecialAttributes);
             especialAttributes.forEach(function(attributes){
     
           count = 1;
 
-     $('#id_atrib_rango_especial').append('<option value='+attributes.id_atrib_rango_especial+'>'+attributes.descripcion + '</option>')
+     $('#id_atrib_especial').append('<option value='+attributes.id_atrib_especial+'>'+attributes.descripcion + '</option>')
 
         });
         load_atrib_especial.style.display = "none";
@@ -220,7 +220,7 @@ var hour = getHourForFileExport();
       },
 
       {
-                // comlumn id_atrib_rango_especial
+                // comlumn id_atrib_especial
 
       targets: [16],
       visible: false,

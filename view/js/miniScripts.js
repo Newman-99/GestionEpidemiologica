@@ -131,22 +131,22 @@ function getHourForFileExport(){
 
 }
 
-async function setCIE10ToFormUpdateCaseEpidemiAsync(clave_capitulo_cie10,catalog_key_cie10,actionAjaxForCie10,id_atrib_rango_especial) {
+async function setCIE10ToFormUpdateCaseEpidemiAsync(clave_capitulo_cie10,catalog_key_cie10,actionAjaxForCie10,id_atrib_especial) {
   try {
     
     await setEventCIE10ByidCapituloToFormCaseEpidemi(clave_capitulo_cie10,actionAjaxForCie10);
 
     await setTimeout(function(){ $("#catalogKeyCIE10").val(catalog_key_cie10);}, 500);
 
-    await $('#id_atrib_rango_especial').empty();
+    await $('#id_atrib_especial').empty();
 
-    await $('#id_atrib_rango_especial').append('<option value=0>Seleccionar Atributo Especial</option>')
+    await $('#id_atrib_especial').append('<option value=0>Seleccionar Atributo Especial</option>')
 
     await getEspecialAttributesCIE10();
 
    await setTimeout(function(){ getEspecialAttributesCIE10()}, 500);
 
-  setTimeout(function(){ $("#id_atrib_rango_especial").val(id_atrib_rango_especial);}, 1000);
+  setTimeout(function(){ $("#id_atrib_especial").val(id_atrib_especial);}, 1000);
 
   }catch (e) {
     alert('error: '+e);

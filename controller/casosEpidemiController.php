@@ -48,7 +48,7 @@
 		 $fecha_registro = mainModel::cleanStringSQL($dataCasosEpidemi['fecha_registro']);
 
 
-		 $id_atrib_rango_especial = mainModel::cleanStringSQL($dataCasosEpidemi['id_atrib_rango_especial']);
+		 $id_atrib_especial = mainModel::cleanStringSQL($dataCasosEpidemi['id_atrib_especial']);
 
 		$ifExistPerson = 0;
 	if(isset($dataCasosEpidemi['ifExistPerson'])){
@@ -141,7 +141,7 @@
 		"ifExistPerson"=>$ifExistPerson,
 		"id_tipo_entrada"=>$id_tipo_entrada,
 		"is_hospital"=>$is_hospital,
-		"id_atrib_rango_especial"=>$id_atrib_rango_especial,
+		"id_atrib_especial"=>$id_atrib_especial,
 		"indicatorEpidemiCaseError"=>'',
 		"indicatorPersonError"=>'',
 		"id_person"=>$id_person,
@@ -305,7 +305,7 @@
 		 $doc_identidad) && !$ifNotHaveIdentityDocument || mainModel::isDataEmtpy($id_person));
 
 
-		 $id_atrib_rango_especial = mainModel::cleanStringSQL($dataCasosEpidemi['id_atrib_rango_especial']);
+		 $id_atrib_especial = mainModel::cleanStringSQL($dataCasosEpidemi['id_atrib_especial']);
 
 		if (mainModel::isDataEmtpy(
 		 $catalog_key_cie10,
@@ -344,7 +344,7 @@
 		"fecha_registro"=>$fecha_registro,
 		"telefono"=>$telefono,
 		"is_hospital"=>$is_hospital,
-		"id_atrib_rango_especial"=>$id_atrib_rango_especial,
+		"id_atrib_especial"=>$id_atrib_especial,
 		"id_person"=>$id_person,
 		"ifNotHaveIdentityDocument"=>$ifNotHaveIdentityDocument,
 		"ifExistPerson"=>true,
@@ -381,7 +381,7 @@
 		"telefono",
 		"is_hospital",
 		"id_tipo_entrada",
-		"id_atrib_rango_especial"];
+		"id_atrib_especial"];
 
  		 $fieldsForFilter = array('id_caso_epidemi' => $id_caso_epidemi);
 
@@ -427,7 +427,7 @@
 		"fecha_registro"=>$fecha_registro,
 		"catalog_key_cie10"=>$catalog_key_cie10,
 		"is_hospital"=>$is_hospital,
-		"id_atrib_rango_especial"=>$id_atrib_rango_especial];
+		"id_atrib_especial"=>$id_atrib_especial];
 
 		$dataCasosEpidemi = array_merge($dataCasosEpidemi,$dataCasosEpidemiBitacora);
 
@@ -520,12 +520,12 @@
 
 		$fecha_registro = mainModel::cleanStringSQL($dataCasosEpidemi['fecha_registro']);
 
-		$id_atrib_rango_especial = mainModel::cleanStringSQL($dataCasosEpidemi['id_atrib_rango_especial']);
+		$id_atrib_especial = mainModel::cleanStringSQL($dataCasosEpidemi['id_atrib_especial']);
 
 		$is_hospital = mainModel::cleanStringSQL($dataCasosEpidemi['is_hospital']);
 
 		 			if (mainModel::isDataEmtpy(
-						 $id_caso_epidemi,$catalog_key_cie10,$fecha_registro,$is_hospital,$id_person) || mainModel::isDataEmtpyPermitedZero($id_atrib_rango_especial) || !isset($doc_identidad,$id_nacionalidad)) {
+						 $id_caso_epidemi,$catalog_key_cie10,$fecha_registro,$is_hospital,$id_person) || mainModel::isDataEmtpyPermitedZero($id_atrib_especial) || !isset($doc_identidad,$id_nacionalidad)) {
 			$alert=[
 				"Alert"=>"simple",
 				"Title"=>"Datos Vacios",
@@ -566,7 +566,7 @@ if (!isset($dataCasosEpidemi['confirmDelete'])) {
 						"Alert"=>"confirmation",
 						"Text"=>"Esta persona no presenta otro  caso epidemiologico ni posee algun usuario  por lo que se eliminara del sistema completamente",
 						"Url"=>"".SERVERURL."ajax/casosEpidemiAjax.php",
-						"Data"=>"doc_identidad=$doc_identidad&id_caso_epidemi=$id_caso_epidemi&id_person=$id_person&id_nacionalidad=$id_nacionalidad&fecha_registro=$fecha_registro&catalog_key_cie10=$catalog_key_cie10&is_hospital=$is_hospital&id_atrib_rango_especial=$id_atrib_rango_especial&operationType=delete&confirmDelete=true",
+						"Data"=>"doc_identidad=$doc_identidad&id_caso_epidemi=$id_caso_epidemi&id_person=$id_person&id_nacionalidad=$id_nacionalidad&fecha_registro=$fecha_registro&catalog_key_cie10=$catalog_key_cie10&is_hospital=$is_hospital&id_atrib_especial=$id_atrib_especial&operationType=delete&confirmDelete=true",
 						"Method"=>"POST"];
 					
 					echo json_encode($alert);
@@ -580,7 +580,7 @@ if (!isset($dataCasosEpidemi['confirmDelete'])) {
 		'doc_identidad' => $doc_identidad,
 		'id_nacionalidad' => $id_nacionalidad,
 		'fecha_registro' => $fecha_registro,
-		'id_atrib_rango_especial' => $id_atrib_rango_especial,
+		'id_atrib_especial' => $id_atrib_especial,
 		'is_hospital' => $is_hospital];
 
 		if (isset($dataCasosEpidemi['confirmDelete'])) {
@@ -628,10 +628,8 @@ if (!isset($dataCasosEpidemi['confirmDelete'])) {
 
   public static function getDataTablesCasosEpidemiController() {
 
-//  	    mainModel::connectDB()->query('drop view caso_epidemi_view');
-
   $columnsTable = array(
-     'row_number',
+     'ROW_NUMBER() OVER()',
       'id_caso_epidemi',
       'id_person_caso',
       	'id_genero',
@@ -649,7 +647,7 @@ if (!isset($dataCasosEpidemi['confirmDelete'])) {
     'nombre_cie10',
     'id_tipo_entrada',
     'descrip_entrad_caso',
-    'id_atrib_rango_especial',
+    'id_atrib_especial',
     'atributo_especial',
     'notific_inmediata',
     'is_hospital',
@@ -683,7 +681,7 @@ array(
      'capitulo_cie10',
     'catalog_key_cie10',
     'nombre_cie10',
-    'id_atrib_rango_especial',
+    'id_atrib_especial',
     'atributo_especial',
     'id_tipo_entrada',
     'descrip_entrad_caso',
@@ -705,7 +703,7 @@ array(
 
   try {
 
-//   mainModel::connectDB()->query('drop view caso_epidemi_view');
+   mainModel::connectDB()->query('drop view caso_epidemi_view');
 
 
 $queryifExistView = mainModel::connectDB()->query("SELECT where EXISTS  ( SELECT FROM information_schema.tables WHERE table_name = 'caso_epidemi_view' ) = true");
@@ -732,7 +730,8 @@ $queryifExistView = mainModel::connectDB()->query("SELECT where EXISTS  ( SELECT
         $sOrder
         $sLimit
     ";
-//var_dump($sQueryForPersonalizedPrint);
+
+    //var_dump($sQueryForPersonalizedPrint);
 
     $rResult = mainModel::connectDB()->query($sQueryForPersonalizedPrint);
 
@@ -799,7 +798,7 @@ $queryifExistView = mainModel::connectDB()->query("SELECT where EXISTS  ( SELECT
 
                 $dataFields['catalog_key_cie10']=$aRow['catalog_key_cie10'];
 
-                $dataFields['id_atrib_rango_especial']=$aRow['id_atrib_rango_especial'];
+                $dataFields['id_atrib_especial']=$aRow['id_atrib_especial'];
 
                 $dataFields['atributo_especial']=$aRow['atributo_especial'];
 
@@ -1106,7 +1105,7 @@ $dataForDataTables = array();
 
 			$dataRow[] = $agrupacion_epi["orden"];
 
-			$dataRow[] = $agrupacion_epi["enfermedad_evento"];
+			$dataRow[] = $agrupacion_epi["enfermedad_evento_epi"];
 
 
 				/// for obtener los datos por todos los rango de edades
@@ -1245,7 +1244,7 @@ $apellidos = mainModel::cleanStringSQL($dataForQuery[$indiceFila][10]);
 
 $catalog_key_cie10 = mainModel::cleanStringSQL($dataForQuery[$indiceFila][13]);
 
-$id_atrib_rango_especial = mainModel::cleanStringSQL($dataForQuery[$indiceFila][15]);
+$id_atrib_especial = mainModel::cleanStringSQL($dataForQuery[$indiceFila][15]);
 
 $is_hospital = mainModel::cleanStringSQL($dataForQuery[$indiceFila][18]);
 
@@ -1273,7 +1272,7 @@ $telefono = mainModel::cleanStringSQL($dataForQuery[$indiceFila][24]);
 		"id_genero"=>$id_genero,
 		"catalog_key_cie10"=>$catalog_key_cie10,
 		"is_hospital"=>$is_hospital,
-		"id_atrib_rango_especial"=>$id_atrib_rango_especial,
+		"id_atrib_especial"=>$id_atrib_especial,
 		"id_parroquia"=>$id_parroquia,
 		"direccion"=>$direccion,
 		"fecha_registro"=>$fecha_registro,
@@ -1292,7 +1291,7 @@ $telefono = mainModel::cleanStringSQL($dataForQuery[$indiceFila][24]);
 				$fecha_registro,
 				$id_parroquia,
 				$direccion,
-			   	$telefono) || mainModel::isDataEmtpyPermitedZero($id_atrib_rango_especial)){
+			   	$telefono) || mainModel::isDataEmtpyPermitedZero($id_atrib_especial)){
 
 				$alert=[
 					"Alert"=>"simple",
@@ -1437,14 +1436,14 @@ $dataSendCasos = urlencode($dataSendCasos);
 
 /*
 		 if (!$queryGetAttribEspecial->rowCount()) {
-			$dataJsonAtribEspecial[] = array('descripcion' =>'Seleccionar Atributo Especial','id_atrib_rango_especial'=>'0');
+			$dataJsonAtribEspecial[] = array('descripcion' =>'Seleccionar Atributo Especial','id_atrib_especial'=>'0');
 
 		echo json_encode($dataJsonAtribEspecial);
 		exit();
 
 		 }
 */
-			$dataJsonAtribEspecial[] = array('descripcion' =>'Seleccionar Atributo Especial','id_atrib_rango_especial'=>'0');
+			$dataJsonAtribEspecial[] = array('descripcion' =>'Seleccionar Atributo Especial','id_atrib_especial'=>'0');
 
 		while($recordsAtribEspecial=$queryGetAttribEspecial->fetch(PDO
 			::FETCH_ASSOC)){
@@ -1863,9 +1862,9 @@ if ($dataCasosEpidemi['doc_identidad'] === 'admin') {
 
 	protected static function msgValidIdAtribEspecialCIE10($dataCasosEpidemi){
 
-		$id_atrib_rango_especial = intval($dataCasosEpidemi['id_atrib_rango_especial']);
+		$id_atrib_especial = intval($dataCasosEpidemi['id_atrib_especial']);
 
-		if (!is_int($id_atrib_rango_especial) || $id_atrib_rango_especial < 0){
+		if (!is_int($id_atrib_especial) || $id_atrib_especial < 0){
 
 			$alert=[
 			"Alert"=>"simple",
@@ -1880,8 +1879,8 @@ if ($dataCasosEpidemi['doc_identidad'] === 'admin') {
 			}
 
 
-		$queryIdAtribEspecialCIE10 = mainModel::connectDB()->query("SELECT id_atrib_rango_especial FROM atribs_especiales_cie10 WHERE  id_atrib_rango_especial =
-			".$id_atrib_rango_especial);
+		$queryIdAtribEspecialCIE10 = mainModel::connectDB()->query("SELECT id_atrib_especial FROM atribs_especiales_epi WHERE  id_atrib_especial =
+			".$id_atrib_especial);
 
 		if (!$queryIdAtribEspecialCIE10->rowCount()){
 
@@ -1900,7 +1899,7 @@ if ($dataCasosEpidemi['doc_identidad'] === 'admin') {
 			// el atribtuto especial 0 (es ninguno) asi que  no  es necesario verificar que si es valido para el evento CIE 10
 			
 
-			if($id_atrib_rango_especial ==! 0) {
+			if($id_atrib_especial ==! 0) {
 
 //				var_dump($dataCasosEpidemi['catalog_key_cie10']);
 		$queryGetAttribEspecial = mainModel::connectDB()->prepare(parent::$queryGetAttribEspecial);
@@ -2047,7 +2046,7 @@ $apellidos = mainModel::cleanStringSQL($dataForQuery[$indiceFila][10]);
 
 $catalog_key_cie10 = mainModel::cleanStringSQL($dataForQuery[$indiceFila][13]);
 
-$id_atrib_rango_especial = mainModel::cleanStringSQL($dataForQuery[$indiceFila][15]);
+$id_atrib_especial = mainModel::cleanStringSQL($dataForQuery[$indiceFila][15]);
 
 $is_hospital = mainModel::cleanStringSQL($dataForQuery[$indiceFila][18]);
 
@@ -2072,7 +2071,7 @@ $telefono = mainModel::cleanStringSQL($dataForQuery[$indiceFila][24]);
 		"id_genero"=>$id_genero,
 		"catalog_key_cie10"=>$catalog_key_cie10,
 		"is_hospital"=>$is_hospital,
-		"id_atrib_rango_especial"=>$id_atrib_rango_especial,
+		"id_atrib_especial"=>$id_atrib_especial,
 		"id_parroquia"=>$id_parroquia,
 		"direccion"=>$direccion,
 		"fecha_registro"=>$fecha_registro,
@@ -2185,7 +2184,7 @@ ON CONFLICT ON CONSTRAINT casos_epidemi_bitacora_unq_1 DO UPDATE SET
 		 "doc_identidad" => $dataCasosEpidemi['doc_identidad'],
 		 "id_nacionalidad" => $dataCasosEpidemi['id_nacionalidad'],
 		 "catalog_key_cie10" => $dataCasosEpidemi['catalog_key_cie10'],
-		 "id_atrib_rango_especial" => $dataCasosEpidemi['id_atrib_rango_especial'],
+		 "id_atrib_especial" => $dataCasosEpidemi['id_atrib_especial'],
 		 "is_hospital" => $dataCasosEpidemi['is_hospital'],
 		 "id_parroquia" => $dataCasosEpidemi['id_parroquia'],
 		 "direccion" => $dataCasosEpidemi['direccion'],
@@ -2211,7 +2210,7 @@ ON CONFLICT ON CONSTRAINT casos_epidemi_bitacora_unq_1 DO UPDATE SET
 		 "id_caso_epidemi"=>$dataCasosEpidemi['id_caso_epidemi'],
 		 "fecha_caso_epidemi"=>$dataCasosEpidemi['fecha_registro'],
 		 "catalog_key_cie10"=>$dataCasosEpidemi['catalog_key_cie10'],
-		 "id_atrib_rango_especial" => $dataCasosEpidemi['id_atrib_rango_especial'],
+		 "id_atrib_especial" => $dataCasosEpidemi['id_atrib_especial'],
 		 "is_hospital" => $dataCasosEpidemi['is_hospital'],
 		 "id_nacionalidad_caso"=>$dataCasosEpidemi['id_nacionalidad'],
 		 "doc_identidad_caso"=>$dataCasosEpidemi['doc_identidad'],

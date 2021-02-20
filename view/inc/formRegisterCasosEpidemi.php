@@ -136,7 +136,7 @@
 
 <div class="input-group">
 
-    <select name='id_atrib_rango_especial' id='id_atrib_rango_especial' class="form-control" class="form-control" >
+    <select name='id_atrib_especial' id='id_atrib_especial' class="form-control" class="form-control" >
 
             <option value="0">Seleccionar Atributo Especial </option>
 

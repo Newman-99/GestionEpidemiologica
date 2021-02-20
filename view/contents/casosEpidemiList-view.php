@@ -252,9 +252,9 @@ var minDateRangeDefaulPHP = minDateRangeDefault.toISOString().split('T')[0];
 
       $('#fecha_registro').val(maxDateAllowedPHP);
 
-      $('#id_atrib_rango_especial').empty();
+      $('#id_atrib_especial').empty();
 
-     $('#id_atrib_rango_especial').append('<option value=0>Seleccionar Atributo Especial</option>')
+     $('#id_atrib_especial').append('<option value=0>Seleccionar Atributo Especial</option>')
 
     document.getElementById("id_caso_epidemi").setAttribute("value",'');
 
@@ -309,7 +309,7 @@ function deleteCasosEpidemi(data){
 
     var catalog_key_cie10 = data[13];
 
-    var id_atrib_rango_especial = data[16];
+    var id_atrib_especial = data[16];
 
     var is_hospital = data[21];
 
@@ -334,7 +334,7 @@ var dataCasoEpidemi =
   '&id_person='+id_person+
   '&id_caso_epidemi='+id_caso_epidemi+
   '&catalog_key_cie10='+catalog_key_cie10+
-  '&id_atrib_rango_especial='+id_atrib_rango_especial+
+  '&id_atrib_especial='+id_atrib_especial+
   '&is_hospital='+is_hospital+
   '&fecha_registro='+fecha_registro+
   '&operationType='+'delete';
@@ -412,7 +412,7 @@ function updateCasosEpidemi(data){
 
     var catalog_key_cie10 = data[14];
 
-    var id_atrib_rango_especial = data[16];
+    var id_atrib_especial = data[16];
 
     var id_tipo_entrada = data[18];
 
@@ -453,7 +453,7 @@ function updateCasosEpidemi(data){
           var actionAjaxForCie10 = $('#actionAjaxForCie10').val();
 
  
-setCIE10ToFormUpdateCaseEpidemiAsync(clave_capitulo_cie10,catalog_key_cie10,actionAjaxForCie10,id_atrib_rango_especial);
+setCIE10ToFormUpdateCaseEpidemiAsync(clave_capitulo_cie10,catalog_key_cie10,actionAjaxForCie10,id_atrib_especial);
 
 
     

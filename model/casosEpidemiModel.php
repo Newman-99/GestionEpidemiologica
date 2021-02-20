@@ -13,13 +13,13 @@
 			exit();
 		}
 
-					protected static $queryGetAttribEspecial = "SELECT DISTINCT ON (cie10.catalog_key,atr_esp.id_atrib_rango_especial,atr_esp.id_atrib_rango_especial) /*cie10.catalog_key,*/ atr_esp.id_atrib_rango_especial,
+					protected static $queryGetAttribEspecial = "SELECT DISTINCT ON (cie10.catalog_key,atr_esp.id_atrib_especial,atr_esp.id_atrib_especial) /*cie10.catalog_key,*/ atr_esp.id_atrib_especial,
 atr_esp.descripcion
-from atribs_especiales_cie10 atr_esp,data_cie10 cie10
+from atribs_especiales_epi atr_esp,data_cie10 cie10
 WHERE cie10.catalog_key BETWEEN atr_esp.key_cie10_inicio 
 AND atr_esp.key_cie10_final 
 AND cie10.catalog_key = :catalog_key
-order by atr_esp.id_atrib_rango_especial";
+order by atr_esp.id_atrib_especial";
 
 				protected static $queryAddBitacoraCasoEpidemi = "INSERT INTO public.casos_epidemi_bitacora(
 		 id_person_usuario,
@@ -59,7 +59,7 @@ order by atr_esp.id_atrib_rango_especial";
 		 fecha_registro = :fecha_registro,
 		 year_registro = :year_registro,
 		 is_hospital = :is_hospital,
-		 id_atrib_rango_especial = :id_atrib_rango_especial, 
+		 id_atrib_especial = :id_atrib_especial, 
 		 id_tipo_entrada = :id_tipo_entrada
 		 WHERE id_caso_epidemi = :id_caso_epidemi;";
 
@@ -74,7 +74,7 @@ order by atr_esp.id_atrib_rango_especial";
 		 year_registro,
 		 is_hospital,
 		 id_tipo_entrada,
-		 id_atrib_rango_especial
+		 id_atrib_especial
 		 ) VALUES (		
 		 :id_person,		 
 		 :catalog_key_cie10,
@@ -85,25 +85,27 @@ order by atr_esp.id_atrib_rango_especial";
 		 :year_registro,
 		 :is_hospital,
 		 :id_tipo_entrada,
-		 :id_atrib_rango_especial)";
+		 :id_atrib_especial)";
 
 
-protected static $queryGetAgrupacionEPI =	"SELECT DISTINCT ON (orden) orden, enfermedad_evento, key_cie10_Inicio, key_cie10_final 
+protected static $queryGetAgrupacionEPI =	"SELECT DISTINCT ON (orden) orden, enfermedad_evento_epi, key_cie10_Inicio, key_cie10_final 
 			FROM agrupacion_epi order by orden";
 
 
 protected static $queryCreateViewCasosEpidemi = "
-
-CREATE OR REPLACE VIEW caso_epidemi_view  AS SELECT DISTINCT ON (caso.id_caso_epidemi) caso.id_caso_epidemi,  ROW_NUMBER() OVER(ORDER BY caso.id_caso_epidemi desc),
+CREATE OR REPLACE VIEW caso_epidemi_view  AS SELECT DISTINCT ON (caso.id_caso_epidemi) caso.id_caso_epidemi,
+ROW_NUMBER() OVER(),
  caso.telefono, 
 caso.catalog_key_cie10,caso.fecha_registro,caso.direccion,
 strFromBool(caso.is_hospital) as hospitalizado,
 caso.is_hospital,
-caso.id_atrib_rango_especial,
+caso.id_atrib_especial,
 atr_esp.descripcion atributo_especial,
 			    parr.parroquia,
-			    parr.id_parroquia,			        
-			    casos_bit.id_bitacora, casos_bit.usuario_alias,casos_bit.bitacora_year, casos_bit.bitacora_fecha, casos_bit.bitacora_hora, 
+			    parr.id_parroquia,		
+				
+			    casos_bit.id_bitacora, casos_bit.usuario_alias,casos_bit.bitacora_year, casos_bit.bitacora_fecha, 
+				casos_bit.bitacora_hora, 
 
 			    pers.nombres, pers.apellidos, pers.fecha_nacimiento,pers.id_genero,
 					date_part('year',age(caso.fecha_registro, pers.fecha_nacimiento))::int as edad,
@@ -123,34 +125,31 @@ atr_esp.descripcion atributo_especial,
 			    cie10.CLAVE_CAPITULO clave_capitulo_cie10,
 				split_part(cie10.capitulo,' ',1) as  capitulo_cie10,
 
-				caso.id_tipo_entrada, entrad_caso.descripcion descrip_entrad_caso,
+				caso.id_tipo_entrada, entrad_caso.descripcion_tipo_entrada descrip_entrad_caso,
 
 				isCIE10InmediateNotice(cie10.n_inter,cie10.nin,cie10.ninmtobs,cie10.notdiaria,cie10.sistema_especial,
 				cie10.es_suive_notin,cie10.es_suive_est_epi,cie10.es_suive_est_brote) as notific_inmediata
 
-			    FROM casos_epidemi caso,casos_epidemi_bitacora casos_bit,personas pers,parroquias parr,generos gnro,
-				nacionalidades nacion, usuarios usr, data_cie10 cie10,
-				atribs_especiales_cie10 atr_esp, tipos_de_entrada_caso_epidemi entrad_caso
+			    FROM casos_epidemi caso,casos_epidemi_bitacora casos_bit,personas pers,parroquias parr,generos gnro
+				, data_cie10 cie10,
+				atribs_especiales_epi atr_esp, tipos_de_entrada_caso_epidemi entrad_caso
 
 				WHERE caso.id_caso_epidemi = casos_bit.id_caso_epidemi 
-				
-				AND  casos_bit.id_person_caso = pers.id_person 
 
-				AND caso.id_person = casos_bit.id_person_caso
-				
+				AND caso.id_person = pers.id_person 
+
 				AND caso.id_parroquia = parr.id_parroquia 
 				
 				AND pers.id_genero = gnro.id_genero 
-				
-				AND usr.alias = casos_bit.usuario_alias 
 
 				AND casos_bit.id_tipo_operacion =  1
 
 				AND caso.id_tipo_entrada = entrad_caso.id_tipo_entrada
 
-				AND caso.id_atrib_rango_especial = atr_esp.id_atrib_rango_especial
+				AND caso.id_atrib_especial = atr_esp.id_atrib_especial
 				
-				AND caso.catalog_key_cie10 = cie10.CATALOG_KEY ORDER BY caso.id_caso_epidemi DESC";
+				AND caso.catalog_key_cie10 = cie10.CATALOG_KEY 
+				";
 
 
 			public static function addcasosEpidemiModel($dataCasosEpidemi){
@@ -215,7 +214,7 @@ atr_esp.descripcion atributo_especial,
 		 "fecha_registro"=>$dataCasosEpidemi['fecha_registro'],
 		 "year_registro"=>$dataCasosEpidemi['year_registro'],
 		 "is_hospital"=>$dataCasosEpidemi['is_hospital'],
-		 "id_atrib_rango_especial"=>$dataCasosEpidemi['id_atrib_rango_especial'],
+		 "id_atrib_especial"=>$dataCasosEpidemi['id_atrib_especial'],
 		 "id_tipo_entrada"=>$dataCasosEpidemi['id_tipo_entrada']));
 
 			$sqlQuery->closeCursor();
@@ -340,7 +339,7 @@ if ($dataCasosEpidemi['ifUpdatePerson']) {
 		 "year_registro" => $dataCasosEpidemi['year_registro'],
 		 "fecha_registro" => $dataCasosEpidemi['fecha_registro'],
 		 "is_hospital"=>$dataCasosEpidemi['is_hospital'],
-		 "id_atrib_rango_especial"=>$dataCasosEpidemi['id_atrib_rango_especial'],
+		 "id_atrib_especial"=>$dataCasosEpidemi['id_atrib_especial'],
 		 "id_tipo_entrada"=>$dataCasosEpidemi['id_tipo_entrada']
 		));
 
@@ -594,7 +593,7 @@ WHERE casos.catalog_key_cie10 BETWEEN agrup_epi.key_cie10_Inicio AND agrup_epi.k
 AND pers.id_person = casos.id_person ".
 $epiOrderSelededForQuery." AND casos.fecha_registro BETWEEN '$startRegistrationDate' AND '$endRegistrationDate' 
 ".$forHospitalized."
-AND casos.id_atrib_rango_especial BETWEEN agrup_epi.inicio_id_rango_atrib_especial AND agrup_epi.final_id_rango_atrib_especial
+AND casos.id_atrib_especial BETWEEN agrup_epi.inicio_id_rango_atrib_especial AND agrup_epi.final_id_rango_atrib_especial
 AND date_part('year',age(casos.fecha_registro, pers.fecha_nacimiento))::int 
 BETWEEN agrup_epi.edad_incio AND agrup_epi.edad_final;";
 

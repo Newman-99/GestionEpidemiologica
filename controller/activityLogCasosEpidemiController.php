@@ -38,9 +38,11 @@ CREATE OR REPLACE VIEW casos_epidemi_bitacora_view  AS SELECT DISTINCT ON (id_bi
 
   atr_esp.descripcion atributo_especial
 
-  FROM casos_epidemi_bitacora casos_bit ,tipos_operaciones tpo, atribs_especiales_cie10 atr_esp
+  FROM casos_epidemi_bitacora casos_bit ,tipos_operaciones_caso tpo, atribs_especiales_epi atr_esp
   
   WHERE tpo.id_tipo_operacion = casos_bit.id_tipo_operacion 
+
+  AND casos_bit.id_atrib_especial = atr_esp.id_atrib_especial
         
   ORDER BY id_bitacora DESC;";
 
@@ -55,6 +57,8 @@ CREATE OR REPLACE VIEW casos_epidemi_bitacora_view  AS SELECT DISTINCT ON (id_bi
 	}
 
   public static function paginateActivityLogCasosEpidemiController() {
+  
+  mainModel::connectDB()->query('drop view casos_epidemi_bitacora_view');
 
     $columnsTable = array(
       'id_bitacora',

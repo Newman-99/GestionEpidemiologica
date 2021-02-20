@@ -813,6 +813,8 @@ $gaSql['link'] = pg_connect($db_url);
     ";
 
 
+//var_dump($sQuery);
+
     $rResult = pg_query( $gaSql['link'], $sQuery ) or die(pg_last_error());
      
     $sQuery = "
