@@ -565,6 +565,7 @@ $genreSelededForQuery = " AND pers.id_genero = $id_genero";
 }
 
 
+
 $epiOrderSelededForQuery = '';
 $forHospitalized = "";
 
@@ -579,7 +580,11 @@ $forHospitalized = "AND casos.is_hospital = true";
 
 }
 
+$tipoEntradaCasoForQuery = '';
 
+if (!empty($id_tipo_entrada)){
+$tipoEntradaCasoForQuery = " AND id_tipo_entrada = $id_tipo_entrada";
+}
 
 
 

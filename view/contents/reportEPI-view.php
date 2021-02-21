@@ -98,33 +98,46 @@ General
             </button>
                   <thead>
                   <tr>
-                          <th class='' rowspan="2" >NRO.</th>
-                          <th class='' rowspan="2">ENFERMEDADES</th>
+                          <th class='' rowspan="3" >NRO.</th>
+                          <th class='' rowspan="3">ENFERMEDADES</th>
 
-                          <th class='' colspan='3'>MENOR DE 1 AÑO</th>
-                          <th class='' colspan='3'>1 - 4 AÑOS</th>
-                          <th class='' colspan='3'>5 - 6 AÑOS</th>
-                          <th class='' colspan='3'>7 - 9 AÑOS</th>
-                          <th class='' colspan='3'>10 - 11 AÑOS</th>
-                          <th class='' colspan='3'>12 - 14 AÑOS</th>
-                          <th class='' colspan='3'>15 - 19 AÑOS</th>
-                          <th class='' colspan='3'>20 - 24 AÑOS</th>
-                          <th class='' colspan='3'>25 - 44 AÑOS</th>
-                          <th class='' colspan='3'>45 - 59 AÑOS</th>
-                          <th class='' colspan='3'>60 - 64 AÑOS</th>
-                          <th class='' colspan='3'>65 AÑOS Y MAS</th>
-                          <th class='' colspan='3'>TOTAL</th>
-                  </tr>
+                          <th class='' colspan='7'>MENOR DE 1 AÑO</th>
+                          <th class='' colspan='7'>1 - 4 AÑOS</th>
+                          <th class='' colspan='7'>5 - 6 AÑOS</th>
+                          <th class='' colspan='7'>7 - 9 AÑOS</th>
+                          <th class='' colspan='7'>10 - 11 AÑOS</th>
+                          <th class='' colspan='7'>12 - 14 AÑOS</th>
+                          <th class='' colspan='7'>15 - 19 AÑOS</th>
+                          <th class='' colspan='7'>20 - 24 AÑOS</th>
+                          <th class='' colspan='7'>25 - 44 AÑOS</th>
+                          <th class='' colspan='7'>45 - 59 AÑOS</th>
+                          <th class='' colspan='7'>60 - 64 AÑOS</th>
+                          <th class='' colspan='7'>65 AÑOS Y MAS</th>
+                          <th class='' colspan='7'>TOTAL</th>
+                    </tr>
                   
 
-                  <tr>
 
+           <tr class="">
               <?php for ($i=0; $i < 13; $i++) { ?>
-                       
+            <th class="" colspan="2">P</th>
+            <th class="" colspan="2">S</th>
+            <th class="" colspan="2">TOTAL</th>
+            <th class="" rowspan="2">X</th>
+            <?php } ?>
+           </tr>
+           <tr class="">
+              <?php for ($i=0; $i < 13; $i++) { ?>
+
+                      
                           <th>FEM.</th>
                           <th>MASC.</th>
 
-                          <th>TOTAL</th>
+                          <th>FEM.</th>
+                          <th>MASC.</th>
+
+                          <th class="">P</th>
+                          <th class="">S</th>
 
               <?php } ?>
 

@@ -95,10 +95,12 @@ public function loginUserController($dataUser){
 $columns = array("pass_encrypt","alias","id_person","id_nivel_permiso","id_estado");
 
                $recordsUserSQL=parent::querySelectsCreator('usuarios',$columns,$userAttributesFilter,$userFilterValues);
-					
+			
+//						var_dump($recordsUserSQL,$aliasUser);
+		
 			$recordsUserSQL->execute();
-
-		if(!$recordsUserSQL->rowCount()){
+						
+					if(!$recordsUserSQL->rowCount()){
 				
 				$alert=[
 				"Alert"=>"simple",
