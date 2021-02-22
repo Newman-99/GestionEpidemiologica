@@ -20,7 +20,7 @@
 
 	class casosEpidemiController extends casosEpidemiModel{
 		
-		protected static $personController;
+		public static $personController;
 
 		function __construct()
 			{
@@ -716,7 +716,7 @@ $queryifExistView = mainModel::connectDB()->query("SELECT where EXISTS  ( SELECT
 
 
     $dataToCreateDataTable = mainModel::getDataTableServerSideModel('caso_epidemi_view', 'row_number',
-      $columnsTable,$columnsPrintDataTable,TRUE);
+      $columnsPrintDataTable,$columnsPrintDataTable,TRUE);
 
  $sTable = $dataToCreateDataTable['sTable'];
  $sWhere = $dataToCreateDataTable['sWhere'];
@@ -1108,25 +1108,34 @@ $dataForDataTables = array();
 			$dataRow[] = $agrupacion_epi["enfermedad_evento_epi"];
 
 
-				/// for obtener los datos por todos los rango de edades
+				/// for obtener los datos por ntodos los rango de edades
 			for ($idAgeRange=0; $idAgeRange < count($rangeAgesStart); $idAgeRange++) {
 
-			// obtnemos los datos para hembras y machos
-			for ($id_genero=1; $id_genero <= 2 ; $id_genero++) {
+			// obtnemos los datos por generors y tipo de entrada
+			for ($id_tipo_entrada=1; $id_tipo_entrada <= 2 ; $id_tipo_entrada++) {
 
-			    $dataRow[] = array(parent::getNroCasesEpidemiForEpiModel($agrupacion_epi["orden"], $startDateRange, $endDateRange,$id_genero,$rangeAgesStart[$idAgeRange],$rangeAgesEnd[$idAgeRange]));
+				for ($id_genero=1; $id_genero <= 2 ; $id_genero++) {
+
+				    $dataRow[] = array(parent::getNroCasesEpidemiForEpiModel($agrupacion_epi["orden"], $startDateRange, $endDateRange,$id_genero,$rangeAgesStart[$idAgeRange],$rangeAgesEnd[$idAgeRange],$id_tipo_entrada));
+				}
+
+			
 
 			}
+				// total por tipo de entrada
+				    
+					for ($id_tipo_entrada=1; $id_tipo_entrada <= 2 ; $id_tipo_entrada++) {
 
-				// el total de todos los sexos por edad
-			    $dataRow[] = array(parent::getNroCasesEpidemiForEpiModel($agrupacion_epi["orden"], $startDateRange, $endDateRange,'',$rangeAgesStart[$idAgeRange],$rangeAgesEnd[$idAgeRange]));
-
-
+					$dataRow[] = array(parent::getNroCasesEpidemiForEpiModel($agrupacion_epi["orden"], $startDateRange, $endDateRange,'',$rangeAgesStart[$idAgeRange],$rangeAgesEnd[$idAgeRange],$id_tipo_entrada));
+					
+					}
+							// total por tipo entrada y genero
+							$dataRow[] = array(parent::getNroCasesEpidemiForEpiModel($agrupacion_epi["orden"], $startDateRange, $endDateRange,'',$rangeAgesStart[$idAgeRange],$rangeAgesEnd[$idAgeRange],''));
 		}
 
-		// rango total de edades y genero
 
-         $dataRow[] = parent::getNroCasesEpidemiForEpiModel($agrupacion_epi["orden"], $startDateRange, $endDateRange,'','','','');
+		// total de edades, genero, tipoEntrada
+         $dataRow[] = parent::getNroCasesEpidemiForEpiModel($agrupacion_epi["orden"], $startDateRange, $endDateRange,'','','','','');
 	
 
 		$dataForDataTables[] = $dataRow;

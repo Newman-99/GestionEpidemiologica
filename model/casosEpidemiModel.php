@@ -93,7 +93,7 @@ protected static $queryGetAgrupacionEPI =	"SELECT DISTINCT ON (orden) orden, enf
 
 
 protected static $queryCreateViewCasosEpidemi = "
-CREATE OR REPLACE VIEW caso_epidemi_view  AS SELECT DISTINCT ON (caso.id_caso_epidemi) caso.id_caso_epidemi,
+CREATE OR REPLACE VIEW caso_epidemi_view  AS SELECT DISTINCT ON (caso.id_caso_epidemi,caso.fecha_registro) caso.id_caso_epidemi,
 ROW_NUMBER() OVER(),
  caso.telefono, 
 caso.catalog_key_cie10,caso.fecha_registro,caso.direccion,
@@ -149,6 +149,8 @@ atr_esp.descripcion atributo_especial,
 				AND caso.id_atrib_especial = atr_esp.id_atrib_especial
 				
 				AND caso.catalog_key_cie10 = cie10.CATALOG_KEY 
+
+				ORDER BY caso.fecha_registro DESC, caso.id_caso_epidemi DESC;
 				";
 
 
@@ -531,7 +533,7 @@ if ($dataCasosEpidemi['ifUpdatePerson']) {
 		}
 
 
-protected static function getNroCasesEpidemiForEpiModel($epiOrder, $startRegistrationDate, $endRegistrationDate,$id_genero ='',$startAge = '',$ageEnd = ''){
+protected static function getNroCasesEpidemiForEpiModel($epiOrder, $startRegistrationDate, $endRegistrationDate,$id_genero ='',$startAge = '',$ageEnd = '',$id_tipo_entrada = ''){
 
 $queryFunctionGetAge = " AND date_part('year',age(casos.fecha_registro, pers.fecha_nacimiento)) ";
 
@@ -591,13 +593,12 @@ $tipoEntradaCasoForQuery = " AND id_tipo_entrada = $id_tipo_entrada";
 
 $queryGetDataCIE10ForEPI = "SELECT DISTINCT ON (casos.id_caso_epidemi) 
 casos.id_caso_epidemi
-
 from agrupacion_epi agrup_epi, casos_epidemi casos,personas pers 
 WHERE casos.catalog_key_cie10 BETWEEN agrup_epi.key_cie10_Inicio AND agrup_epi.key_cie10_final 
  ".$genreSelededForQuery." ".$ageRangeForQuery."
 AND pers.id_person = casos.id_person ".
 $epiOrderSelededForQuery." AND casos.fecha_registro BETWEEN '$startRegistrationDate' AND '$endRegistrationDate' 
-".$forHospitalized."
+".$forHospitalized. " $tipoEntradaCasoForQuery "."
 AND casos.id_atrib_especial BETWEEN agrup_epi.inicio_id_rango_atrib_especial AND agrup_epi.final_id_rango_atrib_especial
 AND date_part('year',age(casos.fecha_registro, pers.fecha_nacimiento))::int 
 BETWEEN agrup_epi.edad_incio AND agrup_epi.edad_final;";

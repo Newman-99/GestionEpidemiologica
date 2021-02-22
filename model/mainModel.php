@@ -24,7 +24,7 @@
 
 		public static function connectDB(){
 
-/*		try {			
+		try {			
 
 
 $db = (function(){
@@ -40,7 +40,7 @@ return $db;
 		    error_log("Failed to connect to database: ".$e->getMessage());
 		}				
 /**/
-
+/*
 
 
 		try {			
@@ -653,7 +653,7 @@ protected static function isFieldsEqualToThoseInTheDatabase($queryToGet,$fieldst
      
     
     //* DB connection
-   
+   /*
     $gaSql['link'] = pg_connect(
         " host=".$gaSql['server'].
         " dbname=".$gaSql['db'].
@@ -662,7 +662,7 @@ protected static function isFieldsEqualToThoseInTheDatabase($queryToGet,$fieldst
     ) or die('Could not connect: ' . pg_last_error());
 
 /**/
-/*
+
  $db_url = getenv("DATABASE_URL") ?: "postgres://ilsmpwdzrresby:7879db47bd3be54c574eab3a81a1bc2db477bc890a756eccc406992832a0fd8e@ec2-54-246-87-132.eu-west-1.compute.amazonaws.com:5432/d4hub5gh1m9jjj";
 
 $gaSql['link'] = pg_connect($db_url);
@@ -715,7 +715,7 @@ $gaSql['link'] = pg_connect($db_url);
         {
             if ( $_GET['bSearchable_'.$i] == "true" )
             {
-                $sWhere .= $columnsPrintDataTable[$i]."::text ILIKE '%".pg_escape_string( $_GET['sSearch'] )."%' OR ";
+                $sWhere .= $columnsPrintDataTable[$i]."::text ILIKE '%".pg_escape_string( $_GET['sSearch'] )."%'::text OR ";
             }
         }
         $sWhere = substr_replace( $sWhere, "", -3 );
@@ -723,11 +723,25 @@ $gaSql['link'] = pg_connect($db_url);
     }
      
 
+
+
     /* Individual column filtering */
-    for ( $i=0 ; $i<count($columnsPrintDataTable) ; $i++ )
+
+
+    for ( $i=0 ; $i<count($aColumns) ; $i++ )
     {
-        if ( $_GET['bSearchable_'.$i] == "true" && $_GET['sSearch_'.$i] != '' )
+
+	var_dump($_GET['sSearch_'.$i]);
+	var_dump($_GET['bSearchable_'.$i]);
+	var_dump($aColumns[$i]);
+	echo "<hr><br>";
+
+
+        if ($_GET['bSearchable_'.$i] == "true" && $_GET['sSearch_'.$i] != '' )
         {
+
+
+
             if ( $sWhere == "" )
             {
                 $sWhere = "WHERE ";
@@ -736,9 +750,15 @@ $gaSql['link'] = pg_connect($db_url);
             {
                 $sWhere .= " AND ";
             }
-            $sWhere .= $columnsPrintDataTable[$i]." ILIKE '%".pg_escape_string($_GET['sSearch_'.$i])."%' ";
-        }
+            $sWhere .= $aColumns[$i]."::text ILIKE '%".pg_escape_string($_GET['sSearch_'.$i])."%'::text ";
+
+
+}
+
+//	var_dump($columnsPrintDataTable[$i+1],$_GET['sSearch_'.$i]);
+
     }
+
 
      
     if (!empty($_GET['minDateRange']) AND !empty($_GET['maxDateRange']) ) {

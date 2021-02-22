@@ -185,6 +185,8 @@ var hour = getHourForFileExport();
         bProcessing: true,
         bDeferRender: true,
         bServerSide: true,
+        orderCellsTop: false,
+        fixedHeader: true,
         sAjaxSource: action+'?viewCasosEpidemi=true&minDateRange='+minDateRange+'&maxDateRange='+maxDateRange+'&requestedPersonEpidemi='+requestedPersonEpidemi+'&nameDateFieldDB='+'fecha_registro',
     aoColumnDefs: [
 
@@ -192,14 +194,16 @@ var hour = getHourForFileExport();
         // id_genero
       targets: [ 3 ],
       visible: false,
-       searchable: false
-      },
+      searchable: false,
+      bSearchable: false}
+      ,
 
       {
         // id_nacionalidad_caso
       targets: [ 5 ],
       visible: false,
-      searchable: false
+     searchable: false,
+ bSearchable: false
 
       },
 
@@ -207,15 +211,17 @@ var hour = getHourForFileExport();
         // doc_identidad_caso
       targets: [ 6 ],
       visible: false,
-       searchable: false
-    
+      searchable: false,
+  bSearchable: false
+
       },
 
       {
         // comlumn clave_capitulo_cie10
       targets: [12],
       visible: false,
-      searchable: false
+     searchable: false,
+ bSearchable: false
 
       },
 
@@ -224,7 +230,8 @@ var hour = getHourForFileExport();
 
       targets: [16],
       visible: false,
-      searchable: false
+     searchable: false,
+ bSearchable: false
 
       },
 
@@ -234,7 +241,8 @@ var hour = getHourForFileExport();
 
       targets: [18],
       visible: false,
-      searchable: false
+     searchable: false,
+ bSearchable: false
 
       },
 
@@ -244,7 +252,8 @@ var hour = getHourForFileExport();
       
       targets: [21],
       visible: false,
-      searchable: false
+     searchable: false,
+ bSearchable: false
 
       },
 
@@ -253,7 +262,8 @@ var hour = getHourForFileExport();
         //id_parroquia
       targets: [ 24 ],
       visible: false,
-      searchable: false
+      earchable: false,
+      bSearchable: false
       },
   
 
@@ -267,7 +277,8 @@ var hour = getHourForFileExport();
         //year_registro
       targets: [ 30 ],
       visible: false,
-      searchable: false
+     searchable: false,
+     bSearchable: false
 
       },
 
@@ -286,7 +297,8 @@ var hour = getHourForFileExport();
       {
         // para los botnes var to y ver menos
       targets: [ 2, 8, 13,14,19, 22, 17 ,23, 25, 26, 27, 28],
-      visible: false
+      visible: false,
+      bSearchable: false
       },
     
 
@@ -296,6 +308,7 @@ var hour = getHourForFileExport();
 
         aTargets: [33],
         searchable: false ,
+       bSearchable: false,
         orderable: false
       }
         ],
@@ -371,7 +384,9 @@ var hour = getHourForFileExport();
                 
                 attr:  {
                 id: 'btn-ver-todo'
-            }
+            },
+
+              bSearchable: true
 
         },
 
@@ -381,7 +396,8 @@ var hour = getHourForFileExport();
           hide : [ 2, 8, 13, 14, 17, 19, 22 ,23, 25, 26, 27, 28],
                 attr:  {
                 id: 'btn-ver-menos'
-            }
+            },
+              bSearchable: false
         },
 
         ]

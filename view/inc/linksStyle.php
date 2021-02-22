@@ -21,21 +21,24 @@
 
   <!-- LINkS DATATABLES -->
 
-  <!-- Bootstrap core JavaScript-->
+  <!-- Bootstrap core JavaScript
   
-  <script src="<?php echo SERVERURL; ?>libraries/jquery/jquery.min.js"></script>
-
+  <script src="<?php //echo SERVERURL; ?>libraries/jquery/jquery.min.js"></script>
+-->
 
 <!-- Page level plugins -->  
 
+<script src="<?php echo SERVERURL; ?>libraries/datatables/jQuery-3.3.1/jquery-3.5.1.js"></script>
+
 <!--<script src="<?php //echo SERVERURL; ?>libraries/datatables/jQuery-3.3.1/jquery-3.3.1.min.js"></script>-->
 
-
+<link rel="stylesheet" type="text/css" href="<?php echo SERVERURL; ?>libraries/datatables/fixedHeader/fixedHeader.dataTables.min.css"/>
 
 <link rel="stylesheet" type="text/css" href="<?php echo SERVERURL; ?>libraries/datatables/DataTables-1.10.22/css/dataTables.bootstrap4.min.css"/>
 
-<!--<link rel="stylesheet" type="text/css" href="<?php //echo SERVERURL; ?>libraries/datatables/DataTables-1.10.22/css/jquery.dataTables.min.css"/>
--->
+<link rel="stylesheet" type="text/css" href="<?php echo SERVERURL; ?>libraries/datatables/DataTables-1.10.22/css/dataTables.bootstrap4.min.css"/>
+
+<link rel="stylesheet" type="text/css" href="<?php echo SERVERURL; ?>libraries/datatables/DataTables-1.10.22/css/jquery.dataTables.min.css"/>
 
 <link rel="stylesheet" type="text/css" href="<?php echo SERVERURL; ?>libraries/datatables/Editor-1.9.5/css/editor.bootstrap4.min.css"/>
 <link rel="stylesheet" type="text/css" href="<?php echo SERVERURL; ?>libraries/datatables/AutoFill-2.3.5/css/autoFill.bootstrap4.css"/>

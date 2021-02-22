@@ -156,7 +156,7 @@
 
                   </tfoot>
                   <tbody>
-                    
+
                     </tbody>
             
                 </table>
@@ -523,5 +523,37 @@ setCIE10ToFormUpdateCaseEpidemiAsync(clave_capitulo_cie10,catalog_key_cie10,acti
 
   
   });
+
+$(document).ready(function() {
+
+
+    $('#dataTable thead tr').clone(true).appendTo( '#dataTable thead' );
+    $('#dataTable thead tr:eq(1) th').each( function (i) {
+        var title = $(this).text();
+        $(this).html( '<input style="width:100%" class="not_order" type="text" placeholder="Buscar" />' );
+ 
+        $( 'input', this ).on( 'keyup change', function () {
+            if ( table.column(i).search() !== this.value ) {
+                table
+                    .column(i)
+                    .search( this.value )
+                    .draw();
+            }
+        } );
+    
+        } );
+
+    var table = $('#dataTable').DataTable();
+
+
+    var th = $('.not_order').parent('th');
+    
+    th.removeClass('sorting');
+
+      $(th).off("keypress");
+
+      $(th).off("click");
+
+ } );
 
 </script>

@@ -19,6 +19,7 @@
 
   <!-- Core plugin JavaScript-->
 
+  
 <script src="<?php echo SERVERURL; ?>libraries/datatables/JSZip-2.5.0/jszip.min.js"></script>
 <script src="<?php echo SERVERURL; ?>libraries/datatables/pdfmake-0.1.36/pdfmake.min.js"></script>
 <script src="<?php echo SERVERURL; ?>libraries/datatables/pdfmake-0.1.36/vfs_fonts.js"></script>
@@ -43,6 +44,7 @@
 <script src="<?php echo SERVERURL; ?>libraries/datatables/SearchPanes-1.2.1/js/dataTables.searchPanes.min.js"></script>
 <script src="<?php echo SERVERURL; ?>libraries/datatables/SearchPanes-1.2.1/js/searchPanes.bootstrap4.min.js"></script>
 <script src="<?php echo SERVERURL; ?>libraries/datatables/Select-1.3.1/js/dataTables.select.min.js"></script>
+<script src="<?php echo SERVERURL; ?>libraries/datatables/fixedHeader/dataTables.fixedHeader.min.js"></script>
   
 
 
