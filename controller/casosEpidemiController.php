@@ -716,7 +716,7 @@ $queryifExistView = mainModel::connectDB()->query("SELECT where EXISTS  ( SELECT
 
 
     $dataToCreateDataTable = mainModel::getDataTableServerSideModel('caso_epidemi_view', 'row_number',
-      $columnsPrintDataTable,$columnsPrintDataTable,TRUE);
+      $columnsPrintDataTable ,$columnsPrintDataTable,TRUE);
 
  $sTable = $dataToCreateDataTable['sTable'];
  $sWhere = $dataToCreateDataTable['sWhere'];

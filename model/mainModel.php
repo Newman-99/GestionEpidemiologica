@@ -24,7 +24,7 @@
 
 		public static function connectDB(){
 
-		try {			
+ 		try {			
 
 
 $db = (function(){
@@ -40,10 +40,10 @@ return $db;
 		    error_log("Failed to connect to database: ".$e->getMessage());
 		}				
 /**/
-/*
 
 
-		try {			
+
+/*		try {			
 	$DB = new PDO("pgsql:host=".SERVER_PATH.";port=".PORT.";dbname=".DB."",USER,PASS, array(
 				PDO::ATTR_PERSISTENT => true, PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8'));
     $DB->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -653,8 +653,8 @@ protected static function isFieldsEqualToThoseInTheDatabase($queryToGet,$fieldst
      
     
     //* DB connection
-   /*
-    $gaSql['link'] = pg_connect(
+   
+/*    $gaSql['link'] = pg_connect(
         " host=".$gaSql['server'].
         " dbname=".$gaSql['db'].
         " user=".$gaSql['user'].
@@ -727,20 +727,20 @@ $gaSql['link'] = pg_connect($db_url);
 
     /* Individual column filtering */
 
+//	var_dump($_GET);
 
-    for ( $i=0 ; $i<count($aColumns) ; $i++ )
+
+    for ( $i=0 ; $i<count($columnsPrintDataTable) ; $i++ )
     {
 
-	var_dump($_GET['sSearch_'.$i]);
+
+        if ($_GET['bSearchable_'.$i] == "true" && $_GET['sSearch_'.$i] != '' )        {
+/*
+	var_dump($_GET['sSearch_'.$i=+2]);
 	var_dump($_GET['bSearchable_'.$i]);
-	var_dump($aColumns[$i]);
+	var_dump($columnsPrintDataTable[$i]);
 	echo "<hr><br>";
-
-
-        if ($_GET['bSearchable_'.$i] == "true" && $_GET['sSearch_'.$i] != '' )
-        {
-
-
+*/	
 
             if ( $sWhere == "" )
             {
@@ -750,8 +750,10 @@ $gaSql['link'] = pg_connect($db_url);
             {
                 $sWhere .= " AND ";
             }
-            $sWhere .= $aColumns[$i]."::text ILIKE '%".pg_escape_string($_GET['sSearch_'.$i])."%'::text ";
-
+            $sWhere .= $columnsPrintDataTable[$i]."::text ILIKE '%".pg_escape_string($_GET['sSearch_'.$i])."%'::text ";
+/*if (condition) {
+	# code...
+}*/
 
 }
 

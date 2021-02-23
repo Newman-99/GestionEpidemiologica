@@ -70,8 +70,6 @@
 
           </div>
            <!-- FINAL Formulario para limitar fecha mediante el Backend -->
-
-
                 <table class='table table-striped display' id='dataTable' name = 'dataTable' width='100%' cellspacing='0'>
                   <thead>
                     <tr>
@@ -156,10 +154,11 @@
 
                   </tfoot>
                   <tbody>
-
+                    
                     </tbody>
             
                 </table>
+
               </div>
            </div>
       </div>
@@ -526,6 +525,7 @@ setCIE10ToFormUpdateCaseEpidemiAsync(clave_capitulo_cie10,catalog_key_cie10,acti
 
 $(document).ready(function() {
 
+/*
 
     $('#dataTable thead tr').clone(true).appendTo( '#dataTable thead' );
     $('#dataTable thead tr:eq(1) th').each( function (i) {
@@ -545,7 +545,6 @@ $(document).ready(function() {
 
     var table = $('#dataTable').DataTable();
 
-
     var th = $('.not_order').parent('th');
     
     th.removeClass('sorting');
@@ -553,7 +552,7 @@ $(document).ready(function() {
       $(th).off("keypress");
 
       $(th).off("click");
-
+*/
  } );
 
 </script>
