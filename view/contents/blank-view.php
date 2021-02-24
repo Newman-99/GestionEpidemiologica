@@ -23,7 +23,7 @@
     // obtnener data por captulos
 
 
-    $queryGetCasesCie10 = $casosEpidemiController->connectDB()->query($queryGetCasesCie10." WHERE consecutivo BETWEEN  0 and 100");
+    $queryGetCasesCie10 = $casosEpidemiController->connectDB()->query($queryGetCasesCie10." WHERE consecutivo BETWEEN  0 and 2000");
 
 
 
@@ -48,7 +48,7 @@ $cie10 = ["A00",
 "A02"];
 */
 
-
+/*
 $dataCasosEpidemi = 
   ["id_nacionalidad"=>"1",
   "doc_identidad"=>"12394859",
@@ -71,7 +71,7 @@ $dataCasosEpidemi =
   "bitacora_hora"=> "11:38:31 am",
   "id_tipo_operacion"=>"1"];
 
-
+*/
 $dataCasosEpidemi = 
   ["id_nacionalidad"=>"2",
   "doc_identidad"=>"10304251",
@@ -94,7 +94,7 @@ $dataCasosEpidemi =
   "bitacora_hora"=> "11:38:31 am",
   "id_tipo_operacion"=>"1"];
 
-
+/*
 $dataCasosEpidemi = 
   ["id_nacionalidad"=>"1",
   "doc_identidad"=>"12304251",
@@ -116,10 +116,10 @@ $dataCasosEpidemi =
   "bitacora_year"=>"2021",
   "bitacora_hora"=> "11:38:31 am",
   "id_tipo_operacion"=>"1"];
-
+*/
     $count = 0;
 
-for ($nroRegister=0; $nroRegister < 100; $nroRegister++) { 
+for ($nroRegister=0; $nroRegister < 30; $nroRegister++) { 
 
 
 $date_now = date('d-m-Y');
@@ -132,7 +132,7 @@ $dateRegister = date('Y-m-d', $dateRegister);
 
 
 
-$selectCIE10 = mt_rand(0,100);
+$selectCIE10 = mt_rand(0,2000);
 
 $select_is_hospital = mt_rand(0,1);
 
@@ -141,9 +141,7 @@ $select_id_tipo_entrada = mt_rand(1,2);
   $dataCasosEpidemi["is_hospital"]=$select_is_hospital;
 
   $dataCasosEpidemi["id_tipo_entrada"]=$select_id_tipo_entrada;
-
     if ($cie10[$selectCIE10] == 'A08' || $cie10[$selectCIE10] == 'A09') {
-    
       $dataCasosEpidemi["id_atrib_especial"]=mt_rand(1,2);
       
     }

@@ -223,14 +223,13 @@ atr_esp.descripcion atributo_especial,
 
 		// registrar bitacora
 
-           $queryGetIdEpidemiCaseToRegister = $DB_transacc->query("SELECT id_caso_epidemi FROM public.casos_epidemi ORDER BY id_caso_epidemi DESC limit 1;");
+           $queryGetIdEpidemiCaseToRegister = $DB_transacc->query("SELECT id_caso_epidemi FROM casos_epidemi ORDER BY id_caso_epidemi DESC limit 1;");
 
-
-			$idEpidemiCaseToRegister = $queryGetIdEpidemiCaseToRegister->fetchColumn();
-
-           	if (!$idEpidemiCaseToRegister) {
+           	if (!$queryGetIdEpidemiCaseToRegister) {
            		$idEpidemiCaseToRegister = 1;
-           	}
+           	}else{
+			$idEpidemiCaseToRegister = $queryGetIdEpidemiCaseToRegister->fetchColumn();
+			}
 
 
 			$dataCasosEpidemi["id_caso_epidemi"]=$idEpidemiCaseToRegister;

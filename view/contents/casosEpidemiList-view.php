@@ -73,6 +73,44 @@
                 <table class='table table-striped display' id='dataTable' name = 'dataTable' width='100%' cellspacing='0'>
                   <thead>
                     <tr>
+                      
+                      <th >Nro. </th>
+                      <th >id Caso</th>
+                      <th >id Persona</th>
+                      <th >id Genero</th>
+                      <th >Genero</th>
+                      <th >id Nacionalidad (Caso)</th>
+                      <th >Nro. Documento de Identidad (Caso)</th>
+                      <th >Documento de Identidad</th>
+                      <th >Fecha de Nacimiento</th>
+                      <th >Edad</th>
+                      <th >Nombres</th>
+                      <th >Apellidos</th>
+                      <th >Clave Capitulo CIE-10</th>
+                      <th >Capitulo</th>
+                      <th >Codigo CIE-10</th>
+                      <th >Nombre CIE-10</th>
+                      <th >id atributo especial</th>
+                      <th >Atributo Especial</th>
+           <!-- 16 --> <th >Id Tipo Entrada Caso </th>
+           <!-- 17 --> <th >Tipo de Entrada</th>                     
+                       <th >Notificacion Inmediata</th>
+                       <th >is hospital</th>
+                      <th >Hospitalizado o Referido</th>
+                      <th >Fecha</th>
+                      <th >id Parroquia</th>
+                      <th >Parroquia</th>
+                      <th >Direccion</th>
+                      <th >Telefono</th>
+                      <th >Usuario</th>
+                      <th >Documento de Identidad</th>
+                       <th >Anio de Operacion</th>
+                      <th >Fecha de Operacion</th>
+                      <th >Hora de Operacion</th>
+                      <th ></th>
+                    </tr>
+
+                    <tr>
                       <th>Nro. </th>
                       <th >id Caso</th>
                       <th >id Persona</th>
@@ -176,7 +214,7 @@
 
 requestQueryByActionToAction();
 
-function requestQueryByActionToAction(){
+ function requestQueryByActionToAction(){
 
 
     var url = $('#actionForAjax').val();
@@ -191,7 +229,8 @@ $('#minDateRange,#maxDateRange').change(function() {
 if (!isBlank(minDateRange) && !isBlank(maxDateRange)) {
 
 
-return getDataCasosEpidemiForDataTablesAsync(requestedPersonEpidemi,minDateRange,maxDateRange,url);
+  return getDataCasosEpidemiForDataTablesAsync(requestedPersonEpidemi,minDateRange,maxDateRange,url);
+  
 }
 
 })
@@ -525,26 +564,22 @@ setCIE10ToFormUpdateCaseEpidemiAsync(clave_capitulo_cie10,catalog_key_cie10,acti
 
 $(document).ready(function() {
 
-/*
 
-    $('#dataTable thead tr').clone(true).appendTo( '#dataTable thead' );
-    $('#dataTable thead tr:eq(1) th').each( function (i) {
-        var title = $(this).text();
-        $(this).html( '<input style="width:100%" class="not_order" type="text" placeholder="Buscar" />' );
- 
-        $( 'input', this ).on( 'keyup change', function () {
-            if ( table.column(i).search() !== this.value ) {
-                table
-                    .column(i)
-                    .search( this.value )
-                    .draw();
-            }
-        } );
-    
-        } );
+//$("#dataTable thead tr:eq(1)").before($("#dataTable thead tr:eq(0)"));
 
+
+ $('.buttons-colvisGroup').on('click', function () {
+$('#dataTable thead tr:eq(1) th').each(function () {
+        $('input',this).on('keyup change', function () {
+            table.column($(this).parent().index() + ':visible')
+                .search(this.value)
+                .draw();
+
+        });
+    });
+});
     var table = $('#dataTable').DataTable();
-
+/*
     var th = $('.not_order').parent('th');
     
     th.removeClass('sorting');

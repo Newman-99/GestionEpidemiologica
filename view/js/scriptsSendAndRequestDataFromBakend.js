@@ -175,18 +175,54 @@ function getDataActivityLogCasosEpidemiForDataTables(requestedUser,minDateRange,
 }
 
 
+function addColumnsFilteringDatatables(table){
 
-function getDataCasosEpidemiForDataTables(requestedPersonEpidemi,minDateRange,maxDateRange,action){
-
-var hour = getHourForFileExport();
+    $('#dataTable thead tr').clone(true).appendTo( '#dataTable thead' );
+    $('#dataTable thead tr:eq(1) th').each( function (i) {
+        var title = $(this).text();
+        $(this).html( '<input style="width:100%" class="not_order" type="text" placeholder="Buscar" />' );
  
+        $( 'input', this ).on( 'keyup change', function () {
+            if ( table.column(i).search() !== this.value ) {
+                table
+                    .column(i)
+                    .search( this.value )
+                    .draw();
+            }
+        } );
+    
+        } );
+}
+
+ function getDataCasosEpidemiForDataTables(requestedPersonEpidemi,minDateRange,maxDateRange,action){
+
+ var hour = getHourForFileExport();
+
+//    $('#dataTable thead tr').clone(true).appendTo( '#dataTable thead' );
+
+    $('#dataTable thead tr:eq(1) th').each( function () {
+        var title = $(this).text();
+        $(this).html( '<input style="width:100%" class="not_orders" type="text" placeholder="Buscar" />' );
+    } ); 
+
+    $('#dataTable thead tr:eq(1)  th:eq(0)').html('');
+
+    $('#dataTable thead tr:eq(1)  th:eq(33)').html('');
+
+//<span>'+title+'<span><br>
     var table = $('#dataTable').DataTable({
 //       "aaSorting": [[ 0, "asc" ]], // Sort by first column descending
         bProcessing: true,
         bDeferRender: true,
         bServerSide: true,
+        orderCellsTop: true,
         sAjaxSource: action+'?viewCasosEpidemi=true&minDateRange='+minDateRange+'&maxDateRange='+maxDateRange+'&requestedPersonEpidemi='+requestedPersonEpidemi+'&nameDateFieldDB='+'fecha_registro',
     aoColumnDefs: [
+      {
+        // row clumn
+      targets: [ 0 ],
+       searchable: false
+      },
 
       {
         // id_genero
@@ -396,6 +432,19 @@ var hour = getHourForFileExport();
                 "bDestroy": true,
 
     });
+  
+$('#dataTable thead tr:eq(1) th').each(function () {
+        $('input',this).on('keyup change', function () {
+            table.column($(this).parent().index() + ':visible')
+                .search(this.value)
+                .draw();
+
+        });
+    });
+
+//    $('#dataTable thead tr:eq(1)  th:eq(33) :input').remove();
+
+//  var filteringHeader $('#dataTable thead tr:eq(1) th');
   }
 
 function getParroquias(actionForAjax){
