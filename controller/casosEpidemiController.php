@@ -71,7 +71,7 @@
 		$id_person = false;
 
 	if($ifNotHaveIdentityDocument){
-		$id_person = mainModel::cleanStringSQL($dataCasosEpidemi['id_person']);	
+		$id_person = mainModel::cleanStringSQL($dataCasosEpidemi['id_person']);
 
 		$ifNotHaveIdentityDocument = 1;
 
@@ -348,7 +348,7 @@
 		"id_person"=>$id_person,
 		"ifNotHaveIdentityDocument"=>$ifNotHaveIdentityDocument,
 		"ifExistPerson"=>true,
-		"ifUpdateOperationCase"=>true		
+		"ifUpdateOperationCase"=>true
 		];
 
 
@@ -627,7 +627,6 @@ if (!isset($dataCasosEpidemi['confirmDelete'])) {
 				 }
 
   public static function getDataTablesCasosEpidemiController() {
-
   $columnsTable = array(
      'ROW_NUMBER() OVER()',
       'id_caso_epidemi',
@@ -703,7 +702,7 @@ array(
 
   try {
 
-   mainModel::connectDB()->query('drop view caso_epidemi_view');
+//   mainModel::connectDB()->query('drop view caso_epidemi_view');
 
 
 $queryifExistView = mainModel::connectDB()->query("SELECT where EXISTS  ( SELECT FROM information_schema.tables WHERE table_name = 'caso_epidemi_view' ) = true");
@@ -715,8 +714,8 @@ $queryifExistView = mainModel::connectDB()->query("SELECT where EXISTS  ( SELECT
 			}
 
 
-    $dataToCreateDataTable = mainModel::getDataTableServerSideModel('caso_epidemi_view', 'row_number',
-      $columnsPrintDataTable ,$columnsPrintDataTable,TRUE);
+    $dataToCreateDataTable = mainModel::getDataTableServerSideModel('caso_epidemi_view', 'ROW_NUMBER() OVER()',
+      $columnsTable ,$columnsPrintDataTable,TRUE);
 
  $sTable = $dataToCreateDataTable['sTable'];
  $sWhere = $dataToCreateDataTable['sWhere'];
@@ -1673,7 +1672,7 @@ if ($dataCasosEpidemi['doc_identidad'] === 'admin') {
 					$queryForOperationsUpdateCaseEpidemi = '';
 					if (isset($id_caso_epidemi)) {
 						$queryForOperationsUpdateCaseEpidemi = ' AND id_caso_epidemi != '.$id_caso_epidemi;
-					}		
+					}
 							
 				$queryIsExistcasosEpidemiPrimerizo = mainModel::connectDB()->query("SELECT id_caso_epidemi FROM casos_epidemi WHERE ".$queryIdentifyPerson." AND catalog_key_cie10 = '$catalog_key_cie10' AND id_tipo_entrada = 1 ".$queryForOperationsUpdateCaseEpidemi);
 
@@ -1710,7 +1709,7 @@ if ($dataCasosEpidemi['doc_identidad'] === 'admin') {
 	$queryForOperationsUpdateCaseEpidemi = '';
 	if (isset($id_caso_epidemi)) {
 		$queryForOperationsUpdateCaseEpidemi = ' AND id_caso_epidemi != '.$id_caso_epidemi;
-	}		
+	}
 
 		$queryIsExistcasosEpidemi = mainModel::connectDB()->query("SELECT id_caso_epidemi FROM casos_epidemi WHERE ".$queryIdentifyPerson." AND catalog_key_cie10 = '$catalog_key_cie10' AND fecha_registro = '$fecha_registro' ".$queryForOperationsUpdateCaseEpidemi);
 
@@ -2100,7 +2099,7 @@ $telefono = mainModel::cleanStringSQL($dataForQuery[$indiceFila][24]);
 		$fecha_registro_values = explode("-", $fecha_registro);
 
 		$dataCasosEpidemiBitacora=
-		["id_person_usuario"=>$_SESSION['id_person'],		
+		["id_person_usuario"=>$_SESSION['id_person'],
 		'indicatorPersonError'=>$indicatorEpidemiCaseError,
 		'operationImportCaseEpidemi'=>true,
 		"year_registro"=>$fecha_registro_values[0],

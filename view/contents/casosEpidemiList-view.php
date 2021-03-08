@@ -28,14 +28,7 @@
 
             <div class='card-body '>
 
-<!-- Button trigger modal -->
-<button type="button" class="btn btn-primary formCasosEpidemiModal" data-toggle="modal" data-target="#formCasosEpidemiModal">
-  Registrar Nuevo
-</button>
 
-<button type="button" class="btn btn-primary importCasosEpidemiModal" data-toggle="modal" data-target="#importCasosEpidemiModal">
-  Importar
-</button>
 
 <?php  require_once "./view/inc/formRegisterCasosEpidemi.php";?>
 
@@ -44,8 +37,10 @@
   <div class='table-responsive'>
 
 
-           <!-- Formulario para limitar fecha mediante el Backend -->
-          <div class='form-group col-sm-2'>
+           <!-- INPUTS para parametros denviados al Backend -->
+      <div class='input-table'>
+        <div class="form-row">
+           <!-- Se enviara una fecha por defaul en una semana -->
 
           <?php
             $requestAjax = FALSE;
@@ -57,20 +52,52 @@
           //es la feha con el registro mas viejo
           $minDateValueAvailable = $casosEpidemiController-> getFirstDateRecordscasosEpidemiController();
            ?>
-
+           
+            <div class="col-md-3">
           <input type='date' class='form-control' id='minDateRange' name='minDateRange'
           min ='<?php echo $minDateValueAvailable; ?>' max = '<?php echo $currentDate; ?>'
           >
-
+              
           <input type='date' class='form-control' id='maxDateRange' name='maxDateRange' min ='<?php echo $minDateValueAvailable; ?>' max = '<?php echo $currentDate; ?>'>
+            </div>
+
 
           <input type="hidden" name="actionForAjax" id="actionForAjax"  class='form-control' value='<?php echo SERVERURL; ?>ajax/casosEpidemiAjax.php'>
-         
+              
           <input type='hidden' class='form-control' id='requestedPersonEpidemi' name='requestedPersonEpidemi' value='<?php echo $requestedPersonEpidemi; ?>'>
+            
+          <br><br>
+          
+            <div class="col-md-3">
+          <input type='number' placeholder = 'Edad Minima'   class='form-control' id='minAgeRange' name='minAgeRange' min ='0' max='200' value=''>
+
+          <input type='number' placeholder = 'Edad Maxima' class='form-control' id='maxAgeRange' name='maxAgeRange' min ='0' max='200' value=''>
+              </div>
+          
+          <br><br>
+
+            <div class="col-md-3">
+          <input type='text' placeholder = 'Clave Catalogo Minima' class='form-control' id='minKeyCIE10' name='minKeyCIE10' value=''>
+
+          <input type='text' placeholder = 'Clave Catalogo Maxima' class='form-control' id='maxKeyCIE10' name='maxKeyCIE10' value=''>
 
           </div>
+      </div>
+    </div>  
+          <!-- Button trigger modal -->
+
+          <div class="p-2">
+<button type="button" class="btn btn-primary formCasosEpidemiModal" data-toggle="modal" data-target="#formCasosEpidemiModal">
+  Registrar
+</button>
+
+<button type="button" class="btn btn-primary importCasosEpidemiModal" data-toggle="modal" data-target="#importCasosEpidemiModal">
+  Importar
+</button>
+          </div>
+
            <!-- FINAL Formulario para limitar fecha mediante el Backend -->
-                <table class='table table-striped display' id='dataTable' name = 'dataTable' width='100%' cellspacing='0'>
+                <table class='table hover table-striped display' id='dataTable' name = 'dataTable' width='100%' cellspacing='0'>
                   <thead>
                     <tr>
                       
@@ -93,11 +120,11 @@
                       <th >id atributo especial</th>
                       <th >Atributo Especial</th>
            <!-- 16 --> <th >Id Tipo Entrada Caso </th>
-           <!-- 17 --> <th >Tipo de Entrada</th>                     
+           <!-- 17 --> <th >Tipo de Entrada</th>
                        <th >Notificacion Inmediata</th>
                        <th >is hospital</th>
                       <th >Hospitalizado o Referido</th>
-                      <th >Fecha</th>
+                      <th >Fecha de Registro</th>
                       <th >id Parroquia</th>
                       <th >Parroquia</th>
                       <th >Direccion</th>
@@ -107,7 +134,7 @@
                        <th >Anio de Operacion</th>
                       <th >Fecha de Operacion</th>
                       <th >Hora de Operacion</th>
-                      <th ></th>
+                      <th class="remove-item-child"></th>                   
                     </tr>
 
                     <tr>
@@ -130,11 +157,11 @@
                       <th>id atributo especial</th>
                       <th>Atributo Especial</th>
            <!-- 16 --> <th>Id Tipo Entrada Caso </th>
-           <!-- 17 --> <th>Tipo de Entrada</th>                     
+           <!-- 17 --> <th>Tipo de Entrada</th>
                        <th>Notificacion Inmediata</th>
                        <th>is hospital</th>
                       <th>Hospitalizado o Referido</th>
-                      <th>Fecha</th>
+                      <th>Fecha de Registro</th>
                       <th>id Parroquia</th>
                       <th>Parroquia</th>
                       <th>Direccion</th>
@@ -144,9 +171,9 @@
                        <th>Anio de Operacion</th>
                       <th>Fecha de Operacion</th>
                       <th>Hora de Operacion</th>
-                      <th></th>
+                      <th class="remove-item-child"></th>
                     </tr>
-                  </thead>
+                  </thead> 
 
                   <tfoot>
                     <tr>
@@ -173,7 +200,7 @@
            <!-- 20 --> <th>Notificacion Inmediata</th>
            <!-- 21 --> <th>is hospital</th>
            <!-- 22 --> <th>Hospitalizado o Referido</th>
-           <!-- 23 --> <th>Fecha</th>
+           <!-- 23 --> <th>Fecha de Registro</th>
            <!-- 24 --> <th>id Parroquia</th>
            <!-- 25 --> <th>Parroquia</th>
            <!-- 26 --> <th>Direccion</th>
@@ -183,7 +210,7 @@
            <!-- 30 --> <th>Anio de Operacion</th>
            <!-- 31 --> <th>Fecha de Operacion</th>
            <!-- 32 --> <th>Hora de Operacion</th>
-           <!-- 33 --> <th></th>
+           <!-- 33 --> <th class="remove-item-child"> </th>
                     </tr>
 
                     <div class="responseProcessAjax"></div>
@@ -191,6 +218,7 @@
                     <div class="msgBackendProcess"></div>
 
                   </tfoot>
+                  
                   <tbody>
                     
                     </tbody>
@@ -211,29 +239,112 @@
 
   $( document ).ready(function() {
 
+// indicar si la pogina se ha cargada la primera vez
+
 
 requestQueryByActionToAction();
 
- function requestQueryByActionToAction(){
+ async function  requestQueryByActionToAction(){
 
 
     var url = $('#actionForAjax').val();
     var requestedPersonEpidemi = $('#requestedPersonEpidemi').val();
 
-$('#minDateRange,#maxDateRange').change(function() {
+ var parameterPreGetDataTables = '';
+
+// ambos rangos deben poseer valores
+
+
+ $('#minDateRange,#maxDateRange').on('keyup change', function () {
+
     var minDateRange  = $('#minDateRange').val();
     var maxDateRange = $('#maxDateRange').val();
-// ambos rangos de fecha deben poseer valores
 
+    var minDateRange  = $('#minDateRange').val();
+    var maxDateRange = $('#maxDateRange').val();
 
+    var minKeyCIE10  = $('#minKeyCIE10').val();
+    var maxKeyCIE10 = $('#maxKeyCIE10').val();
+
+    var minAgeRange  = $('#minAgeRange').val();
+    var maxAgeRange = $('#maxAgeRange').val();
+
+ var parameterPreGetDataTables =
+  '&minDateRange='+minDateRange+
+  '&maxDateRange='+maxDateRange+
+  '&minKeyCIE10='+minKeyCIE10+
+  '&maxKeyCIE10='+maxKeyCIE10+
+  '&minAgeRange='+minAgeRange+
+  '&maxAgeRange='+maxAgeRange;
+  
 if (!isBlank(minDateRange) && !isBlank(maxDateRange)) {
 
-
-  return getDataCasosEpidemiForDataTablesAsync(requestedPersonEpidemi,minDateRange,maxDateRange,url);
+return setTimeout(function(){getDataCasosEpidemiForDataTablesAsync(parameterPreGetDataTables,url);}, 1000);
   
 }
 
-})
+});
+
+
+$('#minAgeRange,#maxAgeRange').on('change keyup', function () {
+
+    var minDateRange  = $('#minDateRange').val();
+    var maxDateRange = $('#maxDateRange').val();
+
+    var minDateRange  = $('#minDateRange').val();
+    var maxDateRange = $('#maxDateRange').val();
+
+    var minKeyCIE10  = $('#minKeyCIE10').val();
+    var maxKeyCIE10 = $('#maxKeyCIE10').val();
+
+    var minAgeRange  = $('#minAgeRange').val();
+    var maxAgeRange = $('#maxAgeRange').val();
+
+ var parameterPreGetDataTables =
+  '&minDateRange='+minDateRange+
+  '&maxDateRange='+maxDateRange+
+  '&minKeyCIE10='+minKeyCIE10+
+  '&maxKeyCIE10='+maxKeyCIE10+
+  '&minAgeRange='+minAgeRange+
+  '&maxAgeRange='+maxAgeRange;
+
+
+if (!isBlank(minAgeRange) && !isBlank(maxAgeRange) || isBlank(minAgeRange) && isBlank(maxAgeRange)) {
+
+return setTimeout(function(){getDataCasosEpidemiForDataTablesAsync(parameterPreGetDataTables,url);}, 1000);
+}
+
+});
+
+$('#minKeyCIE10,#maxKeyCIE10').on('keyup', function () {
+
+    var minDateRange  = $('#minDateRange').val();
+    var maxDateRange = $('#maxDateRange').val();
+
+    var minDateRange  = $('#minDateRange').val();
+    var maxDateRange = $('#maxDateRange').val();
+
+    var minKeyCIE10  = $('#minKeyCIE10').val();
+    var maxKeyCIE10 = $('#maxKeyCIE10').val();
+
+    var minAgeRange  = $('#minAgeRange').val();
+    var maxAgeRange = $('#maxAgeRange').val();
+
+ var parameterPreGetDataTables =
+  '&minDateRange='+minDateRange+
+  '&maxDateRange='+maxDateRange+
+  '&minKeyCIE10='+minKeyCIE10+
+  '&maxKeyCIE10='+maxKeyCIE10+
+  '&minAgeRange='+minAgeRange+
+  '&maxAgeRange='+maxAgeRange;
+
+if (!isBlank(minKeyCIE10) && !isBlank(maxKeyCIE10) || isBlank(minKeyCIE10) && isBlank(maxKeyCIE10)) {
+
+return setTimeout(function(){getDataCasosEpidemiForDataTablesAsync(parameterPreGetDataTables,url);}, 1000);
+  
+}
+
+});
 
 // si no se dio click pero si se actualizo;
 
@@ -252,8 +363,10 @@ var minDateRangeDefaulPHP = minDateRangeDefault.toISOString().split('T')[0];
 $('#minDateRange').val(minDateRangeDefaulPHP)
 $('#maxDateRange').val(maxDateAllowedPHP)
 
+ var parameterPreGetDataTables ='&minDateRange='+minDateRangeDefaulPHP+'&maxDateRange='+maxDateAllowedPHP;
 
-return getDataCasosEpidemiForDataTablesAsync(requestedPersonEpidemi,minDateRangeDefaulPHP,maxDateAllowedPHP,url);
+
+return getDataCasosEpidemiForDataTablesAsync(parameterPreGetDataTables,url);
 
 }
 
@@ -292,7 +405,7 @@ var minDateRangeDefaulPHP = minDateRangeDefault.toISOString().split('T')[0];
 
       $('#id_atrib_especial').empty();
 
-     $('#id_atrib_especial').append('<option value=0>Seleccionar Atributo Especial</option>')
+     $('#id_atrib_especial').append('<option value=0>Seleccionar Atributo Especial</option>');
 
     document.getElementById("id_caso_epidemi").setAttribute("value",'');
 
@@ -302,6 +415,7 @@ var minDateRangeDefaulPHP = minDateRangeDefault.toISOString().split('T')[0];
 
   $("#doc_identidad").prop('readonly', $('#ifNotHaveIdentityDocument').checked);
   $("#id_nacionalidad").prop('disabled', $('#ifNotHaveIdentityDocument').checked);
+
 
 
   // osea si la persona existe dale la opcion de inserar id persona
@@ -569,16 +683,35 @@ $(document).ready(function() {
 
 
  $('.buttons-colvisGroup').on('click', function () {
+
+  var timer;
+
+
 $('#dataTable thead tr:eq(1) th').each(function () {
         $('input',this).on('keyup change', function () {
+
+  window.clearTimeout(timer); // prevent errant multiple timeouts from being generated
+
+  timer = window.setTimeout(() => {
+
             table.column($(this).parent().index() + ':visible')
                 .search(this.value)
                 .draw();
 
+  }, 1000);
+
+    $('#dataTable thead tr:eq(1)  th:eq(33)').html('');
+
+    $('#dataTable thead tr:eq(0)  th:eq(33)').html('');
+
         });
     });
-});
+
+
+    });
+
     var table = $('#dataTable').DataTable();
+
 /*
     var th = $('.not_order').parent('th');
     
@@ -588,6 +721,8 @@ $('#dataTable thead tr:eq(1) th').each(function () {
 
       $(th).off("click");
 */
- } );
+ }
+ 
+ );
 
 </script>

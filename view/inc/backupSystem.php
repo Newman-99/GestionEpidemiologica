@@ -1,6 +1,8 @@
 
+
+
 <!-- Modal -->
-<div class="modal modalAjax fade" id="backupModal" tabindex="-1" role="dialog" aria-labelledby="backupModal" aria-hidden="true">
+<div class="modal modalAjax fade" id="backupModal" tabindex="-1" role="dialog" style="overflow-y: scroll;" aria-labelledby="backupModal" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
@@ -15,7 +17,7 @@
       <div class="card-body p-0">
         <!-- Nested Row within Card Body -->
         <div class="row">
-          <div class="col-lg-7">
+          <div class="col-lg-12">
             <div class="p-5">
 
                   <a href="#" target="_blank" class="btn btn-secondary btn-icon-split" id="backup" name="backup">
@@ -24,6 +26,27 @@
                     </span>
                     <span class="text">Obtener Copia de Seguridad</span>
                   </a>
+
+                  <br><br>
+                  
+                  <button href="#" target="_blank" class="btn btn-info btn-icon-split" id="backup" name="backup">
+                    <span class="icon text-white-50">
+                      <i class="fas fa-cog"></i>
+                    </span>
+                    <span class="text">Subir Copia de Seguridad</span>
+                  </button>
+
+                  <br><br>
+
+                  <button class="btn btn-info btn-icon-split" id="btnBackupClouConfig" name="btnBackupClouConfig">
+
+                    <span class="icon text-white-50">
+                      <i class="fas fa-cloud-upload-alt"></i>
+                    </span>
+                    <span class="text">Configurar cuenta de la nube</span>
+
+                </button>
+
 
      <div class="responseProcessAjax"></div>
 
@@ -37,15 +60,35 @@
 
       </div>
       <div class="modal-footer">
-        <button type="button" id="importBackup" class="btn btn-secondary buttonCancelAjax" data-dismiss="modal">Cancelar</button>
+        <button type="button" id="importBackupClose" class="btn btn-secondary buttonCancelAjax" data-dismiss="modal">Cancelar</button>
       </div>
      </form>
     </div>
   </div>
 </div>
 
+
+
 <script type="text/javascript">
     $( document ).ready(function() {
+
+
+    $('#btnBackupClouConfig').on('click', function() {
+      alert('show');
+    $("#backupModal").modal('hide');
+
+    $('#backupClouConfig').modal('show');
+
+    });
+
+    $('#backupClouConfig').on('hidden.bs.modal', function () {
+        $("#backupModal").modal('show');
+    });
+
+    $('#typeCloudFor').on('change', function () {
+      alert($('#typeCloudFor').val());
+    });
+
 
 $('#backupModal').on('show.bs.modal', function () {
 
@@ -80,6 +123,15 @@ var data =
 
       });
 
+// enviar dato de configuracion de datos  cloud
+
+/*$('#backupClouConfig').on('change', function () {
+
+    alert('here');
+
+    });
+*/
     });
 
 </script>
+

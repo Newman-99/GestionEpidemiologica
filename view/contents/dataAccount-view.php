@@ -1,8 +1,8 @@
     <div class="card o-hidden border-0 shadow-lg my-5">
-      <div class="card-body p-0">
+      <div class="card-body p-1">
         <!-- Nested Row within Card Body -->
         <div class="row">
-          <div class="col-lg-7">
+          <div class="col-lg-12">
             <div class="p-5">
               <div class="text-center">
                 <h1 class="h3 mb-2 text-gray-800">Datos de la Cuenta</h1>

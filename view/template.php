@@ -57,8 +57,20 @@ ob_start();
 	?>
 	
 <body id="page-top">
+  <style type="text/css">
+    
+  </style>
   <!-- Page Wrapper -->
   <div id="wrapper">
+
+            <?php  require_once "inc/configCloudBackup.php";?>
+
+           <?php  require_once "inc/formRestoreSystem.php";?>
+
+           <?php  require_once "inc/backupSystem.php";?>
+
+           <?php  require_once "inc/formImportCIE10.php";?>
+
 
     <!-- Sidebar -->
     <?php require_once "inc/sideBar.php"; ?>

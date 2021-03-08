@@ -4,6 +4,8 @@
 
       function getDataActivityLogSessionsForDataTables(requestedAliasUser,minDateRange,maxDateRange,action){
     var table = $('#dataTable').DataTable({
+             fixedHeader: true,
+            keys: true,
        "aaSorting": [[ 1, "asc" ]], // Sort by first column descending
         "bProcessing": true,
         "bDeferRender": true,
@@ -28,18 +30,20 @@
     var hour = getHourForFileExport();
 
     var table = $('#dataTable').DataTable({
-
+        fixedHeader: true,
+            keys: true,
         "bProcessing": true,
         "bDeferRender": true,
         "bServerSide": true,
+        "fixedHeader": true,
         "sAjaxSource": url+"?cie10listCatalog=view&idCapitulo="+idCapitulo,
         "columnDefs": [
             ],
 
           
       lengthMenu: [
-            [ 10, 25, 50,100,200,500, -1 ],
-            [ '10', '25', '50','100','200', '500', 'Todo' ]
+            [ 10, 25, 50,100,200,500, 1000 ],
+            [ '10', '25', '50','100','200', '500','1000']
         ]/*,
         
         dom: 'Bfrtip',
@@ -159,9 +163,12 @@ load_atrib_especial.style.display = "block";
 function getDataActivityLogCasosEpidemiForDataTables(requestedUser,minDateRange,maxDateRange,action){
     var table = $('#dataTable').DataTable({
        "aaSorting": [[ 1, "asc" ]], // Sort by first column descending
+             fixedHeader: true,
+            keys: true,
         "bProcessing": true,
         "bDeferRender": true,
         "bServerSide": true,
+         "fixedHeader": true,
         "sAjaxSource": action+"?activityLogCasosEpidemi=true&minDateRange="+minDateRange+"&maxDateRange="+maxDateRange+"&requestedUser="+requestedUser+"&nameDateFieldDB="+'bitacora_fecha',
      "aoColumnDefs": [      {
         // id_genero
@@ -194,29 +201,41 @@ function addColumnsFilteringDatatables(table){
         } );
 }
 
- function getDataCasosEpidemiForDataTables(requestedPersonEpidemi,minDateRange,maxDateRange,action){
+/*
+            $(".form-control dtsb-data").each(function(){
+              alert($(this).text())
+          })*/
+
+
+ function getDataCasosEpidemiForDataTables(parameterPreGetDataTables,action){
 
  var hour = getHourForFileExport();
 
 //    $('#dataTable thead tr').clone(true).appendTo( '#dataTable thead' );
 
-    $('#dataTable thead tr:eq(1) th').each( function () {
+    $('#dataTable thead tr:eq(1) th').not(':eq(33)').each( function () {
         var title = $(this).text();
         $(this).html( '<input style="width:100%" class="not_orders" type="text" placeholder="Buscar" />' );
-    } ); 
+    } );
 
     $('#dataTable thead tr:eq(1)  th:eq(0)').html('');
 
     $('#dataTable thead tr:eq(1)  th:eq(33)').html('');
+    
+
 
 //<span>'+title+'<span><br>
+
+
     var table = $('#dataTable').DataTable({
 //       "aaSorting": [[ 0, "asc" ]], // Sort by first column descending
         bProcessing: true,
         bDeferRender: true,
         bServerSide: true,
         orderCellsTop: true,
-        sAjaxSource: action+'?viewCasosEpidemi=true&minDateRange='+minDateRange+'&maxDateRange='+maxDateRange+'&requestedPersonEpidemi='+requestedPersonEpidemi+'&nameDateFieldDB='+'fecha_registro',
+        fixedHeader: true,
+            keys: true,
+      sAjaxSource: action+'?'+parameterPreGetDataTables+'&viewCasosEpidemi=true&nameDateFieldDB='+'fecha_registro',
     aoColumnDefs: [
       {
         // row clumn
@@ -321,7 +340,7 @@ function addColumnsFilteringDatatables(table){
 
       {
         // para los botnes var to y ver menos
-      targets: [ 2, 8, 13,14,19, 22, 17 ,23, 25, 26, 27, 28],
+      targets: [ 2, 8, 13,14,19, 22, 17, 25, 26, 27, 28],
       visible: false
       },
     
@@ -332,17 +351,18 @@ function addColumnsFilteringDatatables(table){
 
         aTargets: [33],
         searchable: false ,
-        orderable: false
       }
         ],
-        dom: 'lBfrtip',
+        dom: 'Bfrtip',
+
+//        dom: 'Qlfrtip',
 
       lengthMenu: [
             [ 10, 25, 50,100,200,500, -1 ],
             [ '10', '25', '50','100','200', '500', 'Todo' ]
         ],
-
         buttons: [
+      
         {
        extend: 'excelHtml5',
         filename: 'Casos_Epidemiologicos_' + minDateRange + '_' + maxDateRange + '_' + hour,
@@ -408,7 +428,7 @@ function addColumnsFilteringDatatables(table){
         {
           extend: 'colvisGroup',
           text: 'Ver Todo',
-          show : [ 2, 8, 13, 14, 17, 19, 22 ,23, 25, 26, 27, 28],
+          show : [ 2, 8, 13, 14, 17, 19, 22, 25, 26, 27, 28],
                 
                 attr:  {
                 id: 'btn-ver-todo'
@@ -419,32 +439,42 @@ function addColumnsFilteringDatatables(table){
         {
           extend: 'colvisGroup',
           text: 'Ver Menos',
-          hide : [ 2, 8, 13, 14, 17, 19, 22 ,23, 25, 26, 27, 28],
+          hide : [ 2, 8, 13, 14, 17, 19, 22, 25, 26, 27, 28],
                 attr:  {
                 id: 'btn-ver-menos'
             }
         },
 
-        ]
-        ,
-        
+        ],
         language: LANGUAGE_SPANISH_DATATABLES,
                 "bDestroy": true,
 
     });
   
+    var timer;
+
 $('#dataTable thead tr:eq(1) th').each(function () {
         $('input',this).on('keyup change', function () {
+  window.clearTimeout(timer); // prevent errant multiple timeouts from being generated
+  
+  timer = window.setTimeout(() => {
             table.column($(this).parent().index() + ':visible')
                 .search(this.value)
                 .draw();
+  }, 1000);
+
 
         });
     });
 
+  window.clearTimeout(timer); // prevent errant multiple timeouts from being generated
+
 //    $('#dataTable thead tr:eq(1)  th:eq(33) :input').remove();
 
 //  var filteringHeader $('#dataTable thead tr:eq(1) th');
+table.columns.adjust().draw();
+
+
   }
 
 function getParroquias(actionForAjax){

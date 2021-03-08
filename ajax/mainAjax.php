@@ -1,5 +1,7 @@
-<?php 
-	
+<?php 	
+				ini_set('memory_limit','1024M');
+
+
 	require_once "../config/app.php";
 
 		$requestAjax =  TRUE;
@@ -20,6 +22,10 @@
 	}elseif (isset($_FILES['restore'])) {
 
 			$mainModel->restoreDatabase($_FILES);
+				
+ 	}elseif (isset($_POST['operationType']) && $_POST['operationType'] == "config"){
+
+			$mainModel->backupClouConfig($_POST);
 				
  }else { 
 		

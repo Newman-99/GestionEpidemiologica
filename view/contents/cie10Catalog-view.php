@@ -107,6 +107,7 @@
                       <th>LINF</th>
                       <th>LSUP</th>
                       <th>TRIVIAL</th>
+                      <th>NOTIFICACION INMEDIATA</th>
                       <th>ERRADICADO</th>
                       <th>N_INTER</th> 
                       <th>NIN</th> 
@@ -179,6 +180,7 @@
                       <th>LINF</th>
                       <th>LSUP</th>
                       <th>TRIVIAL</th>
+                      <th>NOTIFICACION INMEDIATA</th>
                       <th>ERRADICADO</th>
                       <th>N_INTER</th> 
                       <th>NIN</th> 

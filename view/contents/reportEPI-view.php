@@ -49,53 +49,48 @@ General
           <div class="card shadow mb-4">
             <div class="card-header py-3">
               <h6 class="m-0 font-weight-bold text-primary">Reportes EPI</h6>
-
             </div>
-           
+          
+            <div class="card-body">
+              <div class="table-responsive">
 
-  <div class='form-group col-sm-2'>
+        <div class="input-table">
+          <div class="form-row">
 
-           <button type="button" class="btn btn-primary getReportEpiCompleteModal" data-toggle="modal" data-target="#getReportEpiCompleteModal">
-            Reporte Completo
-          </button>
-
-          <?php  require_once "./view/inc/formGetReportEpiComplete.php";?>
-
-  </div>
-
-
-          <br><br>
-
-            <div class='form-group col-sm-2'>
-
+            
+            <div class="col-md-2">
             <input type='date' class='form-control' id='startDateRange' name='startDateRange'
             min ='<?php echo $minDateValueAvailable; ?>' max = '<?php echo $currentDate; ?>'
             >
-
+            </div>
+            <div class="col-md-2">
             <input type='date' class='form-control' id='endDateRange' name='endDateRange' min ='<?php echo $minDateValueAvailable; ?>' max = '<?php echo $currentDate; ?>'>
+            </div>
 
             <input type="hidden" name="actionForAjax" id="actionForAjax"  class='form-control' value='<?php echo SERVERURL; ?>ajax/casosEpidemiAjax.php'>
 
-           
+          </div>
+        </div>  
+          
+              <div class='p-1'>
+              <button type="button" class="btn btn-primary getReportEpiCompleteModal" data-toggle="modal" data-target="#getReportEpiCompleteModal">
+                Reporte Completo
+              </button>
+
+                <?php  require_once "./view/inc/formGetReportEpiComplete.php";?>
+            
             <button type="button" class="btn btn-primary" name="requestReportEpi" id="requestReportEpi" value='<?php echo SERVERURL; ?>ajax/casosEpidemiAjax.php'>
               Ver Reporte
             </button>
-
             </div>
-        
-
-          </div>
-          
-
-            <div class="card-body" id="card-body">
-
-              <div class='table-responsive'>
+            
                 
                 <table class='table display table-striped' id='dataTable' width='100%' cellspacing='0'>
-                  
-            <button type="button" class="btn" name="btnExportXls" id="btnExportXls" value='<?php echo SERVERURL; ?>ajax/casosEpidemiAjax.php'>
+              <br>
+            <button type="button" class="btn btn-secondary" name="btnExportXls" id="btnExportXls" value='<?php echo SERVERURL; ?>ajax/casosEpidemiAjax.php'>
               Excel
             </button>
+
                   <thead>
                   <tr>
                           <th class='' rowspan="3" >NRO.</th>
@@ -151,8 +146,8 @@ General
                 </tbody>
 
               </table>
-              </div>
-          </div>
+        </div>
+      </div>
 
 
 
