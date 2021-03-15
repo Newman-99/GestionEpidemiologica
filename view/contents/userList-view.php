@@ -48,10 +48,7 @@
     $( document ).ready(function() {
 
       var table = $('#dataTable').DataTable({
-                fixedHeader: true,
-            keys: true,
-          'language': LANGUAGE_SPANISH_DATATABLES,
-                          "bDestroy": true
+          'language': LANGUAGE_SPANISH_DATATABLES
     });
   
 });

@@ -9,24 +9,26 @@
 	class loginController extends userController{
 // Iniamos y revismo el contador en cada pagina para cerrar la sesion
 	function __construct(){
-
-
-		session_start(['name'=>'dptoEpidemi']);	
 		
 	if (isset($_SESSION['timeout']) && (time() - $_SESSION['timeout'] > 10800)) {
-			//
 			self::forceClosureController();
 
 	}
-				$_SESSION['timeout'] = time();
+				if(!isset($_SESSION)){
 
-}
+				session_start(['name'=>'dptoEpidemi']);
+			}
+			$_SESSION['timeout'] = time();
+
+		}
 
 
 public function loginUserController($dataUser){
 			// si hay una sesion iniciada se le registre su cieerre de sesion en bitacora
+//var_dump(SERVERURL."dashboard/");
+//	session_start();
 
-			if (isset($_SESSION['aliasUser'])) {
+	if (isset($_SESSION['aliasUser'])) {
 
 
 			$currentDate =  mainModel::getDateCurrentSystem();
@@ -269,7 +271,7 @@ if ($aliasUser !== 'admin') {
 				"Alert"=>"redirecting",
 				"URL"=>SERVERURL."dashboard/"
 				];
-
+				
 				echo json_encode($alert);
 
 		}
@@ -287,11 +289,11 @@ if ($aliasUser !== 'admin') {
 
 	}else{
 
-				session_unset();
+/*				session_unset();
 				session_destroy();
 
 		 header("Location: ".SERVERURL);
-	}
+*/	}
 
 			}
 

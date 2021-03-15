@@ -1,5 +1,6 @@
 <?php 
 // Si existen usuadios en estadp reiniciar se muestra el sisguiente btn
+
 $queryIsExistUserReload = $loginController->getUserController(['id_estado'],array("id_estado"=>2)); 
 
 $queryIsExistUserReload->execute(); 

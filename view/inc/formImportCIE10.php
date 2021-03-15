@@ -15,10 +15,9 @@
       <div class="card-body p-0">
         <!-- Nested Row within Card Body -->
         <div class="row">
-          <div class="col-lg-12">
+          <div class="col-lg-7">
             <div class="p-5">
 
-                  
                     <p class="mb-4">El catalogo CIE-10 que se subira sobreescribira al actual, por lo se debe verificar los datos correctamente y debe asegurarse si este proceso es necesario.
                     </p>
 
@@ -28,13 +27,11 @@
                     <p class="mb-4">La Primera fila del archivo se obviara ya que deberia ser un encabezado. 
                     </p>
 
-                  
-
    <form class="formAjax form-update form-group text-center user" action="<?php echo SERVERURL; ?>ajax/cie10DataAjax.php" method="POST" data-form="files" autocomplete="off" enctype="multipart/form-data">
 
                 <div class="form-group" id="importCIE10Modal">
                   <label for="">Elegir Archivo CSV:</label>
-                    <input type="file" class=" input-files" id="fileCSVCIE10" name="fileCSVCIE10" accept=".csv">
+                    <input type="file" class="form-control input-files" id="fileCSVCIE10" name="fileCSVCIE10" accept=".csv">
               </div>
 
     <div class="responseProcessAjax"></div>

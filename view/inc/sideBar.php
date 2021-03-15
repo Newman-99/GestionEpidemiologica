@@ -1,6 +1,10 @@
+           <?php  require_once "./view/inc/formRestoreSystem.php";?>
+
+           <?php  require_once "./view/inc/backupSystem.php";?>
+
+           <?php  require_once "./view/inc/formImportCIE10.php";?>
 
     <!-- Sidebar -->
-
     <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
 
       <!-- Sidebar - Brand -->
@@ -62,7 +66,7 @@
             <?php if ($_SESSION['id_nivel_permiso'] == "1"): ?>
 
             <span class="collapse-item">
-              <button type="button" id="importCIE10Modal" class="importCIE10Modal" data-toggle="modal" data-target="#importCIE10Modal" style="
+              <button type="button" class="importCIE10Modal" data-toggle="modal" data-target="#importCIE10Modal" style="
               padding: 0;
               border: none;
               background: none;">

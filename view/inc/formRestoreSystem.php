@@ -15,14 +15,14 @@
       <div class="card-body p-0">
         <!-- Nested Row within Card Body -->
         <div class="row">
-          <div class="col-lg-12">
+          <div class="col-lg-7">
             <div class="p-5">
 
    <form class="formAjax restore form-group text-center user" action="<?php echo SERVERURL; ?>ajax/mainAjax.php" method="POST" data-form="files" autocomplete="off" enctype="multipart/form-data">
 
                 <div class="form-group">
                   <label for="">Elegir Archivo de Respaldo .GZ:</label>
-                    <input type="file" class="files" id="restore" name="restore" accept=".gz">
+                    <input type="file" class="form-control files" id="restore" name="restore" accept=".gz">
               </div>
 
      <div class="responseProcessAjax"></div>

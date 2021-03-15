@@ -1,4 +1,4 @@
-<?php
+<?php 
 	if ($requestAjax) {
 		require_once "../config/server.php";
 
@@ -24,29 +24,37 @@
 
 		public static function connectDB(){
 
- 		try {
+/* 		try {			
 
-if (IF_LOCAL_SERVER) {
 
-				$DB = new PDO("pgsql:host=".SERVER_PATH.";port=".PORT.";dbname=".DB."",USER,PASS, array(
-							PDO::ATTR_PERSISTENT => true, PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8'));
-			    $DB->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-			    
-					return $DB;
+$db = (function(){
+    $parts = (parse_url(getenv('DATABASE_URL') ?: 'postgres://ilsmpwdzrresby:7879db47bd3be54c574eab3a81a1bc2db477bc890a756eccc406992832a0fd8e@ec2-54-246-87-132.eu-west-1.compute.amazonaws.com:5432/d4hub5gh1m9jjj'));
+    extract($parts);
+    $path = ltrim($path, "/");
+    return new PDO("pgsql:host={$host};port={$port};dbname={$path}", $user, $pass);
+})();
 
-			}else{
-			$db = (function(){
-			    $parts = (parse_url(getenv('DATABASE_URL') ?: 'postgres://ilsmpwdzrresby:7879db47bd3be54c574eab3a81a1bc2db477bc890a756eccc406992832a0fd8e@ec2-54-246-87-132.eu-west-1.compute.amazonaws.com:5432/d4hub5gh1m9jjj'));
-			    extract($parts);
-			    $path = ltrim($path, "/");
-			    return new PDO("pgsql:host={$host};port={$port};dbname={$path}", $user, $pass);
-			})();
-			}
+return $db;
+
+		} catch (PDOException $e) {
+		    error_log("Failed to connect to database: ".$e->getMessage());
+		}				
+/**/
+
+		try {			
+
+
+			$DB = new PDO("pgsql:host=".SERVER_PATH.";port=".PORT.";dbname=".DB."",USER,PASS);
+
+   			 $DB->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    
+		return $DB;
 
 
 		} catch (PDOException $e) {
-		    error_log("Fallo al conectar con la base de datos: ".$e->getMessage());
-		}
+		    var_dump("Failed to connect to database: ".$e->getMessage());
+		}				
+/**/
 	}
 
 
@@ -54,22 +62,16 @@ if (IF_LOCAL_SERVER) {
 
 public static function backupDatabase(){
 
-		try {
+		try {			
 
 
 		self::cleanBackupsTempDirectory();
 
 		require_once '../config/backup-phpcloud.php';
 
-			$sync
-			    ->makeBackup()
-			    ->run('production', [
-			        new Destination('local',$nameBackup),
-			    ], 'gzip');
-
 				$operationElementHtml=[
 					"idSetAtribute"=>"backup",
-					"valueSetAtribute"=>SERVERURL."backups_temp/".$nameBackup.'.gz',
+					"valueSetAtribute"=>SERVERURL."\backups_temp".$nameBackup.'.gz',
 					"typeSetAtribute"=>"href",
 
 					"idAddClass"=>"#backup",
@@ -77,7 +79,7 @@ public static function backupDatabase(){
 
 					"idRemoveClass"=>"#backup",
 					"valueRemoveClass"=>"btn-secondary"
-				];
+				];	
 
 		    echo json_encode($operationElementHtml);
 
@@ -97,153 +99,24 @@ public static function backupDatabase(){
 
 }
 
-public static function backupClouConfig($dataConfigBackup){
-
-		$email = mainModel::cleanStringSQL($dataConfigBackup["email"]);
-		$typeCloud = mainModel::cleanStringSQL($dataConfigBackup["typeCloud"]);
-		$key = mainModel::cleanStringSQL($dataConfigBackup["key"]);
-		$secret = mainModel::cleanStringSQL($dataConfigBackup["secret"]);
-		$root = mainModel::cleanStringSQL($dataConfigBackup["root"]);
-
-
-if (self::isDataEmtpy($typeCloud,$key,$secret,$root,$email)) {
-				$alert=[
-					"Alert"=>"simple",
-					"Title"=>"Campos Vacios",
-					"Text"=>"Todos los campos de configuracion son obligatorios",
-					"Type"=>"error"
-				];
-				echo json_encode($alert);
-
-				exit();
-}
-
-$ifGcsOrAw3sDataEmpty = 0;
-
-if ($typeCloud == 1 || $typeCloud == 3){
-
-		$bucket = mainModel::cleanStringSQL($dataConfigBackup["bucket"]);
-
-	 	$ifGcsOrAw3sDataEmpty = (self::isDataEmtpy($bucket));
-
-	}
-
-$ifDropboxDataEmpty = '';
-
-if ($typeCloud == 2){
-		$token = mainModel::cleanStringSQL($dataConfigBackup["token"]);
-
-		$app = mainModel::cleanStringSQL($dataConfigBackup["app"]);
-
-	 	$ifDropboxDataEmpty = (self::isDataEmtpy($token,$app));
-}
-
-if ($ifDropboxDataEmpty || $ifGcsOrAw3sDataEmpty) {
-				$alert=[
-					"Alert"=>"simple",
-					"Title"=>"Campos Vacios",
-					"Text"=>"Todos los campos de configuracion son obligatorios",
-					"Type"=>"error"
-				];
-				echo json_encode($alert);
-
-				exit();
-}
-
-$DB_transacc = mainModel::connectDB();
-
-$DB_transacc->beginTransaction();
-
-	try {
-
-		$typeCloud = mainModel::cleanStringSQL($dataConfigBackup["typeCloud"]);
-		$key = mainModel::cleanStringSQL($dataConfigBackup["key"]);
-		$secret = mainModel::cleanStringSQL($dataConfigBackup["secret"]);
-		$root = mainModel::cleanStringSQL($dataConfigBackup["root"]);
-		$token = mainModel::cleanStringSQL($dataConfigBackup["token"]);
-		$app = mainModel::cleanStringSQL($dataConfigBackup["app"]);
-		$bucket = mainModel::cleanStringSQL($dataConfigBackup["bucket"]);
-
-		$sqlQuery = $DB_transacc->query("TRUNCATE table cuenta_nube");
-
-		$sqlQuery = $DB_transacc->prepare("INSERT INTO cuenta_nube(
-		type,
-		email,
-	 	key,
-	 	secret,
-	 	root,
-	 	token,
-	 	app,
-	 	bucket) VALUES (
-		:type,
-	 	:email,
-	 	:key,
-	 	:secret,
-	 	:root,
-	 	:token,
-	 	:app,
-	 	:bucket)");
-
-			$sqlQuery->execute(array(
-		"type"=>$typeCloud,
-		"email"=>$email,
-		"key"=>$key,
-		"secret"=>$secret,
-		"root"=>$root,
-		"token"=>$token,
-		"app"=>$app,
-		"bucket"=>$bucket));
-
-		$sqlQuery->closeCursor();
-
-			$DB_transacc->commit();
-
-
-			$alert=[
-				"Alert"=>"reload",
-				"Title"=>"Operacion Exitosa",
-				"Text"=>"Nueva Cuenta de la Nube Cofigurada",
-				"Type"=>"success"
-			];
-			
-			}catch (Exception $e) {
-
-			$DB_transacc->rollBack();
-
-			    	$codeError = $e->getCode();
-
-			    	$textDetailsTecnics =  "<br><br> Detalles Tecnicos: ". $e->getMessage();
-					
-					$textError = mainModel:: getMsgErrorSQL($codeError);
-
-						$alert=[
-							"Alert"=>"simple",
-							"Title"=>"Ocurrio un error inesperado",
-							"Text"=>$textError.$textDetailsTecnics,
-							"Type"=>"error"
-						];
-			}
-							
-							echo json_encode($alert);
-}
-
 public static function restoreDatabase($files){
 
-		try {
+		try {			
 
 			ini_set('memory_limit','512M');
+			/*
 if ($files['restore']['type'] !='application/gzip' || mainModel::isDataEmtpy($files['restore']['size'])){
 				$alert=[
 					"Alert"=>"simple",
 					"Title"=>"Datos Invalidos",
 					"Text"=>"El archivo de Respaldo es invalido o esta vacio <br> debe poseer la extension .gz",
 					"Type"=>"error"
-				];
+				];	
 
 				echo json_encode($alert);
 
 				exit();
-	}
+	}*/
 
 	self::cleanBackupsTempDirectory();
 
@@ -251,12 +124,11 @@ if ($files['restore']['type'] !='application/gzip' || mainModel::isDataEmtpy($fi
 
 	$nameFileRestore = $files['restore']['name'];
 
-$mewUploaddDirectory = BASE_DIRECTORY.'backups_temp/';
-
+$mewUploaddDirectory = BASE_DIRECTORY.'\backups_temp\\';
 $uploadFile = $mewUploaddDirectory . basename($files['restore']['name']);
 
 move_uploaded_file($uploadDirectory, $uploadFile);
-
+//exit();
 	require_once '../config/restore-phpcloud.php';
 
 			$alert=[
@@ -300,7 +172,7 @@ foreach($filesBackupsTemp as $file){ // iterate files
 					"Title"=>"Ha ocurrido un error inesperado",
 					"Text"=>"Los archivos de respaldo de datos no han podido ser borrados en la carpeta (backups_temp)",
 					"Type"=>"error"
-				];
+				];	
 
 				echo json_encode($alert);
     }
@@ -332,7 +204,7 @@ foreach($filesBackupsTemp as $file){ // iterate files
 
 	protected function generateRandomCode($Codeletter,$lenghtCode,$identifierNumber){
 
-	for ($i=1; $i <=$lenghtCode ; $i++) {
+	for ($i=1; $i <=$lenghtCode ; $i++) { 
 		$numberRandom = rand(0,9);
 		$Codeletter.=$numberRandom;
 	}
@@ -434,7 +306,7 @@ protected static function checkPatterns($pattern,$string){
 
 		$countBotons = 0;
 
-		for ($i=$currentPage; $i <= $nroButtons ; $i++) {
+		for ($i=$currentPage; $i <= $nroButtons ; $i++) { 
 			if ($countBotons >= $nroButtons ) {
 				break;
 			}
@@ -471,7 +343,7 @@ protected static function checkPatterns($pattern,$string){
 
 		foreach ($data as $value) {
 		    
-		    if(empty($value) || is_null($value) || self::isStringOnlyHasSpaces($value)){
+		    if(empty($value) || is_null($value) || self::isStringOnlyHasSpaces($value)){        
 		        return true;
 		    }
 		}
@@ -483,11 +355,11 @@ protected static function checkPatterns($pattern,$string){
 
 		foreach ($data as $value) {
 		    
-		    if(empty($value) || is_null($value) || self::isStringOnlyHasSpaces($value)){
+		    if(empty($value) || is_null($value) || self::isStringOnlyHasSpaces($value)){  
 		    	
 		    	if (!is_numeric($value)) {
 		        return true;
-		    	      }
+		    	      }  
 		    }
 		}
 
@@ -537,7 +409,7 @@ protected static function isDateGreaterCurrentDate($dateReviewed){
         }else{
             return FALSE;
 
-        }
+        }                   
 }
 
 public static function getDateCurrentSystem(){
@@ -546,7 +418,7 @@ public static function getDateCurrentSystem(){
 
      return $currentDate = date("Y-m-d H:i:s");
 
-}
+} 	
 
 protected static function isValidNroTlf(...$nrosTlfs){
     foreach ($nrosTlfs as $nroTlf) {
@@ -571,7 +443,7 @@ public static function isValidSelectionTwoOptions($idOption){
 
     if (strcmp($idOption,"1") == 0 || strcmp($idOption,"2") == 0) {
 		return TRUE;
-	}
+	}	
 	else FALSE;
 }
 
@@ -606,12 +478,12 @@ protected function  addUsuarioBitacora($dataUserBitacora){
 		,bitacora_hora_final
 		,bitacora_nivel_usuario
 		,bitacora_year) VALUES (
-		:usuario_alias,
-		:bitacora_codigo,
-		:bitacora_fecha,
-		:bitacora_hora_inicio,
-		:bitacora_hora_final,
-		:bitacora_nivel_usuario,
+		:usuario_alias, 
+		:bitacora_codigo, 
+		:bitacora_fecha, 
+		:bitacora_hora_inicio, 
+		:bitacora_hora_final, 
+		:bitacora_nivel_usuario, 
 		:bitacora_year)");
 
 			return $sqlQuery->execute(array(
@@ -634,7 +506,7 @@ protected function updateUsuarioBitacora($dataUserBitacora){
 
 	try {
 
-$sqlQuery = $DB_transacc->prepare("UPDATE usuario_bitacora SET
+$sqlQuery = $DB_transacc->prepare("UPDATE usuario_bitacora SET 
 		bitacora_hora_final=:bitacora_hora_final WHERE bitacora_codigo = :bitacora_codigo");
 
 			$sqlQuery->execute(array(
@@ -667,7 +539,7 @@ $sqlQuery = $DB_transacc->prepare("UPDATE usuario_bitacora SET
 			return $alert;
 
 
-	}
+	}	
 
 
 
@@ -675,7 +547,7 @@ protected static function deleteBitacora($usuario_alias){
 
 	self::disableForeingDB();
  	
- 	$sqlQuery = self::connectDB()->prepare(self::$stringQueryDeleteBitacora);
+ 	$sqlQuery = self::connectDB()->prepare(self::$stringQueryDeleteBitacora); 
 	
 	$resultQuery = $sqlQuery->execute(array("usuario_alias"=>$usuario_alias));
 
@@ -699,10 +571,18 @@ protected static function deleteBitacora($usuario_alias){
         $where
 	    ";
 
+
+		//var_dump($sqlQuery);
+
 		$sqlQuery = mainModel::connectDB()->prepare($sqlQuery);
+
 		foreach($filterValues as $key => $values) {
-			$sqlQuery->bindParam($key, $values['value'], $values['type']);
+			$sqlQuery->bindParam($key, $values['value'], $values['type']); 
 		}
+
+		$sqlQuery->execute(); 
+
+//		var_dump($sqlQuery->rowCount());
 
 		return $sqlQuery;
 
@@ -729,7 +609,7 @@ protected static function isFieldsEqualToThoseInTheDatabase($queryToGet,$fieldst
 
 				$matchCounterDatabaseFields++;
 
-				return false;
+				return false;				
 
 				}
 			}
@@ -781,9 +661,7 @@ protected static function isFieldsEqualToThoseInTheDatabase($queryToGet,$fieldst
      
     
     //* DB connection
-
-if (IF_LOCAL_SERVER) {
-
+   /**/
     $gaSql['link'] = pg_connect(
         " host=".$gaSql['server'].
         " dbname=".$gaSql['db'].
@@ -791,13 +669,12 @@ if (IF_LOCAL_SERVER) {
         " password=".$gaSql['password']
     ) or die('Could not connect: ' . pg_last_error());
 
-}else{
-
+/*
 
  $db_url = getenv("DATABASE_URL") ?: "postgres://ilsmpwdzrresby:7879db47bd3be54c574eab3a81a1bc2db477bc890a756eccc406992832a0fd8e@ec2-54-246-87-132.eu-west-1.compute.amazonaws.com:5432/d4hub5gh1m9jjj";
 
 $gaSql['link'] = pg_connect($db_url);
- }
+ 
     
     /*
      * Paging
@@ -873,7 +750,7 @@ var_dump($_GET['sSearch_'.$i]);
 	var_dump($_GET['bSearchable_'.$i]);
 	var_dump($columnsPrintDataTable[$i]);
 	echo "<hr><br>";
-*/
+*/	
 
             if ( $sWhere == "" )
             {
@@ -894,8 +771,9 @@ var_dump($_GET['sSearch_'.$i]);
 
     }
 
-    if (isset($_GET['minDateRange']) && isset($_GET['maxDateRange']) &&
-        !empty($_GET['minDateRange']) && !empty($_GET['maxDateRange']) ) {
+
+     
+    if (!empty($_GET['minDateRange']) AND !empty($_GET['maxDateRange']) ) {
 
      $minDateRange = mainModel::cleanStringSQL($_GET['minDateRange']);
 
@@ -911,56 +789,8 @@ var_dump($_GET['sSearch_'.$i]);
             {
                 $sWhere .= " AND ";
             }
-      $sWhere.= $nameDateFieldDB." BETWEEN '$minDateRange' AND '$maxDateRange'";
+      $sWhere.= $nameDateFieldDB." BETWEEN '$minDateRange' AND '$maxDateRange'";      
        }
-
-
-if (isset($_GET['minAgeRange']) && isset($_GET['maxAgeRange']) &&
-    !self::isDataEmtpyPermitedZero($_GET['minAgeRange']) && !empty($_GET['maxAgeRange']) ) {
-
-
-     $minAgeRange = mainModel::cleanStringSQL($_GET['minAgeRange']);
-
-     $maxAgeRange = mainModel::cleanStringSQL($_GET['maxAgeRange']);
-
-     $nameAgeFieldDB = 'edad';
-
-            if ( $sWhere == "" )
-            {
-                $sWhere = "WHERE ";
-            }
-            else
-            {
-                $sWhere .= " AND ";
-            }
-      $sWhere.= $nameAgeFieldDB." BETWEEN '$minAgeRange' AND '$maxAgeRange'";
-/*
-       var_dump ($sWhere);
-       exit();
-*/
-       }
-       
-
-if (isset($_GET['minKeyCIE10']) && isset($_GET['maxKeyCIE10']) &&
-  !empty($_GET['minKeyCIE10']) && !empty($_GET['maxKeyCIE10']) ) {
-
-     $minKeyCIE10 = mainModel::cleanStringSQL($_GET['minKeyCIE10']);
-
-     $maxKeyCIE10 = mainModel::cleanStringSQL($_GET['maxKeyCIE10']);
-
-     $nameKeyCIE10FieldDB = 'catalog_key_cie10';
-
-            if ( $sWhere == "" )
-            {
-                $sWhere = "WHERE ";
-            }
-            else
-            {
-                $sWhere .= " AND ";
-            }
-      $sWhere.= $nameKeyCIE10FieldDB." BETWEEN '$minKeyCIE10' AND '$maxKeyCIE10'";
-       }
-       
 
           // Script para solictar la data del CIE10 por capitulos
  	if (isset($_GET['idCapitulo'] ) && !self::isDataEmtpy($_GET['idCapitulo'] )) {
@@ -973,10 +803,8 @@ if (isset($_GET['minKeyCIE10']) && isset($_GET['maxKeyCIE10']) &&
             {
                 $sWhere .= " AND ";
             }
-			$sWhere.=" CLAVE_CAPITULO = '$idCapitulo' ";
+			$sWhere.=" CLAVE_CAPITULO = '$idCapitulo' ";    	
 		}
-		
-		
 
 		// para paginar en base a un usuario especifico
 
@@ -990,7 +818,7 @@ if (isset($_GET['minKeyCIE10']) && isset($_GET['maxKeyCIE10']) &&
             {
                 $sWhere .= " AND ";
             }
-			$sWhere.=" alias = '$requestedAliasUser' ";
+			$sWhere.=" alias = '$requestedAliasUser' ";    	
 		}
 
  	if (isset($_GET['requestedPersonEpidemi']) && !self::isDataEmtpy($_GET['requestedPersonEpidemi'])) {
@@ -1003,8 +831,9 @@ if (isset($_GET['minKeyCIE10']) && isset($_GET['maxKeyCIE10']) &&
             {
                 $sWhere .= " AND ";
             }
-			$sWhere.=" alias = '$requestedPersonEpidemi' ";
+			$sWhere.=" alias = '$requestedPersonEpidemi' ";    	
 		}
+
      
     $sQuery = "
         SELECT ".str_replace(" , ", " ", implode(", ", $aColumns))."
@@ -1059,7 +888,7 @@ if (isset($_GET['minKeyCIE10']) && isset($_GET['maxKeyCIE10']) &&
 		        "sLimit" => $sLimit,
 
 		    );
-     }
+     } 
 
 
 
@@ -1169,7 +998,7 @@ public static function utf8_converter($array){
     });
     return $array;*/
 
-    for ($i=0; $i < count($array) ; $i++) {
+    for ($i=0; $i < count($array) ; $i++) { 
 
 		$array[$i] = mb_convert_encoding($array[$i], 'UTF-16LE', 'UTF-8');
 

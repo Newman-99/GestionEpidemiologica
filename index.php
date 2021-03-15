@@ -1,4 +1,5 @@
 <?php 
+
 require_once "./config/app.php";
 
 require_once "./controller/viewsController.php";
@@ -7,6 +8,4 @@ require_once "./controller/viewsController.php";
  $template->getTemplateController();
 
 
-
  ?> 
-

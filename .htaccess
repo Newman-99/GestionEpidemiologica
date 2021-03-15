@@ -1,9 +1,8 @@
-
-Options All -Indexes
-
 RewriteEngine On
+Options +SymLinksIfOwnerMatch 
 
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME} !-l
 
-RewriteRule ^([a-zA-Z0-9/]+)$ index.php?views=$1
+RewriteRule "^([a-zA-Z0-9/]+)$" "index.php?views=$1"

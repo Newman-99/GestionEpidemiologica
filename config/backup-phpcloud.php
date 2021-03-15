@@ -13,4 +13,11 @@
 
 			$sync = require '../config/boostrap-phpcloud.php';
 
+			$sync
+			    ->makeBackup()
+			    ->run('production', [
+			        new Destination('local',$nameBackup),
+			    ], 'gzip');
+
+
  ?>

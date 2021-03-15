@@ -1,190 +1,5 @@
-
-                  <div class="col-sm-5">
-                    <p>Email: </p>
-                  </div>
-
-                  <div class="col-sm-5">
-                    <p>Tipo de Cuenta: </p>
-                  </div>
-
-       <form class="formAjax form-group text-center" action="<?php echo SERVERURL; ?>ajax/mainAjax.php" method="POST" data-form="config" id="form-update-config-cloud" autocomplete="off">
-
-          <div class="form-group row typeCloud">
-             <div class="col-sm-6 mb-6 mb-sm-0">
-
-              <select name='typeCloud' id='typeCloud' class="form-control div-input-static div-input" clauss="form-control" required>
-                  <option  value=''>Seleccione tipo de Nube</option>
-                  <option value='1'>Cloud Storage | Google Cloud</option>
-                  <option value='2'>Secure cloud storage - Dropbox -v2</option>
-                  <option  value='3'>Amazon Simple Storage Service</option>
-              </select>
-              </div>
-              </div>
-          <div class="form-group row">
-
-                <!-- Gcs,dropbox-v2,s3 -->
-                  <div class="col-sm-5 div-input div-input-static">
-                    <input type="text" class="form-control
-                    " id="email" name ="email" placeholder="Correo">
-                  </div>
-
-                <!-- Gcs,dropbox-v2,s3 -->
-                  <div class="col-sm-5 div-input">
-                    <input type="text" class="form-control
-                    " id="key" name ="key" placeholder="key">
-                  </div>
-                               <!-- Gcs,dropbox-v2,aws -->
-                  <div class="col-sm-5 div-input">
-                    <input type="text" class="form-control
-                    " id="secret" name ="secret" placeholder="secret">
-                  </div>
-
-                <!-- Gcs -->                  
-                  <div class="col-sm-5 div-input">
-                    <input type="text" class="form-control
-                    " id="bucket" name ="bucket" placeholder="bucket">
-                  </div>  
-
-
-          </div>
-
-          <div class="form-group row">
-
-                <!-- Gcs,dropbox-v2 -->
-                  <div class="col-sm-5 div-input">
-                    <input type="text" class="form-control
-                    " id="token" name ="token" placeholder="token">
-                  </div>
-
-                <!-- dropbox -->                  
-                  <div class="col-sm-5 div-input">
-                    <input type="text" class="form-control
-                    " id="app" name ="app" placeholder="app">
-                  </div>  
-
-                <!-- Gcs,dropbox -->
-                  <div class="col-sm-5 div-input">
-                    <input type="text" class="form-control
-                    " id="root" name ="root" placeholder="root">
-                  </div>  
-
-          </div>
-
-        <button class="btn btn-primary btn-user btn-block" type="submit" value="saveCloudBackup" name="save">Actualizar</button>
-
-              </form>
-
-
-    <script type="text/javascript">
-        $('.div-input').css("display", "none");    
-        $('.div-input-static').css("display", "block");    
-
-
-      $( document ).ready(function() {
-
-      $('#typeCloud').on('change', function () {
-
-      if ($('#typeCloud').val() == '') {
-      $('.div-input').css("display", "none");    
-      $('.div-input-static').css("display", "block");    
-
-      }
-
-      if ($('#typeCloud').val() == 1) {
-
-        // atribute for gcs
-      $('#key').parent('div').css("display", "block");    
-
-      $('#secret').parent('div').css("display", "block");    
-
-      $('#bucket').parent('div').css("display", "block");    
-
-      $('#root').parent('div').css("display", "block");    
-
-      // not for gcs
-      
-      $('#token').parent('div').css("display", "none");    
-
-      $('#app').parent('div').css("display", "none");    
-
-      }
-
-      if ($('#typeCloud').val() == 2) {
-
-        // atribute for dropbox
-      $('#token').parent('div').css("display", "block");    
-
-      $('#key').parent('div').css("display", "block");    
-
-      $('#secret').parent('div').css("display", "block");    
-
-      $('#root').parent('div').css("display", "block");    
-
-      $('#app').parent('div').css("display", "block");    
-
-      // not for dropbox
-      
-      $('#bucket').parent('div').css("display", "none");    
-
-      }
-
-      if ($('#typeCloud').val() == 3) {
-
-        // atribute for s3
-
-      $('#key').parent('div').css("display", "block");    
-
-      $('#secret').parent('div').css("display", "block");    
-
-      $('#root').parent('div').css("display", "block");    
-
-      $('#bucket').parent('div').css("display", "block");    
-
-      // not for s3
-      $('#app').parent('div').css("display", "none");    
-
-      $('#token').parent('div').css("display", "none");    
-              
-      }
-
-    });
-
-    });
-
-</script>
-<!--
-    'gcs' => [
-        'type' => 'Gcs',
-        'key'    => '',
-        'secret' => '',
-        'version' => 'latest',
-        'bucket' => '',
-        'root'   => '',
-    ],
-
-    'dropbox-v2' => [
-        'type' => 'DropboxV2',
-        'token' => '',
-        'key' => '',
-        'secret' => '',
-        'app' => '',
-        'root' => '',
-    ],
-
-    's3' => [
-        'type' => 'AwsS3',
-        'key'    => '',
-        'secret' => '',
-        'region' => 'us-east-1',
-        'version' => 'latest',
-        'bucket' => '',
-        'root'   => '',
-    ],
--->
 <?php
 
-
-/*
 
         $requestAjax =  false;
 
@@ -232,8 +47,8 @@ $cie10 = ["A00",
 "A014",
 "A02"];
 */
-/*
 
+/*
 $dataCasosEpidemi = 
   ["id_nacionalidad"=>"1",
   "doc_identidad"=>"12394859",
@@ -256,8 +71,7 @@ $dataCasosEpidemi =
   "bitacora_hora"=> "11:38:31 am",
   "id_tipo_operacion"=>"1"];
 
-
-  /*
+*/
 $dataCasosEpidemi = 
   ["id_nacionalidad"=>"2",
   "doc_identidad"=>"10304251",
@@ -279,7 +93,7 @@ $dataCasosEpidemi =
   "bitacora_year"=>"2021",
   "bitacora_hora"=> "11:38:31 am",
   "id_tipo_operacion"=>"1"];
-*/
+
 /*
 $dataCasosEpidemi = 
   ["id_nacionalidad"=>"1",
@@ -303,10 +117,9 @@ $dataCasosEpidemi =
   "bitacora_hora"=> "11:38:31 am",
   "id_tipo_operacion"=>"1"];
 */
-  
-  /*  $count = 0;
+    $count = 0;
 
-for ($nroRegister=0; $nroRegister < 10; $nroRegister++) { 
+for ($nroRegister=0; $nroRegister < 30; $nroRegister++) { 
 
 
 $date_now = date('d-m-Y');
@@ -355,4 +168,3 @@ if ($nroRegister > 0) {
 var_dump($count);
 
 
-*/?>

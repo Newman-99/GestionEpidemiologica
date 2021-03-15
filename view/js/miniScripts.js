@@ -176,11 +176,12 @@ async function setCIE10ToFormRegisterCaseEpidemBySearchPatternAsync(valueSearch,
   }
 } 
 
-async function getDataCasosEpidemiForDataTablesAsync(parameterPreGetDataTables,action) {
+async function getDataCasosEpidemiForDataTablesAsync(requestedPersonEpidemi,minDateRange,maxDateRange,url) {
   try {
-        await  getDataCasosEpidemiForDataTables(parameterPreGetDataTables,action);
+        await  getDataCasosEpidemiForDataTables(requestedPersonEpidemi,minDateRange,maxDateRange,url);
 
-  document.getElementById("btn-ver-menos").style.display = "none"
+  document.getElementById("btn-ver-menos").style.display = "none";
+
   
 
 document.getElementById('btn-ver-todo').addEventListener('click', function() {
@@ -192,12 +193,6 @@ document.getElementById('btn-ver-menos').addEventListener('click', function() {
   document.getElementById("btn-ver-todo").style.display = "block";
   document.getElementById("btn-ver-menos").style.display = "none";
 });
-
-
-    $('.remove-item-child').children(':input').remove();
-
-    $('#dataTable thead tr:eq(1)  th:eq(33)').html('');
-
 
   }catch (e) {
     alert(e);

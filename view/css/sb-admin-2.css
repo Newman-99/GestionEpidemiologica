@@ -67,6 +67,12 @@ body {
   color: #858796;
   text-align: left;
   background-color: #fff;
+  /* Prueba de fondo BG*/
+  background-image: url("https://lh3.googleusercontent.com/p/AF1QipP3hL-eCpv8fZAC8Sc3WdNoaslwXhz7qYazh-Lu=s0");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+
 }
 
 [tabindex="-1"]:focus {
@@ -9667,7 +9673,7 @@ a:focus {
 }
 
 .bg-gradient-primary {
-  background-color: #4bb2f3;
+  background-color: #4e73df;
   background-image: linear-gradient(180deg, #4e73df 10%, #224abe 100%);
   background-size: cover;
 }
@@ -11025,7 +11031,16 @@ body.sidebar-toggled footer.sticky-footer {
   padding-right: 30px;
 }
 
+/* MIS ESTILOS CSS JGV */ 
 
-.input-table {
-  padding-bottom:  30px;
- }
+/*
+.bg-cpp { background-image: url(view/img/bg-cpp.png); }
+
+/* <img src="https://lh3.googleusercontent.com/p/AF1QipP3hL-eCpv8fZAC8Sc3WdNoaslwXhz7qYazh-Lu=s1600-w400" alt="Background">
+
+.navbar-dark .navbar-toggler-icon {
+  background-image: url("data:image/svg+xml,%3csvg viewBox='0 0 30 30' xmlns='http://www.w3.org/2000/svg'%3e%3cpath stroke='rgba(255, 255, 255, 0.5)' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+}
+
+body { background-image: url(https://lh3.googleusercontent.com/p/AF1QipP3hL-eCpv8fZAC8Sc3WdNoaslwXhz7qYazh-Lu=s1600-w400); }
+*/

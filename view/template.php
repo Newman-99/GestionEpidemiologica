@@ -1,26 +1,32 @@
-
 <?php
+/*
+var_dump($_GET);
+var_dump($_SERVER["PHP_SELF"]);
+*/
 
 ob_start();
 
   $requestAjax = false;
 
-  require_once "./controller/loginController.php";
+  require_once "controller/loginController.php";
   
   $loginController = new loginController();
 
-  require_once "./controller/viewsController.php";; 
+  require_once "controller/viewsController.php";
   
   $viewsController =  new viewsController();
 
   $requestedView= $viewsController->getViewsController(); 
 
+/*  var_dump($requestedView);
+  var_dump($_SESSION);
+*/
 
 ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
-
+    <!-- prueba head J -->
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -38,14 +44,15 @@ ob_start();
 
 		// si ya esta la session activa, no entra a registerUser, login, forgotPassword,restartUser
 		
-      if(isset($_SESSION['token_dptoEpidemi']) &&isset($_SESSION['aliasUser']) && $requestedView != "404"){
+      if(isset($_SESSION['token_dptoEpidemi']) && isset($_SESSION['aliasUser']) && $requestedView != "404"){
 		header('Location: '.SERVERURL.'dashboard/');
 		exit();      	
 		}else{
-
 		}
 
-      require_once "./view/contents/".$requestedView."-view.php";
+    include_once  "view/contents/".$requestedView."-view.php";
+
+
 
 		}else{
 
@@ -57,20 +64,8 @@ ob_start();
 	?>
 	
 <body id="page-top">
-  <style type="text/css">
-    
-  </style>
   <!-- Page Wrapper -->
   <div id="wrapper">
-
-            <?php  require_once "inc/configCloudBackup.php";?>
-
-           <?php  require_once "inc/formRestoreSystem.php";?>
-
-           <?php  require_once "inc/backupSystem.php";?>
-
-           <?php  require_once "inc/formImportCIE10.php";?>
-
 
     <!-- Sidebar -->
     <?php require_once "inc/sideBar.php"; ?>
@@ -88,8 +83,11 @@ ob_start();
 
         <!-- Begin Page Content -->
         <div class="container-fluid">	
-	<?php include $requestedView; ?>
+        
+	<?php 
 
+include_once  $requestedView;
+?>
         </div>
         <!-- /.container-fluid -->
 
@@ -97,7 +95,8 @@ ob_start();
       <!-- End of Main Content -->
 
       <!-- Footer -->
-      <?php require_once "inc/footer.php"; ?>
+      <?php 
+      require_once "inc/footer.php"; ?>
       <!-- End of Footer -->
 
     </div>
@@ -116,7 +115,9 @@ ob_start();
 <?php //require_once "inc/logOutScript.php"; ?>
 
 
-<?php } ?>
+<?php } 
+
+?>
 <?php require_once "inc/script.php"; ?>
 
 </body>

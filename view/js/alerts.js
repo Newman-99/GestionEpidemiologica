@@ -309,7 +309,8 @@ async function ajaxSweetAlerts(alert){
 		});
 
 	}else if(alert.Alert==="redirecting"){
-			window.location.href=alert.URL;
+		//alert(alert.URL);
+		window.location.href=alert.URL;
 		}
 	
 		if (typeof alert.reloadDataTable != 'undefined') {	

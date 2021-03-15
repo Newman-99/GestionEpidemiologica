@@ -94,6 +94,7 @@ protected static $queryGetAgrupacionEPI =	"SELECT DISTINCT ON (orden) orden, enf
 
 protected static $queryCreateViewCasosEpidemi = "
 CREATE OR REPLACE VIEW caso_epidemi_view  AS SELECT DISTINCT ON (caso.id_caso_epidemi,caso.fecha_registro) caso.id_caso_epidemi,
+ROW_NUMBER() OVER(),
  caso.telefono, 
 caso.catalog_key_cie10,caso.fecha_registro,caso.direccion,
 strFromBool(caso.is_hospital) as hospitalizado,
@@ -107,7 +108,7 @@ atr_esp.descripcion atributo_especial,
 				casos_bit.bitacora_hora, 
 
 			    pers.nombres, pers.apellidos, pers.fecha_nacimiento,pers.id_genero,
-					get_age(caso.fecha_registro, pers.fecha_nacimiento) as edad,
+					date_part('year',age(caso.fecha_registro, pers.fecha_nacimiento))::int as edad,
 
 				pers.id_person id_person_caso,
 
