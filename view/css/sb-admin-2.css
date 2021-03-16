@@ -11032,3 +11032,39 @@ body.sidebar-toggled footer.sticky-footer {
 .input-table {
   padding-bottom:  30px;
  }
+
+
+ /* Estyle JGV*/
+
+.cp-logo {
+
+/*  background-image: url("/view/img/cp-logo.png");*/
+  width: 35px;
+  height: 35px;
+ }
+ 
+.cp-logo-lgn {
+
+  /*  background-image: url("/view/img/cp-logo.png");*/
+    width: 65px;
+    height: 65px;
+    margin-bottom: 3%;
+   }
+   
+ .dash-view-lg {
+  width: 150px;
+  height: 150px;
+  margin-left: 20px;
+  margin-right: 20px;
+ }
+
+ .dash-view-mppps-logo {
+  width: 350px;
+  height: 170px;
+  margin-left: 5%;
+  
+ }
+
+ .input-add-table {
+   margin-bottom: 15px;
+ }

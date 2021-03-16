@@ -45,7 +45,7 @@ var hour = getHourForFileExport();
           
           <!-- <p class="mb-4">DataTables is a third party plugin that is used to generate the demo table below. For more information about DataTables, pleas>
           -->
-General
+
           <div class="card shadow mb-4">
             <div class="card-header py-3">
               <h6 class="m-0 font-weight-bold text-primary">Reportes EPI</h6>
@@ -58,25 +58,25 @@ General
           <div class="form-row">
 
             
-            <div class="col-md-2">
-            <input type='date' class='form-control' id='startDateRange' name='startDateRange'
+            <div class="col-md-3">
+            <input type='date' class='form-control input-add-table' id='startDateRange' name='startDateRange'
             min ='<?php echo $minDateValueAvailable; ?>' max = '<?php echo $currentDate; ?>'
             >
             </div>
-            <div class="col-md-2">
-            <input type='date' class='form-control' id='endDateRange' name='endDateRange' min ='<?php echo $minDateValueAvailable; ?>' max = '<?php echo $currentDate; ?>'>
+            <div class="col-md-3">
+            <input type='date' class='form-control input-add-table' id='endDateRange' name='endDateRange' min ='<?php echo $minDateValueAvailable; ?>' max = '<?php echo $currentDate; ?>'>
             </div>
 
             <input type="hidden" name="actionForAjax" id="actionForAjax"  class='form-control' value='<?php echo SERVERURL; ?>ajax/casosEpidemiAjax.php'>
 
           </div>
         </div>  
-          
               <div class='p-1'>
+                <!--
               <button type="button" class="btn btn-primary getReportEpiCompleteModal" data-toggle="modal" data-target="#getReportEpiCompleteModal">
                 Reporte Completo
               </button>
-
+                -->
                 <?php  require_once "./view/inc/formGetReportEpiComplete.php";?>
             
             <button type="button" class="btn btn-primary" name="requestReportEpi" id="requestReportEpi" value='<?php echo SERVERURL; ?>ajax/casosEpidemiAjax.php'>
