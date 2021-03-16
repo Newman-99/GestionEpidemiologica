@@ -25,9 +25,18 @@
 }
 
 
-      function getDataCIE10CatalogForDataTables(url,idCapitulo){
-    
+
+
+      function getDataCIE10CatalogForDataTables(url,parameterPreGetDataTables){
+
     var hour = getHourForFileExport();
+
+    $('#dataTable thead tr:eq(1) th').not(':eq(0)').each( function () {
+        var title = $(this).text();
+        $(this).html( '<input style="width:100%" class="not_orders" type="text" placeholder="Buscar" />' );
+    } );
+
+    $('#dataTable thead tr:eq(1)  th:eq(0)').html('');
 
     var table = $('#dataTable').DataTable({
         fixedHeader: true,
@@ -36,7 +45,8 @@
         "bDeferRender": true,
         "bServerSide": true,
         "fixedHeader": true,
-        "sAjaxSource": url+"?cie10listCatalog=view&idCapitulo="+idCapitulo,
+        'orderCellsTop': true,
+        "sAjaxSource": url+"?cie10listCatalog=view"+parameterPreGetDataTables,
         "columnDefs": [
             ],
 
@@ -65,6 +75,31 @@
 
     });
   
+      var timer;
+
+$('#dataTable thead tr:eq(1) th').each(function () {
+        $('input',this).on('keyup change', function () {
+  window.clearTimeout(timer); // prevent errant multiple timeouts from being generated
+  
+  timer = window.setTimeout(() => {
+            table.column($(this).parent().index() + ':visible')
+                .search(this.value)
+                .draw();
+  }, 1000);
+
+
+        });
+    });
+
+  window.clearTimeout(timer); // prevent errant multiple timeouts from being generated
+
+//    $('#dataTable thead tr:eq(1)  th:eq(33) :input').remove();
+
+//  var filteringHeader $('#dataTable thead tr:eq(1) th');
+table.columns.adjust().draw();
+
+$( "#dataTable thead tr:eq(1) th:eq(0)").removeClass( "sorting_asc");
+
 };
 
 // devolvera datos para el select dinamico
@@ -199,6 +234,8 @@ function addColumnsFilteringDatatables(table){
         } );
     
         } );
+
+
 }
 
 /*
@@ -347,10 +384,11 @@ function addColumnsFilteringDatatables(table){
 
       {
         mData: null,
-        sDefaultContent: '<button name= "delete" id= "delete" value="delete" class="btn btn-danger btn-circle btn-sm delete"><i class="fas fa-trash"></i> </button> <button value = "update" name = "update" id = "update" class="btn btn-info btn-circle btn-sm"><i class="fas fa-plus"></i></i></button>',
+        sDefaultContent: '<button name= "delete" id= "delete" value="delete" class="btn btn-danger btn-circle btn-sm delete"><i class="fas fa-trash"></i></button>&nbsp;<button value = "update" name = "update" id = "update" class="btn btn-info btn-circle btn-sm"><i class="fas fa-plus"></i></i></button>',
 
         aTargets: [33],
         searchable: false ,
+        width: 30
       }
         ],
         dom: 'Bfrtip',
@@ -474,6 +512,7 @@ $('#dataTable thead tr:eq(1) th').each(function () {
 //  var filteringHeader $('#dataTable thead tr:eq(1) th');
 table.columns.adjust().draw();
 
+$( "#dataTable thead tr:eq(1) th:eq(0)").removeClass( "sorting_asc");
 
   }
 

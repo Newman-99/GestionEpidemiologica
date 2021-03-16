@@ -1,3 +1,4 @@
+<?php  libxml_disable_entity_loader(false); ?>
 
                   <div class="col-sm-5">
                     <p>Email: </p>

@@ -17,7 +17,7 @@ class cie10DataController extends mainModel
 
 	public function updateCie10DataController($files){
 			
-
+/*
 if ($files['fileCSVCIE10']['type'] !='text/csv' || mainModel::isDataEmtpy($files['fileCSVCIE10']['size'])){
 				$alert=[
 					"Alert"=>"simple",
@@ -30,7 +30,7 @@ if ($files['fileCSVCIE10']['type'] !='text/csv' || mainModel::isDataEmtpy($files
 
 				exit();
 	}
-
+*/
 
 if ($files['fileCSVCIE10']['size'] >20000000){
 				$alert=[
@@ -51,6 +51,9 @@ require_once "../view/inc/spout.php";
 
 $filePath = $files['fileCSVCIE10']['tmp_name'];
 
+var_dump($files);
+
+var_dump($files['fileCSVCIE10']['error']);
 
 $reader = $ReaderEntityFactory::createCSVReader();
 
@@ -574,7 +577,7 @@ if ($codeError = '23503') {
 //   mainModel::connectDB()->query('drop view data_cie10_view');
 
 $queryCreateViewDataCIE10 = '
-CREATE OR REPLACE VIEW data_cie10_view  AS SELECT consecutivo, letra, catalog_key, nombre, codigox, lsex, linf, lsup, trivial,isCIE10InmediateNotice(n_inter,nin,ninmtobs,notdiaria,sistema_especial,
+CREATE OR REPLACE VIEW data_cie10_view  AS SELECT consecutivo, letra, catalog_key as catalog_key_cie10, nombre, codigox, lsex, linf, lsup, trivial,isCIE10InmediateNotice(n_inter,nin,ninmtobs,notdiaria,sistema_especial,
 				es_suive_notin,es_suive_est_epi,es_suive_est_brote) as notific_inmediata, erradicado, n_inter, nin, ninmtobs, cod_sit_lesion, no_cbd, cbd, no_aph, af_prin, dia_sis, clave_programa_sis, cod_complemen_morbi, def_fetal_cm, def_fetal_cbd, clave_capitulo, capitulo, lista1, grupo1, lista5, rubrica_type, year_modifi, year_aplicacion, valid, prinmorta, prinmorbi, lm_morbi, lm_morta, lgbd165, lomsbeck, lgbd190, notdiaria, notsemanal, sistema_especial, birmm, cve_causa_type, causa_type, epi_morta, edas_e_iras_en_m5, csve_maternas_seed_epid, epi_morta_m5, epi_morbi, def_maternas, es_causes, num_causes, es_suive_morta, es_suive_morb, epi_clave, epi_clave_desc, es_suive_notin, es_suive_est_epi, es_suive_est_brote, sinac, prin_sinac, prin_sinac_grupo, descripcion_sinac_grupo, prin_sinac_subgrupo, descripcion_sinac_subgrupo, daga, asterisco
 	FROM public.data_cie10;
 	';
@@ -590,7 +593,7 @@ $queryifExistView = mainModel::connectDB()->query("SELECT where EXISTS  ( SELECT
 mainModel::getDataTableServerSideModel('data_cie10_view', 'consecutivo',
 	array('consecutivo',
 'letra',
-'catalog_key',
+'catalog_key_cie10',
 'nombre',
 'codigox',
 'lsex',

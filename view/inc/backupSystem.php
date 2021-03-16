@@ -28,24 +28,7 @@
                   </a>
 
                   <br><br>
-                  
-                  <button href="#" target="_blank" class="btn btn-info btn-icon-split" id="backup" name="backup">
-                    <span class="icon text-white-50">
-                      <i class="fas fa-cog"></i>
-                    </span>
-                    <span class="text">Subir Copia de Seguridad</span>
-                  </button>
-
-                  <br><br>
-
-                  <button class="btn btn-info btn-icon-split" id="btnBackupClouConfig" name="btnBackupClouConfig">
-
-                    <span class="icon text-white-50">
-                      <i class="fas fa-cloud-upload-alt"></i>
-                    </span>
-                    <span class="text">Configurar cuenta de la nube</span>
-
-                </button>
+                                  </button>
 
 
      <div class="responseProcessAjax"></div>
