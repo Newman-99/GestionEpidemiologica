@@ -66,7 +66,10 @@ body {
   line-height: 1.5;
   color: #858796;
   text-align: left;
-  background-color: #fff;
+  background-image: url("../img/CPP-BG.jpg");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
 }
 
 [tabindex="-1"]:focus {

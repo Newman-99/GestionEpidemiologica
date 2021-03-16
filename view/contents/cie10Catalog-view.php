@@ -95,6 +95,11 @@
 
     </div>
 
+    <div class="float-right">
+    <button type="button" class="btn btn-primary" data-toggle="modal" data-target=".bd-example-modal-lg">Mas Informacion</button>
+    </div>
+<br>
+    
 <br><br>
                 <thead>
                     <tr>
@@ -251,6 +256,378 @@
            </div>
       </div>
         
+      <div>
+    <!-- Inicio Modal-->
+    
+    <!-- Large modal -->
+
+<div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+          <h5>INFORMACION DE LOS ATRIBUTOS</h5>
+      </div>
+    <!-- Inicio de tabla Modal-->
+
+    <table class="table table-bordered table-striped table-striped data-table" id="" width="100%" cellspacing="0">
+                  <thead>
+                    <tr>
+                      <th>Nombre</th>
+                      <th>Tipo de Dato</th>
+                      <th>Largo</th>
+                    </tr>
+                  </thead>
+                  <tfoot>
+                    <tr>
+                      <th>Nombre</th>
+                      <th>Tipo de Dato</th>
+                      <th>Largo</th>
+                    </tr>
+                  </tfoot>
+                  <tbody>
+                    <tr>
+                      <td>consecutivo</td>
+                      <td>Numeros enteros</td>
+                      <td></td>
+                    </tr>
+                    <tr>
+                      <td>letra</td>
+                      <td>Caracteres de texto</td>
+                      <td>1</td>
+                    </tr>
+                    <tr>
+                      <td>llave catalogo</td>
+                      <td>Caracteres de texto</td>
+                      <td>5</td>
+                    </tr>
+                    <tr>
+                      <td>nombre</td>
+                      <td>Caracteres de texto</td>
+                      <td>300</td>
+                    </tr>
+                    <tr>
+                      <td>codigox</td>
+                      <td>Caracteres de texto</td>
+                      <td>2</td>
+                    </tr>
+                    <tr>
+                      <td>lsex</td>
+                      <td>Caracteres de texto</td>
+                      <td>2</td>
+                    </tr>
+                    <tr>
+                      <td>linf</td>
+                      <td>Caracteres de texto</td>
+                      <td>4</td>
+                    </tr>
+                    <tr>
+                      <td>lsup</td>
+                      <td>Caracteres de texto</td>
+                      <td>4</td>
+                    </tr>
+                    <tr>
+                      <td>trivial</td>
+                      <td>Caracteres de texto</td>
+                      <td>2</td>
+                    </tr>
+                    <tr>
+                      <td>erradicado</td>
+                      <td>Caracteres de texto</td>
+                      <td>2</td>
+                    </tr>
+                    <tr>
+                      <td>n_inter</td>
+                      <td>Caracteres de texto</td>
+                      <td>2</td>
+                    </tr>
+                    <tr>
+                      <td>nin</td>
+                      <td>Caracteres de texto</td>
+                      <td>2</td>
+                    </tr>
+                    <tr>
+                      <td>ninmtobs</td>
+                      <td>Caracteres de texto</td>
+                      <td>2</td>
+                    </tr>
+                    <tr>
+                      <td>cod_sit_lesion</td>
+                      <td>Caracteres de texto</td>
+                      <td>2</td>
+                    </tr>
+                    <tr>
+                      <td>no_cbd</td>
+                      <td>Caracteres de texto</td>
+                      <td>2</td>
+                    </tr>
+                    <tr>
+                      <td>cbd</td>
+                      <td>Caracteres de texto</td>
+                      <td>2</td>
+                    </tr>
+                    <tr>
+                      <td>no_aph</td>
+                      <td>Caracteres de texto</td>
+                      <td>2</td>
+                    </tr>
+                    <tr>
+                      <td>af_prin</td>
+                      <td>Caracteres de texto</td>
+                      <td>2</td>
+                    </tr>
+                    <tr>
+                      <td>dia_sis</td>
+                      <td>Caracteres de texto</td>
+                      <td>2</td>
+                    </tr>
+                    <tr>
+                      <td>clave_programa_sis</td>
+                      <td>Caracteres de texto</td>
+                      <td>2</td>
+                    </tr>
+                    <tr>
+                      <td>cod_complemen_morbi</td>
+                      <td>Caracteres de texto</td>
+                      <td>2</td>
+                    </tr>
+                    <tr>
+                      <td>def_fetal_cm</td>
+                      <td>Caracteres de texto</td>
+                      <td>2</td>
+                    </tr>
+                    <tr>
+                      <td>def_fetal_cbd</td>
+                      <td>Caracteres de texto</td>
+                      <td>2</td>
+                    </tr>
+                    <tr>
+                      <td>clave_capitulo</td>
+                      <td>Caracteres de texto</td>
+                      <td>2</td>
+                    </tr>
+                    <tr>
+                      <td>capitulo</td>
+                      <td>Caracteres de texto</td>
+                      <td>200</td>
+                    </tr>
+                    <tr>
+                      <td>lista1</td>
+                      <td>Caracteres de texto</td>
+                      <td>3</td>
+                    </tr>
+                    <tr>
+                      <td>grupo1</td>
+                      <td>Caracteres de texto</td>
+                      <td>3</td>
+                    </tr>
+                    <tr>
+                      <td>lista5</td>
+                      <td>Caracteres de texto</td>
+                      <td>3</td>
+                    </tr>
+                    <tr>
+                      <td>rubrica_type</td>
+                      <td>Caracteres de texto</td>
+                      <td>3</td>
+                    </tr>
+                    <tr>
+                      <td>year_modifi</td>
+                      <td>Caracteres de texto</td>
+                      <td>150</td>
+                    </tr>
+                    <tr>
+                      <td>year_aplicacion</td>
+                      <td>Caracteres de texto</td>
+                      <td>4</td>
+                    </tr>
+                    <tr>
+                      <td>valid</td>
+                      <td>Caracteres de texto</td>
+                      <td>4</td>
+                    </tr>
+                    <tr>
+                      <td>prinmorta</td>
+                      <td>Caracteres de texto</td>
+                      <td>4</td>
+                    </tr>
+                    <tr>
+                      <td>primorbi</td>
+                      <td>Caracteres de texto</td>
+                      <td>4</td>
+                    </tr>
+                    <tr>
+                      <td>lm_morbi</td>
+                      <td>Caracteres de texto</td>
+                      <td>4</td>
+                    </tr>
+                    <tr>
+                      <td>lm_morta</td>
+                      <td>Caracteres de texto</td>
+                      <td>5</td>
+                    </tr>
+                    <tr>
+                      <td>lgbd165</td>
+                      <td>Caracteres de texto</td>
+                      <td>3</td>
+                    </tr>
+                    <tr>
+                      <td>lomsbeck</td>
+                      <td>Caracteres de texto</td>
+                      <td>3</td>
+                    </tr>
+                    <tr>
+                      <td>lgbd190</td>
+                      <td>Caracteres de texto</td>
+                      <td>3</td>
+                    </tr>
+                    <tr>
+                      <td>notdiaria</td>
+                      <td>Caracteres de texto</td>
+                      <td>2</td>
+                    </tr>
+                    <tr>
+                      <td>notsemanal</td>
+                      <td>Caracteres de texto</td>
+                      <td>2</td>
+                    </tr>
+                    <tr>
+                      <td>sistema_especial</td>
+                      <td>Caracteres de texto</td>
+                      <td>2</td>
+                    </tr>
+                    <tr>
+                      <td>birmm</td>
+                      <td>Caracteres de texto</td>
+                      <td>2</td>
+                    </tr>
+                    <tr>
+                      <td>cve_causa_type</td>
+                      <td>Caracteres de texto</td>
+                      <td>2</td>
+                    </tr>
+                    <tr>
+                      <td>causa_type</td>
+                      <td>Caracteres de texto</td>
+                      <td>50</td>
+                    </tr>
+                    <tr>
+                      <td>epi_morta</td>
+                      <td>Caracteres de texto</td>
+                      <td>2</td>
+                    </tr>
+                    <tr>
+                      <td>edas_e_iras_en_m5</td>
+                      <td>Caracteres de texto</td>
+                      <td>2</td>
+                    </tr>
+                    <tr>
+                      <td>csve_maternas_seed_epid</td>
+                      <td>Caracteres de texto</td>
+                      <td>2</td>
+                    </tr>
+                    <tr>
+                      <td>epi_morta_m5</td>
+                      <td>Caracteres de texto</td>
+                      <td>2</td>
+                    </tr>
+                    <tr>
+                      <td>epi_morbi</td>
+                      <td>Caracteres de texto</td>
+                      <td>2</td>
+                    </tr>
+                    <tr>
+                      <td>def_maternas</td>
+                      <td>Caracteres de texto</td>
+                      <td>3</td>
+                    </tr>
+                    <tr>
+                      <td>es_causes</td>
+                      <td>Caracteres de texto</td>
+                      <td>2</td>
+                    </tr>
+                    <tr>
+                      <td>num_causes</td>
+                      <td>Caracteres de texto</td>
+                      <td>3</td>
+                    </tr>
+                    <tr>
+                      <td>es_suive_morta</td>
+                      <td>Caracteres de texto</td>
+                      <td>2</td>
+                    </tr>
+                    <tr>
+                      <td>es_suive_morb</td>
+                      <td>Caracteres de texto</td>
+                      <td>2</td>
+                    </tr>
+                    <tr>
+                      <td>epi_clave</td>
+                      <td>Caracteres de texto</td>
+                      <td>5</td>
+                    </tr>
+                    <tr>
+                      <td>epi_clave_desc</td>
+                      <td>Caracteres de texto</td>
+                      <td>120</td>
+                    </tr>
+                    <tr>
+                      <td>es_suive_notin</td>
+                      <td>Caracteres de texto</td>
+                      <td>2</td>
+                    </tr>
+                    <tr>
+                      <td>es_suive_est_epi</td>
+                      <td>Caracteres de texto</td>
+                      <td>2</td>
+                    </tr>
+                    <tr>
+                      <td>es_suive_est_brote</td>
+                      <td>Caracteres de texto</td>
+                      <td>2</td>
+                    </tr>
+                    <tr>
+                      <td>sinac</td>
+                      <td>Caracteres de texto</td>
+                      <td>2</td>
+                    </tr>
+                    <tr>
+                      <td>prin_sinac</td>
+                      <td>Caracteres de texto</td>
+                      <td>3</td>
+                    </tr>
+                    <tr>
+                      <td>prin_sinac_grupo</td>
+                      <td>Caracteres de texto</td>
+                      <td>2</td>
+                    </tr>
+                    <tr>
+                      <td>descripcion_sinac_grupo</td>
+                      <td>Caracteres de texto</td>
+                      <td>180</td>
+                    </tr>
+                    <tr>
+                      <td>prin_sinac_subgrupo</td>
+                      <td>Caracteres de texto</td>
+                      <td>3</td>
+                    </tr>
+                    <tr>
+                      <td>descripcion_sinac_subgrupo</td>
+                      <td>Caracteres de texto</td>
+                      <td>180</td>
+                    </tr>
+                    <tr>
+                      <td>daga</td>
+                      <td>Caracteres de texto</td>
+                      <td>2</td>
+                    </tr>
+                    <tr>
+                      <td>asterisco</td>
+                      <td>Caracteres de texto</td>
+                      <td>2</td>
+                    </tr>
+                    
+                  </tbody>
+                </table>
 
                         </div>
           </div>
