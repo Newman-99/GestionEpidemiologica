@@ -15,6 +15,6 @@ use Box\Spout\Common\Entity\Row;
 
    $WriterEntityFactory = new WriterEntityFactory();
 
-libxml_disable_entity_loader(false);
+//libxml_disable_entity_loader(false);
 
  ?>

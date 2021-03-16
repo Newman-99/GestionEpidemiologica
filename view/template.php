@@ -1,6 +1,7 @@
 
 <?php
 
+//phpinfo();
 ob_start();
 
   $requestAjax = false;
@@ -15,6 +16,8 @@ ob_start();
 
   $requestedView= $viewsController->getViewsController(); 
 
+
+//    echo $loginController->forceClosureController();
 
 ?>
 <!DOCTYPE html>

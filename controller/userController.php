@@ -1299,8 +1299,6 @@ $table.="<div class='table-responsive'>
                       <th>Nivel de Permiso</th>
                       <th>Estado</th>
                       <th></th>
-                      <th></th>
-                      <th></th>
                     </tr>
                   </thead>
                   <tfoot>
@@ -1313,7 +1311,6 @@ $table.="<div class='table-responsive'>
                       <th>Apellidos</th>
                       <th>Nivel de Permiso</th>
                       <th>Estado</th>
-                      <th></th>
                       <th></th>
                     </tr>
                   </tfoot>
@@ -1340,13 +1337,18 @@ $table.="<div class='table-responsive'>
 		 			<td>'.$rows['descripcion_nivel_permiso'].'</td>
 		 			<td>'.$rows['descripcion_estado'].'</td>
 		 			<td>
+
+    <div style="display: inline-block;">
+      
+
 	                  <a href="'.SERVERURL.'dataAccount/'.mainModel::encryption($rows['usuario_alias']).'" class="btn btn-info btn-circle btn-sm">
 	                    <i class="fas fa-plus"></i>
 	                  </a>
-		 			</td>
+		 		
+		    </div>
 
+	<div style="display: inline-block;">
 
-				<td>
 		 		<form class="formAjax" action="'.SERVERURL.'ajax/userAjax.php" method="POST" data-form="restart" enctypy="multipart/form-data" autocomplete="off">
 
 					<input name= "id_person" type="hidden" value="'.mainModel::encryption($rows['id_person']).'">
@@ -1360,11 +1362,11 @@ $table.="<div class='table-responsive'>
 						<button type="submit" value = "restart" class="btn btn-warning btn-circle btn-sm">
 	                    <i class="fas fa-redo"></i>
 	                     </button>
-	                     <div class="responseProcessAjax"></div>
 		 			</form>
-				</td>
+		    </div>
 
-		 			<td>
+	<div style="display: inline-block;">
+
 		 		<form class="formAjax" action="'.SERVERURL.'ajax/userAjax.php" method="POST" data-form="delete" enctypy="multipart/form-data" autocomplete="off">
 
 					<input name= "id_person" type="hidden" value="'.mainModel::encryption($rows['id_person']).'">
@@ -1378,8 +1380,8 @@ $table.="<div class='table-responsive'>
 						<button type="submit" value = "delete" class="btn btn-danger btn-circle btn-sm">
 	                    <i class="fas fa-trash"></i>
 	                     </button>
-	                     <div class="responseProcessAjax"></div>
 		 			</form>
+		    </div>
 		 			</td>
                </tr>
 			';

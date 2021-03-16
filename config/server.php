@@ -3,7 +3,7 @@
 
 const SERVER = "localhost";
 
-const DB="dptoEpidemi";
+const DB="gestionEpidemi";
 
 const USER = "postgres";
 

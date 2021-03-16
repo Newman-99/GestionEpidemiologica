@@ -47,6 +47,7 @@
   
     $( document ).ready(function() {
 
+
       var table = $('#dataTable').DataTable({
                 fixedHeader: true,
             keys: true,
@@ -54,6 +55,9 @@
                           "bDestroy": true
     });
   
+$( "#dataTable thead tr:eq(0) th:eq(10)").removeClass( "sorting_asc");
+
+
 });
 
 

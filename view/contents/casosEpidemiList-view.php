@@ -712,6 +712,7 @@ $('#dataTable thead tr:eq(1) th').each(function () {
 
     var table = $('#dataTable').DataTable();
 
+
 /*
     var th = $('.not_order').parent('th');
     

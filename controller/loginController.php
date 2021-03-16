@@ -18,8 +18,10 @@
 			self::forceClosureController();
 
 	}
-				$_SESSION['timeout'] = time();
 
+			if (isset($_SESSION['aliasUser'])) {
+				$_SESSION['timeout'] = time();
+			}
 }
 
 

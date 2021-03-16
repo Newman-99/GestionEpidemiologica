@@ -1,4 +1,6 @@
 <?php
+
+
 	if ($requestAjax) {
 		require_once "../config/server.php";
 
@@ -838,6 +840,9 @@ $gaSql['link'] = pg_connect($db_url);
      * NOTE This assumes that the field that is being searched on is a string typed field (ie. one
      * on which ILIKE can be used). Boolean fields etc will need a modification here.
      */
+
+//                    $where .= 'UNACCENT('.$columnsSearch[$i]."::text) ILIKE UNACCENT('%".$valueSearch."%') OR ";
+
     $sWhere = "";
     if ( $_GET['sSearch'] != "" )
     {
@@ -846,7 +851,7 @@ $gaSql['link'] = pg_connect($db_url);
         {
             if ( $_GET['bSearchable_'.$i] == "true" )
             {
-                $sWhere .= $columnsPrintDataTable[$i]."::text ILIKE '%".pg_escape_string( $_GET['sSearch'] )."%'::text OR ";
+                $sWhere .= 'UNACCENT('.$columnsPrintDataTable[$i]."::text) ILIKE UNACCENT('%".pg_escape_string( $_GET['sSearch'] )."%'::text) OR ";
             }
         }
         $sWhere = substr_replace( $sWhere, "", -3 );
@@ -869,11 +874,15 @@ var_dump($_GET['sSearch_'.$i]);
 */
         if ($_GET['bSearchable_'.$i] == "true" && $_GET['sSearch_'.$i] != '' )        {
 /*
+
+
 	var_dump($_GET['sSearch_'.$i=+2]);
 	var_dump($_GET['bSearchable_'.$i]);
 	var_dump($columnsPrintDataTable[$i]);
 	echo "<hr><br>";
 */
+
+//                    $where .= 'UNACCENT('.$columnsSearch[$i]."::text) ILIKE UNACCENT('%".$valueSearch."%') OR ";
 
             if ( $sWhere == "" )
             {
@@ -883,7 +892,7 @@ var_dump($_GET['sSearch_'.$i]);
             {
                 $sWhere .= " AND ";
             }
-            $sWhere .= $columnsPrintDataTable[$i]."::text ILIKE '%".pg_escape_string($_GET['sSearch_'.$i])."%'::text ";
+            $sWhere .=  'UNACCENT('.$columnsPrintDataTable[$i]."::text) ILIKE UNACCENT('%".pg_escape_string($_GET['sSearch_'.$i])."%'::text)";
 /*if (condition) {
 	# code...
 }*/
@@ -1060,7 +1069,6 @@ if (isset($_GET['minKeyCIE10']) && isset($_GET['maxKeyCIE10']) &&
 
 		    );
      }
-
 
 
     /*
