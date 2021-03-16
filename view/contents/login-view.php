@@ -1,4 +1,4 @@
-<body class="bg-gradient-primary">
+<body>
 
   <div class="container">
 
@@ -13,11 +13,12 @@
             <div class="row">
               
               <div class="col-lg-12" >
-                <div class="p-4">
+                <div class="p-3 text-center h3"><?php echo ORGANIZATION ?></div>
+                <div class="p-1">
                     <div class="text-center">
                     <h1 class="h4 text-gray-900 mb-4">Iniciar Sesion</h1>
                   </div>
-                <form class="formAjax form-group text-center user" action="<?php echo SERVERURL; ?>ajax/loginAjax.php" method="POST" data-form="login" autocomplete="off">
+                <form class="formAjax form-group text-center user p-3" action="<?php echo SERVERURL; ?>ajax/loginAjax.php" method="POST" data-form="login" autocomplete="off">
 
                     <div class="form-group">
                   <input type="text" class="form-control 
@@ -54,6 +55,8 @@
                   </div>
   
                     <?php require "./view/inc/linkRestartUser.php"; ?>
+                  <br>
+                  <div class="text-center"><img class="cp-logo-lgn" src= "<?php echo SERVERURL; ?>view/img/cp-logo.png"></div>
       
                 </div>
               </div>

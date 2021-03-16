@@ -1,11 +1,10 @@
 <?php 
+const IF_LOCAL_SERVER =FALSE;
 
-const IF_LOCAL_SERVER =true;
 
+const SERVERURL="https://gestion-epidemiologica-paraiso.herokuapp.com/";
 
-//const SERVERURL="https://gestion-epidemiologica-paraiso.herokuapp.com/";
-
-const SERVERURL = "http://localhost/gestionEpidemi/";
+//const SERVERURL = "http://localhost/gestionEpidemi/";
 
 const ORGANIZATION = "Clinica Popular el Paraiso: Dpto de Epidemiologia";
 

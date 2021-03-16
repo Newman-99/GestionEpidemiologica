@@ -2,13 +2,12 @@
     <!-- Sidebar -->
 
     <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
-
       <!-- Sidebar - Brand -->
       <a class="sidebar-brand d-flex align-items-center justify-content-center" href="<?php echo SERVERURL; ?>dashboard/">
-        <div class="sidebar-brand-icon">
-          <i class="fas fa-hospital"></i>
-        </div>
-        <div class="sidebar-brand-text mx-3 small"><?php echo ORGANIZATION ?></div>
+
+      <img class="cp-logo" src= "<?php echo SERVERURL; ?>view/img/cp-logo.png">
+    
+      <div class="sidebar-brand-text mx-3 small"><?php echo ORGANIZATION ?></div>
       </a>
 
       <!-- Divider -->

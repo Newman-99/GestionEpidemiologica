@@ -66,7 +66,10 @@ body {
   line-height: 1.5;
   color: #858796;
   text-align: left;
-  background-color: #fff;
+  background-image: url("../img/CPP-BG.jpg");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
 }
 
 [tabindex="-1"]:focus {
@@ -11028,4 +11031,40 @@ body.sidebar-toggled footer.sticky-footer {
 
 .input-table {
   padding-bottom:  30px;
+ }
+
+
+ /* Estyle JGV*/
+
+.cp-logo {
+
+/*  background-image: url("/view/img/cp-logo.png");*/
+  width: 35px;
+  height: 35px;
+ }
+ 
+.cp-logo-lgn {
+
+  /*  background-image: url("/view/img/cp-logo.png");*/
+    width: 65px;
+    height: 65px;
+    margin-bottom: 3%;
+   }
+   
+ .dash-view-lg {
+  width: 150px;
+  height: 150px;
+  margin-left: 20px;
+  margin-right: 20px;
+ }
+
+ .dash-view-mppps-logo {
+  width: 350px;
+  height: 170px;
+  margin-left: 5%;
+  
+ }
+
+ .input-add-table {
+   margin-bottom: 15px;
  }

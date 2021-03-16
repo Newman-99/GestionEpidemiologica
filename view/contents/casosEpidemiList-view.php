@@ -54,32 +54,30 @@
            ?>
            
             <div class="col-md-3">
-          <input type='date' class='form-control' id='minDateRange' name='minDateRange'
+          <input type='date' class='form-control input-add-table' id='minDateRange' name='minDateRange'
           min ='<?php echo $minDateValueAvailable; ?>' max = '<?php echo $currentDate; ?>'
           >
-              
-          <input type='date' class='form-control' id='maxDateRange' name='maxDateRange' min ='<?php echo $minDateValueAvailable; ?>' max = '<?php echo $currentDate; ?>'>
+            
+          <input type='date' class='form-control input-add-table' id='maxDateRange' name='maxDateRange' min ='<?php echo $minDateValueAvailable; ?>' max = '<?php echo $currentDate; ?>'>
             </div>
 
 
           <input type="hidden" name="actionForAjax" id="actionForAjax"  class='form-control' value='<?php echo SERVERURL; ?>ajax/casosEpidemiAjax.php'>
-              
+ 
           <input type='hidden' class='form-control' id='requestedPersonEpidemi' name='requestedPersonEpidemi' value='<?php echo $requestedPersonEpidemi; ?>'>
             
-          <br><br>
+          
           
             <div class="col-md-3">
-          <input type='number' placeholder = 'Edad Minima'   class='form-control' id='minAgeRange' name='minAgeRange' min ='0' max='200' value=''>
-
-          <input type='number' placeholder = 'Edad Maxima' class='form-control' id='maxAgeRange' name='maxAgeRange' min ='0' max='200' value=''>
+          <input type='number' placeholder = 'Edad Minima'   class='form-control input-add-table' id='minAgeRange' name='minAgeRange' min ='0' max='200' value=''>
+            
+          <input type='number' placeholder = 'Edad Maxima' class='form-control input-add-table' id='maxAgeRange' name='maxAgeRange' min ='0' max='200' value=''>
               </div>
           
-          <br><br>
-
             <div class="col-md-3">
-          <input type='text' placeholder = 'Clave Catalogo Minima' class='form-control' id='minKeyCIE10' name='minKeyCIE10' value=''>
+          <input type='text' placeholder = 'Clave Catalogo Minima' class='form-control input-add-table' id='minKeyCIE10' name='minKeyCIE10' value=''>
 
-          <input type='text' placeholder = 'Clave Catalogo Maxima' class='form-control' id='maxKeyCIE10' name='maxKeyCIE10' value=''>
+          <input type='text' placeholder = 'Clave Catalogo Maxima' class='form-control input-add-table' id='maxKeyCIE10' name='maxKeyCIE10' value=''>
 
           </div>
       </div>

@@ -47,14 +47,16 @@ $minDateValueAvailable = $activityLogCasosEpidemi-> getFirstDateRecordsActivityL
 
            <!-- Formulario para limitar fecha mediante el Backend -->
           <div class='form-row'>
-            <div class="col-md-2">
-          <input type='date' class='form-control' id='minDateRange' name='minDateRange'
+            <div class="col-md-3">
+          <input type='date' class='form-control input-add-table' id='minDateRange' name='minDateRange'
           min ='<?php echo $minDateValueAvailable; ?>' max = '<?php echo $todayDate; ?>'
           >
           </div>
-          <div class="col-md-2">
-          <input type='date' class='form-control' id='maxDateRange' name='maxDateRange' min ='<?php echo $minDateValueAvailable; ?>' max = '<?php echo $todayDate; ?>'>
-
+          
+          <div class="col-md-3">
+          <input type='date' class='form-control input-add-table' id='maxDateRange' name='maxDateRange' min ='<?php echo $minDateValueAvailable; ?>' max = '<?php echo $todayDate; ?>'>
+          </div>
+          <div class="col-md-3">
           <input type="hidden" name="urlToRequestQuery" id="urlToRequestQuery"  class='form-control' value='<?php echo SERVERURL; ?>ajax/activityLogCasosEpidemiAjax.php'>
          
           <input type='hidden' class='form-control' id='requestedAliasUser' name='requestedAliasUser' value='<?php echo $requestedAliasUser; ?>'>
