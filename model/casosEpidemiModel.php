@@ -366,7 +366,7 @@ if ($dataCasosEpidemi['ifUpdatePerson']) {
 		$sqlQuery->closeCursor();
 
 			$alert=[
-				"Alert"=>"simple",
+				"Alert"=>"clean",
 				"Title"=>"Operacion Exitosa",
 				"Text"=>"Datos del Caso Epidemiologico actualizados",
 				"Type"=>"success",

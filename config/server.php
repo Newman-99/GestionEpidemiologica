@@ -7,7 +7,7 @@ const DB="gestionEpidemi";
 
 const USER = "postgres";
 
-const PASS="password";
+const PASS="dark";
  
 const SGBD = "mysql:host=".SERVER.";dbname=".DB;
 

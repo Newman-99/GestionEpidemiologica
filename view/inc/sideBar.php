@@ -7,7 +7,7 @@
 
       <img class="cp-logo" src= "<?php echo SERVERURL; ?>view/img/cp-logo.png">
     
-      <div class="sidebar-brand-text mx-3 small"><?php echo ORGANIZATION ?></div>
+      <div class="sidebar-brand-text mx-1 small"><?php echo ORGANIZATION ?></div>
       </a>
 
       <!-- Divider -->
@@ -16,7 +16,7 @@
       <!-- Nav Item - Dashboard -->
       <li class="nav-item">
         <a class="nav-link" href="<?php echo SERVERURL; ?>dashboard/">
-          <i class="fas fa-bars"></i>
+          <i class="fas fa-hospital"></i>
           <span>Inicio</span></a>
       </li>
 

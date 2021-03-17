@@ -51,9 +51,7 @@ require_once "../view/inc/spout.php";
 
 $filePath = $files['fileCSVCIE10']['tmp_name'];
 
-var_dump($files);
-
-var_dump($files['fileCSVCIE10']['error']);
+$filePath = '/home/newman/Descargas/cbghc-qr718.csv';
 
 $reader = $ReaderEntityFactory::createCSVReader();
 

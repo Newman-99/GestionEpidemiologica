@@ -212,7 +212,7 @@ Fecha de Nacimiento
           var idCapituloCIE10 = $(this).val();
 
           if(idCapituloCIE10 != ''){
-          setEventCIE10ByidCapituloToFormCaseEpidemi(idCapituloCIE10,actionForAjax);
+          setEventCIE10ByidCapituloToFormCaseEpidemi(idCapituloCIE10);
           }
 
   });
@@ -227,7 +227,7 @@ Fecha de Nacimiento
           var idCapituloCIE10 = $(this).val();
 
           if(idCapituloCIE10 != ''){
-          setEventCIE10ByidCapituloToFormCaseEpidemi(idCapituloCIE10,actionForAjax);
+          setEventCIE10ByidCapituloToFormCaseEpidemi(idCapituloCIE10);
           }
       });
 
@@ -254,11 +254,7 @@ var timeForRequestSearch = "";
     else
     {
       // si esta vacio llenamos con el cap seleccionado
-             setEventCIE10ByidCapituloToFormCaseEpidemi();
-    }
-
-
-});
+             setEventCIE10ByidCapituloToFormCaseEpidemi(idCapituloCIE10);
 
         // llenar select parroquia
   

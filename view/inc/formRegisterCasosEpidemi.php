@@ -281,7 +281,7 @@ load.style.display = "block";
           var idCapituloCIE10 = $(this).val();
 
           if(idCapituloCIE10 != ''){
-          setCIE10ToFormRegisterCaseEpidemByidCapituloAsync(idCapituloCIE10,actionAjaxForCie10);
+          setCIE10ToFormRegisterCaseEpidemByidCapituloAsync(idCapituloCIE10);
           }else{
        load.style.display = "none";
 }
@@ -316,7 +316,7 @@ function searchCIE10forPattern(){
      load.style.display = "none";
 
       // si esta vacio llenamos con el cap seleccionado
-             setCIE10ToFormRegisterCaseEpidemByidCapituloAsync();
+             setCIE10ToFormRegisterCaseEpidemByidCapituloAsync(idCapituloCIE10);
     }
 
     load.style.display = "block";

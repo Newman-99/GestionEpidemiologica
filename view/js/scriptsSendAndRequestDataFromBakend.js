@@ -114,7 +114,7 @@ var load  = document.getElementById("icon-load");
       data:{'valueSearch': valueSearch,
           'idCapituloCIE10':idCapituloCIE10,'getCasesCIE10':true},
      success:function(casesCIE10){
-      //console.log(casesCIE10);
+      console.log(casesCIE10);
       casesCIE10 = JSON.parse(casesCIE10);
       $('#catalogKeyCIE10').empty();
       casesCIE10.forEach(function(casesCIE10){
@@ -127,18 +127,20 @@ var load  = document.getElementById("icon-load");
 
 
 // devolvera datos para el select dinamico
-function setEventCIE10ByidCapituloToFormCaseEpidemi(idCapituloCIE10,actionForAjax){
+async function setEventCIE10ByidCapituloToFormCaseEpidemi(idCapituloCIE10){
 
+  var load  = document.getElementById("icon-load");
 
-var load  = document.getElementById("icon-load");
-    $.ajax({
+   let actionForAjax = server_url+'ajax/cie10DataAjax.php';
+
+   await $.ajax({
       type:'POST',
       url: actionForAjax,
       data:{'idCapituloCIE10':
       idCapituloCIE10,'getCasesCIE10':true,'searchByChapter':true},
       success:function(jsonCasesCIE10){
+      console.log(jsonCasesCIE10);
       casesCIE10 = JSON.parse(jsonCasesCIE10);
-
       $('#catalogKeyCIE10').empty();
       casesCIE10.forEach(function(casesCIE10){
      $('#catalogKeyCIE10').append('<option value='+casesCIE10.catalog_key+'>'+casesCIE10.catalog_key + ' - ' + casesCIE10.nombre + '</option>')
@@ -149,13 +151,14 @@ var load  = document.getElementById("icon-load");
     }
      });
 
+          load.style.display = "none";
+
+
 }
 
 // para ciertos eventos cie-10 con caractaeristicas especiales
 
 function getEspecialAttributesCIE10(){
-
-
   
   var catalog_key = $('#catalogKeyCIE10').val();
 
@@ -172,7 +175,7 @@ load_atrib_especial.style.display = "block";
       url: server_url+'ajax/casosEpidemiAjax.php',
       data:{'catalog_key': catalog_key,'getEspecialAttributes':true},
      success:function(JsonEspecialAttributes){
-      console.log(JsonEspecialAttributes);
+     console.log(JsonEspecialAttributes);
 
 //     $('#id_atrib_especial').append("<option value="+0+">Seleccionar Atributo Especial</option>");
        count = 0;
@@ -191,8 +194,8 @@ load_atrib_especial.style.display = "block";
     
       }
     });
-  }
 
+  }
   }
 
 function getDataActivityLogCasosEpidemiForDataTables(requestedUser,minDateRange,maxDateRange,action){
@@ -215,33 +218,6 @@ function getDataActivityLogCasosEpidemiForDataTables(requestedUser,minDateRange,
                 "bDestroy": true,
     });
 }
-
-
-function addColumnsFilteringDatatables(table){
-
-    $('#dataTable thead tr').clone(true).appendTo( '#dataTable thead' );
-    $('#dataTable thead tr:eq(1) th').each( function (i) {
-        var title = $(this).text();
-        $(this).html( '<input style="width:100%" class="not_order" type="text" placeholder="Buscar" />' );
- 
-        $( 'input', this ).on( 'keyup change', function () {
-            if ( table.column(i).search() !== this.value ) {
-                table
-                    .column(i)
-                    .search( this.value )
-                    .draw();
-            }
-        } );
-    
-        } );
-
-
-}
-
-/*
-            $(".form-control dtsb-data").each(function(){
-              alert($(this).text())
-          })*/
 
 
  function getDataCasosEpidemiForDataTables(parameterPreGetDataTables,action){
@@ -640,13 +616,13 @@ await   Swal.fire({
     });
 
 
+
 if(confirmSendAjax) {
 
-/*
 
-console.log(isBlankBasicPerson,isBlankDataCaseEpidemi,isBlankDocIdentidad);
+//console.log(isBlankBasicPerson,isBlankDataCaseEpidemi,isBlankDocIdentidad);
 
-if (isBlankBasicPerson || isBlankDataCaseEpidemi || isBlankDocIdentidad) {
+if (/*isBlankBasicPerson || isBlankDataCaseEpidemi || isBlankDocIdentidad*/isBlank(catalog_key)) {
 
         var alert = {'Alert': 'simple','Title':'Campos Vacios', 'Text':'Todos los campos del caso epidemiologico son obligatorios','Type':'error'};
 
@@ -657,7 +633,7 @@ if (isBlankBasicPerson || isBlankDataCaseEpidemi || isBlankDocIdentidad) {
 
 
 }
-*/
+/**/
 
 var dataEventCIE10 = await getAttributesEventCIE10(catalog_key);
 

@@ -134,7 +134,7 @@ function getHourForFileExport(){
 async function setCIE10ToFormUpdateCaseEpidemiAsync(clave_capitulo_cie10,catalog_key_cie10,actionAjaxForCie10,id_atrib_especial) {
   try {
     
-    await setEventCIE10ByidCapituloToFormCaseEpidemi(clave_capitulo_cie10,actionAjaxForCie10);
+    await setEventCIE10ByidCapituloToFormCaseEpidemi(clave_capitulo_Cie10);
 
     await setTimeout(function(){ $("#catalogKeyCIE10").val(catalog_key_cie10);}, 500);
 
@@ -156,7 +156,7 @@ async function setCIE10ToFormUpdateCaseEpidemiAsync(clave_capitulo_cie10,catalog
 async function setCIE10ToFormRegisterCaseEpidemByidCapituloAsync(idCapituloCIE10,actionAjaxForCie10) {
   try {
 
-        await  setEventCIE10ByidCapituloToFormCaseEpidemi(idCapituloCIE10,actionAjaxForCie10);
+        await  setEventCIE10ByidCapituloToFormCaseEpidemi(idCapituloCIE10);
 
        await setTimeout(function(){ getEspecialAttributesCIE10()}, 500);
 
