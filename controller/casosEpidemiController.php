@@ -107,7 +107,6 @@
 			$ifDataEmptyIndentityPerson = (mainModel::isDataEmtpy(
 		 $id_nacionalidad,
 		 $doc_identidad) && !$ifNotHaveIdentityDocument || $ifNotHaveIdentityDocument && mainModel::isDataEmtpy($id_person) && $ifExistPerson);
-
 			 
 		if (mainModel::isDataEmtpy(
 		 $catalog_key_cie10,
@@ -702,8 +701,6 @@ array(
 
   try {
 
-//   mainModel::connectDB()->query('drop view caso_epidemi_view');
-
 
 $queryifExistView = mainModel::connectDB()->query("SELECT where EXISTS  ( SELECT FROM information_schema.tables WHERE table_name = 'caso_epidemi_view' ) = true");
 
@@ -1082,6 +1079,8 @@ $writer->save( $editFile );
 
 
 }
+
+
 		public static function getDataTablesEPIController($dataEpi){
 
 		 $startDateRange = mainModel::cleanStringSQL($dataEpi['startDateRange']);
@@ -1105,7 +1104,6 @@ $dataForDataTables = array();
 			$dataRow[] = $agrupacion_epi["orden"];
 
 			$dataRow[] = $agrupacion_epi["enfermedad_evento_epi"];
-
 
 				/// for obtener los datos por ntodos los rango de edades
 			for ($idAgeRange=0; $idAgeRange < count($rangeAgesStart); $idAgeRange++) {
@@ -1815,13 +1813,20 @@ if ($dataCasosEpidemi['doc_identidad'] === 'admin') {
 
 		if ($infAge != "NO" || $supAge != "NO") {
 
-		if (!isset($fecha_nacimiento)) {
+		if ($ifExistPerson) {
 
-		$queryGetIdGeneroPerson = mainModel::connectDB()->query("SELECT date_part('year',age('$fecha_registro', fecha_nacimiento))::int as edad FROM personas WHERE id_nacionalidad = '$id_nacionalidad' AND doc_identidad = '$doc_identidad'");
+			if (isset($id_nacionalidad) && isset($doc_identidad)) {
+		$queryGeAgePerson = mainModel::connectDB()->query("SELECT date_part('year',age('$fecha_registro', fecha_nacimiento))::int as edad FROM personas WHERE id_nacionalidad = '$id_nacionalidad' AND doc_identidad = '$doc_identidad'");
+			}else{
 
-		$ageCaseEpidemi = $queryGetIdGeneroPerson->fetchColumn();
+		$queryGeAgePerson = mainModel::connectDB()->query("SELECT date_part('year',age('$fecha_registro', fecha_nacimiento))::int as edad FROM personas WHERE id_person = '$id_person'");
+
+		}
+		
+		$ageCaseEpidemi = $queryGeAgePerson->fetchColumn();
 
 		}else{
+
 			$fecha_nacimiento = mainModel::cleanStringSQL($fecha_nacimiento);
 
 		$queryGetIdGeneroPerson = mainModel::connectDB()->query("SELECT date_part('year',age('$fecha_registro', '$fecha_nacimiento'))::int as edad");

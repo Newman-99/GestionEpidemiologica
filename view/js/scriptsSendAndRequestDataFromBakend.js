@@ -129,6 +129,8 @@ var load  = document.getElementById("icon-load");
 // devolvera datos para el select dinamico
 async function setEventCIE10ByidCapituloToFormCaseEpidemi(idCapituloCIE10){
 
+//alert(idCapituloCIE10);
+
   var load  = document.getElementById("icon-load");
 
    let actionForAjax = server_url+'ajax/cie10DataAjax.php';
@@ -139,7 +141,7 @@ async function setEventCIE10ByidCapituloToFormCaseEpidemi(idCapituloCIE10){
       data:{'idCapituloCIE10':
       idCapituloCIE10,'getCasesCIE10':true,'searchByChapter':true},
       success:function(jsonCasesCIE10){
-      console.log(jsonCasesCIE10);
+ //     console.log(jsonCasesCIE10);
       casesCIE10 = JSON.parse(jsonCasesCIE10);
       $('#catalogKeyCIE10').empty();
       casesCIE10.forEach(function(casesCIE10){

@@ -957,6 +957,14 @@ if (isset($_GET['minKeyCIE10']) && isset($_GET['maxKeyCIE10']) &&
 
      $maxKeyCIE10 = mainModel::cleanStringSQL($_GET['maxKeyCIE10']);
 
+       $queryGetConsecutivoCIE10 = self::connectDB()->query("SELECT consecutivo from data_cie10 where catalog_key = '".$minKeyCIE10."' LIMIT 1");
+
+       $minConsecutivoCie10 = $queryGetConsecutivoCIE10->fetchColumn();
+
+       $queryGetConsecutivoCIE10 = self::connectDB()->query("SELECT consecutivo from data_cie10 where catalog_key = '".$maxKeyCIE10."' LIMIT 1");
+
+       $maxConsecutivoCie10 = $queryGetConsecutivoCIE10->fetchColumn();
+
      $nameKeyCIE10FieldDB = 'catalog_key_cie10';
 
             if ( $sWhere == "" )

@@ -600,10 +600,6 @@ function updateCasosEpidemi(data){
 
     $("#id_tipo_entrada").val(id_tipo_entrada);
 
-          var actionAjaxForCie10 = $('#actionAjaxForCie10').val();
-
- 
-setCIE10ToFormUpdateCaseEpidemiAsync(clave_capitulo_cie10,catalog_key_cie10,actionAjaxForCie10,id_atrib_especial);
 
 
     
@@ -629,6 +625,10 @@ setCIE10ToFormUpdateCaseEpidemiAsync(clave_capitulo_cie10,catalog_key_cie10,acti
     
     $("#id_parroquia").val(id_parroquia);
 
+
+var actionAjaxForCie10 = $('#actionAjaxForCie10').val();
+
+setCIE10ToFormUpdateCaseEpidemiAsync(clave_capitulo_cie10,catalog_key_cie10,actionAjaxForCie10,id_atrib_especial);
 
     var textMsjAlert = 'Los datos del Caso Epidemiologico seran Modificados';
     

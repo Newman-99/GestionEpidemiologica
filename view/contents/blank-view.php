@@ -1,4 +1,65 @@
-<?php  libxml_disable_entity_loader(false); ?>
+<?php  
+
+
+    $queryGet = $loginController::connectDB()->query('select consecutivo_cie10,id_caso_epidemi,catalog_key_cie10
+      FROM casos_epidemi');
+    
+    while($casos_epidemi=$queryGet->fetch(PDO
+      ::FETCH_ASSOC)){
+
+//       $queryGetCatalogKey = $loginController::connectDB()->query("SELECT catalog_key_cie10 from casos_epidemi where id_caso_epidemi = '".$casos_epidemi["id_caso_epidemi"]."' LIMIT 1");
+
+       $queryGetCatalogKey = $loginController::connectDB()->query("SELECT consecutivo from data_cie10 where catalog_key = '".$casos_epidemi["catalog_key_cie10"]."' LIMIT 1");
+
+      $consecutivoCIE10 = $queryGetCatalogKey->fetchColumn();
+
+      $id_caso_epidemi = $casos_epidemi["id_caso_epidemi"];
+
+       $insertConsecutivoInAgrupacionEpi = "UPDATE casos_epidemi
+                SET consecutivo_cie10 = '$consecutivoCIE10'
+                WHERE id_caso_epidemi = $id_caso_epidemi";
+
+      $loginController::connectDB()->query($insertConsecutivoInAgrupacionEpi);
+  }
+
+exit();
+
+    $queryGetAgrupacionEPI = $loginController::connectDB()->query('select enfermedad_evento_epi, key_cie10_Inicio, key_cie10_final, id_agrupacion 
+      FROM agrupacion_epi');
+    
+    while($agrupacion_epi=$queryGetAgrupacionEPI->fetch(PDO
+      ::FETCH_ASSOC)){
+
+
+       $queryGetConsecutivoInicioCIE10 = $loginController::connectDB()->query("SELECT consecutivo from data_cie10 where catalog_key = '".$agrupacion_epi["key_cie10_inicio"]."' LIMIT 1");
+
+       $queryGetConsecutivoFinalCIE10 = $loginController::connectDB()->query("SELECT consecutivo from data_cie10 where catalog_key = '".$agrupacion_epi["key_cie10_final"]."' LIMIT 1");
+
+
+      $consecutivoInicioCIE10 = $queryGetConsecutivoInicioCIE10->fetchColumn();
+
+      $consecutivoFinalCIE10 = $queryGetConsecutivoFinalCIE10->fetchColumn();
+
+      $id_agrupacion = $agrupacion_epi["id_agrupacion"];
+
+       $insertConsecutivoInAgrupacionEpi = "UPDATE agrupacion_epi
+                SET consecutivo_cie10_inicio = '$consecutivoInicioCIE10', consecutivo_cie10_final = 
+                '$consecutivoFinalCIE10'
+                WHERE id_agrupacion = $id_agrupacion";
+
+      $loginController::connectDB()->query($insertConsecutivoInAgrupacionEpi);
+    }
+
+exit();
+
+
+/*
+       $queryGetConsecutivoOfCatalogKey = mainModel::connectDB()->query("SELECT consecutivo from data_cie10 where catalog_key = '".$$agrupacion_epi["enfermedad_evento_epi"]."' LIMIT 1");
+
+      $consecutivoCIE10 = $queryGetConsecutivoOfCatalogKey->fetchColumn();
+*/
+
+//libxml_disable_entity_loader(false); ?>
 
                   <div class="col-sm-5">
                     <p>Email: </p>

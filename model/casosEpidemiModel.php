@@ -60,7 +60,8 @@ order by atr_esp.id_atrib_especial";
 		 year_registro = :year_registro,
 		 is_hospital = :is_hospital,
 		 id_atrib_especial = :id_atrib_especial, 
-		 id_tipo_entrada = :id_tipo_entrada
+		 id_tipo_entrada = :id_tipo_entrada,
+		 consecutivo_cie10 = :consecutivo_cie10
 		 WHERE id_caso_epidemi = :id_caso_epidemi;";
 
 
@@ -74,6 +75,7 @@ order by atr_esp.id_atrib_especial";
 		 year_registro,
 		 is_hospital,
 		 id_tipo_entrada,
+		 consecutivo_cie10,
 		 id_atrib_especial
 		 ) VALUES (		
 		 :id_person,		 
@@ -85,10 +87,12 @@ order by atr_esp.id_atrib_especial";
 		 :year_registro,
 		 :is_hospital,
 		 :id_tipo_entrada,
+		 :consecutivo_cie10,		 
 		 :id_atrib_especial)";
 
 
-protected static $queryGetAgrupacionEPI =	"SELECT DISTINCT ON (orden) orden, enfermedad_evento_epi, key_cie10_Inicio, key_cie10_final 
+
+protected static $queryGetAgrupacionEPI =	"SELECT DISTINCT ON (orden) orden, enfermedad_evento_epi, key_cie10_Inicio, key_cie10_final, consecutivo_cie10_Inicio, consecutivo_cie10_final 
 			FROM agrupacion_epi order by orden";
 
 
@@ -125,6 +129,7 @@ atr_esp.descripcion atributo_especial,
 				split_part(cie10.capitulo,' ',1) as  capitulo_cie10,
 
 				caso.id_tipo_entrada, entrad_caso.descripcion_tipo_entrada descrip_entrad_caso,
+				caso.consecutivo_cie10,
 
 				isCIE10InmediateNotice(cie10.n_inter,cie10.nin,cie10.ninmtobs,cie10.notdiaria,cie10.sistema_especial,
 				cie10.es_suive_notin,cie10.es_suive_est_epi,cie10.es_suive_est_brote) as notific_inmediata
@@ -206,6 +211,10 @@ atr_esp.descripcion atributo_especial,
 
 		$sqlQuery = $DB_transacc->prepare(self::$queryAddCasosEpidemi);
 
+       $queryGetConsecutivoCIE10 = $DB_transacc->query("SELECT consecutivo from data_cie10 where catalog_key = '".$dataCasosEpidemi["catalog_key_cie10"]."' LIMIT 1");
+
+       $consecutivo_cie10 = $queryGetConsecutivoCIE10->fetchColumn();
+
 			$sqlQuery->execute(array(
 		 "id_person"=>$dataCasosEpidemi['id_person'],
 		 "catalog_key_cie10"=>$dataCasosEpidemi['catalog_key_cie10'],
@@ -216,6 +225,7 @@ atr_esp.descripcion atributo_especial,
 		 "year_registro"=>$dataCasosEpidemi['year_registro'],
 		 "is_hospital"=>$dataCasosEpidemi['is_hospital'],
 		 "id_atrib_especial"=>$dataCasosEpidemi['id_atrib_especial'],
+		 "consecutivo_cie10"=>$consecutivo_cie10,
 		 "id_tipo_entrada"=>$dataCasosEpidemi['id_tipo_entrada']));
 
 			$sqlQuery->closeCursor();
@@ -330,6 +340,10 @@ if ($dataCasosEpidemi['ifUpdatePerson']) {
 		$sqlQuery = $DB_transacc->prepare($sqlQuery);
 
 
+       $queryGetConsecutivoCIE10 = $DB_transacc->query("SELECT consecutivo from data_cie10 where catalog_key = '".$dataCasosEpidemi["catalog_key_cie10"]."' LIMIT 1");
+
+       $consecutivo_cie10 = $queryGetConsecutivoCIE10->fetchColumn();
+
 			$sqlQuery->execute(array(
 		 "id_caso_epidemi" => $dataCasosEpidemi['id_caso_epidemi'],
 		 "catalog_key_cie10" => $dataCasosEpidemi['catalog_key_cie10'],
@@ -340,7 +354,8 @@ if ($dataCasosEpidemi['ifUpdatePerson']) {
 		 "fecha_registro" => $dataCasosEpidemi['fecha_registro'],
 		 "is_hospital"=>$dataCasosEpidemi['is_hospital'],
 		 "id_atrib_especial"=>$dataCasosEpidemi['id_atrib_especial'],
-		 "id_tipo_entrada"=>$dataCasosEpidemi['id_tipo_entrada']
+		 "id_tipo_entrada"=>$dataCasosEpidemi['id_tipo_entrada'],
+		 "consecutivo_cie10"=>$consecutivo_cie10
 		));
 
 
@@ -587,12 +602,10 @@ $tipoEntradaCasoForQuery = " AND id_tipo_entrada = $id_tipo_entrada";
 }
 
 
-
-
 $queryGetDataCIE10ForEPI = "SELECT DISTINCT ON (casos.id_caso_epidemi) 
 casos.id_caso_epidemi
 from agrupacion_epi agrup_epi, casos_epidemi casos,personas pers 
-WHERE casos.catalog_key_cie10 BETWEEN agrup_epi.key_cie10_Inicio AND agrup_epi.key_cie10_final 
+WHERE casos.consecutivo_cie10 BETWEEN agrup_epi.consecutivo_cie10_Inicio AND agrup_epi.consecutivo_cie10_final 
  ".$genreSelededForQuery." ".$ageRangeForQuery."
 AND pers.id_person = casos.id_person ".
 $epiOrderSelededForQuery." AND casos.fecha_registro BETWEEN '$startRegistrationDate' AND '$endRegistrationDate' 
