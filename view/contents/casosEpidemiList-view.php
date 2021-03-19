@@ -80,6 +80,15 @@
           <input type='text' placeholder = 'Clave Catalogo Maxima' class='form-control input-add-table' id='maxKeyCIE10' name='maxKeyCIE10' value=''>
 
           </div>
+
+            <div class="col-md-1">
+             <br>
+
+            <button  class="form-control input-add-table btn btn-info btn-square btn-sm" style="margin-left: 30%;" id='searchInputsRanges' name='searchInputsRanges'>
+                    <i class="fas  fa-search-plus fa-lg"></i>  
+            </button>
+          
+          </div>
       </div>
     </div>  
           <!-- Button trigger modal -->
@@ -244,7 +253,6 @@ requestQueryByActionToAction();
 
  async function  requestQueryByActionToAction(){
 
-
     var url = $('#actionForAjax').val();
     var requestedPersonEpidemi = $('#requestedPersonEpidemi').val();
 
@@ -252,8 +260,7 @@ requestQueryByActionToAction();
 
 // ambos rangos deben poseer valores
 
-
- $('#minDateRange,#maxDateRange').on('keyup change', function () {
+ $('#searchInputsRanges').on('click', function () {
 
     var minDateRange  = $('#minDateRange').val();
     var maxDateRange = $('#maxDateRange').val();
@@ -267,80 +274,33 @@ requestQueryByActionToAction();
     var minAgeRange  = $('#minAgeRange').val();
     var maxAgeRange = $('#maxAgeRange').val();
 
- var parameterPreGetDataTables =
-  '&minDateRange='+minDateRange+
-  '&maxDateRange='+maxDateRange+
-  '&minKeyCIE10='+minKeyCIE10+
-  '&maxKeyCIE10='+maxKeyCIE10+
-  '&minAgeRange='+minAgeRange+
-  '&maxAgeRange='+maxAgeRange;
   
 if (!isBlank(minDateRange) && !isBlank(maxDateRange)) {
-
-return setTimeout(function(){getDataCasosEpidemiForDataTablesAsync(parameterPreGetDataTables,url);}, 1000);
-  
-}
-
-});
-
-
-$('#minAgeRange,#maxAgeRange').on('change keyup', function () {
-
-    var minDateRange  = $('#minDateRange').val();
-    var maxDateRange = $('#maxDateRange').val();
-
-    var minDateRange  = $('#minDateRange').val();
-    var maxDateRange = $('#maxDateRange').val();
-
-    var minKeyCIE10  = $('#minKeyCIE10').val();
-    var maxKeyCIE10 = $('#maxKeyCIE10').val();
-
-    var minAgeRange  = $('#minAgeRange').val();
-    var maxAgeRange = $('#maxAgeRange').val();
-
  var parameterPreGetDataTables =
   '&minDateRange='+minDateRange+
-  '&maxDateRange='+maxDateRange+
-  '&minKeyCIE10='+minKeyCIE10+
-  '&maxKeyCIE10='+maxKeyCIE10+
-  '&minAgeRange='+minAgeRange+
-  '&maxAgeRange='+maxAgeRange;
+  '&maxDateRange='+maxDateRange; 
+}
+
+
 
 
 if (!isBlank(minAgeRange) && !isBlank(maxAgeRange) || isBlank(minAgeRange) && isBlank(maxAgeRange)) {
 
-return setTimeout(function(){getDataCasosEpidemiForDataTablesAsync(parameterPreGetDataTables,url);}, 1000);
-}
-
-});
-
-$('#minKeyCIE10,#maxKeyCIE10').on('keyup', function () {
-
-    var minDateRange  = $('#minDateRange').val();
-    var maxDateRange = $('#maxDateRange').val();
-
-    var minDateRange  = $('#minDateRange').val();
-    var maxDateRange = $('#maxDateRange').val();
-
-    var minKeyCIE10  = $('#minKeyCIE10').val();
-    var maxKeyCIE10 = $('#maxKeyCIE10').val();
-
-    var minAgeRange  = $('#minAgeRange').val();
-    var maxAgeRange = $('#maxAgeRange').val();
-
  var parameterPreGetDataTables =
-  '&minDateRange='+minDateRange+
-  '&maxDateRange='+maxDateRange+
-  '&minKeyCIE10='+minKeyCIE10+
-  '&maxKeyCIE10='+maxKeyCIE10+
   '&minAgeRange='+minAgeRange+
   '&maxAgeRange='+maxAgeRange;
 
+}
+
+
 if (!isBlank(minKeyCIE10) && !isBlank(maxKeyCIE10) || isBlank(minKeyCIE10) && isBlank(maxKeyCIE10)) {
 
-return setTimeout(function(){getDataCasosEpidemiForDataTablesAsync(parameterPreGetDataTables,url);}, 1000);
-  
+ var parameterPreGetDataTables =
+  '&minKeyCIE10='+minKeyCIE10+
+  '&maxKeyCIE10='+maxKeyCIE10; 
 }
+
+return  getDataCasosEpidemiForDataTablesAsync(parameterPreGetDataTables,url);
 
 });
 
@@ -362,9 +322,9 @@ $('#minDateRange').val(minDateRangeDefaulPHP)
 $('#maxDateRange').val(maxDateAllowedPHP)
 
  var parameterPreGetDataTables ='&minDateRange='+minDateRangeDefaulPHP+'&maxDateRange='+maxDateAllowedPHP;
-
-
-return getDataCasosEpidemiForDataTablesAsync(parameterPreGetDataTables,url);
+    
+    return  getDataCasosEpidemiForDataTablesAsync(parameterPreGetDataTables,url);
+  
 
 }
 

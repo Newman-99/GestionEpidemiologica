@@ -179,6 +179,7 @@ async function setCIE10ToFormRegisterCaseEpidemBySearchPatternAsync(valueSearch,
 
 async function getDataCasosEpidemiForDataTablesAsync(parameterPreGetDataTables,action) {
   try {
+
         await  getDataCasosEpidemiForDataTables(parameterPreGetDataTables,action);
 
   document.getElementById("btn-ver-menos").style.display = "none"

@@ -19,19 +19,27 @@
 
             <div class='card-body'>
 
-                          <div class="col-md-3">
-          <input type='text' placeholder = 'Clave Catalogo Minima' class='form-control' id='minKeyCIE10' name='minKeyCIE10' value=''>
 
-          <input type='text' placeholder = 'Clave Catalogo Maxima' class='form-control' id='maxKeyCIE10' name='maxKeyCIE10' value=''>
+   <div class='input-table'>
+        <div class="form-row">
+           
+        <div class="col-md-3">
+          <input type='text' placeholder = 'Clave Catalogo Minima' class='form-control input-add-table' id='minKeyCIE10' name='minKeyCIE10' value=''>
+
+          <input type='text' placeholder = 'Clave Catalogo Maxima' class='form-control input-add-table' id='maxKeyCIE10' name='maxKeyCIE10' value=''>
             <br>
-            </div>
+        </div>
 
-          
-          <div class="col-md-7">
+      </div>
+
+
+        <div class="form-row">
+
+          <div class="col-md-6">
 
 
             <!-- start form to limit query-->
-          <select name='idCapitulo' id='idCapitulo' class="form-control" autocomplete='on' class="form-control" >
+          <select name='idCapitulo' id='idCapitulo' class="form-control input-add-table" autocomplete='on' >
 
             <option  value='01'>I CIERTAS ENFERMEDADES INFECCIOSAS Y PARASITARIAS</option>
 
@@ -82,9 +90,13 @@
             <option value="">TODOS</option>
         </select>
             <!-- Final form to limit query-->
-<br>
+  </div>
 
 </div>
+
+   </div>
+
+
 
               <div class='table-responsive'>
 
@@ -759,16 +771,19 @@ $('#minKeyCIE10,#maxKeyCIE10').on('keyup', function () {
     '&idCapitulo='+idCapitulo;
 
 
-if (!isBlank(minKeyCIE10) && !isBlank(maxKeyCIE10)) {
+if (!isBlank(minKeyCIE10) && !isBlank(maxKeyCIE10) || isBlank(minKeyCIE10) && isBlank(maxKeyCIE10)) {
 
-return setTimeout(function(){getDataCIE10CatalogForDataTables(url,parameterPreGetDataTables);}, 1000);
-  
+let timerID;
+
+function setTimer() {
+  clearTimeout(timerID)
+  timerID = setTimeout(() => {
+  getDataCIE10CatalogForDataTables(url,parameterPreGetDataTables);
+  }, 2000)
+}  
 }
 
-if (isBlank(minKeyCIE10) && isBlank(maxKeyCIE10)) {
-
-return setTimeout(function(){getDataCIE10CatalogForDataTables(url,parameterPreGetDataTables);}, 1000);  
-}
+setTimer();
 
 });
 

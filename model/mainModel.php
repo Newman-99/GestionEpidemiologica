@@ -953,9 +953,9 @@ if (isset($_GET['minAgeRange']) && isset($_GET['maxAgeRange']) &&
 if (isset($_GET['minKeyCIE10']) && isset($_GET['maxKeyCIE10']) &&
   !empty($_GET['minKeyCIE10']) && !empty($_GET['maxKeyCIE10']) ) {
 
-     $minKeyCIE10 = mainModel::cleanStringSQL($_GET['minKeyCIE10']);
+     $minKeyCIE10 = strtoupper(mainModel::cleanStringSQL($_GET['minKeyCIE10']));
 
-     $maxKeyCIE10 = mainModel::cleanStringSQL($_GET['maxKeyCIE10']);
+     $maxKeyCIE10 = strtoupper(mainModel::cleanStringSQL($_GET['maxKeyCIE10']));
 
        $queryGetConsecutivoCIE10 = self::connectDB()->query("SELECT consecutivo from data_cie10 where catalog_key = '".$minKeyCIE10."' LIMIT 1");
 
@@ -965,7 +965,12 @@ if (isset($_GET['minKeyCIE10']) && isset($_GET['maxKeyCIE10']) &&
 
        $maxConsecutivoCie10 = $queryGetConsecutivoCIE10->fetchColumn();
 
-     $nameKeyCIE10FieldDB = 'catalog_key_cie10';
+     $nameKeyCIE10FieldDB = 'consecutivo_cie10';
+
+     if (mainModel::isDataEmtpy($minConsecutivoCie10,$maxConsecutivoCie10)) {
+     		$minConsecutivoCie10 = 0;
+     		$maxConsecutivoCie10 = 0;
+     }
 
             if ( $sWhere == "" )
             {
@@ -975,7 +980,7 @@ if (isset($_GET['minKeyCIE10']) && isset($_GET['maxKeyCIE10']) &&
             {
                 $sWhere .= " AND ";
             }
-      $sWhere.= $nameKeyCIE10FieldDB." BETWEEN '$minKeyCIE10' AND '$maxKeyCIE10'";
+      $sWhere.= $nameKeyCIE10FieldDB." BETWEEN '$minConsecutivoCie10' AND '$maxConsecutivoCie10'";
        }
        
 
