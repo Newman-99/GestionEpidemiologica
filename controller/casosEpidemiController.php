@@ -701,6 +701,7 @@ array(
 
   try {
 
+//    mainModel::connectDB()->query('drop view caso_epidemi_view');
 
 $queryifExistView = mainModel::connectDB()->query("SELECT where EXISTS  ( SELECT FROM information_schema.tables WHERE table_name = 'caso_epidemi_view' ) = true");
 
@@ -843,7 +844,6 @@ $queryifExistView = mainModel::connectDB()->query("SELECT where EXISTS  ( SELECT
     }
 
 
-   // mainModel::connectDB()->query('drop view caso_epidemi_view');
 /*
 header("Content-type: application/json; charset=utf-8");
 echo json_encode($dataToCreateDataTable,JSON_UNESCAPED_UNICODE);

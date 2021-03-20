@@ -924,15 +924,15 @@ var_dump($_GET['sSearch_'.$i]);
        }
 
 
-if (isset($_GET['minAgeRange']) && isset($_GET['maxAgeRange']) &&
-    !self::isDataEmtpyPermitedZero($_GET['minAgeRange']) && !empty($_GET['maxAgeRange']) ) {
+
+if (isset($_GET['minAgeRange']) && isset($_GET['maxAgeRange']) && !self::isDataEmtpyPermitedZero($_GET['minAgeRange']) && !self::isDataEmtpyPermitedZero($_GET['maxAgeRange']) ) {
 
 
      $minAgeRange = mainModel::cleanStringSQL($_GET['minAgeRange']);
 
      $maxAgeRange = mainModel::cleanStringSQL($_GET['maxAgeRange']);
 
-     $nameAgeFieldDB = 'edad';
+     $nameAgeFieldDB = 'edadINT';
 
             if ( $sWhere == "" )
             {
@@ -942,11 +942,11 @@ if (isset($_GET['minAgeRange']) && isset($_GET['maxAgeRange']) &&
             {
                 $sWhere .= " AND ";
             }
-      $sWhere.= $nameAgeFieldDB." BETWEEN '$minAgeRange' AND '$maxAgeRange'";
-/*
-       var_dump ($sWhere);
-       exit();
-*/
+      $sWhere.= $nameAgeFieldDB." BETWEEN $minAgeRange AND $maxAgeRange";
+
+     //var_dump ($sWhere);
+      //exit();
+
        }
        
 

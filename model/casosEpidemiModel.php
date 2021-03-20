@@ -111,6 +111,9 @@ atr_esp.descripcion atributo_especial,
 				casos_bit.bitacora_hora, 
 
 			    pers.nombres, pers.apellidos, pers.fecha_nacimiento,pers.id_genero,
+
+					date_part('year',age(caso.fecha_registro,pers.fecha_nacimiento))::INT as edadINT,
+
 					get_age(caso.fecha_registro, pers.fecha_nacimiento) as edad,
 
 				pers.id_person id_person_caso,

@@ -276,7 +276,7 @@ requestQueryByActionToAction();
 
   
 if (!isBlank(minDateRange) && !isBlank(maxDateRange)) {
- var parameterPreGetDataTables =
+  parameterPreGetDataTables+=
   '&minDateRange='+minDateRange+
   '&maxDateRange='+maxDateRange; 
 }
@@ -285,8 +285,7 @@ if (!isBlank(minDateRange) && !isBlank(maxDateRange)) {
 
 
 if (!isBlank(minAgeRange) && !isBlank(maxAgeRange) || isBlank(minAgeRange) && isBlank(maxAgeRange)) {
-
- var parameterPreGetDataTables =
+  parameterPreGetDataTables+=
   '&minAgeRange='+minAgeRange+
   '&maxAgeRange='+maxAgeRange;
 
@@ -295,7 +294,7 @@ if (!isBlank(minAgeRange) && !isBlank(maxAgeRange) || isBlank(minAgeRange) && is
 
 if (!isBlank(minKeyCIE10) && !isBlank(maxKeyCIE10) || isBlank(minKeyCIE10) && isBlank(maxKeyCIE10)) {
 
- var parameterPreGetDataTables =
+  parameterPreGetDataTables+=
   '&minKeyCIE10='+minKeyCIE10+
   '&maxKeyCIE10='+maxKeyCIE10; 
 }
