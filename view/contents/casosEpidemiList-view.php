@@ -313,7 +313,7 @@ var currentDate = new Date;
 // para pasar de formato js a aaaa-mm-dd de PHP
 var maxDateAllowedPHP = currentDate.toISOString().split('T')[0];
 
-var minDateRangeDefault = addOrRemoveDaysToDate(currentDate,7,false);
+var minDateRangeDefault = addOrRemoveDaysToDate(currentDate,31,false);
 
 var minDateRangeDefaulPHP = minDateRangeDefault.toISOString().split('T')[0];
 

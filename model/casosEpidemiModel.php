@@ -21,7 +21,7 @@ AND atr_esp.key_cie10_final
 AND cie10.catalog_key = :catalog_key
 order by atr_esp.id_atrib_especial";
 
-				protected static $queryAddBitacoraCasoEpidemi = "INSERT INTO public.casos_epidemi_bitacora(
+				public static $queryAddBitacoraCasoEpidemi = "INSERT INTO public.casos_epidemi_bitacora(
 		 id_person_usuario,
 		 id_person_caso,
 		 usuario_alias,
@@ -308,44 +308,111 @@ atr_esp.descripcion atributo_especial,
 	try {
 
 
-if ($dataCasosEpidemi['ifUpdatePerson']) {
-	
-		$sqlQuery  = personModel::stringQueryUpdatePersonModel();
+if ($dataCasosEpidemi['ifIdentityDocumentIsRepeatedInOtherPersons'] == true) {
 
-		$sqlQuery = $DB_transacc->prepare($sqlQuery);
+ 	
+foreach ($dataCasosEpidemi['idsCaseEpidemiOtherCaseSameDocumentIdentity']  as  $idsCaseEpidemiOtherCaseSameDocumentIdentity) {
+
+
+		$sqlQuery = $DB_transacc->prepare("UPDATE casos_epidemi  SET 
+		 id_person = :id_person
+		 WHERE id_caso_epidemi = :id_caso_epidemi;");
 
 		 $sqlQuery->execute(array(
 		 "id_person"=>$dataCasosEpidemi['id_person'],
-		 "id_nacionalidad"=>$dataCasosEpidemi['id_nacionalidad'],
-		 "doc_identidad"=>$dataCasosEpidemi['doc_identidad'],
-		 "nombres"=>$dataCasosEpidemi['nombres'],
-		 "apellidos"=>$dataCasosEpidemi['apellidos'],
-		 "fecha_nacimiento"=>$dataCasosEpidemi['fecha_nacimiento'],
-		 "id_nacionalidad"=>$dataCasosEpidemi['id_nacionalidad'],
-		 "id_genero"=>$dataCasosEpidemi['id_genero']));
+		 "id_caso_epidemi"=>$idsCaseEpidemiOtherCaseSameDocumentIdentity));
+
 
 		$sqlQuery->closeCursor();
-		}		
 
 
-		if ($dataCasosEpidemi['is_hospital'] == true) {
-		$dataCasosEpidemi['is_hospital'] = 'true';
-		}		
 
-		if ($dataCasosEpidemi['is_hospital'] == false) {
-		$dataCasosEpidemi['is_hospital'] = 'false';
+}
+
+foreach ($dataCasosEpidemi['idsPersonsOtherCaseSameDocumentIdentity'] as $idsPersonsOtherCaseSameDocumentIdentity) {
+
+
+		$sqlQuery = $DB_transacc->query("SELECT alias FROM usuarios WHERE id_person = $idsPersonsOtherCaseSameDocumentIdentity;");
+
+
+		if ($sqlQuery->rowCount()) {
+
+		$sqlQuery = $DB_transacc->prepare("UPDATE  usuarios 
+			set  id_person = :id_person_new WHERE id_person = :id_person_usuario;");
+
+		 $sqlQuery->execute(array(
+		 "id_person_new"=>$dataCasosEpidemi['id_person'],
+		 "id_person_usuario"=>$idsPersonsOtherCaseSameDocumentIdentity
+		));
+
+
+		$sqlQuery->closeCursor();
+			
 		}
-				
+		
 
-		// actualizar como caso epidemiologivo
-		$sqlQuery = self::$queryUpdateCasoEpidemi;
+		$sqlQuery = $DB_transacc->prepare("DELETE FROM personas 
+			WHERE id_person = :id_person;");
 
-		$sqlQuery = $DB_transacc->prepare($sqlQuery);
+		 $sqlQuery->execute(array(
+		 "id_person"=>$idsPersonsOtherCaseSameDocumentIdentity));
+
+		$sqlQuery->closeCursor();
+
+
+}
+
+
+foreach ($dataCasosEpidemi['datasOthersCasesBitacoras'] as $dataBitacoraOtherCaseSameDocumentIdentity) {
+		$sqlQuery = $DB_transacc->prepare(self::$queryAddBitacoraCasoEpidemi);
+
+			$sqlQuery->execute(array(
+		 "id_person_caso"=>$dataBitacoraOtherCaseSameDocumentIdentity['id_person'],
+		 "id_person_usuario"=>$dataBitacoraOtherCaseSameDocumentIdentity['id_person_usuario'],
+		 "usuario_alias"=>$dataBitacoraOtherCaseSameDocumentIdentity['usuario_alias'],
+		 "bitacora_fecha"=>$dataBitacoraOtherCaseSameDocumentIdentity['bitacora_fecha'],
+		 "bitacora_hora"=>$dataBitacoraOtherCaseSameDocumentIdentity['bitacora_hora'],
+		 "bitacora_year"=>$dataBitacoraOtherCaseSameDocumentIdentity['bitacora_year'],
+		 "id_tipo_operacion"=>$dataBitacoraOtherCaseSameDocumentIdentity['id_tipo_operacion'],
+		 "id_caso_epidemi"=>$dataBitacoraOtherCaseSameDocumentIdentity['id_caso_epidemi'],
+		 "fecha_caso_epidemi"=>$dataBitacoraOtherCaseSameDocumentIdentity['fecha_registro'],
+		 "catalog_key_cie10"=>$dataBitacoraOtherCaseSameDocumentIdentity['catalog_key_cie10'],
+		 "id_nacionalidad_caso"=>$dataBitacoraOtherCaseSameDocumentIdentity['id_nacionalidad_caso'],
+		 "doc_identidad_caso"=>$dataBitacoraOtherCaseSameDocumentIdentity['doc_identidad_caso'],
+		 "is_hospital"=>$dataBitacoraOtherCaseSameDocumentIdentity['is_hospital']));
+
+		$sqlQuery->closeCursor();
+
+/*			self::msgValidNotRepeatCasoEpidemi($dataBitacoraOtherCaseSameDocumentIdentity);
+
+			self::msgValidInputTypeCasosEpidemiModel($dataBitacoraOtherCaseSameDocumentIdentity['id_tipo_entrada'],
+				$dataBitacoraOtherCaseSameDocumentIdentity['id_caso_epidemi'],
+				$dataCasosEpidemi['id_caso_epidemi'],$dataBitacoraOtherCaseSameDocumentIdentity['id_person'],$dataBitacoraOtherCaseSameDocumentIdentity['catalog_key_cie10'],
+				$dataBitacoraOtherCaseSameDocumentIdentity['indicatorEpidemiCaseError']);
+*/
+}
+
+/*
+			self::msgValidInputTypeCasosEpidemiModel($dataCasosEpidemi['id_tipo_entrada'],$dataCasosEpidemi['id_caso_epidemi'],
+				"",$dataCasosEpidemi['id_person'],$dataCasosEpidemi['catalog_key_cie10'],
+				$dataCasosEpidemi['indicatorEpidemiCaseError']);
+
+*/
+
+}
 
 
        $queryGetConsecutivoCIE10 = $DB_transacc->query("SELECT consecutivo from data_cie10 where catalog_key = '".$dataCasosEpidemi["catalog_key_cie10"]."' LIMIT 1");
 
        $consecutivo_cie10 = $queryGetConsecutivoCIE10->fetchColumn();
+
+
+		// actualizar como caso epidemiologivo
+
+		$sqlQuery = self::$queryUpdateCasoEpidemi;
+
+
+		$sqlQuery = $DB_transacc->prepare($sqlQuery);
 
 			$sqlQuery->execute(array(
 		 "id_caso_epidemi" => $dataCasosEpidemi['id_caso_epidemi'],
@@ -363,6 +430,28 @@ if ($dataCasosEpidemi['ifUpdatePerson']) {
 
 
 		$sqlQuery->closeCursor();
+
+
+if ($dataCasosEpidemi['ifUpdatePerson']) {
+	
+		$sqlQuery  = personModel::stringQueryUpdatePersonModel();
+
+		$sqlQuery = $DB_transacc->prepare($sqlQuery);
+
+		 $sqlQuery->execute(array(
+		 "id_person"=>$dataCasosEpidemi['id_person'],
+		 "id_nacionalidad"=>$dataCasosEpidemi['id_nacionalidad'],
+		 "doc_identidad"=>$dataCasosEpidemi['doc_identidad'],
+		 "nombres"=>$dataCasosEpidemi['nombres'],
+		 "apellidos"=>$dataCasosEpidemi['apellidos'],
+		 "fecha_nacimiento"=>$dataCasosEpidemi['fecha_nacimiento'],
+		 "id_nacionalidad"=>$dataCasosEpidemi['id_nacionalidad'],
+		 "id_genero"=>$dataCasosEpidemi['id_genero']));
+
+		$sqlQuery->closeCursor();
+
+		}		
+				
 
 		$sqlQuery = $DB_transacc->prepare(self::$queryAddBitacoraCasoEpidemi);
 
@@ -383,6 +472,7 @@ if ($dataCasosEpidemi['ifUpdatePerson']) {
 
 		$sqlQuery->closeCursor();
 
+
 			$alert=[
 				"Alert"=>"clean",
 				"Title"=>"Operacion Exitosa",
@@ -392,7 +482,10 @@ if ($dataCasosEpidemi['ifUpdatePerson']) {
 
 			];
 
-		  	$DB_transacc->commit();
+
+			$DB_transacc->commit();
+
+		  	//$DB_transacc->commit();
 
 			}catch (Exception $e) {
 
@@ -409,6 +502,24 @@ if ($dataCasosEpidemi['ifUpdatePerson']) {
 		}
 
 			return json_encode($alert);
+
+		}
+
+
+
+	protected static function msgValidNotRepeatCasoEpidemi($dataCasosEpidemi){
+
+	extract($dataCasosEpidemi);
+
+
+			$queryIdentifyPerson = 'id_person ='.$id_person;
+
+	$queryForOperationsUpdateCaseEpidemi = '';
+	if (isset($id_caso_epidemi)) {
+		$queryForOperationsUpdateCaseEpidemi = ' AND id_caso_epidemi != '.$id_caso_epidemi;
+	}
+
+		return $queryIsExistcasosEpidemi = "SELECT id_caso_epidemi FROM casos_epidemi WHERE ".$queryIdentifyPerson." AND catalog_key_cie10 = '$catalog_key_cie10' AND fecha_registro = '$fecha_registro' ".$queryForOperationsUpdateCaseEpidemi;
 
 		}
 
@@ -523,7 +634,42 @@ if ($dataCasosEpidemi['ifUpdatePerson']) {
 
 		}
 
+			 public static function msgValidInputTypeCasosEpidemiModel($id_tipo_entrada,$id_caso_epidemi,$id_caso_epidemi_current,$id_person,$catalog_key_cie10,$indicatorEpidemiCaseError){
 
+	// si se envia susesivo no hace falta
+				$countCasosEpidemiPrimerizoPerPerson = 0;
+
+			if ($id_tipo_entrada == 1) {
+
+			$queryIdentifyPerson = 'id_person ='.$id_person;
+
+
+			$queryForOperationsUpdateCaseEpidemi = ' AND id_caso_epidemi != '.$id_caso_epidemi;
+
+			if (!empty($id_caso_epidemi_current)) {
+			$queryForOperationsUpdateCaseEpidemi.=' AND id_caso_epidemi != '.$id_caso_epidemi_current;
+			}
+							
+				$queryIsExistcasosEpidemiPrimerizo = mainModel::connectDB()->query("SELECT id_caso_epidemi FROM casos_epidemi WHERE ".$queryIdentifyPerson." AND catalog_key_cie10 = '$catalog_key_cie10' AND id_tipo_entrada = 1 ".$queryForOperationsUpdateCaseEpidemi);
+
+				$countCasosEpidemiPrimerizoPerPerson = $queryIsExistcasosEpidemiPrimerizo->rowCount();
+				
+			}
+
+			if($countCasosEpidemiPrimerizoPerPerson){
+			$alert=[
+				"Alert"=>"simple",
+				"Title"=>"Datos Duplicados",
+				"Text"=>"Ya esta registrado un Caso Epidemiologico Primerizo con este Evento CIE-10".$indicatorEpidemiCaseError,
+				"Type"=>"error"
+			];
+
+				echo json_encode($alert);
+
+				exit();
+			}
+
+			}
 
 	protected static function getCasosEpidemiModel($table,$columnsTable,$attributesFilter,$filterValues){
 			

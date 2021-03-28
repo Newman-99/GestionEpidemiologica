@@ -288,3 +288,4 @@ function getMsgWarningAttributesEventCIE10(dataEventCIE10){
 return dataEventCIE10;
 
 }
+

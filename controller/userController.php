@@ -1,5 +1,10 @@
 	<?php 
+
 		// para colaboracion de objetos
+		// para simular la herencia mediante colaboracion de objetos
+
+		require_once "casosEpidemiController.php";
+
 		require_once "personController.php";
 
 	if($requestAjax){
@@ -13,10 +18,14 @@
 		
 		public static $personController;
 
+		public static $casosEpidemiController;
+
 		function __construct()
 			{
 
 			self::$personController = new personController();
+
+			self::$casosEpidemiController = new casosEpidemiController();
 		}
 
 		public function addUserController($dataUser){
@@ -528,7 +537,9 @@ if ($_SESSION['id_nivel_permiso'] == 3){
 
 		 	$userDataTocomparedWithDatabase["id_nivel_permiso"] = $id_nivel_permiso;
 		$columnsTableToCompare[]="id_nivel_permiso";
+
 		}
+
 
 		// isset cuando el id_estado no se muestra en form por seguridad
 
@@ -571,6 +582,95 @@ if ($_SESSION['id_nivel_permiso'] == 3){
 				exit();
 
 			}
+
+
+
+			// si cambiamos los datos personales y tiene un caso epidemiologico asignado, entonces
+			// registramos una bitacora con el ultimo id_caso_epidemi
+			 
+			if ($dataPerson['ifUpdatePerson']){
+
+
+	$queryifExistView = mainModel::connectDB()->query("SELECT where EXISTS  ( SELECT FROM information_schema.tables WHERE table_name = 'caso_epidemi_view' ) = true");
+
+				if(!$queryifExistView->rowCount()){
+	    
+	    		mainModel::connectDB()->query(self::$casosEpidemiController::$queryCreateViewCasosEpidemi);
+				
+				}
+
+		$queryLastEpidemiCaseAssignedToUser = mainModel::connectDB()->query("SELECT id_caso_epidemi,id_person_caso,fecha_registro,catalog_key_cie10,is_hospital,fecha_nacimiento, id_genero,id_tipo_entrada FROM caso_epidemi_view WHERE 
+			id_person_caso = $id_person ORDER BY id_caso_epidemi ASC");
+
+
+			if ($queryLastEpidemiCaseAssignedToUser->rowCount()){
+
+
+				$currentDate =  mainModel::getDateCurrentSystem();
+
+				$currentYear = date("Y", strtotime($currentDate));
+
+				$currentHour = date("h:i:s a", strtotime($currentDate));
+
+				$currentDate = date("Y-m-d", strtotime($currentDate));
+
+
+		while($dataLastEpidemiCaseAssignedToUser=$queryLastEpidemiCaseAssignedToUser->fetch(PDO
+			::FETCH_ASSOC)){
+
+			// data para registro de bitcora
+	
+    			$idsCaseEpidemiOtherCaseSameDocumentIdentity[] = $dataLastEpidemiCaseAssignedToUser['id_caso_epidemi'];
+
+    			$idsPersonsOtherCaseSameDocumentIdentity[] = $dataLastEpidemiCaseAssignedToUser['id_person_caso'];
+
+		if ($dataLastEpidemiCaseAssignedToUser['is_hospital'] == true) {
+		$dataLastEpidemiCaseAssignedToUser['is_hospital'] = 'true';
+		}		
+
+		if ($dataLastEpidemiCaseAssignedToUser['is_hospital'] == false) {
+		$dataLastEpidemiCaseAssignedToUser['is_hospital'] = 'false';
+		}
+
+
+			$dataBitacoraLastCaseEpidemiAssignUser = array(
+		 "indicatorEpidemiCaseError"=> '<br>En el Caso Epidemiologico ID: '.$dataLastEpidemiCaseAssignedToUser['id_caso_epidemi'],
+		 "id_person"=>$id_person,
+		 "id_person_caso"=>$id_person,
+		 "id_person_usuario"=>$_SESSION['id_person'],
+		 "usuario_alias"=>$_SESSION['aliasUser'],
+			"bitacora_fecha"=>$currentDate,
+			"bitacora_year"=>$currentYear,
+			"bitacora_hora"=>$currentHour,
+		"id_tipo_operacion"=>'2', // tipo Actualizacion
+		 "id_caso_epidemi"=>$dataLastEpidemiCaseAssignedToUser['id_caso_epidemi'],
+		 "fecha_caso_epidemi"=>$dataLastEpidemiCaseAssignedToUser['fecha_registro'],
+		 "fecha_registro"=>$dataLastEpidemiCaseAssignedToUser['fecha_registro'],
+		 "fecha_nacimiento"=>$fecha_nacimiento,
+		 "id_genero"=>$id_genero,
+		 "catalog_key_cie10"=>$dataLastEpidemiCaseAssignedToUser['catalog_key_cie10'],
+		 "ifNotHaveIdentityDocument"=>FALSE,
+		 "id_tipo_entrada"=>$dataLastEpidemiCaseAssignedToUser['id_tipo_entrada'],
+		 "id_nacionalidad_caso"=>$id_nacionalidad,
+		 "doc_identidad_caso"=>$doc_identidad,
+		 "is_hospital"=>$dataLastEpidemiCaseAssignedToUser['is_hospital']);
+	
+
+			self::$casosEpidemiController::msgValididGenreAssingnEventCIE10($dataBitacoraLastCaseEpidemiAssignUser);
+
+			self::$casosEpidemiController::msgValididAgeAssingnEventCIE10($dataBitacoraLastCaseEpidemiAssignUser);
+
+
+			}
+
+		// solo el ultimo array de la bitacora se tomara en cuenta
+
+		$dataPerson['dataBitacoraLastCaseEpidemiAssignUser'] = $dataBitacoraLastCaseEpidemiAssignUser;
+
+
+			}
+
+		}
 
 			echo userModel::updateUserModel($userValuesUpdate,$userAttributesUpdate,$dataPerson);
 			}

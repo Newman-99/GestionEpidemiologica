@@ -482,7 +482,25 @@ if (!$ifNotHaveIdentityDocument){
 			}
 	}
 
-	protected static function msgValidiFieldsBasicPersona($dataPerson){
+	public static function ifIdentityDocumentIsRepeatedInOtherPersons($dataPerson){
+
+		 $doc_identidad = mainModel::cleanStringSQL($dataPerson['doc_identidad']);
+		 
+		 $id_nacionalidad = mainModel::cleanStringSQL($dataPerson['id_nacionalidad']);
+
+		 $id_person = mainModel::cleanStringSQL($dataPerson['id_person']);
+
+						$queryGetifIdentityDocumentIsRepeatedInOtherPersons = mainModel::connectDB()->query("select doc_identidad,id_nacionalidad from personas where doc_identidad = '$doc_identidad'
+							AND id_nacionalidad = $id_nacionalidad AND id_person != $id_person /*limit 1*/");
+
+
+						return $queryGetifIdentityDocumentIsRepeatedInOtherPersons->rowCount();
+
+					
+						}
+
+
+	public static function msgValidiFieldsBasicPersona($dataPerson){
 
 
 extract($dataPerson);

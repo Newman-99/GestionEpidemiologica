@@ -687,7 +687,7 @@ protected static function deleteBitacora($usuario_alias){
 }
 
 
-	protected static function querySelectsCreator($table,$columnsTable,$attributesFilter,$filterValues){
+	public static function querySelectsCreator($table,$columnsTable,$attributesFilter,$filterValues){
 			
 
 	   $where = '';
@@ -713,7 +713,7 @@ protected static function deleteBitacora($usuario_alias){
 	
 // Comrpueba que un conjuntos de campos enviados comparar tienen los mismo valores a los registrados en la base de datos
 
-protected static function isFieldsEqualToThoseInTheDatabase($queryToGet,$fieldstoCompare){
+public static function isFieldsEqualToThoseInTheDatabase($queryToGet,$fieldstoCompare){
 
  		$queryToGet->execute();
 
@@ -726,7 +726,7 @@ protected static function isFieldsEqualToThoseInTheDatabase($queryToGet,$fieldst
  		foreach ($records as $databaseKey => $databaseValue) {
  			$counterFieldsToCompare++;
  				// si encuentra uno diferente los datos no son iguales
- 				
+
 				if (strcmp($databaseValue,$fieldstoCompare[$databaseKey])!=0) {
 
 				$matchCounterDatabaseFields++;

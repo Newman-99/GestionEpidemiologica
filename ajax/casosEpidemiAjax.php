@@ -54,9 +54,13 @@ if (isset($_POST['operationType']) && $_POST['operationType'] == "register"){
      $casosEpidemiController->getReportCompleteEPIController($_POST);
 
 
+		}elseif($_POST['operationType'] == "ifIdentityDocumentIsRepeatedInOtherPersons") {
+
+     $casosEpidemiController->ifIdentityDocumentIsRepeatedInOtherPersonsCasosEpidemiController($_POST);
+
 
 		} else { 
-			$casosEpidemiController->forceClosureController();
+			//$casosEpidemiController->forceClosureController();
 	}
 
 	

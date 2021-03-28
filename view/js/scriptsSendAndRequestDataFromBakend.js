@@ -114,7 +114,7 @@ var load  = document.getElementById("icon-load");
       data:{'valueSearch': valueSearch,
           'idCapituloCIE10':idCapituloCIE10,'getCasesCIE10':true},
      success:function(casesCIE10){
-      console.log(casesCIE10);
+//      console.log(casesCIE10);
       casesCIE10 = JSON.parse(casesCIE10);
       $('#catalogKeyCIE10').empty();
       casesCIE10.forEach(function(casesCIE10){
@@ -535,20 +535,47 @@ try{
 
 var fieldsFormForValidate = [];
 
-     var fecha_registro = document. getElementById('fecha_registro').value;
+     var fecha_registro = document.getElementById('fecha_registro').value;
 
-     var id_parroquia = document. getElementById('id_parroquia').value;
+     var id_parroquia = document.getElementById('id_parroquia').value;
 
-     var direccion = document. getElementById('direccion').value;
+     var direccion = document.getElementById('direccion').value;
         
-     var telefonoPart1 = document. getElementById('telefonoPart1').value;
+     var telefonoPart1 = document.getElementById('telefonoPart1').value;
 
-     var telefonoPart2 = document. getElementById('telefonoPart1').value;
+     var telefonoPart2 = document.getElementById('telefonoPart1').value;
 
-     var telefonoPart3 = document. getElementById('telefonoPart3').value;
+     var telefonoPart3 = document.getElementById('telefonoPart3').value;
 
     var catalog_key = document.getElementById("catalogKeyCIE10").value;
 
+var ifIdentityDocumentIsRepeatedInOtherPersons = 0;
+
+//  alert(getElementById('ifNotHaveIdentityDocument').checked);
+
+    var id_nacionalidad = '';
+
+    var doc_identidad = '';
+
+  if (!document.getElementById('ifNotHaveIdentityDocument').checked) {
+    var id_nacionalidad = document.getElementById('id_nacionalidad').value;
+
+    var doc_identidad = document.getElementById('doc_identidad').value;
+
+  }
+
+/*
+
+
+if (!isBlank(id_nacionalidad) && !isBlank(doc_identidad) && type =='update') {
+
+
+//    var ifIdentityDocumentIsRepeatedInOtherPersons =  ifIdentityDocumentIsRepeatedInOtherPersons(id_nacionalidad,doc_identidad);
+
+  console.log(ifIdentityDocumentIsRepeatedInOtherPersons);
+
+}
+*/
 /*
 
 var isBlankDocIdentidad = false;
@@ -667,6 +694,37 @@ if (msgWarningAttributesEventCIE10 != 0) {
 
 }
 
+/*
+if (!isBlank(id_nacionalidad) && !isBlank(doc_identidad) 
+    && !ifIdentityDocumentIsRepeatedInOtherPersons
+    && type =='update'
+    && !getElementById('ifNotHaveIdentityDocument').checked) {
+
+  await Swal.fire({
+    title: '¿Estás seguro?',
+    html: '<span style="color: red;"> Esta cedula la posee otra persona<br> si procede, se le asinaran los casos epidemiologicos a la persona entrante, y la anterior sera elminada <br>¿Desea continuar?</b></span>',
+    type: 'question',
+    showCancelButton: true,
+    confirmButtonColor: '#3085d6',
+    cancelButtonColor: '#d33',
+    confirmButtonText: 'Aceptar',
+    cancelButtonText: 'Cancelar'
+  }).then((result) => {
+    if(result.value){
+              confirmSendAjax = true;
+              return confirmSendAjax
+            }else{
+
+              confirmSendAjax = false;
+              return confirmSendAjax
+            }
+
+
+    });
+
+}
+*/
+
 if(confirmSendAjax){
        sendDataAjax(action,formFields,method,responseProcess,msgBackendProcess);
 }
@@ -674,8 +732,37 @@ if(confirmSendAjax){
 }
 
 }catch (e) {
-    alert(e);
+    console.log(e);
   }
 
 
+}
+
+ function ifIdentityDocumentIsRepeatedInOtherPersons(id_nacionalidad,doc_identidad){
+
+/*  var ifIdentityDocumentIsRepeatedInOtherPersons = '';
+
+   server_url = $('#server_url').val();
+
+  $.ajax({
+      type:'POST',
+      url: server_url+'ajax/casosEpidemiAjax.php',
+      data:{
+      'id_nacionalidad':id_nacionalidad,
+      'doc_identidad':doc_identidad,
+      'operationType':'ifIdentityDocumentIsRepeatedInOtherPersons'},
+
+      success:function(dataJsonifIdentityDocumentIsRepeatedInOtherPersons){
+
+
+      var dataifIdentityDocumentIsRepeatedInOtherPersons = JSON.parse(dataJsonifIdentityDocumentIsRepeatedInOtherPersons);
+      
+      ifIdentityDocumentIsRepeatedInOtherPersons = dataifIdentityDocumentIsRepeatedInOtherPersons[0];
+
+
+ }
+});
+
+return ifIdentityDocumentIsRepeatedInOtherPersons;
+*/
 }

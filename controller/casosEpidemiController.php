@@ -191,16 +191,16 @@
 
 	}
 
+
 	self::msgsValidDataBasicCaseEpidemi($dataCasosEpidemiClean);
+
 
 		$year_registro = date("Y", strtotime($fecha_registro));
 
-
 		$dataCasosEpidemi["year_registro"] = $year_registro;
-	
 
 			// data para registro de bitcora
-
+	
 				$currentDate =  mainModel::getDateCurrentSystem();
 
 				$currentYear = date("Y", strtotime($currentDate));
@@ -283,7 +283,7 @@
 
 	}else{
 
-		$ifNotHaveIdentityDocument = 1;
+		$ifNotHaveIdentityDocument = 0;
 
 		$dataCasosEpidemi['ifNotHaveIdentityDocument'] = 0;
 
@@ -297,6 +297,7 @@
 
 
 	}
+
 
 
 			$ifDataEmptyIndentityPerson = (mainModel::isDataEmtpy(
@@ -330,6 +331,12 @@
 		}
 
 
+
+$ifIdentityDocumentIsRepeatedInOtherPersons = 0;
+
+if (!$ifNotHaveIdentityDocument) {
+$ifIdentityDocumentIsRepeatedInOtherPersons = self::$personController->ifIdentityDocumentIsRepeatedInOtherPersons(array('id_nacionalidad' => $id_nacionalidad,"doc_identidad"=>$doc_identidad,"id_person"=>$id_person));
+}
 		$dataCasosEpidemiClean =
 		[
 		'indicatorEpidemiCaseError'=>'',
@@ -347,7 +354,8 @@
 		"id_person"=>$id_person,
 		"ifNotHaveIdentityDocument"=>$ifNotHaveIdentityDocument,
 		"ifExistPerson"=>true,
-		"ifUpdateOperationCase"=>true
+		"ifUpdateOperationCase"=>true,
+		"ifIdentityDocumentIsRepeatedInOtherPersons"=>$ifIdentityDocumentIsRepeatedInOtherPersons
 		];
 
 
@@ -370,6 +378,7 @@
 		$dataCasosEpidemi["year_registro"] = $year_registro;
 
 
+
 		// compararemos los datos del formulario con la base de datos
 		
  		  $columnsTableToCompare = [
@@ -387,7 +396,7 @@
 		$queryToGetDataCasoEpidemi = self::getCasosEpidemiController($columnsTableToCompare,$fieldsForFilter);
 
 		$ifCasosEpidemiDataUpdateIsSameDatabase = mainModel::isFieldsEqualToThoseInTheDatabase($queryToGetDataCasoEpidemi,$dataCasosEpidemiClean);
-
+		
 			if ($ifCasosEpidemiDataUpdateIsSameDatabase && !$dataPerson['ifUpdatePerson']) {
 
 			$alert=[
@@ -430,6 +439,162 @@
 
 		$dataCasosEpidemi = array_merge($dataCasosEpidemi,$dataCasosEpidemiBitacora);
 
+
+		if ($dataCasosEpidemi['is_hospital'] == true) {
+		$dataCasosEpidemi['is_hospital'] = 'true';
+		}		
+
+		if ($dataCasosEpidemi['is_hospital'] == false) {
+		$dataCasosEpidemi['is_hospital'] = 'false';
+		}
+
+
+
+		$columnsTableToCompare =["fecha_nacimiento",
+		"id_genero"];
+				 	
+	 	$queryToGetPerson = self::$personController->getpersonController($columnsTableToCompare,array("id_person"=>$id_person));
+
+		$ifPersonDataUpdatePosibbleconfictWhithOtherCasesEpidemi = mainModel::isFieldsEqualToThoseInTheDatabase($queryToGetPerson,$dataCasosEpidemi);
+
+
+if ($dataPerson['ifUpdatePerson'] == true) {
+
+
+		if (!$ifPersonDataUpdatePosibbleconfictWhithOtherCasesEpidemi) {
+
+		$sqlQuery = mainModel::connectDB()->prepare("SELECT id_caso_epidemi,id_person_caso,fecha_registro,catalog_key_cie10,fecha_nacimiento, id_genero,id_tipo_entrada FROM caso_epidemi_view WHERE 
+			id_person_caso = :id_person_caso AND id_caso_epidemi != :id_caso_epidemi");
+
+		 $sqlQuery->execute(array(
+		 "id_person_caso"=>$dataCasosEpidemi['id_person'],
+		 "id_caso_epidemi"=>$dataCasosEpidemi['id_caso_epidemi']
+		));
+
+		while($dataPersonPosibbleconfictWhithOtherCasesEpidemi=$sqlQuery->fetch(PDO
+			::FETCH_ASSOC)){
+
+			$dataOtherCaseToValid['catalog_key_cie10'] = $dataPersonPosibbleconfictWhithOtherCasesEpidemi['catalog_key_cie10'];
+
+			$dataOtherCaseToValid['fecha_registro'] = $dataPersonPosibbleconfictWhithOtherCasesEpidemi['fecha_registro'];
+
+			$dataOtherCaseToValid['id_genero'] = $dataCasosEpidemi['id_genero'];
+
+			$dataOtherCaseToValid['fecha_nacimiento'] = $dataCasosEpidemi['fecha_nacimiento'];
+
+			$dataOtherCaseToValid['id_persona'] = $dataCasosEpidemi['id_person'];
+			
+
+			$dataOtherCaseToValid['indicatorEpidemiCaseError'] = '<br>En el Caso Epidemiologico ID: '.$dataPersonPosibbleconfictWhithOtherCasesEpidemi['id_caso_epidemi'];
+
+			self::msgValididGenreAssingnEventCIE10($dataOtherCaseToValid);
+
+			self::msgValididAgeAssingnEventCIE10($dataOtherCaseToValid);
+			
+		}
+
+	}
+
+}
+
+
+if ($dataCasosEpidemi['ifIdentityDocumentIsRepeatedInOtherPersons'] == true) {
+
+
+		$sqlQuery = mainModel::connectDB()->prepare("SELECT id_caso_epidemi,id_person_caso,fecha_registro,catalog_key_cie10,is_hospital,fecha_nacimiento, id_genero,id_tipo_entrada FROM caso_epidemi_view WHERE 
+			doc_identidad_caso = :doc_identidad_caso AND 
+			id_nacionalidad_caso = :id_nacionalidad_caso AND 
+			id_person_caso != :id_person_caso  AND id_caso_epidemi != :id_caso_epidemi");
+
+		 $sqlQuery->execute(array(
+		 "id_caso_epidemi"=>$dataCasosEpidemi['id_caso_epidemi'],
+		 "id_person_caso"=>$dataCasosEpidemi['id_person'],
+		 "id_nacionalidad_caso"=>$dataCasosEpidemi['id_nacionalidad'],
+		 "doc_identidad_caso"=>$dataCasosEpidemi['doc_identidad']));
+
+		 $idsCaseEpidemiOtherCaseSameDocumentIdentity=[];
+
+		 $idsPersonsOtherCaseSameDocumentIdentity=[];
+
+		 $datasOthersCasesBitacoras=[];
+
+		while($dataPreviousPersonSameIdentityDocument=$sqlQuery->fetch(PDO
+			::FETCH_ASSOC)){
+
+			  if (!in_array($dataPreviousPersonSameIdentityDocument['id_caso_epidemi'], $idsCaseEpidemiOtherCaseSameDocumentIdentity )) {
+    			$idsCaseEpidemiOtherCaseSameDocumentIdentity[] = $dataPreviousPersonSameIdentityDocument['id_caso_epidemi'];
+		  	}
+
+			  if (!in_array($dataPreviousPersonSameIdentityDocument['id_person_caso'], $idsPersonsOtherCaseSameDocumentIdentity)) {
+    			$idsPersonsOtherCaseSameDocumentIdentity[] = $dataPreviousPersonSameIdentityDocument['id_person_caso'];
+		  	}
+
+		if ($dataPreviousPersonSameIdentityDocument['is_hospital'] == true) {
+		$dataPreviousPersonSameIdentityDocument['is_hospital'] = 'true';
+		}		
+
+		if ($dataPreviousPersonSameIdentityDocument['is_hospital'] == false) {
+		$dataPreviousPersonSameIdentityDocument['is_hospital'] = 'false';
+		}
+
+
+			$dataOtherCasesBitacora = array(
+		 "indicatorEpidemiCaseError"=> '<br> here En el Caso Epidemiologico ID: '.$dataPreviousPersonSameIdentityDocument['id_caso_epidemi'],
+		 "id_person"=>$dataCasosEpidemi['id_person'],
+		 "id_person_caso"=>$dataCasosEpidemi['id_person'],
+		 "id_person_usuario"=>$dataCasosEpidemi['id_person_usuario'],
+		 "usuario_alias"=>$dataCasosEpidemi['usuario_alias'],
+		 "bitacora_fecha"=>$dataCasosEpidemi['bitacora_fecha'],
+		 "bitacora_hora"=>$dataCasosEpidemi['bitacora_hora'],
+		 "bitacora_year"=>$dataCasosEpidemi['bitacora_year'],
+		 "id_tipo_operacion"=>$dataCasosEpidemi['id_tipo_operacion'],
+		 "id_caso_epidemi"=>$dataPreviousPersonSameIdentityDocument['id_caso_epidemi'],
+		 "fecha_caso_epidemi"=>$dataPreviousPersonSameIdentityDocument['fecha_registro'],
+		 "fecha_registro"=>$dataPreviousPersonSameIdentityDocument['fecha_registro'],
+		 "fecha_nacimiento"=>$dataCasosEpidemi['fecha_nacimiento'],
+		 "id_genero"=>$dataCasosEpidemi['id_genero'],
+		 "catalog_key_cie10"=>$dataPreviousPersonSameIdentityDocument['catalog_key_cie10'],
+		 "ifNotHaveIdentityDocument"=>FALSE,
+		 "id_tipo_entrada"=>$dataPreviousPersonSameIdentityDocument['id_tipo_entrada'],
+		 "id_nacionalidad_caso"=>$dataCasosEpidemi['id_nacionalidad'],
+		 "doc_identidad_caso"=>$dataCasosEpidemi['doc_identidad'],
+		 "is_hospital"=>$dataPreviousPersonSameIdentityDocument['is_hospital']);
+	
+
+		$datasOthersCasesBitacoras[] = $dataOtherCasesBitacora;
+
+
+			self::msgValididGenreAssingnEventCIE10($dataOtherCasesBitacora);
+
+			self::msgValididAgeAssingnEventCIE10($dataOtherCasesBitacora);
+		
+			self::msgValidInputTypeCases(array(
+				"id_tipo_entrada"=>$dataCasosEpidemi['id_tipo_entrada'],
+				"id_person"=>$dataPreviousPersonSameIdentityDocument['id_person_caso'],
+				$dataCasosEpidemi['id_caso_epidemi'],'catalog_key_cie10' =>
+				$dataCasosEpidemi['catalog_key_cie10'],"indicatorEpidemiCaseError"=> '<br> here En el Caso Epidemiologico ID: '.$dataPreviousPersonSameIdentityDocument['id_caso_epidemi']));
+
+			self::msgValidNotRepeatCasoEpidemi(array(
+				"catalog_key_cie10"=>$dataCasosEpidemi['catalog_key_cie10'],
+				"fecha_registro"=>$dataCasosEpidemi['fecha_registro'],
+				"id_person"=>$dataPreviousPersonSameIdentityDocument['id_person_caso'],
+				$dataCasosEpidemi['id_caso_epidemi'],'catalog_key_cie10' =>
+				$dataCasosEpidemi['catalog_key_cie10'],"indicatorEpidemiCaseError"=> '<br> here En el Caso Epidemiologico ID: '.$dataPreviousPersonSameIdentityDocument['id_caso_epidemi']));
+
+
+
+		  }
+		
+
+
+		$dataCasosEpidemi['datasOthersCasesBitacoras'] = $datasOthersCasesBitacoras;
+
+	 	$dataCasosEpidemi['idsPersonsOtherCaseSameDocumentIdentity'] = $idsPersonsOtherCaseSameDocumentIdentity;
+
+	 	$dataCasosEpidemi['idsCaseEpidemiOtherCaseSameDocumentIdentity'] = $idsCaseEpidemiOtherCaseSameDocumentIdentity;
+ 	
+
+ 	}
 
 		echo casosEpidemiModel::updateCasosEpidemiModel($dataCasosEpidemi);
 
@@ -1440,15 +1605,6 @@ $dataSendCasos = urlencode($dataSendCasos);
 		
 		$dataJsonAtribEspecial=[];
 
-/*
-		 if (!$queryGetAttribEspecial->rowCount()) {
-			$dataJsonAtribEspecial[] = array('descripcion' =>'Seleccionar Atributo Especial','id_atrib_especial'=>'0');
-
-		echo json_encode($dataJsonAtribEspecial);
-		exit();
-
-		 }
-*/
 			$dataJsonAtribEspecial[] = array('descripcion' =>'Seleccionar Atributo Especial','id_atrib_especial'=>'0');
 
 		while($recordsAtribEspecial=$queryGetAttribEspecial->fetch(PDO
@@ -1456,6 +1612,15 @@ $dataSendCasos = urlencode($dataSendCasos);
 
 			$dataJsonAtribEspecial[] = $recordsAtribEspecial;
 		}
+
+		echo json_encode($dataJsonAtribEspecial);
+		exit();
+	}
+
+
+	public static function ifIdentityDocumentIsRepeatedInOtherPersonsCasosEpidemiController($dataCasosEpidemi){
+
+			$dataJsonAtribEspecial[] = self::$personController->ifIdentityDocumentIsRepeatedInOtherPersons($dataCasosEpidemi);
 
 		echo json_encode($dataJsonAtribEspecial);
 		exit();
@@ -1618,6 +1783,8 @@ if ($dataCasosEpidemi['doc_identidad'] === 'admin') {
 }
 
 
+
+
 	self::msgValidExistCatalogKeyCIE10($dataCasosEpidemi);
 
 	self::msgValididGenreAssingnEventCIE10($dataCasosEpidemi);
@@ -1628,7 +1795,7 @@ if ($dataCasosEpidemi['doc_identidad'] === 'admin') {
 
 	self::msgValididDateRegisterCaseEpidemi($dataCasosEpidemi);
 
-	if($dataCasosEpidemi['id_person']){
+	if (!empty($dataCasosEpidemi['id_person'])) {
 	self::msgValidInputTypeCases($dataCasosEpidemi);
 	}
 
@@ -1638,7 +1805,7 @@ if ($dataCasosEpidemi['doc_identidad'] === 'admin') {
 
 		}
 
-	protected static function msgValidInputTypeCases($dataCasosEpidemi){
+	public static function msgValidInputTypeCases($dataCasosEpidemi){
 
 	extract($dataCasosEpidemi);
 
@@ -1674,12 +1841,9 @@ if ($dataCasosEpidemi['doc_identidad'] === 'admin') {
 							
 				$queryIsExistcasosEpidemiPrimerizo = mainModel::connectDB()->query("SELECT id_caso_epidemi FROM casos_epidemi WHERE ".$queryIdentifyPerson." AND catalog_key_cie10 = '$catalog_key_cie10' AND id_tipo_entrada = 1 ".$queryForOperationsUpdateCaseEpidemi);
 
-
 				$countCasosEpidemiPrimerizoPerPerson = $queryIsExistcasosEpidemiPrimerizo->rowCount();
 				
 			}
-			
-
 
 			if($countCasosEpidemiPrimerizoPerPerson){
 			$alert=[
@@ -1711,6 +1875,7 @@ if ($dataCasosEpidemi['doc_identidad'] === 'admin') {
 
 		$queryIsExistcasosEpidemi = mainModel::connectDB()->query("SELECT id_caso_epidemi FROM casos_epidemi WHERE ".$queryIdentifyPerson." AND catalog_key_cie10 = '$catalog_key_cie10' AND fecha_registro = '$fecha_registro' ".$queryForOperationsUpdateCaseEpidemi);
 
+//			var_dump($queryIsExistcasosEpidemi);
 
 			if($queryIsExistcasosEpidemi->rowCount()){
 			$alert=[
@@ -1752,7 +1917,7 @@ if ($dataCasosEpidemi['doc_identidad'] === 'admin') {
 		// para comprobar el  caso cei-10 no tenga un sexo asignado obligatorio
 
 
-	protected static function msgValididGenreAssingnEventCIE10($dataCasosEpidemi){
+	public static function msgValididGenreAssingnEventCIE10($dataCasosEpidemi){
 
 					extract($dataCasosEpidemi);
 
@@ -1800,7 +1965,7 @@ if ($dataCasosEpidemi['doc_identidad'] === 'admin') {
 			}
 
 
-	protected static function msgValididAgeAssingnEventCIE10($dataCasosEpidemi){
+	public static function msgValididAgeAssingnEventCIE10($dataCasosEpidemi){
 
 					extract($dataCasosEpidemi);
 
@@ -1811,9 +1976,15 @@ if ($dataCasosEpidemi['doc_identidad'] === 'admin') {
 		    $infAge=intval(preg_replace('/[^0-9]+/', '', $row["linf"]), 10);;
 		    $supAge=intval(preg_replace('/[^0-9]+/', '', $row["lsup"]), 10);;
 
-		if ($infAge != "NO" || $supAge != "NO") {
 
+		$isNotExistRangeEdadCIE10 = ($row["linf"] == "NO" && $row["lsup"] == "NO");
+
+		
+		if (!$isNotExistRangeEdadCIE10) {
+
+/*
 		if ($ifExistPerson) {
+
 
 			if (isset($id_nacionalidad) && isset($doc_identidad)) {
 		$queryGeAgePerson = mainModel::connectDB()->query("SELECT date_part('year',age('$fecha_registro', fecha_nacimiento))::int as edad FROM personas WHERE id_nacionalidad = '$id_nacionalidad' AND doc_identidad = '$doc_identidad'");
@@ -1826,17 +1997,22 @@ if ($dataCasosEpidemi['doc_identidad'] === 'admin') {
 		$ageCaseEpidemi = $queryGeAgePerson->fetchColumn();
 
 		}else{
+*/
 
 			$fecha_nacimiento = mainModel::cleanStringSQL($fecha_nacimiento);
+
+			$fecha_registro = mainModel::cleanStringSQL($fecha_registro);
 
 		$queryGetIdGeneroPerson = mainModel::connectDB()->query("SELECT date_part('year',age('$fecha_registro', '$fecha_nacimiento'))::int as edad");
 
 		$ageCaseEpidemi = $queryGetIdGeneroPerson->fetchColumn();
 
-		}
+		//}
+
+
+//			var_dump($ageCaseEpidemi,$infAge,$supAge);
 
 			if ($ageCaseEpidemi < $infAge  || $ageCaseEpidemi > $supAge) {
-
 			$alert=[
 			"Alert"=>"simple",
 			"Title"=>"Datos Invalidos",
@@ -2156,6 +2332,8 @@ $telefono = mainModel::cleanStringSQL($dataForQuery[$indiceFila][24]);
 		 $dataCasosEpidemi['ifUpdatePerson']  = true;
 
 }
+
+
 
 // si updatePersonaController tiene ifUpdatePerson con true y los datos de caos epidemi no son lo mismo hagan las operaiones
 

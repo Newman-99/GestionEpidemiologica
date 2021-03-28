@@ -21,7 +21,9 @@
 
 			if (isset($_SESSION['aliasUser'])) {
 				$_SESSION['timeout'] = time();
+			
 			}
+
 }
 
 

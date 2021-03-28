@@ -1,6 +1,7 @@
 <?php 
 	
 	require_once "personModel.php";
+	require_once "casosEpidemiModel.php";
 
 	/**
 	 * 
@@ -130,10 +131,37 @@
 
 		$DB_transacc->beginTransaction();
 
-//	try {
+	try {
 
 // si no son los mismos datos personales acualizamos
 if (isset($dataPerson['ifUpdatePerson']) && $dataPerson['ifUpdatePerson'] == true ) {
+	
+
+if (isset($dataPerson['dataBitacoraLastCaseEpidemiAssignUser'])) {
+
+		$sqlQuery = $DB_transacc->prepare(casosEpidemiController::$queryAddBitacoraCasoEpidemi);
+
+
+			$sqlQuery->execute(array(
+		 "id_person_caso"=>$dataPerson['dataBitacoraLastCaseEpidemiAssignUser']['id_person'],
+		 "id_person_usuario"=>$dataPerson['dataBitacoraLastCaseEpidemiAssignUser']['id_person_usuario'],
+		 "usuario_alias"=>$dataPerson['dataBitacoraLastCaseEpidemiAssignUser']['usuario_alias'],
+		 "bitacora_fecha"=>$dataPerson['dataBitacoraLastCaseEpidemiAssignUser']['bitacora_fecha'],
+		 "bitacora_hora"=>$dataPerson['dataBitacoraLastCaseEpidemiAssignUser']['bitacora_hora'],
+		 "bitacora_year"=>$dataPerson['dataBitacoraLastCaseEpidemiAssignUser']['bitacora_year'],
+		 "id_tipo_operacion"=>$dataPerson['dataBitacoraLastCaseEpidemiAssignUser']['id_tipo_operacion'],
+		 "id_caso_epidemi"=>$dataPerson['dataBitacoraLastCaseEpidemiAssignUser']['id_caso_epidemi'],
+		 "fecha_caso_epidemi"=>$dataPerson['dataBitacoraLastCaseEpidemiAssignUser']['fecha_registro'],
+		 "catalog_key_cie10"=>$dataPerson['dataBitacoraLastCaseEpidemiAssignUser']['catalog_key_cie10'],
+		 "id_nacionalidad_caso"=>$dataPerson['dataBitacoraLastCaseEpidemiAssignUser']['id_nacionalidad_caso'],
+		 "doc_identidad_caso"=>$dataPerson['dataBitacoraLastCaseEpidemiAssignUser']['doc_identidad_caso'],
+		 "is_hospital"=>$dataPerson['dataBitacoraLastCaseEpidemiAssignUser']['is_hospital']));
+
+		$sqlQuery->closeCursor();
+
+
+}
+
 		$sqlQuery  = personModel::stringQueryUpdatePersonModel();
 
 		$sqlQuery = $DB_transacc->prepare($sqlQuery);
@@ -172,7 +200,7 @@ if (isset($dataPerson['ifUpdatePerson']) && $dataPerson['ifUpdatePerson'] == tru
 			];
 
 		  	$DB_transacc->commit();
-		/*	
+		
 			}catch (Exception $e) {
 
 			$DB_transacc->rollBack();
@@ -186,7 +214,7 @@ if (isset($dataPerson['ifUpdatePerson']) && $dataPerson['ifUpdatePerson'] == tru
 			];
 
 		}
-*/
+
 			return json_encode($alert);
 
 	}
