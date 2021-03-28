@@ -1240,7 +1240,7 @@ if (!isset($dataUser['confirmDelete'])) {
 		'value' => $id_person,
 		'type' => \PDO::PARAM_INT,
 		];}
-
+/*
 		if (isset($dataUser["id_nacionalidad"]) && !mainModel::isDataEmtpy($dataUser["id_nacionalidad"])) {
 
 		$id_nacionalidad = mainModel::cleanStringSQL($dataUser["id_nacionalidad"]);
@@ -1260,7 +1260,7 @@ if (!isset($dataUser['confirmDelete'])) {
 		'value' => $doc_identidad,
 		'type' => \PDO::PARAM_STR,
 		];}
-
+*/
 		if (isset($dataUser["aliasUser"]) && !mainModel::isDataEmtpy($dataUser["aliasUser"])) {
 		
 		$aliasUser = mainModel::cleanStringSQL($dataUser["aliasUser"]);
@@ -1302,6 +1302,7 @@ if (!isset($dataUser['confirmDelete'])) {
 		'value' => $email,
 		'type' => \PDO::PARAM_STR,
 		];}
+
 
 			return mainModel::querySelectsCreator('usuarios',$columnsTable,$userAttributesFilter,$filterValues);
 

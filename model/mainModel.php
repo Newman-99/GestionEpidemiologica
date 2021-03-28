@@ -37,7 +37,7 @@ if (IF_LOCAL_SERVER) {
 					return $DB;
 
 			}else{
-			$db = (function(){
+			return (function(){
 			    $parts = (parse_url(getenv('DATABASE_URL') ?: 'postgres://ilsmpwdzrresby:7879db47bd3be54c574eab3a81a1bc2db477bc890a756eccc406992832a0fd8e@ec2-54-246-87-132.eu-west-1.compute.amazonaws.com:5432/d4hub5gh1m9jjj'));
 			    extract($parts);
 			    $path = ltrim($path, "/");
@@ -47,7 +47,7 @@ if (IF_LOCAL_SERVER) {
 
 
 		} catch (PDOException $e) {
-		    error_log("Fallo al conectar con la base de datos: ".$e->getMessage());
+		    var_dump("Fallo al conectar con la base de datos: ".$e->getMessage());
 		}
 	}
 
@@ -689,7 +689,7 @@ protected static function deleteBitacora($usuario_alias){
 
 	public static function querySelectsCreator($table,$columnsTable,$attributesFilter,$filterValues){
 			
-
+		try{
 	   $where = '';
 		if (!empty($attributesFilter)) {
 		$where .= ' WHERE ' . implode(' AND ', $attributesFilter);
@@ -701,12 +701,18 @@ protected static function deleteBitacora($usuario_alias){
         $where
 	    ";
 
+
 		$sqlQuery = mainModel::connectDB()->prepare($sqlQuery);
 		foreach($filterValues as $key => $values) {
 			$sqlQuery->bindParam($key, $values['value'], $values['type']);
+
 		}
 
 		return $sqlQuery;
+
+		} catch (PDOException $e) {
+		    var_dump("Fallo al conectar con la base de datos: ".$e->getMessage());
+		}
 
 		}
 
