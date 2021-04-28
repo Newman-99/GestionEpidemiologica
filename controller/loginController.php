@@ -161,7 +161,7 @@ $columns = array("pass_encrypt","alias","id_person","id_nivel_permiso","id_estad
 				$alert=[
 				"Alert"=>"simple",
 				"Title"=>"Permiso Denegado",
-				"Text"=>"El usuario se encuentra inactivo o reiniciado, por favor contactar un administrador",
+				"Text"=>"El usuario se encuentra inactivo o Restablecido, por favor contactar un administrador",
 				"Type"=>"error"
 			];
 
@@ -287,7 +287,7 @@ if ($aliasUser !== 'admin') {
 			"tokenCurrentUser"=>mainModel::encryption($_SESSION["token_dptoEpidemi"])];
 
 			self::closeSessionController($dataSession);
-
+				header("Location: ".SERVERURL);
 
 	}else{
 
@@ -324,9 +324,9 @@ if ($aliasUser !== 'admin') {
 			$alert = mainModel::updateUsuarioBitacora($dataSession);
 
 			if ($alert['Alert'] == 'redirecting') {
-				echo json_encode($alert);
 				session_unset();
 				session_destroy();
+				echo json_encode($alert);
 			}else{
 				echo json_encode($alert);				
 			}
@@ -484,7 +484,7 @@ public function addDataForUserRestartController($dataUser){
 			$alert=[
 				"Alert"=>"reload",
 				"Title"=>"Operacion Exitosa",
-				"Text"=>"Datos de Seguridad reiniciados, Por favor contacte con el administrador para reactivar su cuenta",
+				"Text"=>"Datos de Seguridad Restablecidos, Por favor contacte con el administrador para reactivar su cuenta",
 				"Type"=>"success"
 			];
 

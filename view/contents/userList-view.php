@@ -49,7 +49,7 @@
 
 
       var table = $('#dataTable').DataTable({
-                fixedHeader: true,
+                //fixedHeader: true,
             keys: true,
           'language': LANGUAGE_SPANISH_DATATABLES,
                           "bDestroy": true

@@ -94,8 +94,12 @@ $(document).ready(function() {
       .fixedColumns().relayout();
   });
  
+
+
 } );
 
+
+ document.getElementById('sidebarToggle').click();
 
 
    $(window).on('resize', function () {
@@ -114,12 +118,13 @@ $(document).ready(function() {
       .fixedColumns().relayout();
          } ).DataTable();
 
+/*
 
 
-
-$('div.table-responsive').on('scroll', function() {
-//  alert('');
+$('.dataTables_scrollBody').on('click', function() {
   
+  alert('here');
+
      $($.fn.dataTable.tables(true)).DataTable()
       .columns.adjust()
       .fixedColumns().relayout();
@@ -127,69 +132,84 @@ $('div.table-responsive').on('scroll', function() {
          } );
 
 
-// Final Script evitar el fixed header de las tablas se descuadre
+//      $('#registerOrUpdateReportEpiFilasModal').modal('show');
 
+  /*
+  $('.table-responsive-disabled').keydown(function (e) {
+    console.log('keyCode');
+    
 
+});
 
-/*
-$('table').keydown(function (e) {
-        alert('alert');
-    });
 */
-/*
-     $($.fn.dataTable.tables(true)).DataTable().on( 'key', function ( e, datatable, key, cell, originalEvent ) {
-            alert( '<div>Key press: '+key+' for cell <i>'+cell.data()+'</i></div>' );
-        } );
+
+
+
+/*var oTable = $('#dataTable').dataTable();
+
+
+oTable.columns.adjust().draw();
+
+
+window
+  .addEventListener("keydown", function(event) {
+        
+        if (event.keyCode == 37 || event.keyCode == 39 ) {
+
+//oTable.columns.adjust().draw();
+//    oTable.fnAdjustColumnSizing();
 
 /*
-$('#dataTable').keydown(function (key) {
-    if (key.keyCode == 38) {
-        window.scrollTo(document.body.scrollLeft,
-                        document.body.scrollTop + 100);
-    }
-    if (key.keyCode == 40) {
-        window.scrollTo(document.body.scrollLeft,
-                        document.body.scrollTop + 100);
-    }
-});
-/*
-document.body.onkeyup = function(e) {
-    var code = e.keyCode;
-    if(code === 74) { // key code for j
-        window.scrollTo(document.body.scrollLeft,
-                        document.body.scrollTop + 100);
-    }
-};
+   $($.fn.dataTable.tables(true)).DataTable()
+      .columns.adjust().relayout();
 
-/*
-function arrow(dir) {
-    var activeTableRow = $('.table tbody tr.active')[dir](".table tbody tr");
-    if (activeTableRow.length) {
-        $('.table tbody tr.active').removeClass("active");
-        activeTableRow.addClass('active');
-    }
-};*/
-
-/*
-
-    $('#dataTable')
-        .on( 'mouseenter', 'td', function () {
-            var colIdx = table.cell(this).index().column;
- 
-            $( table.cells().nodes() ).removeClass( 'highlight' );
-            $( table.column( colIdx ).nodes() ).addClass( 'highlight' );
-        } );
-
-
-    var oTable = $('#dataTable').DataTable();
-
-$("#dataTable tbody").click(function(event) {
-$(oTable.fnSettings().aoData).each(function (){
-$(this.nTr).removeClass('row_selected');
-});
-$(event.target.parentNode).addClass('row_selected');
+        }
 });
 */
+
+
+
+$(document).ready(function() {
+
+    var table = $('#dataTable').DataTable();
+
+ $('.buttons-colvisGroup').on('click', function () {
+
+    var table = $('#dataTable').DataTable();
+
+  var timer;
+
+$('.search-column').on('keyup', function () {
+console.log(this);
+  window.clearTimeout(timer);
+  timer = window.setTimeout(() => {
+            table.column($(this).parent().index() + ':visible')
+                .search(this.value)
+                .draw();
+  }, 1000);
+
+
+        });
+  window.clearTimeout(timer);
+
+})
+
+  var timer;
+
+$('.search-column').on('keyup', function () {
+console.log(this);
+  window.clearTimeout(timer);
+  timer = window.setTimeout(() => {
+            table.column($(this).parent().index() + ':visible')
+                .search(this.value)
+                .draw();
+  }, 1000);
+
+
+        });
+  window.clearTimeout(timer);
+
+});
 
 </script>
 

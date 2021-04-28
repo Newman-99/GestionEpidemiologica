@@ -244,7 +244,7 @@
 			$alert=[
 			"Alert"=>"simple",
 			"Title"=>"Datos Invalidos",
-			"Text"=>"Las respuestas de seguridad deben ser poseer entre 3 y 20 caracteres",
+			"Text"=>"Las Respuestas de Seguridad deben ser poseer entre 3 y 20 caracteres",
 			"Type"=>"error"
 				];
 		
@@ -258,7 +258,7 @@
 			$alert=[
 			"Alert"=>"simple",
 			"Title"=>"Datos Invalidos",
-			"Text"=>"Las respuestas de seguridad no deben ser iguales",
+			"Text"=>"Las Respuestas de Seguridad no deben ser iguales",
 			"Type"=>"error"
 				];
 		
@@ -431,7 +431,7 @@ if ($_SESSION['id_nivel_permiso'] == 3){
 
 			// si otra persona ya tiene este correo a parte del usuario a registrar
 
-		$id_person = self::$personController->getIdPerson($id_nacionalidad,$doc_identidad);
+		//$id_person = self::$personController->getIdPerson($id_nacionalidad,$doc_identidad);
 		// verifica estos cambios si el doc identidad va actulizarce
 		if ($id_person) {
 
@@ -522,7 +522,7 @@ if ($_SESSION['id_nivel_permiso'] == 3){
 		$userDataTocomparedWithDatabase=["telefono"=>$telefono,"email"=>$email];
 
 
-		// isset cuando el id_nivel_permiso no se muestra en form por seguridad
+		// isset cuando el id_nivel_permiso no se muestra en form por Seguridad
 
 		if ($_SESSION['id_nivel_permiso'] == 1) {
 		 if (isset($dataUser["id_nivel_permiso"]) && $dataUser['id_nivel_permiso'] != 0){
@@ -541,7 +541,7 @@ if ($_SESSION['id_nivel_permiso'] == 3){
 		}
 
 
-		// isset cuando el id_estado no se muestra en form por seguridad
+		// isset cuando el id_estado no se muestra en form por Seguridad
 
 		 if (isset($dataUser["id_estado"])) {
 
@@ -599,7 +599,9 @@ if ($_SESSION['id_nivel_permiso'] == 3){
 				
 				}
 
-		$queryLastEpidemiCaseAssignedToUser = mainModel::connectDB()->query("SELECT id_caso_epidemi,id_person_caso,fecha_registro,catalog_key_cie10,is_hospital,fecha_nacimiento, id_genero,id_tipo_entrada FROM caso_epidemi_view WHERE 
+
+		$queryLastEpidemiCaseAssignedToUser = mainModel::connectDB()->query("SELECT 
+			id_caso_epidemi,id_person_caso,fecha_registro,catalog_key_cie10,is_hospital,fecha_nacimiento, id_genero,id_tipo_entrada FROM caso_epidemi_view WHERE 
 			id_person_caso = $id_person ORDER BY id_caso_epidemi ASC");
 
 
@@ -623,15 +625,6 @@ if ($_SESSION['id_nivel_permiso'] == 3){
     			$idsCaseEpidemiOtherCaseSameDocumentIdentity[] = $dataLastEpidemiCaseAssignedToUser['id_caso_epidemi'];
 
     			$idsPersonsOtherCaseSameDocumentIdentity[] = $dataLastEpidemiCaseAssignedToUser['id_person_caso'];
-
-		if ($dataLastEpidemiCaseAssignedToUser['is_hospital'] == true) {
-		$dataLastEpidemiCaseAssignedToUser['is_hospital'] = 'true';
-		}		
-
-		if ($dataLastEpidemiCaseAssignedToUser['is_hospital'] == false) {
-		$dataLastEpidemiCaseAssignedToUser['is_hospital'] = 'false';
-		}
-
 
 			$dataBitacoraLastCaseEpidemiAssignUser = array(
 		 "indicatorEpidemiCaseError"=> '<br>En el Caso Epidemiologico ID: '.$dataLastEpidemiCaseAssignedToUser['id_caso_epidemi'],
@@ -677,8 +670,8 @@ if ($_SESSION['id_nivel_permiso'] == 3){
 
 
 // Esta funcion se usa en 4 funcionalidades del sistema:
-// config: Formulario de actulizacion de seguridad normal
-// restart: proceso de reinicio del usuario
+// config: Formulario de actulizacion de Seguridad normal
+// restart: proceso de Restablecer del usuario
 // recoverPass:: proceso de recuperacion password
 // 
 	public  static function modifyUserSafetyDataController($dataUser){
@@ -715,7 +708,7 @@ if ($_SESSION['id_nivel_permiso'] == 3){
 
 			}
 
-		// si estado es 0 no tiene permiso de cambiar datos de seguridad
+		// si estado es 0 no tiene permiso de cambiar datos de Seguridad
 		if($id_estado == 0){
 				
 				$alert=[
@@ -738,7 +731,7 @@ if ($dataUser["operationType"] == "restart") {
 				$alert=[
 				"Alert"=>"simple",
 				"Title"=>"Permiso Denegado",
-				"Text"=>"El usuario no posee una solicitud de reinicio",
+				"Text"=>"El usuario no posee una solicitud de Restablecer",
 				"Type"=>"error"
 			];
 
@@ -749,7 +742,7 @@ if ($dataUser["operationType"] == "restart") {
 			}
 }
 
-// Comprobamos los datos de seguridad
+// Comprobamos los datos de Seguridad
 
 // solo en la configuracion normal de usuario se verfica la password
 
@@ -822,9 +815,9 @@ self::passwordCorrespondDatabase($dataUser);
 
 }
 
-// validar preguntas de seguridad 
+// validar preguntas de Seguridad 
 
-// solo en la configuracion normal y recuperacion de password  se verfica Las respuestas de seguridad
+// solo en la configuracion normal y recuperacion de password  se verfica Las Respuestas de Seguridad
 
 if ($dataUser["operationType"] == "config" || $dataUser["operationType"] == "recoverPass") {
 
@@ -988,7 +981,7 @@ protected static function passwordCorrespondDatabase($dataUser){
 			return $resultQueryUpdatePass = userModel::updateUserModel($userValuesUpdate,$userAttributesUpdate);
 		}
 
-		// las pregunas de seguridad corresponden base de datos
+		// las pregunas de Seguridad corresponden base de datos
 		
 		protected static function securityQuestionsCorrespondDatabase($dataUser){
 		$aliasUser = mainModel::cleanStringSQL($dataUser["aliasUser"]);
@@ -1029,12 +1022,13 @@ protected static function passwordCorrespondDatabase($dataUser){
 		$question1 = mainModel::cleanStringSQL($dataUser["question1"]); 
 
 		$question2 = mainModel::cleanStringSQL($dataUser["question2"]); 
-
+		
 		    if (strcmp($registeredQuestion1, $question1) != 0 || strcmp($registeredQuestion2, $question2) != 0){
 				$alert=[
 				"Alert"=>"simple",
 				"Title"=>"Datos Invalidos",
-				"Text"=>"Revise Las respuestas de seguridad",
+				"Text"=>"Revise las Respuestas de Seguridad
+",
 				"Type"=>"error"
 			];
 
@@ -1087,7 +1081,7 @@ protected static function passwordCorrespondDatabase($dataUser){
 			$alert=[
 			"Alert"=>"simple",
 			"Title"=>"Datos Invalidos",
-			"Text"=>"Las respuestas de seguridad deben ser mayor a 3 caracteres",
+			"Text"=>"Las Respuestas de Seguridad deben ser mayor a 3 caracteres",
 			"Type"=>"error"
 				];
 		
@@ -1310,7 +1304,7 @@ if (!isset($dataUser['confirmDelete'])) {
 
 
  
-	public static function restartUserController($dataUser){
+	public static function restoreUserController($dataUser){
 	
 
 		 $aliasUser = mainModel::cleanStringSQL($dataUser["aliasUser"]);
@@ -1355,7 +1349,7 @@ if (!isset($dataUser['confirmDelete'])) {
 				$alert=[
 				"Alert"=>"reload",
 				"Title"=>"Operacion Exitosa",
-				"Text"=>"Datos del usuario reiniciados",
+				"Text"=>"Datos del usuario Restablecidos",
 				"Type"=>"success"
 			];
 
@@ -1387,7 +1381,7 @@ public static function paginateUserController($currentAliasUser){
 
 $table = "";
 
-$table.="<div class='table-responsive'>
+$table.="<div class='table-responsive-disabled'>
                 <table class='table table-bordered table-striped' id='dataTable' width='100%' cellspacing='0'>
                   <thead>
                     <tr>
@@ -1443,7 +1437,7 @@ $table.="<div class='table-responsive'>
       
 
 	                  <a href="'.SERVERURL.'dataAccount/'.mainModel::encryption($rows['usuario_alias']).'" class="btn btn-info btn-circle btn-sm">
-	                    <i class="fas fa-plus"></i>
+	                    <i class="fas fa-pencil-alt"></i>
 	                  </a>
 		 		
 		    </div>
@@ -1563,7 +1557,7 @@ $table.="</tbody>
   		<br>
         Inactivos: ".$dataCounTypeUsers['userInactives']."
 		<br>
-        Reiniciados: ".$dataCounTypeUsers['userRestarts']."
+        Restablecidos: ".$dataCounTypeUsers['userRestarts']."
 		<br>
         Total: ".$dataCounTypeUsers['usersTotal']."";
 		

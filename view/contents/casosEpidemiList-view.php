@@ -2,6 +2,7 @@
 <?php
 
 
+
   // solicitar dara de person en especifico
   $userEncryptURl= explode("/",$_GET['views']);
 
@@ -15,6 +16,19 @@
 
 ?>
 
+  
+
+<style>
+  
+#btn-ver-todo {/*
+  border-radius: 0.35rem;*/
+  border-bottom-right-radius: 0.35rem;
+  border-top-right-radius: 0.35rem;
+
+}
+
+</style>
+  
           <!-- Page Heading -->
           <h1 class="h3 mb-2 text-gray-800">Casos Epidemiologicos</h1>
           
@@ -34,7 +48,7 @@
 
 <?php  require_once "./view/inc/formImportCasosEpidemi.php";?>
 
-  <div class='table-responsive'>
+  <div class='table-responsive-disabled'>
 
 
            <!-- INPUTS para parametros denviados al Backend -->
@@ -84,7 +98,7 @@
             <div class="col-md-1">
              <br>
 
-            <button  class="form-control input-add-table btn btn-info btn-square btn-sm" style="margin-left: 30%;" id='searchInputsRanges' name='searchInputsRanges'>
+            <button  class="form-control input-add-table btn btn-info btn-square btn-sm" style="/*margin-left: 30%;*/" id='searchInputsRanges' name='searchInputsRanges'>
                     <i class="fas  fa-search-plus fa-lg"></i>  
             </button>
           
@@ -98,10 +112,14 @@
   Registrar
 </button>
 
+          <!-- Button trigger modal 
+
 <button type="button" class="btn btn-primary importCasosEpidemiModal" data-toggle="modal" data-target="#importCasosEpidemiModal">
   Importar
 </button>
+-->
           </div>
+          <br>
 
            <!-- FINAL Formulario para limitar fecha mediante el Backend -->
                 <table class='table hover table-striped display' id='dataTable' name = 'dataTable' width='100%' cellspacing='0'>
@@ -313,7 +331,7 @@ var currentDate = new Date;
 // para pasar de formato js a aaaa-mm-dd de PHP
 var maxDateAllowedPHP = currentDate.toISOString().split('T')[0];
 
-var minDateRangeDefault = addOrRemoveDaysToDate(currentDate,31,false);
+var minDateRangeDefault = addOrRemoveDaysToDate(currentDate,7,false);
 
 var minDateRangeDefaulPHP = minDateRangeDefault.toISOString().split('T')[0];
 
@@ -326,6 +344,35 @@ $('#maxDateRange').val(maxDateAllowedPHP)
   
 
 }
+
+var currentDate = new Date;
+
+var maxDateRangeDefault = addOrRemoveDaysToDate(currentDate,1,false);
+
+//console.log(maxDateRangeDefault);
+
+var maxDateAllowedPHP = formatDate(maxDateRangeDefault);
+
+document.getElementById("fecha_registro").setAttribute("max", maxDateAllowedPHP);
+
+document.getElementById("fecha_registro").value = maxDateAllowedPHP;
+
+
+
+function formatDate(date) {
+    var d = new Date(date),
+        month = '' + (d.getMonth() + 1),
+        day = '' + d.getDate(),
+        year = d.getFullYear();
+
+    if (month.length < 2) 
+        month = '0' + month;
+    if (day.length < 2) 
+        day = '0' + day;
+
+    return [year, month, day].join('-');
+}
+
 
 
   var table = $('#dataTable');
@@ -356,13 +403,10 @@ var minDateRangeDefaulPHP = minDateRangeDefault.toISOString().split('T')[0];
 
 //         document.getElementById("fecha_registro").setAttribute("min",minDateRangeDefaulPHP );
 
-    document.getElementById("fecha_registro").setAttribute("max", maxDateAllowedPHP);
-
-      $('#fecha_registro').val(maxDateAllowedPHP);
 
       $('#id_atrib_especial').empty();
 
-     $('#id_atrib_especial').append('<option value=0>Seleccionar Atributo Especial</option>');
+     $('#id_atrib_especial').append('<option value=0>Atributo Especial: Ninguno</option>');
 
     document.getElementById("id_caso_epidemi").setAttribute("value",'');
 
@@ -370,7 +414,9 @@ var minDateRangeDefaulPHP = minDateRangeDefault.toISOString().split('T')[0];
 
       $("#si-exist-person").css("display", "block");
 
-  $("#doc_identidad").prop('readonly', $('#ifNotHaveIdentityDocument').checked);
+    $(".si-exist-person").css("display", "block");
+
+  $("#doc_identidad").prop('disabled', $('#ifNotHaveIdentityDocument').checked);
   $("#id_nacionalidad").prop('disabled', $('#ifNotHaveIdentityDocument').checked);
 
 
@@ -416,7 +462,7 @@ function deleteCasosEpidemi(data){
 
     var doc_identidad = data[6];
 
-    var catalog_key_cie10 = data[13];
+    var catalog_key_cie10 = data[14];
 
     var id_atrib_especial = data[16];
 
@@ -481,7 +527,7 @@ var dataCasoEpidemi =
     
     if (data_form == 'update') {
   
-  $('#catalogKeyCIE10').empty().append('<option value="">Selecionar Capitulo  o CIE-10 Buscar Nombre </option>');
+  $('#catalog_key_cie10').empty().append('<option value="">Selecionar Capitulo  o CIE-10 Buscar Nombre </option>');
 
   $(".form-control-person").prop('disabled', false);
 
@@ -490,9 +536,12 @@ var dataCasoEpidemi =
 
 
     }
+
       });
 
 function updateCasosEpidemi(data){
+
+      $('#searchCIE10').val('');
 
     document.getElementById("form_caso_epidemi").setAttribute("data-form", 'update');
 
@@ -600,11 +649,14 @@ setCIE10ToFormUpdateCaseEpidemiAsync(clave_capitulo_cie10,catalog_key_cie10,acti
     $(".form-control-person").prop('disabled', false);
 
     $("#si-exist-person").css("display", "none");
+
+    $(".si-exist-person").css("display", "none");
+
     // disbled por que nunca puede cambiarse
     $("#id_person").prop('readonly', true);
 
     $("#id_nacionalidad").prop('disabled', false);
-    $("#doc_identidad").prop('readonly', false);
+    $("#doc_identidad").prop('disabled', false);
 
     ifNotHaveIdentityDocument.checked= false;
 
@@ -616,7 +668,7 @@ setCIE10ToFormUpdateCaseEpidemiAsync(clave_capitulo_cie10,catalog_key_cie10,acti
 
     $("#id_nacionalidad").prop('disabled', true);
 
-    $("#doc_identidad").prop('readonly', true);
+    $("#doc_identidad").prop('disabled', true);
 
     ifNotHaveIdentityDocument.checked= true;
 
@@ -678,9 +730,19 @@ $('#dataTable thead tr:eq(1) th').each(function () {
       $(th).off("keypress");
 
       $(th).off("click");
-*/
- }
- 
- );
 
+*/
+
+/*
+
+$('#dataTable thead tr:eq(1) th').each(function () {
+
+        $('input',this).on('keyup change', function () {
+  */
+
+
+
+ });
+
+$.fn.dataTable.ext.errMode = 'none';
 </script>

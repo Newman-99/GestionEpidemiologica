@@ -1,11 +1,23 @@
 
-    
+    async function setCIE10ToFormRegisterCaseEpidemBySearchPatternAsync(valueSearch,idCapituloCIE10,actionAjaxForCie10) {
+  try {
+
+        await  setEventCIE10BySearchPatternToFormCaseEpidemi(valueSearch,idCapituloCIE10,actionAjaxForCie10);
+
+        getEspecialAttributesCIE10();
+  }catch (e) {
+    alert(e);
+  }
+} 
+
        server_url = $('#server_url').val();
 
       function getDataActivityLogSessionsForDataTables(requestedAliasUser,minDateRange,maxDateRange,action){
     var table = $('#dataTable').DataTable({
-             fixedHeader: true,
+             //fixedHeader: true,
             keys: true,
+        "scrollX": true,
+        "scrollCollapse": true,
        "aaSorting": [[ 1, "asc" ]], // Sort by first column descending
         "bProcessing": true,
         "bDeferRender": true,
@@ -25,27 +37,26 @@
 }
 
 
-
-
       function getDataCIE10CatalogForDataTables(url,parameterPreGetDataTables){
 
     var hour = getHourForFileExport();
 
-    $('#dataTable thead tr:eq(1) th').not(':eq(0)').each( function () {
+    $('#dataTable thead tr:eq(1) th').each( function () {
         var title = $(this).text();
-        $(this).html( '<input style="width:100%" class="not_orders" type="text" placeholder="Buscar" />' );
+        $(this).html( '<input style="width:100%" class="search-column" type="text" placeholder="Buscar" />' );
     } );
 
-    $('#dataTable thead tr:eq(1)  th:eq(0)').html('');
 
     var table = $('#dataTable').DataTable({
-        fixedHeader: true,
+        ////fixedHeader: true,
             keys: true,
+        "scrollX": true,
+        "scrollCollapse": true,
         "bProcessing": true,
         "bDeferRender": true,
         "bServerSide": true,
-        "fixedHeader": true,
         'orderCellsTop': true,
+
         "sAjaxSource": url+"?cie10listCatalog=view"+parameterPreGetDataTables,
         "columnDefs": [
             ],
@@ -54,53 +65,146 @@
       lengthMenu: [
             [ 10, 25, 50,100,200,500, 1000 ],
             [ '10', '25', '50','100','200', '500','1000']
-        ]/*,
-        
-        dom: 'Bfrtip',
-
-        buttons: [
-        {
-       extend: 'excelHtml5',
-        filename: 'catalago_cie10_' + hour
-        },
-
-        {
-       extend: 'csvHtml5',
-
-        filename: 'catalago_cie10_' + hour
-      }
-        ]*/
-            ,'language': LANGUAGE_SPANISH_DATATABLES,
-                "bDestroy": true,
+        ]
+           ,'language': LANGUAGE_SPANISH_DATATABLES,
+                "bDestroy": true
 
     });
   
       var timer;
 
+/*
 $('#dataTable thead tr:eq(1) th').each(function () {
-        $('input',this).on('keyup change', function () {
-  window.clearTimeout(timer); // prevent errant multiple timeouts from being generated
-  
-  timer = window.setTimeout(() => {
-            table.column($(this).parent().index() + ':visible')
-                .search(this.value)
-                .draw();
-  }, 1000);
+            $('input',this).on('keyup change', function () {
+      window.clearTimeout(timer);
+      
+      timer = window.setTimeout(() => {
+                table.column($(this).parent().index() + ':visible')
+                    .search(this.value)
+                    .draw();
+      }, 1000);
 
 
         });
-    });
 
-  window.clearTimeout(timer); // prevent errant multiple timeouts from being generated
+        });
 
-//    $('#dataTable thead tr:eq(1)  th:eq(33) :input').remove();
 
-//  var filteringHeader $('#dataTable thead tr:eq(1) th');
-table.columns.adjust().draw();
+  window.clearTimeout(timer);
+*/
+  table.columns.adjust().draw();
 
-$( "#dataTable thead tr:eq(1) th:eq(0)").removeClass( "sorting_asc");
 
-};
+//$( "#dataTable thead tr:eq(1) th:eq(0)").removeClass( "sorting_asc");
+
+}
+
+  
+
+    async function setCIE10FormReportEpiFilasModalBySearchPatternAsync(inputsGroupCie10,valueSearch,selectcatalog_key_cie10,iconLoadselectcatalog_key_cie10,columnsSearch,columnsShow) {
+  try {    
+
+  var server_url = $('#server_url').val();
+  
+    var actionAjax = server_url+'ajax/cie10DataAjax.php';
+
+
+      iconLoadselectcatalog_key_cie10.css("display", "block");
+
+  await $.ajax({
+      type:'POST',
+      url: actionAjax,
+      data:{'valueSearch': valueSearch,'columnsSearch':columnsSearch,'columnsShow':columnsShow,'getCasesCIE10':true},
+      success:function(casesCIE10Json){
+//     console.log(casesCIE10Json);
+      casesCIE10 = JSON.parse(casesCIE10Json);
+      selectcatalog_key_cie10.empty();
+      
+      casesCIE10.forEach(function(casesCIE10){
+        selectcatalog_key_cie10.append('<option value='+casesCIE10.consecutivo+'>'+casesCIE10.consecutivo+' - '+casesCIE10.catalog_key + ' - ' + casesCIE10.nombre + '</option>')
+        });
+          
+      }
+    });
+
+      iconLoadselectcatalog_key_cie10.css("display", "none");      
+
+  }catch (e) {
+    console.log(e);
+  }
+}
+
+
+
+ function getEspecialAttributesCIE10FormConfigReport(iconLoadSelectAtribEspecialEpi,
+  selectAtribEspecialEpi,typeSearch = 'all',atribsSearchCie10 = '',valuesSearchCie10 = ''){
+  
+      $(iconLoadSelectAtribEspecialEpi).css("display", "block");
+  
+   var server_url = $('#server_url').val();
+
+ $.ajax({
+      type:'POST',
+      url: server_url+'ajax/casosEpidemiAjax.php',
+      data:{'valuesSearchCie10':valuesSearchCie10,'atribsSearchCie10':atribsSearchCie10,
+            'getEspecialAttributes':true,'typeSearch':typeSearch},
+
+     success:function(JsonEspecialAttributes){
+//     console.log(JsonEspecialAttributes);
+
+//     $('#id_atrib_especial').append("<option value="+0+">Atributo Especial: Ninguno</option>");
+       count = 0;
+
+
+      $(selectAtribEspecialEpi).empty();
+
+      especialAttributes = JSON.parse(JsonEspecialAttributes);
+            especialAttributes.forEach(function(attributes){
+    
+          count = 1;
+
+     $(selectAtribEspecialEpi).append('<option value='+attributes.id_atrib_especial+'>'+''+attributes.id_atrib_especial+' - '+attributes.descripcion + '</option>')
+
+        });
+   
+         $(iconLoadSelectAtribEspecialEpi).css("display", "none");
+    
+      }
+    });
+
+  }
+
+async function setCIE10ToFormUpdateReportEpiFilasConfigAsync(inputSearchCIE10,valueKeyCie10) {
+
+
+    var inputsGroupCie10 = inputSearchCIE10.parent('div.inputs-group-cie10');
+
+    var selectcatalog_key_cie10 = inputsGroupCie10.find('select:eq(0)'); 
+
+    var selectAtribEspecialEpi = inputsGroupCie10.find('select:eq(1)'); 
+
+    var iconLoadselectcatalog_key_cie10 = inputsGroupCie10.find('.input-group-addon:eq(0)'); 
+
+    var iconLoadSelectAtribEspecialEpi = inputsGroupCie10.find('.input-group-addon:eq(1)'); 
+
+    var columnsSearch = ['consecutivo'];
+
+    var columnsShow = ['catalog_key','nombre','consecutivo'];
+
+//    console.log(selectcatalog_key_cie10);
+
+  try {
+      
+
+     setCIE10FormReportEpiFilasModalBySearchPatternAsync(inputsGroupCie10,valueKeyCie10,selectcatalog_key_cie10,iconLoadselectcatalog_key_cie10,columnsSearch,columnsShow);
+
+    //await setTimeout(function(){ $(selectcatalog_key_cie10).val(valueKeyCie10);}, 800);
+
+  }catch (e) {
+    alert('error: '+e+'<br> en la Linea: '+e.stack);
+  }
+} 
+
 
 // devolvera datos para el select dinamico
 function setEventCIE10BySearchPatternToFormCaseEpidemi(valueSearch,idCapituloCIE10,actionForAjax){
@@ -116,9 +220,9 @@ var load  = document.getElementById("icon-load");
      success:function(casesCIE10){
 //      console.log(casesCIE10);
       casesCIE10 = JSON.parse(casesCIE10);
-      $('#catalogKeyCIE10').empty();
+      $('#catalog_key_cie10').empty();
       casesCIE10.forEach(function(casesCIE10){
-        $('#catalogKeyCIE10').append('<option value='+casesCIE10.catalog_key+'>'+casesCIE10.catalog_key + ' - ' + casesCIE10.nombre + '</option>')
+        $('#catalog_key_cie10').append('<option value='+casesCIE10.catalog_key+'>'+casesCIE10.catalog_key + ' - ' + casesCIE10.nombre + '</option>')
         })
                   load.style.display = "none";
       }
@@ -143,9 +247,9 @@ async function setEventCIE10ByidCapituloToFormCaseEpidemi(idCapituloCIE10){
       success:function(jsonCasesCIE10){
  //     console.log(jsonCasesCIE10);
       casesCIE10 = JSON.parse(jsonCasesCIE10);
-      $('#catalogKeyCIE10').empty();
+      $('#catalog_key_cie10').empty();
       casesCIE10.forEach(function(casesCIE10){
-     $('#catalogKeyCIE10').append('<option value='+casesCIE10.catalog_key+'>'+casesCIE10.catalog_key + ' - ' + casesCIE10.nombre + '</option>')
+     $('#catalog_key_cie10').append('<option value='+casesCIE10.catalog_key+'>'+casesCIE10.catalog_key + ' - ' + casesCIE10.nombre + '</option>')
         })
 
         load.style.display = "none";
@@ -158,11 +262,11 @@ async function setEventCIE10ByidCapituloToFormCaseEpidemi(idCapituloCIE10){
 
 }
 
-// para ciertos eventos cie-10 con caractaeristicas especiales
+// para ciertos eventos cie-10 con caractaeristicas Especials
 
 function getEspecialAttributesCIE10(){
   
-  var catalog_key = $('#catalogKeyCIE10').val();
+  var catalog_key = $('#catalog_key_cie10').val();
 
 if (catalog_key != 0 && !isBlank(catalog_key)) {
 
@@ -177,9 +281,9 @@ load_atrib_especial.style.display = "block";
       url: server_url+'ajax/casosEpidemiAjax.php',
       data:{'catalog_key': catalog_key,'getEspecialAttributes':true},
      success:function(JsonEspecialAttributes){
-     console.log(JsonEspecialAttributes);
+//     console.log(JsonEspecialAttributes);
 
-//     $('#id_atrib_especial').append("<option value="+0+">Seleccionar Atributo Especial</option>");
+//     $('#id_atrib_especial').append("<option value="+0+">Atributo Especial: Ninguno</option>");
        count = 0;
 
       $('#id_atrib_especial').empty();
@@ -203,12 +307,13 @@ load_atrib_especial.style.display = "block";
 function getDataActivityLogCasosEpidemiForDataTables(requestedUser,minDateRange,maxDateRange,action){
     var table = $('#dataTable').DataTable({
        "aaSorting": [[ 1, "asc" ]], // Sort by first column descending
-             fixedHeader: true,
-            keys: true,
+        //fixedHeader: true,
+        keys: true,
         "bProcessing": true,
         "bDeferRender": true,
         "bServerSide": true,
-         "fixedHeader": true,
+        "scrollX": true,
+        "scrollCollapse": true,        
         "sAjaxSource": action+"?activityLogCasosEpidemi=true&minDateRange="+minDateRange+"&maxDateRange="+maxDateRange+"&requestedUser="+requestedUser+"&nameDateFieldDB="+'bitacora_fecha',
      "aoColumnDefs": [      {
         // id_genero
@@ -222,15 +327,216 @@ function getDataActivityLogCasosEpidemiForDataTables(requestedUser,minDateRange,
 }
 
 
+
+
+function getDataReportsEpiFilasConfigsDataTables(requestedIdFilasReport){
+         server_url = $('#server_url').val();
+
+    var table = $('#dataTable').DataTable({
+       "aaSorting": [[ 0, "asc" ]], // Sort by first column descending       
+        bProcessing: true,
+        bDeferRender: true,
+        bServerSide: true,
+        //fixedHeader: true,
+            keys: true,
+        "scrollX": true,
+        "scrollCollapse": true,
+        "sAjaxSource":server_url+"ajax/reportsEpiAjax.php?getDataReportsEpiFilasConfigsDataTables="+true+'&nro_fila_report='+requestedIdFilasReport,
+    "aoColumnDefs": [      
+      {
+      targets: [ 5,6,7,8,9],
+      visible: false,
+              searchable: false ,
+        orderable: false
+
+      },
+        
+         {
+        searchable: false ,
+        orderable: false,
+            "class": "index",
+            targets: 0
+        },
+
+      {
+        mData: null,
+        sDefaultContent: '<button name= "deleteReportEpiFilasConfig" id= "deleteReportEpiFilasConfig" value="deleteReportEpiFilasConfig" class="btn btn-danger btn-circle btn-sm delete"><i class="fas fa-trash"></i></button>&nbsp;<button value = "updateReportEpiFilasconfig" name = "updateReportEpiFilasconfig" id = "updateReportEpiFilasconfig" class="btn btn-info btn-circle btn-sm"><i class="fas fa-pencil-alt"></i></i></button>',
+
+        aTargets: [10],
+        searchable: false ,
+        orderable: false
+        ,sWidth: '7%'
+        }
+
+      ]
+        ,'language': LANGUAGE_SPANISH_DATATABLES,
+                "bDestroy": true
+    });
+
+        table.on( 'order.dt search.dt', function () {
+        table.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
+            cell.innerHTML = i+1;
+        } );
+    } ).draw();
+
+}
+
+
+function getDataReportsEpiFilasDataTables(){
+         server_url = $('#server_url').val();
+
+    var table = $('#dataTableReportEpiFilas').DataTable({
+        //fixedHeader: true,
+        keys: true,
+        "paging":   true,
+        "info":     true,
+        "bProcessing": true,
+        "bDeferRender": true,
+        "bServerSide": true,
+         //"fixedHeader": true,
+        "sAjaxSource":server_url+"ajax/reportsEpiAjax.php?getDataReportsEpiFilasDataTables="+true,
+        columnDefs: [ {
+            sortable: false,
+            "class": "index",
+            targets: 0
+        },
+
+      {
+        mData: null,
+        sDefaultContent: '<button name= "deleteReportEpiFilas" id= "deleteReportEpiFilas" value="deleteReportEpiFilas" class="btn btn-danger btn-circle btn-sm delete"><i class="fas fa-trash"></i></button><button value = "updateReportEpiFilas" name = "updateReportEpiFilas" id = "updateReportEpiFilas" class="btn btn-info btn-circle btn-sm"><i class="fas fa-pencil-alt"></i></i></button><button value = "configFilasReports" name = "configFilasReport" id = "configFilasReport" class="btn btn-primary btn-circle btn-sm"><i class="fas fa-plus"></i></i></button>',
+        aTargets: [3],
+        searchable: false ,
+        orderable: false,
+        "width": "100px"
+        }
+      ],
+
+            "order": [[ 1, 'asc' ]]
+
+        ,'language': LANGUAGE_SPANISH_DATATABLES,
+                "bDestroy": true
+    });
+
+ 
+    table.on( 'order.dt search.dt', function () {
+        table.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
+            cell.innerHTML = i+1;
+        } );
+    } ).draw();
+
+}
+
+function getDataAtribsEspecialsEpiDataTables(){
+
+         server_url = $('#server_url').val();
+        
+    var table = $('#dataTableAtribsEspecialsEpi').DataTable({
+        //fixedHeader: true,
+        keys: true,
+        "paging":   true,
+        "info":     true,
+        "bProcessing": true,
+        "bDeferRender": true,
+        "bServerSide": true,
+         //"fixedHeader": true,
+        "sAjaxSource":server_url+"ajax/reportsEpiAjax.php?getDataAtribsEspecialsEpiDataTables="+true,
+        columnDefs: [ {
+            sortable: false,
+            "class": "index",
+            targets: 0
+        },
+
+        {
+        mData: null,
+        sDefaultContent: '<button name= "deleteAtribsEspecialsEpi" id= "deleteAtribsEspecialsEpi" value="deleteAtribsEspecialsEpi" class="btn btn-danger btn-circle btn-sm delete"><i class="fas fa-trash"></i></button><button value = "updateAtribsEspecialsEpi" name = "updateAtribsEspecialsEpi" id = "updateAtribsEspecialsEpi" class="btn btn-info btn-circle btn-sm"><i class="fas fa-pencil-alt"></i></i></button><button value = "configAtribsEspecialsEpi" name = "configAtribsEspecialsEpi" id = "configAtribsEspecialsEpi" class="btn btn-primary btn-circle btn-sm"><i class="fas fa-plus"></i></i></button>',
+        aTargets: [3],
+        searchable: false ,
+        orderable: false,
+        "width": "100px"
+        }
+      ],
+
+            "order": [[ 3, 'asc' ]]
+
+        ,'language': LANGUAGE_SPANISH_DATATABLES,
+                "bDestroy": true
+    });
+
+ 
+    table.on( 'order.dt search.dt', function () {
+        table.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
+            cell.innerHTML = i+1;
+        } );
+    } ).draw();
+
+}
+
+function getDataAtribsEspecialsEpiConfigsDataTables(id_atrib_especial){
+         server_url = $('#server_url').val();
+
+    var table = $('#dataTable').DataTable({
+       "aaSorting": [[ 0, "asc" ]], // Sort by first column descending       
+        bProcessing: true,
+        bDeferRender: true,
+        bServerSide: true,
+        //fixedHeader: true,
+            keys: true,
+        "sAjaxSource":server_url+"ajax/reportsEpiAjax.php?getDataAtribsEspecialsEpiConfigsDataTables="+true+'&id_atrib_especial='+id_atrib_especial,
+    "aoColumnDefs": [      
+      {
+      targets: [0,3,4,5],
+      visible: false,
+              searchable: false ,
+        orderable: false,
+            sortable: false,
+      },
+        
+         {
+        searchable: false ,
+        orderable: false,
+            "class": "index",
+            targets: 0
+        },
+
+      {
+        mData: null,
+        sDefaultContent: '<button name= "deleteAtribEspecialEpiConfig" id= "deleteAtribEspecialEpiConfig" value="deleteAtribEspecialEpiConfig" class="btn btn-danger btn-circle btn-sm delete"><i class="fas fa-trash"></i></button>&nbsp;<button value = "updateAtribEspecialEpiconfig" name = "updateAtribEspecialEpiconfig" id = "updateAtribEspecialEpiconfig" class="btn btn-info btn-circle btn-sm"><i class="fas fa-pencil-alt"></i></i></button>',
+
+        aTargets: [6],
+        searchable: false ,
+        orderable: false
+        ,sWidth: '7%',
+         sortable: false
+        }
+
+      ]
+        ,'language': LANGUAGE_SPANISH_DATATABLES,
+                "bDestroy": true,
+    });
+
+        table.on( 'order.dt search.dt', function () {
+        table.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
+            cell.innerHTML = i+1;
+        } );
+    } ).draw();
+
+}
+
+
  function getDataCasosEpidemiForDataTables(parameterPreGetDataTables,action){
 
  var hour = getHourForFileExport();
 
+    var minDateRange  = $('#minDateRange').val();
+    var maxDateRange = $('#maxDateRange').val();
+
 //    $('#dataTable thead tr').clone(true).appendTo( '#dataTable thead' );
+
+
 
     $('#dataTable thead tr:eq(1) th').not(':eq(33)').each( function () {
         var title = $(this).text();
-        $(this).html( '<input style="width:100%" class="not_orders" type="text" placeholder="Buscar" />' );
+        $(this).html( '<input style="width:100%" class="search-column" type="text" placeholder="Buscar" />' );
     } );
 
     $('#dataTable thead tr:eq(1)  th:eq(0)').html('');
@@ -243,15 +549,25 @@ function getDataActivityLogCasosEpidemiForDataTables(requestedUser,minDateRange,
 
 
     var table = $('#dataTable').DataTable({
-//       "aaSorting": [[ 0, "asc" ]], // Sort by first column descending
+        "aaSorting": [[ 1, "desc" ]], // Sort by first column descending
+        //fixedHeader: true,
+        orderCellsTop: true,
+        keys: true,
+"scrollX": true,
+"scrollCollapse": true,
         bProcessing: true,
         bDeferRender: true,
         bServerSide: true,
-        orderCellsTop: true,
-        fixedHeader: true,
-            keys: true,
       sAjaxSource: action+'?'+parameterPreGetDataTables+'&viewCasosEpidemi=true&nameDateFieldDB='+'fecha_registro',
     aoColumnDefs: [
+      
+      {
+       searchable : false,
+       orderable : false,
+       targets : 0
+      },
+
+
       {
         // row clumn
       targets: [ 0 ],
@@ -340,38 +656,31 @@ function getDataActivityLogCasosEpidemiForDataTables(requestedUser,minDateRange,
       searchable: false
 
       },
-
-      //Fecha de Operacion
       {
-      targets: [ 31 ],
-      visible: false,
 
-      },
-      // Hora de Operacion
-      {
-      targets: [ 32 ],
-      visible: false,
-      },
-
-      {
         // para los botnes var to y ver menos
-      targets: [ 2, 8, 13,14,19, 22, 17, 25, 26, 27, 28],
+      targets: [ 2, 8, 13,14,19, 22, 17, 25, 26, 27, 28, 29 ,32,31],
       visible: false
       },
     
 
       {
         mData: null,
-        sDefaultContent: '<button name= "delete" id= "delete" value="delete" class="btn btn-danger btn-circle btn-sm delete"><i class="fas fa-trash"></i></button>&nbsp;<button value = "update" name = "update" id = "update" class="btn btn-info btn-circle btn-sm"><i class="fas fa-plus"></i></i></button>',
+        sDefaultContent: '<button name= "delete" id= "delete" value="delete" class="btn btn-danger btn-circle btn-sm delete"><i class="fas fa-trash"></i></button>&nbsp;<button value = "update" name = "update" id = "update" class="btn btn-info btn-circle btn-sm"><i class="fas fa-pencil-alt"></i></i></button>',
 
         aTargets: [33],
         searchable: false ,
-        width: 30
+        sortable: false,
+        orderable: false,
+        sWidth: '7%'
+
       }
         ],
-        dom: 'Bfrtip',
+ //       dom: 'Bfrtip',
 
-//        dom: 'Qlfrtip',
+        dom: 'lBfrtip',
+
+//       dom: 'Qlfrtip',
 
       lengthMenu: [
             [ 10, 25, 50,100,200,500, -1 ],
@@ -388,7 +697,7 @@ function getDataActivityLogCasosEpidemiForDataTables(requestedUser,minDateRange,
         columns:[0,1,2,4,7,8,9,10,11,13,14,15,17,19,20,22,23,25,26,27,28,29,31,32]
         }
 /*
-           <!--  0 --> <th>Nro. </th>
+ --> <th>Nro. </th>
            <!--  1 --> <th >id Caso</th>
            <!--  2 --> <th >id Persona</th>
            <!--  3 --> <th>id Genero</th>
@@ -404,14 +713,14 @@ function getDataActivityLogCasosEpidemiForDataTables(requestedUser,minDateRange,
            <!-- 13 --> <th>Capitulo</th>
            <!-- 14 --> <th>Codigo CIE-10</th>
            <!-- 15 --> <th>Nombre CIE-10</th>
-           <!-- 16 --> <th>Id Tipo  Caso </th>
-           <!-- 17 --> <th>Tipo de Entrada</th>
-           <!-- 18 --> <th>id atributo especial</th>
-           <!-- 19 --> <th>Atributo Especial</th>
+           <!-- 16 --> <th>id atributo especial</th>
+           <!-- 17 --> <th>Atributo Especial</th>
+           <!-- 18 --> <th>Id Tipo  Caso </th>
+           <!-- 19 --> <th>Tipo de Entrada</th>
            <!-- 20 --> <th>Notificacion Inmediata</th>
            <!-- 21 --> <th>is hospital</th>
            <!-- 22 --> <th>Hospitalizado o Referido</th>
-           <!-- 23 --> <th>Fecha</th>
+           <!-- 23 --> <th>Fecha de Registro</th>
            <!-- 24 --> <th>id Parroquia</th>
            <!-- 25 --> <th>Parroquia</th>
            <!-- 26 --> <th>Direccion</th>
@@ -421,9 +730,11 @@ function getDataActivityLogCasosEpidemiForDataTables(requestedUser,minDateRange,
            <!-- 30 --> <th>Anio de Operacion</th>
            <!-- 31 --> <th>Fecha de Operacion</th>
            <!-- 32 --> <th>Hora de Operacion</th>
-           <!-- 33 --> <th></th>
+           <!-- 33 --> <th class="remove-item-child"> </th>
 */
         },
+
+
 
         {
        extend: 'excelHtml5',
@@ -433,19 +744,34 @@ function getDataActivityLogCasosEpidemiForDataTables(requestedUser,minDateRange,
 
         {
        extend: 'csvHtml5',
-        filename: 'Casos_Epidemiologicos_' + minDateRange + '_' + maxDateRange + '_' + hour
+        filename: 'Casos_Epidemiologicos_' + minDateRange + '_' + maxDateRange + '_' + hour,
+        exportOptions: {
+        columns:[0,1,2,4,7,8,9,10,11,13,14,15,17,19,20,22,23,25,26,27,28,29,31,32]
+        }
         },
+
+        {
+       extend: 'pdfHtml5',
+        filename: 'Casos_Epidemiologicos_' + minDateRange + '_' + maxDateRange + '_' + hour,        
+         orientation: 'landscape',
+         pageSize: 'TABLOID',
+        exportOptions: {
+        columns:[0,1,2,4,7,8,9,10,11,14,17,19,20,22,23,25,26,27]
+        }
+         },
 
         {
        extend: 'copyHtml5',
             text: 'Copiar',
+                    exportOptions: {
+        columns:[0,1,2,4,7,8,9,10,11,13,14,15,17,19,20,22,23,25,26,27,28,29,31,32]
+        }
         },
 
         {
           extend: 'colvisGroup',
           text: 'Ver Todo',
-          show : [ 2, 8, 13, 14, 17, 19, 22, 25, 26, 27, 28],
-                
+          show : [ 2, 8, 13,14,19, 22, 17, 25, 26, 27, 28, 29 ,32,31],          
                 attr:  {
                 id: 'btn-ver-todo'
             }
@@ -455,7 +781,7 @@ function getDataActivityLogCasosEpidemiForDataTables(requestedUser,minDateRange,
         {
           extend: 'colvisGroup',
           text: 'Ver Menos',
-          hide : [ 2, 8, 13, 14, 17, 19, 22, 25, 26, 27, 28],
+          hide : [ 2, 8, 13,14,19, 22, 17, 25, 26, 27, 28, 29 ,32,31],
                 attr:  {
                 id: 'btn-ver-menos'
             }
@@ -469,10 +795,13 @@ function getDataActivityLogCasosEpidemiForDataTables(requestedUser,minDateRange,
   
     var timer;
 
+/*
+
 $('#dataTable thead tr:eq(1) th').each(function () {
+
         $('input',this).on('keyup change', function () {
-  window.clearTimeout(timer); // prevent errant multiple timeouts from being generated
   
+  window.clearTimeout(timer);
   timer = window.setTimeout(() => {
             table.column($(this).parent().index() + ':visible')
                 .search(this.value)
@@ -483,7 +812,10 @@ $('#dataTable thead tr:eq(1) th').each(function () {
         });
     });
 
-  window.clearTimeout(timer); // prevent errant multiple timeouts from being generated
+  window.clearTimeout(timer);
+*/
+
+
 
 //    $('#dataTable thead tr:eq(1)  th:eq(33) :input').remove();
 
@@ -492,7 +824,21 @@ table.columns.adjust().draw();
 
 $( "#dataTable thead tr:eq(1) th:eq(0)").removeClass( "sorting_asc");
 
+createEmunrationForDatatable(table);
+
+
   }
+
+
+function createEmunrationForDatatable(table){
+    table.on( 'order.dt search.dt', function () {
+        table.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
+            cell.innerHTML = i+1;
+        } );
+    } ).draw();
+
+}
+
 
 function getParroquias(actionForAjax){
   $.ajax({
@@ -501,7 +847,7 @@ function getParroquias(actionForAjax){
       data:{'getParroquias':true},
       success:function(dataJson){
       var parroquias = JSON.parse(dataJson);
-      console.log(parroquias);
+//      console.log(parroquias);
       parroquias.forEach(function(parroquias){
      $('#id_parroquia').append('<option value='+parroquias.id_parroquia+'>'+ parroquias.parroquia + '</option>')
         })
@@ -535,6 +881,8 @@ try{
 
 var fieldsFormForValidate = [];
 
+     var id_person = document.getElementById('id_person').value;
+
      var fecha_registro = document.getElementById('fecha_registro').value;
 
      var id_parroquia = document.getElementById('id_parroquia').value;
@@ -547,9 +895,9 @@ var fieldsFormForValidate = [];
 
      var telefonoPart3 = document.getElementById('telefonoPart3').value;
 
-    var catalog_key = document.getElementById("catalogKeyCIE10").value;
+    var catalog_key = document.getElementById("catalog_key_cie10").value;
 
-var ifIdentityDocumentIsRepeatedInOtherPersons = 0;
+  var ifIdentityDocumentIsRepeatedInOtherPersons = 0;
 
 //  alert(getElementById('ifNotHaveIdentityDocument').checked);
 
@@ -564,18 +912,36 @@ var ifIdentityDocumentIsRepeatedInOtherPersons = 0;
 
   }
 
-/*
 
 
-if (!isBlank(id_nacionalidad) && !isBlank(doc_identidad) && type =='update') {
+
+ if (!isBlank(id_nacionalidad) && !isBlank(doc_identidad) && type =='update' && !document.getElementById('ifNotHaveIdentityDocument').checked) {
+
+   server_url = $('#server_url').val();
+
+ await $.ajax({
+      type:'POST',
+      url: server_url+'ajax/casosEpidemiAjax.php',
+      data:{
+      'id_person':id_person,
+      'id_nacionalidad':id_nacionalidad,
+      'doc_identidad':doc_identidad,
+      'operationType':'ifIdentityDocumentIsRepeatedInOtherPersons'},
+
+      success:function(dataJsonifIdentityDocumentIsRepeatedInOtherPersons){
 
 
-//    var ifIdentityDocumentIsRepeatedInOtherPersons =  ifIdentityDocumentIsRepeatedInOtherPersons(id_nacionalidad,doc_identidad);
+      var dataifIdentityDocumentIsRepeatedInOtherPersons = JSON.parse(dataJsonifIdentityDocumentIsRepeatedInOtherPersons);
+      
+         ifIdentityDocumentIsRepeatedInOtherPersons = dataifIdentityDocumentIsRepeatedInOtherPersons[0];
 
-  console.log(ifIdentityDocumentIsRepeatedInOtherPersons);
+        return ifIdentityDocumentIsRepeatedInOtherPersons;
+
+ }
+});
 
 }
-*/
+
 /*
 
 var isBlankDocIdentidad = false;
@@ -672,7 +1038,7 @@ if (msgWarningAttributesEventCIE10 != 0) {
 
   await Swal.fire({
     title: '¿Estás seguro?',
-    html: '<span style="color: red;"><b>Este evento CIE 10 de notificacion inmediata, se considera:</b><br>'+msgWarningAttributesEventCIE10 + '<br><br><b>¿Desea continuar?</b></span>',
+    html: '<span style="color: red;"><b>Este evento CIE 10 se considera:</b><br>'+msgWarningAttributesEventCIE10 + '<br><br><b>¿Desea continuar?</b></span>',
     type: 'warning',
     showCancelButton: true,
     confirmButtonColor: '#3085d6',
@@ -694,15 +1060,13 @@ if (msgWarningAttributesEventCIE10 != 0) {
 
 }
 
-/*
-if (!isBlank(id_nacionalidad) && !isBlank(doc_identidad) 
-    && !ifIdentityDocumentIsRepeatedInOtherPersons
-    && type =='update'
-    && !getElementById('ifNotHaveIdentityDocument').checked) {
+
+
+if (ifIdentityDocumentIsRepeatedInOtherPersons > 0) {
 
   await Swal.fire({
     title: '¿Estás seguro?',
-    html: '<span style="color: red;"> Esta cedula la posee otra persona<br> si procede, se le asinaran los casos epidemiologicos a la persona entrante, y la anterior sera elminada <br>¿Desea continuar?</b></span>',
+    html: '<span style="color: red;"> Esta cedula la posee otra persona<br> si procede, se le asinaran los casos epidemiologicos a la persona entrante, y la anterior sera elminada. <br>¿Desea continuar?</b></span>',
     type: 'question',
     showCancelButton: true,
     confirmButtonColor: '#3085d6',
@@ -723,7 +1087,7 @@ if (!isBlank(id_nacionalidad) && !isBlank(doc_identidad)
     });
 
 }
-*/
+
 
 if(confirmSendAjax){
        sendDataAjax(action,formFields,method,responseProcess,msgBackendProcess);
@@ -736,33 +1100,4 @@ if(confirmSendAjax){
   }
 
 
-}
-
- function ifIdentityDocumentIsRepeatedInOtherPersons(id_nacionalidad,doc_identidad){
-
-/*  var ifIdentityDocumentIsRepeatedInOtherPersons = '';
-
-   server_url = $('#server_url').val();
-
-  $.ajax({
-      type:'POST',
-      url: server_url+'ajax/casosEpidemiAjax.php',
-      data:{
-      'id_nacionalidad':id_nacionalidad,
-      'doc_identidad':doc_identidad,
-      'operationType':'ifIdentityDocumentIsRepeatedInOtherPersons'},
-
-      success:function(dataJsonifIdentityDocumentIsRepeatedInOtherPersons){
-
-
-      var dataifIdentityDocumentIsRepeatedInOtherPersons = JSON.parse(dataJsonifIdentityDocumentIsRepeatedInOtherPersons);
-      
-      ifIdentityDocumentIsRepeatedInOtherPersons = dataifIdentityDocumentIsRepeatedInOtherPersons[0];
-
-
- }
-});
-
-return ifIdentityDocumentIsRepeatedInOtherPersons;
-*/
 }

@@ -95,7 +95,7 @@
 
     <br>
   
-    <select name='catalogKeyCIE10' id='catalogKeyCIE10' class="form-control" autocomplete='on' class="form-control" >
+    <select name='catalog_key_cie10' id='catalog_key_cie10' class="form-control" autocomplete='on' class="form-control" >
 
             <option value="">Selecionar Capitulo  o CIE-10 Buscar Nombre </option>
 

@@ -13,7 +13,7 @@
 
 		  $loginController = new loginController();
 
-	
+
 	if (isset($_FILES['fileCSVCIE10'])) {
 
 		$cie10DataController->updateCie10DataController($_FILES);			
@@ -27,13 +27,17 @@
 	
 		$cie10DataController->getCasesCIE10($_POST);		
 
+		}elseif(isset($_GET['getCasesCIE10'])) {
+
+		$cie10DataController->getCasesCIE10($_GET);		
+		
 		}elseif(isset($_POST['exportCatalogCIE10'])) {
 	
 		$cie10DataController->exportCatalogCIE10($_POST['typeArchive']);		
 
  }else {
  		
-			$loginController->forceClosureController();
+//			$loginController->forceClosureController();
 			}
 	
 

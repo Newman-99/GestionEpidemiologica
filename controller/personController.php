@@ -491,8 +491,7 @@ if (!$ifNotHaveIdentityDocument){
 		 $id_person = mainModel::cleanStringSQL($dataPerson['id_person']);
 
 						$queryGetifIdentityDocumentIsRepeatedInOtherPersons = mainModel::connectDB()->query("select doc_identidad,id_nacionalidad from personas where doc_identidad = '$doc_identidad'
-							AND id_nacionalidad = $id_nacionalidad AND id_person != $id_person /*limit 1*/");
-
+							AND id_nacionalidad = $id_nacionalidad AND id_person != $id_person limit 1");
 
 						return $queryGetifIdentityDocumentIsRepeatedInOtherPersons->rowCount();
 
@@ -566,11 +565,39 @@ extract($dataPerson);
 		}
 
 
+		if (self::isDateMinPermitedDateBirth($fecha_nacimiento)) {
+				$alert=[
+					"Alert"=>"simple",
+					"Title"=>"Datos Invalidos",
+					"Text"=>"La Fecha de nacimiento es menor a la permitidad (120 Años)".$indicatorPersonError,
+					"Type"=>"error"
+				];
+
+					echo json_encode($alert);
+
+					exit();
+		}
+
+
 		self::msgValidNroTlf($dataPerson);
 
 
 			}
 
+
+public static function isDateMinPermitedDateBirth($dateBirth){
+	
+	$currentDate =  self::getDateCurrentSystem();
+
+	$minDateBirth = date("Y-m-d",strtotime($currentDate."- 120 years"));
+
+        if($dateBirth < $minDateBirth){
+            return TRUE;
+        }else{
+            return FALSE;
+
+        }
+}
 	public static function msgValidNroTlf($dataPerson){
 	
 		if(!mainModel::isValidNroTlf($dataPerson['telefono'])){

@@ -314,7 +314,16 @@ async function ajaxSweetAlerts(alert){
 	
 		if (typeof alert.reloadDataTable != 'undefined') {	
 			$('#dataTable').DataTable().ajax.reload();
+
+			//$('#dataTableReportEpiFilas').DataTable().ajax.reload();
+						 
 			}
+
+		if (typeof alert.reloadDataTableSpecify != 'undefined') {	
+			$('#'+alert.reloadDataTableSpecify).DataTable().ajax.reload();
+						 
+			}
+			
 	}
 
 function msjForAlertForm(typeMsj){
@@ -322,6 +331,8 @@ function msjForAlertForm(typeMsj){
  	var textMsjAlert;
 
 	if(typeMsj==="save"){
+		textMsjAlert="Los datos quedaran guardados en el sistema";
+	}else if(typeMsj==="register"){
 		textMsjAlert="Los datos quedaran guardados en el sistema";
 	}else if(typeMsj==="delete"){
 		textMsjAlert="Los datos serán eliminados completamente del sistema";
@@ -338,7 +349,7 @@ function msjForAlertForm(typeMsj){
 	}else if(typeMsj==="files"){
 	textMsjAlert="Los datos de cargaran en el sistema";	
 	}else{
-		textMsjAlert="Quieres realizar la operación solicitada";
+		textMsjAlert="¿Desea realizar la operación solicitada?";
 	}
 	return textMsjAlert;
 }

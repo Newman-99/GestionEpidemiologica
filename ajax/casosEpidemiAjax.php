@@ -30,13 +30,6 @@ if (isset($_POST['operationType']) && $_POST['operationType'] == "register"){
 }elseif (isset($_GET['viewCasosEpidemi'])) {
 	 	$casosEpidemiController->getDataTablesCasosEpidemiController();
 
-}elseif (isset($_POST['validDataToReportEpi'])) {
-
-	 	$casosEpidemiController->validDatatoGetDataTablesEPIController($_POST);	
-}elseif (isset($_GET['viewReportEpi'])) {
-
-	 	$casosEpidemiController->getDataTablesEPIController($_GET);
-
 }elseif (isset($_FILES['fileCSVImportCaseEpidemi'])) {
 
 	 	echo $casosEpidemiController->importCasosEpidemiController($_FILES);
@@ -49,12 +42,12 @@ if (isset($_POST['operationType']) && $_POST['operationType'] == "register"){
 	
 		$casosEpidemiController->getEspecialAttributesCIE10($_POST);		
 
-		}elseif($_POST['operationType'] == "report") {
+		}elseif(isset($_POST['operationType']) && $_POST['operationType'] == "report") {
 
      $casosEpidemiController->getReportCompleteEPIController($_POST);
 
 
-		}elseif($_POST['operationType'] == "ifIdentityDocumentIsRepeatedInOtherPersons") {
+		}elseif(isset($_POST['operationType']) && $_POST['operationType'] == "ifIdentityDocumentIsRepeatedInOtherPersons") {
 
      $casosEpidemiController->ifIdentityDocumentIsRepeatedInOtherPersonsCasosEpidemiController($_POST);
 

@@ -42,7 +42,7 @@ $minDateValueAvailable = $activityLogCasosEpidemi-> getFirstDateRecordsActivityL
             </div>
             <div class='card-body'>
   
-  <div class='table-responsive'>
+  <div class='table-responsive-disabled'>
 
 
            <!-- Formulario para limitar fecha mediante el Backend -->

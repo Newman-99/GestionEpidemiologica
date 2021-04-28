@@ -16,7 +16,6 @@ class cie10DataController extends mainModel
 
 
 	public function updateCie10DataController($files){
-			
 
 if ($files['fileCSVCIE10']['type'] !='text/csv' || mainModel::isDataEmtpy($files['fileCSVCIE10']['size'])){
 				$alert=[
@@ -330,18 +329,18 @@ $queryDeleteAll->closeCursor();
 */
 
 
-$queryGetRecordsCatalogKeyCie10 = $DB_transacc->query("SELECT CATALOG_KEY FROM data_cie10");
+$queryGetRecordscatalog_key_cie10 = $DB_transacc->query("SELECT CATALOG_KEY FROM data_cie10");
 
-		$recordsCatalogKeyCie10 = array();
+		$recordscatalog_key_cie10 = array();
 		
-		while($rows=$queryGetRecordsCatalogKeyCie10->fetch(PDO
+		while($rows=$queryGetRecordscatalog_key_cie10->fetch(PDO
 			::FETCH_ASSOC)){ 
 
-			$recordsCatalogKeyCie10[] = $rows['catalog_key'];
+			$recordscatalog_key_cie10[] = $rows['catalog_key'];
 		}
 
 
-		$catalogKeyCie10ToRegister = array();
+		$catalog_key_cie10ToRegister = array();
 
 for ($indiceFila = 1; $indiceFila < count($dataForQuery); $indiceFila++) {
 
@@ -358,7 +357,7 @@ $DB_transacc->query("DELETE FROM data_cie10 WHERE  CATALOG_KEY ='$CATALOG_KEY'")
 
 $CONSECUTIVO = mainModel::cleanStringSQL($dataForQuery[$indiceFila][0]); 
 $LETRA = mainModel::cleanStringSQL($dataForQuery[$indiceFila][1]); 
-$catalogKeyCie10ToRegister[] = $CATALOG_KEY;
+$catalog_key_cie10ToRegister[] = $CATALOG_KEY;
 $NOMBRE = mainModel::cleanStringSQL($dataForQuery[$indiceFila][3]); 
 
 /*
@@ -521,10 +520,10 @@ $sqlQuery->execute(array("CONSECUTIVO"=>$CONSECUTIVO,
 // si un caso registrado no esta en los nuevos registros este se eleminara
 if ($ifExistRecordsInDataCIE10->rowCount()) {
 
-for ($i=0; $i <count($recordsCatalogKeyCie10) ; $i++) { 
+for ($i=0; $i <count($recordscatalog_key_cie10) ; $i++) { 
 		
-		if (!in_array($recordsCatalogKeyCie10[$i], $catalogKeyCie10ToRegister)) {
-			$DB_transacc->query("DELETE FROM data_cie10 WHERE  CATALOG_KEY ='$recordsCatalogKeyCie10[$i]'");
+		if (!in_array($recordscatalog_key_cie10[$i], $catalog_key_cie10ToRegister)) {
+			$DB_transacc->query("DELETE FROM data_cie10 WHERE  CATALOG_KEY ='$recordscatalog_key_cie10[$i]'");
 		}
 }
 
@@ -571,6 +570,10 @@ if ($codeError = '23503') {
 }
 
 	public static function paginatecie10DataController(){
+
+  	if (intval($_GET['sEcho']) < 2) {
+  		exit();
+  	}
 
 $queryCreateViewDataCIE10 = '
 CREATE OR REPLACE VIEW data_cie10_view  AS SELECT consecutivo,consecutivo as consecutivo_cie10, letra, catalog_key as catalog_key_cie10, nombre, codigox, lsex, linf, lsup, trivial,isCIE10InmediateNotice(n_inter,nin,ninmtobs,notdiaria,sistema_especial,
@@ -661,7 +664,7 @@ mainModel::getDataTableServerSideModel('data_cie10_view', 'consecutivo',
 
 	// funcion para mostrar datos en el select dinamico y buscador del cie-10
 	public static function getCasesCIE10($dataGetCIE10){
-	
+
 
 	if(isset($dataGetCIE10['searchByChapter'])) {
 
@@ -672,14 +675,14 @@ mainModel::getDataTableServerSideModel('data_cie10_view', 'consecutivo',
 		// obtnener data por captulos
 
 
-		$queryGetCasesCie10 = mainModel::connectDB()->prepare($queryGetCasesCie10." WHERE clave_capitulo = '$idCapituloCIE10' order by catalog_key");
+		$queryGetCasesCie10 = mainModel::connectDB()->prepare($queryGetCasesCie10." WHERE clave_capitulo = '$idCapituloCIE10' order by consecutivo");
 		
 		 $queryGetCasesCie10->execute();
 
 		$dataJsonCasesCIE10=[];
 
 		 if (!$queryGetCasesCie10->rowCount()) {
-			$dataJsonCasesCIE10[] = array('nombre' =>'Casos epidemologicos no encontrados','catalog_key'=>'');
+			$dataJsonCasesCIE10[] = array('nombre' =>'Casos epidemologicos no encontrados','catalog_key'=>'','consecutivo'=>'');
 
 		echo json_encode($dataJsonCasesCIE10);
 		exit();
@@ -698,15 +701,23 @@ mainModel::getDataTableServerSideModel('data_cie10_view', 'consecutivo',
 
 
 	// buscar por patron
+
 	if(isset($dataGetCIE10['valueSearch'])) {
 
-	$idCapituloCIE10 = mainModel::cleanStringSQL($dataGetCIE10['idCapituloCIE10']);
 
 	$valueSearch = mainModel::cleanStringSQL($dataGetCIE10['valueSearch']);
 
 	$valueSearch = pg_escape_string($valueSearch);
 
 	$columnsSearch = array('catalog_key','nombre');
+
+
+	if (isset($dataGetCIE10['columnsSearch'])){
+	$columnsSearch = $dataGetCIE10['columnsSearch'];
+
+
+	}
+
 
 		// buscar patron en las columnas
 
@@ -719,7 +730,10 @@ mainModel::getDataTableServerSideModel('data_cie10_view', 'consecutivo',
         $where .= ")";
 	
 		// si ha selecionado un capitulo
-	 	if (!mainModel::isDataEmtpy($idCapituloCIE10)) {
+	 	if (isset(($idCapituloCIE10)) && !mainModel::isDataEmtpy($idCapituloCIE10)) {
+
+	$idCapituloCIE10 = mainModel::cleanStringSQL($dataGetCIE10['idCapituloCIE10']);
+
                 $where .= " AND ";
 
 				$where.=" clave_capitulo = '$idCapituloCIE10' ";    	
@@ -727,22 +741,33 @@ mainModel::getDataTableServerSideModel('data_cie10_view', 'consecutivo',
 
 	// armar query
 
+	$columnsShow = array('catalog_key','nombre');
+
+
+	if (isset($dataGetCIE10['columnsShow'])){
+	$columnsShow = $dataGetCIE10['columnsShow'];
+	}
 
 	$querySearchPatternCIE10 = "
-        SELECT ".str_replace(" , ", " ", implode(", ",$columnsSearch))."
+        SELECT ".str_replace(" , ", " ", implode(", ",$columnsShow))."
         FROM   data_cie10
-        $where";
+        $where "." ORDER BY consecutivo";
+
+//        var_dump($querySearchPatternCIE10);
+
+  //      exit();
 
 		$querySearchPatternCIE10 = mainModel::connectDB()->prepare($querySearchPatternCIE10);
 		
 		 $querySearchPatternCIE10->execute();
 	
+
 			$dataJsonCasesCIE10=[];
 			
 			// verficar resultado query
 		 if (!$querySearchPatternCIE10->rowCount()) {
 
-			$dataJsonCasesCIE10[] = array('nombre' =>'Casos epidemologicos no encontrados','catalog_key'=>'');
+			$dataJsonCasesCIE10[] = array('nombre' =>'Casos epidemologicos no encontrados','catalog_key'=>'','consecutivo'=>'');
 
 		echo json_encode($dataJsonCasesCIE10);
 		exit();

@@ -1,5 +1,6 @@
   <script src="<?php echo SERVERURL; ?>view/js/changeLanguageDatatables.js">
 
+
   </script>
 
           <!-- Page Heading -->
@@ -98,7 +99,7 @@
 
 
 
-              <div class='table-responsive'>
+              <div class='table-responsive-disabled'>
 
                 <table class='table table-bordered table-striped table-striped' id='dataTable' width='100%' cellspacing='0'>
 
@@ -124,7 +125,7 @@
     </div>
 
     <div class="float-right">
-    <button type="button" class="btn btn-primary" data-toggle="modal" data-target=".bd-example-modal-lg">Mas Informacion</button>
+    <button type="button" class="btn btn-primary" data-toggle="modal" data-target=".moreInfoCatalogCie10">Mas Informacion</button>
     </div>
 <br>
     
@@ -362,7 +363,7 @@
     
     <!-- Large modal -->
 
-<div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+<div class="modal fade moreInfoCatalogCie10" tabindex="-1" role="dialog" aria-labelledby="moreInfoCatalogCie10" aria-hidden="true">
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
       <div class="modal-header">
@@ -389,7 +390,7 @@
                     <tr>
                       <td>consecutivo</td>
                       <td>Numeros enteros</td>
-                      <td></td>
+                      <td>Indefinido</td>
                     </tr>
                     <tr>
                       <td>letra</td>
@@ -431,6 +432,13 @@
                       <td>Caracteres de texto</td>
                       <td>2</td>
                     </tr>
+
+                    <tr>
+                      <td>Notificacion Inmediata</td>
+                      <td>Compuesto</td>
+                      <td>erradicado, n_inter, nin, ninmtobs, notdiaria, sistema_especial, es_suive_notin, es_suive_est_epi, es_suive_est_brote</td>
+                    </tr>
+
                     <tr>
                       <td>erradicado</td>
                       <td>Caracteres de texto</td>
@@ -751,6 +759,21 @@ load_xlsx.style.display = "none";
 
 requestQueryByActionToAction();
 
+function TimerGetDataCIE10CatalogForDataTables(url,parameterPreGetDataTables){
+
+let timerID;
+
+  window.clearTimeout(timerID);
+  
+  return timerID = setTimeout(() => {
+   console.log(parameterPreGetDataTables);
+   getDataCIE10CatalogForDataTables(url,parameterPreGetDataTables);
+
+  window.clearTimeout(timerID);
+
+  }, 1500);
+}
+
 async function requestQueryByActionToAction(){
 
 
@@ -770,20 +793,13 @@ $('#minKeyCIE10,#maxKeyCIE10').on('keyup', function () {
     '&maxKeyCIE10='+maxKeyCIE10+
     '&idCapitulo='+idCapitulo;
 
+      var valueSearch=$(this).val();
 
-if (!isBlank(minKeyCIE10) && !isBlank(maxKeyCIE10) || isBlank(minKeyCIE10) && isBlank(maxKeyCIE10)) {
+if (!isBlank(minKeyCIE10) && !isBlank(maxKeyCIE10) && minKeyCIE10.length > 2 && maxKeyCIE10.length > 2  || isBlank(minKeyCIE10) && isBlank(maxKeyCIE10)) {
 
-let timerID;
+  return TimerGetDataCIE10CatalogForDataTables(url,parameterPreGetDataTables);
 
-function setTimer() {
-  clearTimeout(timerID)
-  timerID = setTimeout(() => {
-  getDataCIE10CatalogForDataTables(url,parameterPreGetDataTables);
-  }, 2000)
 }  
-}
-
-setTimer();
 
 });
 
@@ -810,8 +826,7 @@ return setTimeout(function(){getDataCIE10CatalogForDataTables(url,parameterPreGe
    var parameterPreGetDataTables =
     '&idCapitulo='+idCapitulo;
 
-
-      return getDataCIE10CatalogForDataTables(url,parameterPreGetDataTables);
+    return getDataCIE10CatalogForDataTables(url,parameterPreGetDataTables);
 
 }
 
@@ -870,5 +885,6 @@ load_archive.style.display = "none";
 
   });
 
+$.fn.dataTable.ext.errMode = 'none';
 
 </script>

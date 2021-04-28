@@ -1,20 +1,59 @@
+          <!-- Page Heading -->
+          <h1 class="h3 mb-2 text-gray-800">Usuarios</h1>
+          
+          <!-- <p class="mb-4">DataTables is a third party plugin that is used to generate the demo table below. For more information about DataTables, pleas>
+          -->
+        <div class='card shadow mb-4'>
+            <div class='card-header py-3'>
+              <h6 class='m-0 font-weight-bold text-primary'>Registro de Sesiones</h6>
+            </div>
+            <div class='card-body'>
 
 <?php 
 
 
   $userEncryptURl= explode("/",$_GET['views']);
 
-  $requestedAliasUser = $loginController->decryption($userEncryptURl[1]);
+          $requestedAliasUser = $loginController->decryption($userEncryptURl[1]);
 
   if($_SESSION['id_nivel_permiso']!=1 && strcmp($_SESSION["aliasUser"],$requestedAliasUser) != 0){
     echo $loginController->forceClosureController();
     exit();
   }
 
-?>
+            $msjError = $loginController::$msjErrorRequestData404;
 
-          <!-- Page Heading -->
-          <h1 class="h3 mb-2 text-gray-800">Usuarios</h1>
+
+            $dataUrl= explode("/",$_GET['views']);
+                if (!empty($userEncryptURl[1])){
+
+                 $requestAjax =  FALSE;
+
+                require_once "./controller/userController.php";
+              
+                $userController = new userController();
+
+  
+                      $userAttributesFilter =  [];
+
+                      $userFilterValues = [];
+
+                      array_push($userAttributesFilter, 'alias = :aliasUser');
+                      $userFilterValues[':aliasUser'] = [
+                      'value' => $requestedAliasUser,
+                      'type' => \PDO::PARAM_STR,
+                      ];
+                                 $queryUserRequested=$userController->getQueryInnerJoimForUser($userAttributesFilter,$userFilterValues);
+                                
+                                  $queryUserRequested->execute();
+
+                      if (empty($requestedAliasUser) || !$queryUserRequested->rowCount()) {
+                                  echo $msjError;
+                                  exit;
+                      }
+                }
+ ?>
+
           
           <!-- <p class="mb-4">DataTables is a third party plugin that is used to generate the demo table below. For more information about DataTables, pleas>
           -->
@@ -36,13 +75,8 @@
 $minDateValueAvailable = $activityLogSessionsController-> getFirstDateRecordsActivityLogSessionsController();
            ?>
 
-        <div class='card shadow mb-4'>
-            <div class='card-header py-3'>
-              <h6 class='m-0 font-weight-bold text-primary'>Registro de Sesiones</h6>
-            </div>
-            <div class='card-body'>
   
-  <div class='table-responsive'>
+  <div class='table-responsive-disabled'>
 
 
            <!-- Formulario para limitar fecha mediante el Backend -->

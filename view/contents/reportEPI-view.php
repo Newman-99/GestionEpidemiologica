@@ -3,14 +3,14 @@
 <script>
 function exportFile(){
 
-          var startDateRange = $('#startDateRange').val();
+          var minDateRange = $('#minDateRange').val();
 
-        var endDateRange = $('#endDateRange').val();
+        var maxDateRange = $('#maxDateRange').val();
 
 var hour = getHourForFileExport();
 
   var wb = XLSX.utils.table_to_book(document.getElementById('dataTable'));
-  XLSX.writeFile(wb, 'reporte_EPI_'+startDateRange+'_'+endDateRange+'_'+hour+'.xlsx');
+  XLSX.writeFile(wb, 'reporte_EPI_'+minDateRange+'_'+maxDateRange+'_'+hour+'.xlsx');
   return false;
 }
 </script>
@@ -59,12 +59,12 @@ var hour = getHourForFileExport();
 
             
             <div class="col-md-3">
-            <input type='date' class='form-control input-add-table' id='startDateRange' name='startDateRange'
+            <input type='date' class='form-control input-add-table' id='minDateRange' name='minDateRange'
             min ='<?php echo $minDateValueAvailable; ?>' max = '<?php echo $currentDate; ?>'
             >
             </div>
             <div class="col-md-3">
-            <input type='date' class='form-control input-add-table' id='endDateRange' name='endDateRange' min ='<?php echo $minDateValueAvailable; ?>' max = '<?php echo $currentDate; ?>'>
+            <input type='date' class='form-control input-add-table' id='maxDateRange' name='maxDateRange' min ='<?php echo $minDateValueAvailable; ?>' max = '<?php echo $currentDate; ?>'>
             </div>
 
             <input type="hidden" name="actionForAjax" id="actionForAjax"  class='form-control' value='<?php echo SERVERURL; ?>ajax/casosEpidemiAjax.php'>
@@ -90,6 +90,9 @@ var hour = getHourForFileExport();
             <button type="button" class="btn btn-secondary" name="btnExportXls" id="btnExportXls" value='<?php echo SERVERURL; ?>ajax/casosEpidemiAjax.php'>
               Excel
             </button>
+            <br>   
+
+              <br>
 
                   <thead>
                   <tr>
@@ -177,18 +180,18 @@ return exportFile();
 
   $('button#requestReportEpi').on('click',function(){
 
-        var startDateRange = $('#startDateRange').val();
+        var minDateRange = $('#minDateRange').val();
 
-        var endDateRange = $('#endDateRange').val();
+        var maxDateRange = $('#maxDateRange').val();
 
-        var actionAjax = $(this).val();
+        var server_url = $('#server_url').val();
 
   $.ajax({
       type:'POST',
-      url: actionAjax,
+      url: server_url+'ajax/reportsEpiAjax.php',
       data:{
-      'startDateRange':startDateRange,
-      'endDateRange':endDateRange,
+      'minDateRange':minDateRange,
+      'maxDateRange':maxDateRange,
       'validDataToReportEpi':true},
        success:function(response){
 
@@ -200,8 +203,8 @@ return exportFile();
       }else{
 
     var dataRequestEpi = 
-      'startDateRange='+startDateRange+
-      '&endDateRange='+endDateRange+
+      'minDateRange='+minDateRange+
+      '&maxDateRange='+maxDateRange+
       '&viewReportEpi='+'true';
 
           var table = $('#dataTable').DataTable({
@@ -213,7 +216,7 @@ return exportFile();
         "bProcessing": true,
         "bDeferRender": true, 
         "bServerSide": true,
-        "sAjaxSource": actionAjax+"?"+dataRequestEpi,
+        "sAjaxSource": server_url+'ajax/reportsEpiAjax.php'+"?"+dataRequestEpi,
         'language': LANGUAGE_SPANISH_DATATABLES,
         "bDestroy": true
 

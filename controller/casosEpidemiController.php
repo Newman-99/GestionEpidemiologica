@@ -1,7 +1,6 @@
 <?php
 
 
-
 		// para simular la herencia mediante colaboracion de objetos
 		require_once "personController.php";
 
@@ -35,7 +34,7 @@
 
 		$id_tipo_entrada = mainModel::cleanStringSQL($dataCasosEpidemi['id_tipo_entrada']);
 
-		$catalog_key_cie10 = mainModel::cleanStringSQL($dataCasosEpidemi['catalogKeyCIE10']);
+		$catalog_key_cie10 = mainModel::cleanStringSQL($dataCasosEpidemi['catalog_key_cie10']);
 
 		$id_parroquia = mainModel::cleanStringSQL($dataCasosEpidemi['id_parroquia']);
 		 
@@ -67,6 +66,8 @@
 		$dataCasosEpidemi['ifNotHaveIdentityDocument'] = 0;
 		$ifNotHaveIdentityDocument = 0;
 		}
+
+
 
 		$id_person = false;
 
@@ -128,11 +129,16 @@
 
 		}
 
+       $queryGetConsecutivoCIE10 = mainModel::connectDB()->query("SELECT consecutivo from data_cie10 where catalog_key = '".$catalog_key_cie10."' LIMIT 1");
+
+       $consecutivo_cie10 = $queryGetConsecutivoCIE10->fetchColumn();
+
 
 				$dataCasosEpidemiClean =
 		["id_nacionalidad"=>$id_nacionalidad,
 		"doc_identidad"=>$doc_identidad,
 		"catalog_key_cie10"=>$catalog_key_cie10,
+		"consecutivo_cie10"=>$consecutivo_cie10,
 		"id_parroquia"=>$id_parroquia,
 		"direccion"=>$direccion,
 		"telefono"=>$telefono,
@@ -219,7 +225,6 @@
 		"fecha_registro"=>$fecha_registro,
 		"catalog_key_cie10"=>$catalog_key_cie10];
 
-
 		$dataCasosEpidemi = array_merge($dataCasosEpidemi,$dataCasosEpidemiBitacora);
 
 
@@ -240,7 +245,7 @@
 
 		$id_genero = mainModel::cleanStringSQL($dataCasosEpidemi['id_genero']);
 
-		 $catalog_key_cie10 = mainModel::cleanStringSQL($dataCasosEpidemi['catalogKeyCIE10']);
+		 $catalog_key_cie10 = mainModel::cleanStringSQL($dataCasosEpidemi['catalog_key_cie10']);
 
 		 $id_parroquia = mainModel::cleanStringSQL($dataCasosEpidemi['id_parroquia']);
 		 $direccion = mainModel::cleanStringSQL($dataCasosEpidemi['direccion']);
@@ -262,9 +267,9 @@
 
 		$id_tipo_entrada = mainModel::cleanStringSQL($dataCasosEpidemi['id_tipo_entrada']);
 
-		$is_hospital = false;
+		$is_hospital = 0;
 	if(isset($dataCasosEpidemi['is_hospital'])){
-		$is_hospital = true;
+		$is_hospital = 1;
 
 		}
 
@@ -330,7 +335,9 @@
 
 		}
 
+       $queryGetConsecutivoCIE10 = mainModel::connectDB()->query("SELECT consecutivo from data_cie10 where catalog_key = '".$catalog_key_cie10."' LIMIT 1");
 
+       $consecutivo_cie10 = $queryGetConsecutivoCIE10->fetchColumn();
 
 $ifIdentityDocumentIsRepeatedInOtherPersons = 0;
 
@@ -345,6 +352,7 @@ $ifIdentityDocumentIsRepeatedInOtherPersons = self::$personController->ifIdentit
 		"id_nacionalidad"=>$id_nacionalidad,
 		"doc_identidad"=>$doc_identidad,
 		"catalog_key_cie10"=>$catalog_key_cie10,
+		"consecutivo_cie10"=>$consecutivo_cie10,
 		"id_parroquia"=>$id_parroquia,
 		"direccion"=>$direccion,
 		"fecha_registro"=>$fecha_registro,
@@ -440,16 +448,6 @@ $ifIdentityDocumentIsRepeatedInOtherPersons = self::$personController->ifIdentit
 		$dataCasosEpidemi = array_merge($dataCasosEpidemi,$dataCasosEpidemiBitacora);
 
 
-		if ($dataCasosEpidemi['is_hospital'] == true) {
-		$dataCasosEpidemi['is_hospital'] = 'true';
-		}		
-
-		if ($dataCasosEpidemi['is_hospital'] == false) {
-		$dataCasosEpidemi['is_hospital'] = 'false';
-		}
-
-
-
 		$columnsTableToCompare =["fecha_nacimiento",
 		"id_genero"];
 				 	
@@ -529,17 +527,8 @@ if ($dataCasosEpidemi['ifIdentityDocumentIsRepeatedInOtherPersons'] == true) {
     			$idsPersonsOtherCaseSameDocumentIdentity[] = $dataPreviousPersonSameIdentityDocument['id_person_caso'];
 		  	}
 
-		if ($dataPreviousPersonSameIdentityDocument['is_hospital'] == true) {
-		$dataPreviousPersonSameIdentityDocument['is_hospital'] = 'true';
-		}		
-
-		if ($dataPreviousPersonSameIdentityDocument['is_hospital'] == false) {
-		$dataPreviousPersonSameIdentityDocument['is_hospital'] = 'false';
-		}
-
-
 			$dataOtherCasesBitacora = array(
-		 "indicatorEpidemiCaseError"=> '<br> here En el Caso Epidemiologico ID: '.$dataPreviousPersonSameIdentityDocument['id_caso_epidemi'],
+		 "indicatorEpidemiCaseError"=> '<br> En el Caso Epidemiologico ID: '.$dataPreviousPersonSameIdentityDocument['id_caso_epidemi'],
 		 "id_person"=>$dataCasosEpidemi['id_person'],
 		 "id_person_caso"=>$dataCasosEpidemi['id_person'],
 		 "id_person_usuario"=>$dataCasosEpidemi['id_person_usuario'],
@@ -689,7 +678,7 @@ if ($dataCasosEpidemi['ifIdentityDocumentIsRepeatedInOtherPersons'] == true) {
 		$is_hospital = mainModel::cleanStringSQL($dataCasosEpidemi['is_hospital']);
 
 		 			if (mainModel::isDataEmtpy(
-						 $id_caso_epidemi,$catalog_key_cie10,$fecha_registro,$is_hospital,$id_person) || mainModel::isDataEmtpyPermitedZero($id_atrib_especial) || !isset($doc_identidad,$id_nacionalidad)) {
+						 $id_caso_epidemi,$catalog_key_cie10,$fecha_registro,$id_person) || mainModel::isDataEmtpyPermitedZero($id_atrib_especial,$is_hospital) || !isset($doc_identidad,$id_nacionalidad)) {
 			$alert=[
 				"Alert"=>"simple",
 				"Title"=>"Datos Vacios",
@@ -791,6 +780,11 @@ if (!isset($dataCasosEpidemi['confirmDelete'])) {
 				 }
 
   public static function getDataTablesCasosEpidemiController() {
+
+  	if (intval($_GET['sEcho']) < 3) {
+  		exit();
+  	}
+
   $columnsTable = array(
      'ROW_NUMBER() OVER()',
       'id_caso_epidemi',
@@ -866,14 +860,48 @@ array(
 
   try {
 
-//    mainModel::connectDB()->query('drop view caso_epidemi_view');
+//   mainModel::connectDB()->query('drop view caso_epidemi_view');
+
+//		session_start(['name'=>'dptoEpidemi']);	
+
+/*		var_dump($_SESSION['maxDateRange'], $_GET['maxDateRange'], $_SESSION['minDateRange'], $_GET['minDateRange'],strcmp($_SESSION['maxDateRange'], $_GET['maxDateRange']), strcmp($_SESSION['minDateRange'], $_GET['minDateRange']));
+*/
+
+
+				$siRequestNewViewTableCasosEpidemi = false;
+
+
+		$dataCache = array();
+
+				$dataCache['minDateRange'] = mainModel::cleanStringSQL($_GET['minDateRange']);
+
+				 $dataCache['maxDateRange'] = mainModel::cleanStringSQL($_GET['maxDateRange']);
+
+
+
+		if (!isset($_SESSION['maxDateRange']) || !isset($_SESSION['minDateRange']) || (strcmp($_SESSION['maxDateRange'], $_GET['maxDateRange']) != 0) || (strcmp($_SESSION['minDateRange'], $_GET['minDateRange']) != 0)) {
+				$_SESSION['minDateRange'] = mainModel::cleanStringSQL($_GET['minDateRange']);
+
+				 $_SESSION['maxDateRange'] = mainModel::cleanStringSQL($_GET['maxDateRange']);
+
+				$dataCache['maxDateRange'] = $_SESSION['maxDateRange'];
+
+				$dataCache['minDateRange'] = $_SESSION['minDateRange'];
+
+				$siRequestNewViewTableCasosEpidemi = true;
+
+		}	# code...
+		
+
 
 $queryifExistView = mainModel::connectDB()->query("SELECT where EXISTS  ( SELECT FROM information_schema.tables WHERE table_name = 'caso_epidemi_view' ) = true");
 
-			if(!$queryifExistView->rowCount()){
-    
-    		mainModel::connectDB()->query(parent::$queryCreateViewCasosEpidemi);
+
+			if(!$queryifExistView->rowCount() || $siRequestNewViewTableCasosEpidemi){ 
+    		
+    		mainModel::connectDB()->query(parent::queryCreateViewCasosEpidemi($dataCache));
 			
+
 			}
 
 
@@ -1020,45 +1048,6 @@ echo json_encode($dataToCreateDataTable);
 
 		}
 
-		public static function validDatatoGetDataTablesEPIController($dataEpi){
-
-		 $startDateRange = mainModel::cleanStringSQL($dataEpi['startDateRange']);
-
-
-		 $endDateRange = mainModel::cleanStringSQL($dataEpi['endDateRange']);
-
-
-			if (!mainModel::checkDate($startDateRange,$endDateRange) || $startDateRange > $endDateRange){
-			$alert=[
-				"Alert"=>"simple",
-				"Title"=>"Datos Invalidos",
-				"Text"=>"El Rango de Fechas es invalido",
-				"Type"=>"error"
-			];
-
-				echo json_encode($alert);
-
-				exit();
-		}
-
-			if (parent::getNroCasesEpidemiForEpiModel('', $startDateRange, $endDateRange,'','','') == 0){
-			$alert=[
-				"Alert"=>"simple",
-				"Title"=>"Datos Vacios",
-				"Text"=>"No se encuentra ningun dato en el rango de fechas",
-				"Type"=>"error"
-			];
-
-				echo json_encode($alert);
-
-				exit();
-		}
-
-				echo json_encode('');
-
-				exit();
-
-		}
 		
 
 		public static function getReportCompleteEPIController($dataReport){
@@ -1246,79 +1235,6 @@ $writer->save( $editFile );
 }
 
 
-		public static function getDataTablesEPIController($dataEpi){
-
-		 $startDateRange = mainModel::cleanStringSQL($dataEpi['startDateRange']);
-
-
-		 $endDateRange = mainModel::cleanStringSQL($dataEpi['endDateRange']);
-
-      $rangeAgesStart=['', 1, 5, 7, 10, 12, 15, 20, 25, 45, 60, 65,''];
-
-      $rangeAgesEnd = [1, 4, 6, 9, 11, 14, 19, 24, 44, 59, 64,'', ''];
-
-$dataForDataTables = array();
-
-		$queryGetAgrupacionEPI = mainModel::connectDB()->query(parent::$queryGetAgrupacionEPI);
-		
-		while($agrupacion_epi=$queryGetAgrupacionEPI->fetch(PDO
-			::FETCH_ASSOC)){
-
-			$dataRow=array();
-
-			$dataRow[] = $agrupacion_epi["orden"];
-
-			$dataRow[] = $agrupacion_epi["enfermedad_evento_epi"];
-
-				/// for obtener los datos por ntodos los rango de edades
-			for ($idAgeRange=0; $idAgeRange < count($rangeAgesStart); $idAgeRange++) {
-
-			// obtnemos los datos por generors y tipo de entrada
-			for ($id_tipo_entrada=1; $id_tipo_entrada <= 2 ; $id_tipo_entrada++) {
-
-				for ($id_genero=1; $id_genero <= 2 ; $id_genero++) {
-
-				    $dataRow[] = array(parent::getNroCasesEpidemiForEpiModel($agrupacion_epi["orden"], $startDateRange, $endDateRange,$id_genero,$rangeAgesStart[$idAgeRange],$rangeAgesEnd[$idAgeRange],$id_tipo_entrada));
-				}
-
-			
-
-			}
-				// total por tipo de entrada
-				    
-					for ($id_tipo_entrada=1; $id_tipo_entrada <= 2 ; $id_tipo_entrada++) {
-
-					$dataRow[] = array(parent::getNroCasesEpidemiForEpiModel($agrupacion_epi["orden"], $startDateRange, $endDateRange,'',$rangeAgesStart[$idAgeRange],$rangeAgesEnd[$idAgeRange],$id_tipo_entrada));
-					
-					}
-							// total por tipo entrada y genero
-							$dataRow[] = array(parent::getNroCasesEpidemiForEpiModel($agrupacion_epi["orden"], $startDateRange, $endDateRange,'',$rangeAgesStart[$idAgeRange],$rangeAgesEnd[$idAgeRange],''));
-		}
-
-
-		// total de edades, genero, tipoEntrada
-         $dataRow[] = parent::getNroCasesEpidemiForEpiModel($agrupacion_epi["orden"], $startDateRange, $endDateRange,'','','','','');
-	
-
-		$dataForDataTables[] = $dataRow;
-
-	}
-
-
-		$iFilteredTotal = count($dataForDataTables);
-
-		$iTotal = $iFilteredTotal;
-
-
-		echo json_encode(array(
-        "sEcho" => intval($_GET['sEcho']),
-        "iTotalRecords" => $iTotal,
-        "iTotalDisplayRecords" => $iFilteredTotal,
-        "aaData" => $dataForDataTables
-		));
-	
-		exit();
-		}
 	
 
 public function importCasosEpidemiController($files){
@@ -1431,7 +1347,6 @@ $telefono = mainModel::cleanStringSQL($dataForQuery[$indiceFila][24]);
 		
 		 $indicatorEpidemiCaseError = " <br> En id Caso Epidemiologico (".$id_caso_epidemi.")";
 
-
 		$dataCasosEpidemi=[
 		'indicatorPersonError'=>$indicatorEpidemiCaseError,
 		'indicatorEpidemiCaseError'=>$indicatorEpidemiCaseError,
@@ -1482,12 +1397,12 @@ $telefono = mainModel::cleanStringSQL($dataForQuery[$indiceFila][24]);
 
 	self::msgsValidDataBasicCaseEpidemi($dataCasosEpidemi);
 
-		   if($is_hospital !== "false" && $is_hospital !== "true"){
+		   if($is_hospital != 0 || $is_hospital != 1){
 
 			$alert=[
 			"Alert"=>"simple",
 			"Title"=>"Datos Invalidos",
-			"Text"=>"El atribtuto is hospital solo debe ser un true o un false ".$indicatorEpidemiCaseError,
+			"Text"=>"El atribtuto is hospital solo debe 1 o 0".$indicatorEpidemiCaseError,
 			"Type"=>"error"
 				];
 		
@@ -1593,19 +1508,77 @@ $dataSendCasos = urlencode($dataSendCasos);
 
 	public static function getEspecialAttributesCIE10($dataCasosEpidemi){
 
-	$catalog_key = mainModel::cleanStringSQL($dataCasosEpidemi['catalog_key']);
+//var_dump($dataCasosEpidemi);
+
+	if (isset($dataCasosEpidemi['catalog_key']) && !empty($dataCasosEpidemi['catalog_key'])) {
+
+	$valueSearch = mainModel::cleanStringSQL($dataCasosEpidemi['catalog_key']);
+
+       $queryGetConsecutivoCIE10 = self::connectDB()->query("SELECT consecutivo from data_cie10 where catalog_key = '".$valueSearch."' LIMIT 1");
+
+       $consecutivoCie10 = $queryGetConsecutivoCIE10->fetchColumn();
+
+	$stringSearchForQuery = 'cie10.consecutivo = '.$consecutivoCie10;
 
 
-		$queryGetAttribEspecial = mainModel::connectDB()->prepare(parent::$queryGetAttribEspecial);
+}
+	if (isset($dataCasosEpidemi['consecutivo_cie10']) && !empty($dataCasosEpidemi['consecutivo_cie10'])) {
 
-		$queryGetAttribEspecial->execute(array(
-		 "catalog_key"=>$dataCasosEpidemi['catalog_key']));
+	$consecutivoCie10 = mainModel::cleanStringSQL($dataCasosEpidemi['consecutivo_cie10']);
+
+	$stringSearchForQuery = 'cie10.consecutivo = '.$consecutivoCie10;
+
+	}
+
+
+	if (isset($dataCasosEpidemi['typeSearch'])) {
+
+		if ($dataCasosEpidemi['typeSearch'] == 'range') {
+
+	$consecutivoCie10Inicio = mainModel::cleanStringSQL($dataCasosEpidemi['valuesSearchCie10'][0]);
+
+	$consecutivoCie10Final = mainModel::cleanStringSQL($dataCasosEpidemi['valuesSearchCie10'][1]);
+
+	if (!is_numeric($consecutivoCie10Final) ||  !is_numeric($consecutivoCie10Inicio)) {
+			
+			$dataJsonAtribEspecial[] = array('descripcion' =>'Atributos Especiales No Encontrados','id_atrib_especial'=>'');
+
+			echo json_encode($dataJsonAtribEspecial);
+
+			exit();
+				}
+
+	$stringSearchForQuery = "cie10.consecutivo BETWEEN ".$consecutivoCie10Inicio."
+	AND ".$consecutivoCie10Final."";
+
+
+		}
+	}
+
+
+		$queryGetAttribEspecial = mainModel::connectDB()->query(parent::$queryGetAttribEspecialSimple." AND ".
+			$stringSearchForQuery." order by atr_esp.id_atrib_especial");
+
+/*
+		var_dump(parent::$queryGetAttribEspecialSimple." AND cie10.".$atribTableSearch." = ".$idSearch."
+order by atr_esp.id_atrib_especial");
+*/
 
 
 		
 		$dataJsonAtribEspecial=[];
+		if (!$queryGetAttribEspecial) {
+	
+			$dataJsonAtribEspecial[] = array('descripcion' =>'Atributos Especiales No Encontrados','id_atrib_especial'=>'');
 
-			$dataJsonAtribEspecial[] = array('descripcion' =>'Seleccionar Atributo Especial','id_atrib_especial'=>'0');
+			echo json_encode($dataJsonAtribEspecial);
+
+			exit();
+		}
+
+		if (!$queryGetAttribEspecial->rowCount()) {
+			$dataJsonAtribEspecial[] = array('descripcion' =>' Atributo Especial: Ninguno','id_atrib_especial'=>'0');
+		}
 
 		while($recordsAtribEspecial=$queryGetAttribEspecial->fetch(PDO
 			::FETCH_ASSOC)){
@@ -1785,7 +1758,7 @@ if ($dataCasosEpidemi['doc_identidad'] === 'admin') {
 
 
 
-	self::msgValidExistCatalogKeyCIE10($dataCasosEpidemi);
+	self::msgValidExistcatalog_key_cie10($dataCasosEpidemi);
 
 	self::msgValididGenreAssingnEventCIE10($dataCasosEpidemi);
 
@@ -1893,7 +1866,7 @@ if ($dataCasosEpidemi['doc_identidad'] === 'admin') {
 		}
 
 
-	protected static function msgValidExistCatalogKeyCIE10($dataCasosEpidemi){
+	protected static function msgValidExistcatalog_key_cie10($dataCasosEpidemi){
 			
 			extract($dataCasosEpidemi);
 
@@ -2068,7 +2041,7 @@ if ($dataCasosEpidemi['doc_identidad'] === 'admin') {
 			}
 
 
-		$queryIdAtribEspecialCIE10 = mainModel::connectDB()->query("SELECT id_atrib_especial FROM atribs_especiales_epi WHERE  id_atrib_especial =
+		$queryIdAtribEspecialCIE10 = mainModel::connectDB()->query("SELECT id_atrib_especial FROM atribs_especials_epi_configs WHERE  id_atrib_especial =
 			".$id_atrib_especial);
 
 		if (!$queryIdAtribEspecialCIE10->rowCount()){
@@ -2090,12 +2063,19 @@ if ($dataCasosEpidemi['doc_identidad'] === 'admin') {
 
 			if($id_atrib_especial ==! 0) {
 
+
+
 //				var_dump($dataCasosEpidemi['catalog_key_cie10']);
-		$queryGetAttribEspecial = mainModel::connectDB()->prepare(parent::$queryGetAttribEspecial);
 
-		$queryGetAttribEspecial->execute(array(
+	$stringSearchForQuery = 'cie10.consecutivo = '.$dataCasosEpidemi['consecutivo_cie10'];
+
+		$queryGetAttribEspecial = mainModel::connectDB()->query(parent::$queryGetAttribEspecialSimple." AND ".
+			$stringSearchForQuery);
+
+
+/*		$queryGetAttribEspecial->execute(array(
 		 "catalog_key"=>$dataCasosEpidemi['catalog_key_cie10']));
-
+*/
 
 		if (!$queryGetAttribEspecial->rowCount()){
 

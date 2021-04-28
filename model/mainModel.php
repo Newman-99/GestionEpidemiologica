@@ -12,12 +12,33 @@
 
 	class mainModel{
 
+
 	public static $stringQuerydisableForeingDB = "select 'ALTER TABLE DISABLE TRIGGER ALL;' from information_schema.tables where table_schema = 'public'";
 
 
 	public static $stringQueryEnableForeingDB = "select 'ALTER TABLE ENABLE TRIGGER ALL;' from information_schema.tables where table_schema = 'public';";
 
 	public static $stringQueryDeleteBitacora = "DELETE FROM usuario_bitacora WHERE  usuario_alias = :usuario_alias;";
+
+
+        public static $msjErrorRequestData404="
+
+          <div class='text-center'>
+            <div class='error mx-auto' data-text='404'>404</div>
+            <p class='lead text-gray-800 mb-5'>Error de Solicitud de Datos</p>
+            <a href=".SERVERURL.">&larr; Regresar al Tablero de Inicio</a>
+          </div>
+
+          </div>
+        </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+
+        ";
+
 
 	function __construct(){
     date_default_timezone_set("America/Caracas");
@@ -62,12 +83,6 @@ public static function backupDatabase(){
 		self::cleanBackupsTempDirectory();
 
 		require_once '../config/backup-phpcloud.php';
-
-			$sync
-			    ->makeBackup()
-			    ->run('production', [
-			        new Destination('local',$nameBackup),
-			    ], 'gzip');
 
 				$operationElementHtml=[
 					"idSetAtribute"=>"backup",
@@ -317,6 +332,7 @@ foreach($filesBackupsTemp as $file){ // iterate files
 	}
 
 		public static function encryption($string){
+			self::cleanStringSQL($string);			
 			$output=FALSE;
 			$key=hash('sha256', SECRET_KEY);
 			$iv=substr(hash('sha256', SECRET_IV), 0, 16);
@@ -326,6 +342,7 @@ foreach($filesBackupsTemp as $file){ // iterate files
 		}
 
 		public static function decryption($string){
+			self::cleanStringSQL($string);			
 			$key=hash('sha256', SECRET_KEY);
 			$iv=substr(hash('sha256', SECRET_IV), 0, 16);
 			$output=openssl_decrypt(base64_decode($string), METHOD, $key, 0, $iv);
@@ -542,6 +559,8 @@ protected static function isDateGreaterCurrentDate($dateReviewed){
         }
 }
 
+
+
 public static function getDateCurrentSystem(){
       
     date_default_timezone_set("America/Caracas");
@@ -703,7 +722,12 @@ protected static function deleteBitacora($usuario_alias){
 
 
 		$sqlQuery = mainModel::connectDB()->prepare($sqlQuery);
+
+
 		foreach($filterValues as $key => $values) {
+
+//			$sqlQuery->bindValue($key,$values['value']);
+
 			$sqlQuery->bindParam($key, $values['value'], $values['type']);
 
 		}
@@ -725,16 +749,22 @@ public static function isFieldsEqualToThoseInTheDatabase($queryToGet,$fieldstoCo
 
 		$records = $queryToGet->fetch(PDO::FETCH_ASSOC);
 
+
  		$matchCounterDatabaseFields = 0;
 		 
 		 $counterFieldsToCompare = 0;
 
- 		foreach ($records as $databaseKey => $databaseValue) {
+
+		 if (!$records) {
+				return false;
+		 }
+
+		foreach ($records as $databaseKey => $databaseValue) {
  			$counterFieldsToCompare++;
  				// si encuentra uno diferente los datos no son iguales
 
-				if (strcmp($databaseValue,$fieldstoCompare[$databaseKey])!=0) {
 
+				if (strcmp($databaseValue,$fieldstoCompare[$databaseKey])!=0) {
 				$matchCounterDatabaseFields++;
 
 				return false;

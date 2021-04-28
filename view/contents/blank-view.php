@@ -1,5 +1,29 @@
 <?php  
 
+/*
+
+        $requestAjax =  false;
+
+
+    require_once "./config/app.php";
+
+
+    require_once "./controller/reportsEpiController.php";
+
+
+  
+      $dataEpi['minDateRange'] = '01-02-2020';
+
+      $dataEpi['endDateRange'] = '21-04-2021';
+
+            $reportsEpiController = new reportsEpiController();
+
+//echo $reportsEpiController->getNroCasesEpidemiForEpiModel('','2021-04-20', '2021-04-19','','','');
+
+            $reportsEpiController->getDataTablesEPIController($dataEpi);;
+
+            exit();
+
 
     $queryGet = $loginController::connectDB()->query('select consecutivo_cie10,id_caso_epidemi,catalog_key_cie10
       FROM casos_epidemi');
@@ -60,193 +84,10 @@ exit();
 */
 
 //libxml_disable_entity_loader(false); ?>
-
-                  <div class="col-sm-5">
-                    <p>Email: </p>
-                  </div>
-
-                  <div class="col-sm-5">
-                    <p>Tipo de Cuenta: </p>
-                  </div>
-
-       <form class="formAjax form-group text-center" action="<?php echo SERVERURL; ?>ajax/mainAjax.php" method="POST" data-form="config" id="form-update-config-cloud" autocomplete="off">
-
-          <div class="form-group row typeCloud">
-             <div class="col-sm-6 mb-6 mb-sm-0">
-
-              <select name='typeCloud' id='typeCloud' class="form-control div-input-static div-input" clauss="form-control" required>
-                  <option  value=''>Seleccione tipo de Nube</option>
-                  <option value='1'>Cloud Storage | Google Cloud</option>
-                  <option value='2'>Secure cloud storage - Dropbox -v2</option>
-                  <option  value='3'>Amazon Simple Storage Service</option>
-              </select>
-              </div>
-              </div>
-          <div class="form-group row">
-
-                <!-- Gcs,dropbox-v2,s3 -->
-                  <div class="col-sm-5 div-input div-input-static">
-                    <input type="text" class="form-control
-                    " id="email" name ="email" placeholder="Correo">
-                  </div>
-
-                <!-- Gcs,dropbox-v2,s3 -->
-                  <div class="col-sm-5 div-input">
-                    <input type="text" class="form-control
-                    " id="key" name ="key" placeholder="key">
-                  </div>
-                               <!-- Gcs,dropbox-v2,aws -->
-                  <div class="col-sm-5 div-input">
-                    <input type="text" class="form-control
-                    " id="secret" name ="secret" placeholder="secret">
-                  </div>
-
-                <!-- Gcs -->                  
-                  <div class="col-sm-5 div-input">
-                    <input type="text" class="form-control
-                    " id="bucket" name ="bucket" placeholder="bucket">
-                  </div>  
-
-
-          </div>
-
-          <div class="form-group row">
-
-                <!-- Gcs,dropbox-v2 -->
-                  <div class="col-sm-5 div-input">
-                    <input type="text" class="form-control
-                    " id="token" name ="token" placeholder="token">
-                  </div>
-
-                <!-- dropbox -->                  
-                  <div class="col-sm-5 div-input">
-                    <input type="text" class="form-control
-                    " id="app" name ="app" placeholder="app">
-                  </div>  
-
-                <!-- Gcs,dropbox -->
-                  <div class="col-sm-5 div-input">
-                    <input type="text" class="form-control
-                    " id="root" name ="root" placeholder="root">
-                  </div>  
-
-          </div>
-
-        <button class="btn btn-primary btn-user btn-block" type="submit" value="saveCloudBackup" name="save">Actualizar</button>
-
-              </form>
-
-
-    <script type="text/javascript">
-        $('.div-input').css("display", "none");    
-        $('.div-input-static').css("display", "block");    
-
-
-      $( document ).ready(function() {
-
-      $('#typeCloud').on('change', function () {
-
-      if ($('#typeCloud').val() == '') {
-      $('.div-input').css("display", "none");    
-      $('.div-input-static').css("display", "block");    
-
-      }
-
-      if ($('#typeCloud').val() == 1) {
-
-        // atribute for gcs
-      $('#key').parent('div').css("display", "block");    
-
-      $('#secret').parent('div').css("display", "block");    
-
-      $('#bucket').parent('div').css("display", "block");    
-
-      $('#root').parent('div').css("display", "block");    
-
-      // not for gcs
-      
-      $('#token').parent('div').css("display", "none");    
-
-      $('#app').parent('div').css("display", "none");    
-
-      }
-
-      if ($('#typeCloud').val() == 2) {
-
-        // atribute for dropbox
-      $('#token').parent('div').css("display", "block");    
-
-      $('#key').parent('div').css("display", "block");    
-
-      $('#secret').parent('div').css("display", "block");    
-
-      $('#root').parent('div').css("display", "block");    
-
-      $('#app').parent('div').css("display", "block");    
-
-      // not for dropbox
-      
-      $('#bucket').parent('div').css("display", "none");    
-
-      }
-
-      if ($('#typeCloud').val() == 3) {
-
-        // atribute for s3
-
-      $('#key').parent('div').css("display", "block");    
-
-      $('#secret').parent('div').css("display", "block");    
-
-      $('#root').parent('div').css("display", "block");    
-
-      $('#bucket').parent('div').css("display", "block");    
-
-      // not for s3
-      $('#app').parent('div').css("display", "none");    
-
-      $('#token').parent('div').css("display", "none");    
-              
-      }
-
-    });
-
-    });
-
-</script>
-<!--
-    'gcs' => [
-        'type' => 'Gcs',
-        'key'    => '',
-        'secret' => '',
-        'version' => 'latest',
-        'bucket' => '',
-        'root'   => '',
-    ],
-
-    'dropbox-v2' => [
-        'type' => 'DropboxV2',
-        'token' => '',
-        'key' => '',
-        'secret' => '',
-        'app' => '',
-        'root' => '',
-    ],
-
-    's3' => [
-        'type' => 'AwsS3',
-        'key'    => '',
-        'secret' => '',
-        'region' => 'us-east-1',
-        'version' => 'latest',
-        'bucket' => '',
-        'root'   => '',
-    ],
--->
 <?php
 
 
-/*
+
 
         $requestAjax =  false;
 
@@ -270,7 +111,7 @@ exit();
     // obtnener data por captulos
 
 
-    $queryGetCasesCie10 = $casosEpidemiController->connectDB()->query($queryGetCasesCie10." WHERE consecutivo BETWEEN  0 and 2000");
+    $queryGetCasesCie10 = $casosEpidemiController->connectDB()->query($queryGetCasesCie10."");
 
 
 
@@ -294,6 +135,7 @@ $cie10 = ["A00",
 "A014",
 "A02"];
 */
+
 /*
 
 $dataCasosEpidemi = 
@@ -313,13 +155,13 @@ $dataCasosEpidemi =
   "year_registro"=>"2021",
   "id_person_usuario"=>67,
   "usuario_alias"=>"newman207",
-  "bitacora_fecha"=> "2021-02-21",
+  "bitacora_fecha"=> "2021-04-28",
   "bitacora_year"=>"2021",
   "bitacora_hora"=> "11:38:31 am",
   "id_tipo_operacion"=>"1"];
 
 
-  /*
+
 $dataCasosEpidemi = 
   ["id_nacionalidad"=>"2",
   "doc_identidad"=>"10304251",
@@ -337,12 +179,11 @@ $dataCasosEpidemi =
   "year_registro"=>"2021",
   "id_person_usuario"=>67,
   "usuario_alias"=>"newman207",
-  "bitacora_fecha"=> "2021-02-21",
+  "bitacora_fecha"=> "2021-04-21",
   "bitacora_year"=>"2021",
   "bitacora_hora"=> "11:38:31 am",
   "id_tipo_operacion"=>"1"];
 */
-/*
 $dataCasosEpidemi = 
   ["id_nacionalidad"=>"1",
   "doc_identidad"=>"12304251",
@@ -360,20 +201,134 @@ $dataCasosEpidemi =
   "year_registro"=>"2021",
   "id_person_usuario"=>67,
   "usuario_alias"=>"newman207",
-  "bitacora_fecha"=> "2021-02-21",
+  "bitacora_fecha"=> "2021-04-28",
   "bitacora_year"=>"2021",
-  "bitacora_hora"=> "11:38:31 am",
+  "bitacora_hora"=> "9:31:01 am",
   "id_tipo_operacion"=>"1"];
-*/
-  
-  /*  $count = 0;
 
-for ($nroRegister=0; $nroRegister < 10; $nroRegister++) { 
+$dataCasosEpidemi = 
+  ["id_nacionalidad"=>"1",
+  "doc_identidad"=>"20304251",
+  "nombres"=> "Rosa Maria",
+  "apellidos"=>"Namajunas Morales",
+  "fecha_nacimiento"=> "1998-02-02",
+  "id_genero"=>"2",
+  "telefono"=> "04142423339",
+  "indicatorPersonError"=>"",
+  "id_parroquia"=>"651",
+  "direccion"=> "Calle 12 Casa 120",
+  "ifExistPerson"=>0,
+  "id_atrib_especial"=>"0",
+  "indicatorEpidemiCaseError"=>"",
+  "year_registro"=>"2021",
+  "id_person_usuario"=>67,
+  "usuario_alias"=>"newman207",
+  "bitacora_fecha"=> "2021-04-28",
+  "bitacora_year"=>"2021",
+  "bitacora_hora"=> "10:31:01 am",
+  "id_tipo_operacion"=>"1"];
+
+
+$dataCasosEpidemi = 
+  ["id_nacionalidad"=>"1",
+  "doc_identidad"=>"20304251",
+  "nombres"=> "Frederica Miranda",
+  "apellidos"=>"Rosal Guerra",
+  "fecha_nacimiento"=> "2010-02-02",
+  "id_genero"=>"2",
+  "telefono"=> "02393422339",
+  "indicatorPersonError"=>"",
+  "id_parroquia"=>"612",
+  "direccion"=> "Calle 21 Casa 201",
+  "ifExistPerson"=>0,
+  "id_atrib_especial"=>"0",
+  "indicatorEpidemiCaseError"=>"",
+  "year_registro"=>"2021",
+  "id_person_usuario"=>67,
+  "usuario_alias"=>"newman207",
+  "bitacora_fecha"=> "2021-04-28",
+  "bitacora_year"=>"2021",
+  "bitacora_hora"=> "10:31:01 am",
+  "id_tipo_operacion"=>"1"];
+  
+
+$dataCasosEpidemi = 
+  ["id_nacionalidad"=>"2",
+  "doc_identidad"=>"38328032",
+  "nombres"=> "Johana Prill",
+  "apellidos"=>"Sheckenco Numagedov",
+  "fecha_nacimiento"=> "1980-02-02",
+  "id_genero"=>"2",
+  "telefono"=> "02393422339",
+  "indicatorPersonError"=>"",
+  "id_parroquia"=>"612",
+  "direccion"=> "Calle 21 Edif 12 Apto 221",
+  "ifExistPerson"=>0,
+  "id_atrib_especial"=>"0",
+  "indicatorEpidemiCaseError"=>"",
+  "year_registro"=>"2021",
+  "id_person_usuario"=>67,
+  "usuario_alias"=>"newman207",
+  "bitacora_fecha"=> "2021-04-28",
+  "bitacora_year"=>"2021",
+  "bitacora_hora"=> "10:31:01 am",
+  "id_tipo_operacion"=>"1"];
+  
+
+
+$dataCasosEpidemi = 
+  ["id_nacionalidad"=>"1",
+  "doc_identidad"=>"28328032",
+  "nombres"=> "Andres Eduardo",
+  "apellidos"=>"Morales Villabuena",
+  "fecha_nacimiento"=> "2009-02-02",
+  "id_genero"=>"1",
+  "telefono"=> "04123431339",
+  "indicatorPersonError"=>"",
+  "id_parroquia"=>"612",
+  "direccion"=> "Calle 212 casa 121",
+  "ifExistPerson"=>0,
+  "id_atrib_especial"=>"0",
+  "indicatorEpidemiCaseError"=>"",
+  "year_registro"=>"2021",
+  "id_person_usuario"=>67,
+  "usuario_alias"=>"newman207",
+  "bitacora_fecha"=> "2021-04-28",
+  "bitacora_year"=>"2021",
+  "bitacora_hora"=> "10:31:01 am",
+  "id_tipo_operacion"=>"1"];
+  
+
+$dataCasosEpidemi = 
+  ["id_nacionalidad"=>"1",
+  "doc_identidad"=>"3328032",
+  "nombres"=> "Carlos Eduardo",
+  "apellidos"=>"Prada Villabuena",
+  "fecha_nacimiento"=> "1950-02-02",
+  "id_genero"=>"1",
+  "telefono"=> "0416322339",
+  "indicatorPersonError"=>"",
+  "id_parroquia"=>"612",
+  "direccion"=> "Calle Miranda casa 121",
+  "ifExistPerson"=>0,
+  "id_atrib_especial"=>"0",
+  "indicatorEpidemiCaseError"=>"",
+  "year_registro"=>"2021",
+  "id_person_usuario"=>67,
+  "usuario_alias"=>"newman207",
+  "bitacora_fecha"=> "2021-04-28",
+  "bitacora_year"=>"2021",
+  "bitacora_hora"=> "10:31:01 am",
+  "id_tipo_operacion"=>"1"];
+
+    $count = 0;
+
+for ($nroRegister=0; $nroRegister < 15000; $nroRegister++) { 
 
 
 $date_now = date('d-m-Y');
 
-$dayToRegister = mt_rand(0, 7);
+$dayToRegister = mt_rand(0, 365);
 
 $dateRegister = strtotime("-$dayToRegister day", strtotime($date_now));
 
@@ -381,7 +336,7 @@ $dateRegister = date('Y-m-d', $dateRegister);
 
 
 
-$selectCIE10 = mt_rand(0,2000);
+$selectCIE10 = mt_rand(0,14000);
 
 $select_is_hospital = mt_rand(0,1);
 
@@ -404,6 +359,8 @@ if ($nroRegister > 0) {
 
   $dataCasosEpidemi["catalog_key_cie10"]=$cie10[$selectCIE10];
 
+  $dataCasosEpidemi["consecutivo_cie10"]=$selectCIE10;
+
 
 //echo $cie10[$i].' - '.$dataCasosEpidemi["fecha_registro"];
 
@@ -417,4 +374,4 @@ if ($nroRegister > 0) {
 var_dump($count);
 
 
-*/?>
+?>

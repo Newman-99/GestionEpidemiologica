@@ -1,10 +1,18 @@
-    
-    <div class="card o-hidden border-0 shadow-lg my-5 col-md-10">
-      <div class="card-body p-0">
-        <!-- Nested Row within Card Body -->
-        <div class="row">
-          <div class="col-lg-12">
-            <div class="p-5">
+    <div class="card o-hidden border-0 shadow-lg my-5">
+  <div class="container">
+
+    <!-- Outer Row -->
+    <div class="row justify-content-center">
+
+      <div class="col-xl-8 col-lg-12 col-md-12">
+
+        <div class="card o-hidden border-0 shadow-lg my-5">
+          <div class="card-body p-0">
+            <!-- Nested Row within Card Body -->
+            <div class="row">
+              
+              <div class="col-lg-12">
+                <div class="p-3">
               <div class="text-center">
                 <h1 class="h3 mb-2 text-gray-800">Seguridad</h1>
               </div>
@@ -13,17 +21,9 @@
               <?php 
               $userEncryptURl= explode("/",$_GET['views']);
 
-              $msjError="<div class='form-group row'>
-                    <h3 class='h3 mb-2 red'>Error de solicitud de la Cuenta </h3>
+            $msjError = $loginController::$msjErrorRequestData404;
 
-              <a href=".SERVERURL."/dashboard>&larr; Regresa al Tablero de Inicio</a>
 
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-              ";              
               if (!isset($userEncryptURl[1]) || empty($userEncryptURl[1])){
 
                 echo $msjError;
@@ -31,7 +31,34 @@
                 exit;
 
               }
+
               $requestedAliasUser = $loginController->decryption($userEncryptURl[1]);
+
+                 $requestAjax =  FALSE;
+
+                require_once "./controller/userController.php";
+              
+                $userController = new userController();
+
+  
+                      $userAttributesFilter =  [];
+
+                      $userFilterValues = [];
+
+                      array_push($userAttributesFilter, 'alias = :aliasUser');
+                      $userFilterValues[':aliasUser'] = [
+                      'value' => $requestedAliasUser,
+                      'type' => \PDO::PARAM_STR,
+                      ];
+                                 $queryUserRequested=$userController->getQueryInnerJoimForUser($userAttributesFilter,$userFilterValues);
+                                
+                                  $queryUserRequested->execute();
+
+                      if (empty($requestedAliasUser) || !$queryUserRequested->rowCount()) {
+                                  echo $msjError;
+                                  exit;
+                      }
+
 
               if (strcmp($_SESSION["aliasUser"],$requestedAliasUser) != 0) {
                 echo $loginController->forceClosureController();
@@ -134,9 +161,12 @@ $isDisabled = '';
 
 		 <div class="responseProcessAjax"></div>
 		          </form>
-
+              </div>
               </div>
             </div>
           </div>
         </div>
       </div>
+    </div>
+  </div>
+</div>

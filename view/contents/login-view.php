@@ -54,7 +54,7 @@
                     <a class="small" href="<?php echo SERVERURL; ?>registerUser/">Crear una cuenta</a>
                   </div>
   
-                    <?php require "./view/inc/linkRestartUser.php"; ?>
+                    <?php require "./view/inc/linkRestoreUser.php"; ?>
                   <br>
                   <div class="text-center"><img class="cp-logo-lgn" src= "<?php echo SERVERURL; ?>view/img/cp-logo.png"></div>
       

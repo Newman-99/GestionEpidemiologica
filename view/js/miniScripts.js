@@ -39,6 +39,8 @@ data.forEach(function(str) {
 }
 
 
+
+
 // Control de funcionalidades de formularios
 
 // si el checkbox de la person ya existe se active, inabilita los campos innecesarios
@@ -83,7 +85,7 @@ $('#ifNotHaveIdentityDocument').change(function() {
     showElelemt = 'none'    
   }
 
-  $("#doc_identidad").prop('readonly', this.checked);
+  $("#doc_identidad").prop('disabled', this.checked);
   $("#id_nacionalidad").prop('disabled', this.checked);
 
 
@@ -137,11 +139,11 @@ async function setCIE10ToFormUpdateCaseEpidemiAsync(clave_capitulo_cie10,catalog
       
     await setEventCIE10ByidCapituloToFormCaseEpidemi(clave_capitulo_cie10);
 
-    await setTimeout(function(){ $("#catalogKeyCIE10").val(catalog_key_cie10);}, 800);
+    await setTimeout(function(){ $("#catalog_key_cie10").val(catalog_key_cie10);}, 800);
 
     await $('#id_atrib_especial').empty();
 
-    await $('#id_atrib_especial').append('<option value=0>Seleccionar Atributo Especial</option>')
+    await $('#id_atrib_especial').append('<option value=0>Atributo Especial: Ninguno</option>')
 
    // await getEspecialAttributesCIE10();
 
@@ -212,52 +214,68 @@ function getMsgWarningAttributesEventCIE10(dataEventCIE10){
 
         var warningAttributesEventCIE10 = '';
 
+            var isNotific = '';
+          
+          var warningSemanalAttributesEventCIE10= '';
+
+                    if (dataEventCIE10.notsemanal == 'SI') {
+             var warningSemanalAttributesEventCIE10 = "<br>- notsemanal: Vigilancia epidemiológica mobilidad notificación semanal.<br>";
+            }
+
           if (dataEventCIE10.erradicado == 'SI') {
-            warningAttributesEventCIE10+=" <br>Causas erradicadas o no existentes.";
-                    
+            warningAttributesEventCIE10+=" <br>- erradicado: Causas erradicadas o no existentes.";
+            isNotific = '<br>NOTIFICACION INMEDIATA: <br>';
           }
+
           if (dataEventCIE10.n_inter == 'SI') {
-            warningAttributesEventCIE10+= "<br>- Notificación Internacional.";
+            warningAttributesEventCIE10+= "<br>- n_inter: Notificación Internacional.";
+            isNotific = '<br>NOTIFICACION INMEDIATA: <br>';
             }
 
           if (dataEventCIE10.nin == 'SI') {
-            warningAttributesEventCIE10+= "<br>- Notificación inmediata de vigilancia epidemiológica de morbilidad.";
+            warningAttributesEventCIE10+= "<br>- nin: Notificación inmediata de vigilancia epidemiológica de morbilidad.";
+             isNotific = '<br>NOTIFICACION INMEDIATA: <br>';
             }
 
           if (dataEventCIE10.ninmtobs == 'SI') {
-            warningAttributesEventCIE10+= "<br>- Notificación inmediata de mortalidad obstétrica.";
+            warningAttributesEventCIE10+= "<br>- ninmtobs: Notificación inmediata de mortalidad obstétrica.";
+            isNotific = '<br>NOTIFICACION INMEDIATA: <br>';           
             }
 
           if (dataEventCIE10.notdiaria == 'SI') {
-            warningAttributesEventCIE10+= "<br>- Vigilancia epidemiológica mobilidad notificación diaria.";
-            }
-
-          if (dataEventCIE10.notsemanal == 'SI') {
-            warningAttributesEventCIE10+= "<br>- Vigilancia epidemiológica mobilidad notificación semanal.";
+            warningAttributesEventCIE10+= "<br>- notdiaria: Vigilancia epidemiológica mobilidad notificación diaria.";
+             isNotific = '<br>NOTIFICACION INMEDIATA: <br>';
             }
 
           if (dataEventCIE10.sistema_especial == 'SI') {
-            warningAttributesEventCIE10+= "<br>- Vigilancia epidemiológica mobilidad notificación especial.";
+            warningAttributesEventCIE10+= "<br>- sistema_especial: Vigilancia epidemiológica mobilidad notificación especial.";
+            isNotific = '<br>NOTIFICACION INMEDIATA: <br>';
             }
 
           if (dataEventCIE10.es_suive_notin == 'SI') {
-            warningAttributesEventCIE10+= "<br>- Padecimiento de notificación epidemiológica inmediata.";
+            warningAttributesEventCIE10+= "<br>- es_suive_notin: Padecimiento de notificación epidemiológica inmediata.";
+            isNotific = '<br>NOTIFICACION INMEDIATA: <br>';
+
             }
 
           if (dataEventCIE10.es_suive_est_epi == 'SI') {
-            warningAttributesEventCIE10+= "<br>- Padecimiento que requiere estudio epidemiológico de caso.";
+            warningAttributesEventCIE10+= "<br>- es_suive_est_epi: Padecimiento que requiere estudio epidemiológico de caso.";
+            isNotific = '<br>NOTIFICACION INMEDIATA: <br>';
             }
 
 
           if (dataEventCIE10.es_suive_est_brote  == 'SI') {
-            warningAttributesEventCIE10+= "<br>- Padecimiento que requiere estudio de brote.";
+            warningAttributesEventCIE10+= "<br>- es_suive_est_brote: Padecimiento que requiere estudio de brote.";
+              isNotific = '<br>NOTIFICACION INMEDIATA: <br>';
             }
+console.log(warningSemanalAttributesEventCIE10);
 
+          var warningAttributesEventCIE10 = warningSemanalAttributesEventCIE10+isNotific+warningAttributesEventCIE10;
 
             if (isBlank(warningAttributesEventCIE10)) {
                       return false;
             }else{
-                      return warningAttributesEventCIE10;
+                return   warningAttributesEventCIE10;
             }
 }
 
@@ -289,3 +307,32 @@ return dataEventCIE10;
 
 }
 
+
+
+ async function ifIdentityDocumentIsRepeatedInOtherPersons(id_nacionalidad,doc_identidad){
+
+  var ifIdentityDocumentIsRepeatedInOtherPersons = '';
+
+   server_url = $('#server_url').val();
+
+  await $.ajax({
+      type:'POST',
+      url: server_url+'ajax/casosEpidemiAjax.php',
+      data:{
+      'id_nacionalidad':id_nacionalidad,
+      'doc_identidad':doc_identidad,
+      'operationType':'ifIdentityDocumentIsRepeatedInOtherPersons'},
+
+      success:function(dataJsonifIdentityDocumentIsRepeatedInOtherPersons){
+
+
+      var dataifIdentityDocumentIsRepeatedInOtherPersons = JSON.parse(dataJsonifIdentityDocumentIsRepeatedInOtherPersons);
+      
+      ifIdentityDocumentIsRepeatedInOtherPersons = dataifIdentityDocumentIsRepeatedInOtherPersons[0];
+
+ }
+});
+
+return ifIdentityDocumentIsRepeatedInOtherPersons;
+
+}

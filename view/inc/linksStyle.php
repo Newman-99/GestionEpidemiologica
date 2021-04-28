@@ -88,7 +88,7 @@
                 "sSortDescending": ": Activar para ordenar la columna de manera descendente"
             },
 
-/*            fixedHeader: true,
+/*            //fixedHeader: true,
             keys: true,
 */
                 "bDestroy": true
@@ -111,6 +111,7 @@
 thead {
     z-index: 1;
 }
+
 
 
 </style>

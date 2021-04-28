@@ -36,12 +36,22 @@
             <a class="collapse-item" href="<?php echo SERVERURL; ?>casosEpidemiList/">Lista de Casos</a>
           <?php endif; ?>
 
-            <a class="collapse-item" href="<?php echo SERVERURL; ?>reportEPI/">Reportes EPI</a>
-
             <?php if ($_SESSION['id_nivel_permiso'] == 1): ?>
 
             <a class="collapse-item" href="<?php echo SERVERURL; ?>activityLogCasosEpidemi/">Registro de Operaciones</a>
           <?php endif; ?>
+
+            <a class="collapse-item" href="<?php echo SERVERURL; ?>reportEPI/">Reportes EPI</a>
+
+            <span class="collapse-item">
+                <button type="button" class="reportEpiFilasModal" data-toggle="modal" data-target="#reportEpiFilasModal" style="
+                padding: 0;
+                border: none;
+                background: none;">
+                  Configuracion
+                </button>
+            </span>
+
 
           </div>
         </div>

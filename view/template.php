@@ -37,9 +37,9 @@ ob_start();
 
 	<?php 
 
-	if($requestedView == "registerUser" || $requestedView == "login" || $requestedView == "404" || $requestedView == "forgotPassword" || $requestedView == "restartUser"){
+	if($requestedView == "registerUser" || $requestedView == "login" || $requestedView == "404" || $requestedView == "forgotPassword" || $requestedView == "restoreUser"){
 
-		// si ya esta la session activa, no entra a registerUser, login, forgotPassword,restartUser
+		// si ya esta la session activa, no entra a registerUser, login, forgotPassword,restoreUser
 		
       if(isset($_SESSION['token_dptoEpidemi']) &&isset($_SESSION['aliasUser']) && $requestedView != "404"){
 		header('Location: '.SERVERURL.'dashboard/');
@@ -74,7 +74,18 @@ ob_start();
 
            <?php  require_once "inc/formImportCIE10.php";?>
 
+           <?php  require_once "inc/reportEpiFilasModal.php";?>
 
+           <?php  require_once "inc/registerOrUpdateReportEpiFilasModal.php";?>
+
+           <?php  require_once "inc/registerOrUpdateReportEpiFilasConfigModal.php";?>
+           
+           <?php  require_once "inc/atribsEspecialsEpiModal.php";?>
+
+           <?php  require_once "inc/regOrUpdFormAtribsEspecialsEpiModal.php";?>
+
+           <?php  require_once "inc/regOrUpdFormAtribsEspecialsEpiConfigModal.php";?>
+           
     <!-- Sidebar -->
     <?php require_once "inc/sideBar.php"; ?>
     <!-- End of Sidebar -->

@@ -26,7 +26,7 @@
 	$userController->modifyUserSafetyDataController($_POST);
 
 	}elseif ($_POST['operationType'] === "restart") {
-	$userController->restartUserController($_POST);		
+	$userController->restoreUserController($_POST);		
 				
  }else { 
 		
