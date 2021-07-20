@@ -351,6 +351,7 @@
                   </tfoot>
                   <tbody>
 
+                    <div class="msgBackendProcessDatatable"></div>
 
                     </tbody>
                 </table>

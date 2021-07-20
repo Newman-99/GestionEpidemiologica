@@ -784,7 +784,7 @@ if (!isset($dataCasosEpidemi['confirmDelete'])) {
   	if (intval($_GET['sEcho']) < 3) {
   		exit();
   	}
-
+  	
   $columnsTable = array(
      'ROW_NUMBER() OVER()',
       'id_caso_epidemi',

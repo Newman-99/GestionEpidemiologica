@@ -65,7 +65,7 @@
 
 <script> const LANGUAGE_SPANISH_DATATABLES = {
 
-            "sProcessing":     "Procesando...",
+            "sProcessing":     "<div class='sProcessing'>Procesando...</div>",
             "sLengthMenu":     "Mostrar _MENU_",
             "sZeroRecords":    "No se encontraron resultados",
             "sEmptyTable":     "Ningún dato disponible en esta tabla",
@@ -76,7 +76,7 @@
             "sSearch":         "Buscar:",
             "sUrl":            "",
             "sInfoThousands":  ",",
-            "sLoadingRecords": "Cargando...",
+            "sLoadingRecords": "<div class='sLoadingRecords'> Cargando... </div>",
             "oPaginate": {
                 "sFirst":    "Primero",
                 "sLast":     "Último",

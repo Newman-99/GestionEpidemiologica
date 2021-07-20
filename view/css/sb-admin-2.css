@@ -66,7 +66,7 @@ body {
   line-height: 1.5;
   color: #858796;
   text-align: left;
-  background-image: url("../img/CPP-BG.jpg");
+  background-image: url("../img/graham-ruttan-b3LF7JHQmms-unsplash.jpg");
   background-repeat: no-repeat;
   background-position: center;
   background-size: cover;
@@ -11068,3 +11068,27 @@ body.sidebar-toggled footer.sticky-footer {
  .input-add-table {
    margin-bottom: 15px;
  }
+
+  #btn-ver-todo {/*
+  border-radius: 0.35rem;*/
+  border-bottom-right-radius: 0.35rem;
+  border-top-right-radius: 0.35rem;
+
+}
+
+.sProcessing{
+font-weight: bold;
+font-size: 20px;
+}
+
+.msgBackendProcessDatatable{
+font-weight: bold;
+font-size: 20px;
+position:fixed;
+top:80%;
+left:60%;
+height:240px;
+width:300px;
+margin-top:-120px;
+margin-left:-150px;
+}

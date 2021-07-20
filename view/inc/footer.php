@@ -24,11 +24,12 @@
 <br>
           <div class="copyright text-center my-auto">
 
-            <span>Clinica Popular el Paraiso: Dpto Epidemiologico 2020</span>
+            <span>Sistema de Epidemiologia por <a href="newmanwebs.com">newmanwebs.com</a>  / 
+                Template  of startbootstrap sb admin 2 gh pages</span>
           </div>
         </div>
       </footer>
-      <!-- End of Footer -->
+      <!-- Template  of startbootstrap sb admin 2 gh pages -->
 
 
 <script src="<?php echo SERVERURL; ?>view/js/clock.js" >

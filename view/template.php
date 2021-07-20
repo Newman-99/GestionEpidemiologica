@@ -29,7 +29,8 @@ ob_start();
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <meta name="description" content="">
   <meta name="author" content="">
-  <link rel="shortcut icon" href="<?php echo SERVERURL; ?>view/img/cp-logo.png">
+
+  <link rel="shortcut icon" href="<?php echo SERVERURL; ?> view/img/logo.jpg">
   <title><?php echo ORGANIZATION; ?></title>
 <?php require_once "inc/linksStyle.php"; ?>
 </head>

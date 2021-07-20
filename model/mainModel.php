@@ -54,7 +54,6 @@ if (IF_LOCAL_SERVER) {
 				$DB = new PDO("pgsql:host=".SERVER_PATH.";port=".PORT.";dbname=".DB."",USER,PASS, array(
 							PDO::ATTR_PERSISTENT => true, PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8'));
 			    $DB->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-			    
 					return $DB;
 
 			}else{
@@ -64,6 +63,7 @@ if (IF_LOCAL_SERVER) {
 			    $path = ltrim($path, "/");
 			    return new PDO("pgsql:host={$host};port={$port};dbname={$path}", $user, $pass);
 			})();
+		
 			}
 
 
@@ -722,7 +722,6 @@ protected static function deleteBitacora($usuario_alias){
 
 
 		$sqlQuery = mainModel::connectDB()->prepare($sqlQuery);
-
 
 		foreach($filterValues as $key => $values) {
 

@@ -37,7 +37,11 @@
 }
 
 
-      function getDataCIE10CatalogForDataTables(url,parameterPreGetDataTables){
+async      function getDataCIE10CatalogForDataTables(url,parameterPreGetDataTables){
+
+            let elementMsgBackendProcess=$('.msgBackendProcessDatatable');
+
+            elementMsgBackendProcess.html("</p>Procesando...<p>");
 
     var hour = getHourForFileExport();
 
@@ -47,7 +51,7 @@
     } );
 
 
-    var table = $('#dataTable').DataTable({
+    var table = await $('#dataTable').DataTable({
         ////fixedHeader: true,
             keys: true,
         "scrollX": true,
@@ -96,6 +100,12 @@ $('#dataTable thead tr:eq(1) th').each(function () {
 
 
 //$( "#dataTable thead tr:eq(1) th:eq(0)").removeClass( "sorting_asc");
+
+    $(document).ajaxStop(function() {
+    
+             elementMsgBackendProcess.html("");
+
+           });
 
 }
 
@@ -304,8 +314,15 @@ load_atrib_especial.style.display = "block";
   }
   }
 
-function getDataActivityLogCasosEpidemiForDataTables(requestedUser,minDateRange,maxDateRange,action){
-    var table = $('#dataTable').DataTable({
+async function  getDataActivityLogCasosEpidemiForDataTables(requestedUser,minDateRange,maxDateRange,action){
+
+
+            let elementMsgBackendProcess=$('.msgBackendProcessDatatable');
+
+            elementMsgBackendProcess.html("</p>Procesando...<p>");
+
+
+    var table = await $('#dataTable').DataTable({
        "aaSorting": [[ 1, "asc" ]], // Sort by first column descending
         //fixedHeader: true,
         keys: true,
@@ -324,7 +341,14 @@ function getDataActivityLogCasosEpidemiForDataTables(requestedUser,minDateRange,
         ,'language': LANGUAGE_SPANISH_DATATABLES,
                 "bDestroy": true,
     });
+    $(document).ajaxStop(function() {
+    
+             elementMsgBackendProcess.html("");
+
+           });
+
 }
+
 
 
 
@@ -523,7 +547,11 @@ function getDataAtribsEspecialsEpiConfigsDataTables(id_atrib_especial){
 }
 
 
- function getDataCasosEpidemiForDataTables(parameterPreGetDataTables,action){
+async function getDataCasosEpidemiForDataTables(parameterPreGetDataTables,action){
+
+            let elementMsgBackendProcess=$('.msgBackendProcessDatatable');
+
+            elementMsgBackendProcess.html("</p>Procesando...<p>");
 
  var hour = getHourForFileExport();
 
@@ -545,10 +573,9 @@ function getDataAtribsEspecialsEpiConfigsDataTables(id_atrib_especial){
     
 
 
-//<span>'+title+'<span><br>
+    var table;
 
-
-    var table = $('#dataTable').DataTable({
+    table = await $('#dataTable').DataTable({
         "aaSorting": [[ 1, "desc" ]], // Sort by first column descending
         //fixedHeader: true,
         orderCellsTop: true,
@@ -760,13 +787,13 @@ function getDataAtribsEspecialsEpiConfigsDataTables(id_atrib_especial){
         }
          },
 
-        {
+      /*  {
        extend: 'copyHtml5',
             text: 'Copiar',
                     exportOptions: {
         columns:[0,1,2,4,7,8,9,10,11,13,14,15,17,19,20,22,23,25,26,27,28,29,31,32]
         }
-        },
+        },*/
 
         {
           extend: 'colvisGroup',
@@ -795,36 +822,19 @@ function getDataAtribsEspecialsEpiConfigsDataTables(id_atrib_especial){
   
     var timer;
 
-/*
-
-$('#dataTable thead tr:eq(1) th').each(function () {
-
-        $('input',this).on('keyup change', function () {
-  
-  window.clearTimeout(timer);
-  timer = window.setTimeout(() => {
-            table.column($(this).parent().index() + ':visible')
-                .search(this.value)
-                .draw();
-  }, 1000);
 
 
-        });
-    });
-
-  window.clearTimeout(timer);
-*/
-
-
-
-//    $('#dataTable thead tr:eq(1)  th:eq(33) :input').remove();
-
-//  var filteringHeader $('#dataTable thead tr:eq(1) th');
-table.columns.adjust().draw();
+await table.columns.adjust().draw();
 
 $( "#dataTable thead tr:eq(1) th:eq(0)").removeClass( "sorting_asc");
 
 createEmunrationForDatatable(table);
+
+    $(document).ajaxStop(function() {
+
+             elementMsgBackendProcess.html("");
+
+           });
 
 
   }
@@ -836,6 +846,34 @@ function createEmunrationForDatatable(table){
             cell.innerHTML = i+1;
         } );
     } ).draw();
+
+}
+
+
+
+function createBarProcessForAjax(xhr,elementForShowProccesAjax,elementMsgBackendProcess){ 
+                xhr.upload.addEventListener("progress", function(evt) {
+                   if (evt.lengthComputable) {
+                     var percentComplete = evt.loaded / evt.total;
+                     percentComplete = parseInt(percentComplete * 100);
+                       if(percentComplete<100){
+                          elementForShowProccesAjax.html('<p class="text-center">Enviando... ('+percentComplete+'%)</p><div class="progress progress-striped active"><div class="progress-bar progress-bar-info" style="width: '+percentComplete+'%;"></div></div>');
+                        }else{
+                          elementForShowProccesAjax.html('<p class="text-center"></p>');
+                //mensaje cuando el bakend este procesando datos de ajax
+
+             elementMsgBackendProcess.html("</p>Procesando...<p>");
+
+             // termine el proceso esconde el button de cancelar
+              $(document).ajaxStop(function() {
+
+             elementMsgBackendProcess.html("");
+
+              });
+             }
+                      }
+                    }, false);
+                    return xhr;
 
 }
 

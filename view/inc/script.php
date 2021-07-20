@@ -167,7 +167,7 @@ window
 });
 */
 
-
+/*
 
 $(document).ready(function() {
 
@@ -192,22 +192,52 @@ console.log(this);
         });
   window.clearTimeout(timer);
 
-})
+});
+*/
+
+
+
+
+$(document).ready(async function() {
+
+
+/*
+  var  search_column = $('.search-column');
+
+
+  $('.buttons-colvisGroup').on('click', function () {
+
+  var  search_column = $('.search-column');
+    var table = $('#dataTable').DataTable();
+
+  console.log(search_column);
+ });
+
+*/
+
+
+
+
+$(document).on('keyup', '.search-column', function(){
+
+    var table = $('#dataTable').DataTable();
 
   var timer;
 
-$('.search-column').on('keyup', function () {
 console.log(this);
+
   window.clearTimeout(timer);
+
   timer = window.setTimeout(() => {
-            table.column($(this).parent().index() + ':visible')
+            table.column($(this).parent().index()+' :visible')
                 .search(this.value)
                 .draw();
   }, 1000);
 
 
+//  window.clearTimeout(timer);
+
         });
-  window.clearTimeout(timer);
 
 });
 

@@ -19,13 +19,6 @@
   
 
 <style>
-  
-#btn-ver-todo {/*
-  border-radius: 0.35rem;*/
-  border-bottom-right-radius: 0.35rem;
-  border-top-right-radius: 0.35rem;
-
-}
 
 </style>
   
@@ -238,13 +231,15 @@
            <!-- 33 --> <th class="remove-item-child"> </th>
                     </tr>
 
-                    <div class="responseProcessAjax"></div>
 
-                    <div class="msgBackendProcess"></div>
+                    <div class="responseProcessAjax" style="position: fixed;"></div>
+
 
                   </tfoot>
                   
                   <tbody>
+
+                    <div class="msgBackendProcessDatatable"></div>
                     
                     </tbody>
             
@@ -331,7 +326,7 @@ var currentDate = new Date;
 // para pasar de formato js a aaaa-mm-dd de PHP
 var maxDateAllowedPHP = currentDate.toISOString().split('T')[0];
 
-var minDateRangeDefault = addOrRemoveDaysToDate(currentDate,7,false);
+var minDateRangeDefault = addOrRemoveDaysToDate(currentDate,900,false);
 
 var minDateRangeDefaulPHP = minDateRangeDefault.toISOString().split('T')[0];
 
@@ -571,6 +566,11 @@ function updateCasosEpidemi(data){
     var catalog_key_cie10 = data[14];
 
     var id_atrib_especial = data[16];
+
+
+    console.log(data[15]);
+
+    console.log(id_atrib_especial);
 
     var id_tipo_entrada = data[18];
 

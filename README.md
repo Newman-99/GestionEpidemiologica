@@ -1,2 +1,13 @@
 # GestionEpidemiologica
-El Presente sistema se desarrollo como una herramienta informática para automatizar la gestión de procesos y datos de la unidad de información y estadísticas epidemiológicas en la clínica popular el paraiso. ● Permite el Registro de datos personles y epidemiológicos de los pacientes. ● Permite el cambio de datos de los pacientes. ● Permite la eliminación de datos de los pacientes en caso errores. ● Proporcionar Informes Estadísticos Automatizados y Exportables. ● Proporciona funcionalidades de Seguridad y control de usuarios para evitar el ingreso de personas no autorizadas.
+Este proyecto se desarrolló como una herramienta web para automatizar la gestión de Epidemiológica con las siguientes funcionalidades. 
+ 
+• Consultar, registrar, actualizar y eliminar datos personales y epidemiológicos de los casos. 
+• Informes automatizados y exportables. 
+• Control de seguridad, acceso y usuarios.
+ 
+Características:
+ 
+• Adaptado principalmente a navegadores basados en chromium y firefox.
+• Servidor Apache2.4.
+• Lenguajes: PHP 7.4, Javascript, PostgreSQL, CSS.
+• Librerías y APIs: Composer, Sweet alert,Pdo pgsql,DataTables, php db cloud, Bootstrap, Font awesome, jquery, Sheetjs master.

@@ -5,8 +5,8 @@
       <!-- Sidebar - Brand -->
       <a class="sidebar-brand d-flex align-items-center justify-content-center" href="<?php echo SERVERURL; ?>dashboard/">
 
-      <img class="cp-logo" src= "<?php echo SERVERURL; ?>view/img/cp-logo.png">
-    
+          <i class="fas fa-fw fa-hospital"></i>
+
       <div class="sidebar-brand-text mx-1 small"><?php echo ORGANIZATION ?></div>
       </a>
 

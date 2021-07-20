@@ -6,7 +6,7 @@ const IF_LOCAL_SERVER =TRUE;
 
 const SERVERURL = "http://localhost/gestionEpidemi/";
 
-const ORGANIZATION = "Clinica Popular el Paraiso: Dpto de Epidemiologia";
+const ORGANIZATION = "Clinica: San Pedro";
 
 const BASE_DIRECTORY = '/var/www/html/gestionEpidemi/';
 
