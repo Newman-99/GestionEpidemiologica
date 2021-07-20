@@ -77,6 +77,15 @@ if (IF_LOCAL_SERVER) {
 
 public static function backupDatabase(){
 
+				$alert=[
+					"Alert"=>"simple",
+					"Title"=>"Ocurrio un error inesperado",
+					"Text"=>"Funcion no disponible en este servidor",
+					"Type"=>"error"
+				];
+
+				echo json_encode($alert);
+				exit();
 		try {
 
 
@@ -245,6 +254,16 @@ $DB_transacc->beginTransaction();
 }
 
 public static function restoreDatabase($files){
+
+				$alert=[
+					"Alert"=>"simple",
+					"Title"=>"Ocurrio un error inesperado",
+					"Text"=>"Error en el Respalado de la base de datos <br> Error: ". $e->getMessage()."",
+					"Type"=>"error"
+				];
+
+
+				echo json_encode($alert);
 
 		try {
 

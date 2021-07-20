@@ -1,5 +1,5 @@
 <?php 
-const IF_LOCAL_SERVER =TRUE;
+const IF_LOCAL_SERVER =FALSE;
 
 
 //const SERVERURL="https://gestion-epidemiologica-paraiso.herokuapp.com/";
