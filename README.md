@@ -2,7 +2,7 @@
 Este proyecto se desarrolló como una herramienta web para automatizar la gestión de Epidemiológica con las siguientes funcionalidades. 
  
 • Consultar, registrar, actualizar y eliminar datos personales y epidemiológicos de los casos. 
-• Informes automatizados y exportables. 
+• Informes configurables, automatizados y exportables. 
 • Control de seguridad, acceso y usuarios.
  
 Características:

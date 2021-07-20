@@ -44,10 +44,6 @@ $queryIsExistUserReload = $loginController->getUserController(["id_estado"],arra
                   form-control-user" id="aliasUser" name="aliasUser" placeholder="Alias de Usuario" required minlength = '5' maxlength = '20'>
                 </div>
 
-                <div class="form-group">
-                  <input type="text" class="form-control form-control-user" id="aliasUser" name="aliasUser" placeholder="Alias de Usuario" minlength = '5' maxlength = '20' required>
-                </div>
-
 
               <h5 class="h5 mb-2 text-gray-800">Nuevos Datos</h5>
 
@@ -66,10 +62,10 @@ $queryIsExistUserReload = $loginController->getUserController(["id_estado"],arra
 
                 <div class="form-group row">
                   <div class="col-sm-6 mb-3 mb-sm-0">
-                    <input type="password" class="form-control form-control-user" id="newPassword" name="newPassword" placeholder="Nueva Contraseña minlength = '8' maxlength = '20'">
+                    <input type="password" class="form-control form-control-user" id="newPassword" name="newPassword" placeholder="Nueva Contraseña"minlength = '8' maxlength = '20'>
                   </div>
                   <div class="col-sm-6">
-                    <input type="password" class="form-control form-control-user" id="newPasswordConfirm" name="newPasswordConfirm" placeholder="Confirmar contraseña minlength = '8' maxlength = '20'">
+                    <input type="password" class="form-control form-control-user" id="newPasswordConfirm" name="newPasswordConfirm" placeholder="Confirmar contraseña" minlength = '8' maxlength = '20'>
                   </div>
                 </div>
 
