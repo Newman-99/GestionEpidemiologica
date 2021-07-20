@@ -56,7 +56,7 @@
   
                     <?php require "./view/inc/linkRestoreUser.php"; ?>
                   <br>
-                  <div class="text-center"><img class="cp-logo-lgn" src= "<?php echo SERVERURL; ?>view/img/cp-logo.png"></div>
+                  <div class="text-center"><img class="cp-logo-lgn" src= "<?php echo SERVERURL; ?>view/img/logo.jpg"></div>
       
                 </div>
               </div>
