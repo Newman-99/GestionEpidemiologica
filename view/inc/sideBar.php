@@ -5,9 +5,9 @@
       <!-- Sidebar - Brand -->
       <a class="sidebar-brand d-flex align-items-center justify-content-center" href="<?php echo SERVERURL; ?>dashboard/">
 
-          <i class="fas fa-fw fa-hospital"></i>
+      <img class="cp-logo" src= "<?php echo SERVERURL; ?>view/img/logo.jpg">
 
-      <div class="sidebar-brand-text mx-1 small"><?php echo ORGANIZATION ?></div>
+      <div class="sidebar-brand-text mx-1 small"><?php echo ORGANIZATION; ?></div>
       </a>
 
       <!-- Divider -->
