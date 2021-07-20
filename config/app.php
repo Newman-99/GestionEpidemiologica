@@ -2,9 +2,9 @@
 const IF_LOCAL_SERVER =FALSE;
 
 
-//const SERVERURL="https://gestion-epidemiologica-paraiso.herokuapp.com/";
+const SERVERURL="https://gestion-epidemiologica-paraiso.herokuapp.com/";
 
-const SERVERURL = "http://localhost/gestionEpidemi/";
+//const SERVERURL = "http://localhost/gestionEpidemi/";
 
 const ORGANIZATION = "Clinica: San Pedro";
 

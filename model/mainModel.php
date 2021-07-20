@@ -264,7 +264,7 @@ public static function restoreDatabase($files){
 
 
 				echo json_encode($alert);
-
+				exit;
 		try {
 
 			ini_set('memory_limit','512M');
