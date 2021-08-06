@@ -21,18 +21,18 @@
                 <form class="formAjax form-group text-center user p-3" action="<?php echo SERVERURL; ?>ajax/loginAjax.php" method="POST" data-form="login" autocomplete="off">
 
                     <div class="form-group">
-                  <input type="text" class="form-control 
+                  <input type="text" class="form-control
                   form-control-user
                   form-control-user" id="aliasUser" name="aliasUser" placeholder="Alias de Usuario"
                   required
-                  minlength = '5' maxlength = '20' value="Newman-207" 
+                  minlength = '5' maxlength = '20' value="maria222"
 
                   >
                     </div>
                     <div class="form-group">
-                    <input type="password" class="form-control form-control-user" id="password" name="password" placeholder="Contraseña" value="Estrella-22?" 
+                    <input type="password" class="form-control form-control-user" id="password" name="password" placeholder="Contraseña" value="Miguel22@"
                   required
-                  minlength = '8' maxlength = '20'  
+                  minlength = '8' maxlength = '20'
                     >
 
 
